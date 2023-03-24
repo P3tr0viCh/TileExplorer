@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.slZoom = new System.Windows.Forms.ToolStripStatusLabel();
@@ -168,7 +169,7 @@
             // miMainAbout
             // 
             this.miMainAbout.Name = "miMainAbout";
-            this.miMainAbout.Size = new System.Drawing.Size(180, 22);
+            this.miMainAbout.Size = new System.Drawing.Size(158, 22);
             this.miMainAbout.Text = "О программе...";
             this.miMainAbout.Click += new System.EventHandler(this.MiMainAbout_Click);
             // 
@@ -206,6 +207,7 @@
             this.ClientSize = new System.Drawing.Size(584, 461);
             this.Controls.Add(this.toolStripContainer);
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Main";

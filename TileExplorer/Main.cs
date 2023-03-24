@@ -10,11 +10,15 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using System.Reflection;
+using System.IO;
+using static TileExplorer.Database;
 
 namespace TileExplorer
 {
     public partial class Main : Form
     {
+        Database DB;
+
         GMapOverlay tiles;
         GMapOverlay images;
         GMapOverlay markers;
@@ -24,6 +28,12 @@ namespace TileExplorer
         public Main()
         {
             InitializeComponent();
+
+            DB = new Database(Path.ChangeExtension(Application.ExecutablePath, ".sqlite"));
+
+            tiles = new GMapOverlay("tiles");
+            images = new GMapOverlay("images");
+            markers = new GMapOverlay("markers");
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -41,6 +51,10 @@ namespace TileExplorer
             {
                 WindowState = FormWindowState.Maximized;
             }
+
+            CreateTiles();
+            CreateImages();
+            CreateMarkers();
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -74,28 +88,21 @@ namespace TileExplorer
 
             gMapControl.MinZoom = 2;
             gMapControl.MaxZoom = 16;
-            gMapControl.Zoom = 13;
-            GMapControl_OnMapZoomChanged();
 
+            gMapControl.Zoom = 13;
             gMapControl.Position = new PointLatLng(51.1977, 58.2961);
-            GMapControl_OnPositionChanged(gMapControl.Position);
 
             gMapControl.MouseWheelZoomType = MouseWheelZoomType.ViewCenter;
 
             gMapControl.CanDragMap = true;
             gMapControl.DragButton = MouseButtons.Left;
 
-            tiles = new GMapOverlay("tiles");
-            images = new GMapOverlay("images");
-            markers = new GMapOverlay("markers");
-
             gMapControl.Overlays.Add(tiles);
             gMapControl.Overlays.Add(images);
             gMapControl.Overlays.Add(markers);
 
-            CreateTiles();
-            CreateImages();
-            CreateMarkers();
+            GMapControl_OnMapZoomChanged();
+            GMapControl_OnPositionChanged(gMapControl.Position);
         }
 
         private void GMapControl_OnMapZoomChanged()
@@ -113,7 +120,7 @@ namespace TileExplorer
             Close();
         }
 
-        private void SaveToImage(String fileName)
+        private void SaveToImage(string fileName)
         {
             toolStripContainer.ContentPanel.SuspendLayout();
 
@@ -197,9 +204,19 @@ namespace TileExplorer
             };
         }
 
-        private PointLatLng TileToPoint(int tileX, int tileY)
+        private PointLatLng TileToPoint(int x, int y)
         {
-            return new PointLatLng(Osm.TileYToLat(tileY, TILE_ZOOM), Osm.TileXToLng(tileX, TILE_ZOOM));
+            TileModel tile = DB.LoadTile(x, y);
+
+            if (tile.Id < 0)
+            {
+                tile.Lat = Osm.TileYToLat(y, TILE_ZOOM);
+                tile.Lng = Osm.TileXToLng(x, TILE_ZOOM);
+
+                DB.SaveTile(tile);
+            }
+
+            return new PointLatLng(tile.Lat, tile.Lng);
         }
 
         private void CreateTiles()
@@ -224,36 +241,47 @@ namespace TileExplorer
             tiles.Polygons.Add(CreateTile(TileType.MaxSquare, TileToPoint(tileX, tileY), TileToPoint(tileX + 1, tileY + 1)));
         }
 
-        private GMapMarker CreateMarker(PointLatLng point, String Text, Point offset)
+        private GMapMarker CreateMarker(Database.MarkerModel marker)
         {
-            GMapMarker gMapMarker = new GMarkerGoogle(point, GMarkerGoogleType.blue)
+            GMapMarker gMapMarker = new GMarkerGoogle(new PointLatLng(marker.Lat, marker.Lng), GMarkerGoogleType.blue)
             {
-                ToolTipText = Text,
+                ToolTipText = marker.Text,
                 ToolTipMode = MarkerTooltipMode.Always
             };
 
-            gMapMarker.ToolTip.Offset.X += offset.X;
-            gMapMarker.ToolTip.Offset.Y -= offset.Y;
+            if (gMapMarker.ToolTip != null)
+            {
+                gMapMarker.ToolTip.Offset.X += marker.OffsetX;
+                gMapMarker.ToolTip.Offset.Y -= marker.OffsetY;
+            }
 
             return gMapMarker;
         }
 
         private void CreateMarkers()
         {
-            markers.Markers.Add(CreateMarker(new PointLatLng(51.1977, 58.2961), "Яяяя", new Point(0, 0)));
-            markers.Markers.Add(CreateMarker(new PointLatLng(51.1977, 58.2981), "XXX", new Point(50, 10)));
+            List<Database.MarkerModel> markerList = DB.LoadMarkers();
+
+            foreach (Database.MarkerModel marker in markerList)
+            {
+                markers.Markers.Add(CreateMarker(marker));
+            }
         }
 
-        private GMapMarker CreateImage(PointLatLng point, String fileName)
+        private GMapMarker CreateImage(Database.ImageModel image)
         {
-            return new GMarkerGoogle(point, new Bitmap(fileName));
+            return new GMarkerGoogle(new PointLatLng(image.Lat, image.Lng), image.Image);
         }
 
         private void CreateImages()
         {
-            images.Markers.Add(CreateImage(new PointLatLng(51.2169, 58.2446), $@"d:\!Temp\logo.png"));
-            images.Markers.Add(CreateImage(new PointLatLng(51.2132, 58.3297), $@"d:\!Temp\bic.png"));
-        }
+            List<Database.ImageModel> imageList = DB.LoadImages();
+
+            foreach (Database.ImageModel image in imageList)
+            {
+                markers.Markers.Add(CreateImage(image));
+            }
+         }
 
         Rectangle FullScreenBounds;
 
