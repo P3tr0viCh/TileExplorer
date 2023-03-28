@@ -46,5 +46,29 @@ namespace TileExplorer.Properties {
                 this["MainMaximized"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ImagesVisible {
+            get {
+                return ((bool)(this["ImagesVisible"]));
+            }
+            set {
+                this["ImagesVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MarkersVisible {
+            get {
+                return ((bool)(this["MarkersVisible"]));
+            }
+            set {
+                this["MarkersVisible"] = value;
+            }
+        }
     }
 }

@@ -120,6 +120,15 @@
   <data name="StatusPosition" xml:space="preserve">
     <value>Центр: {0:F6}, {1:F6}</value>
   </data>
+  <data name="StatusTileId" xml:space="preserve">
+    <value>Плитка: {0} x {1}</value>
+  </data>
+  <data name="StatusTilesMaxCluster" xml:space="preserve">
+    <value>Кластер: {0}</value>
+  </data>
+  <data name="StatusTilesVisited" xml:space="preserve">
+    <value>Открыто: {0}</value>
+  </data>
   <data name="StatusZoom" xml:space="preserve">
     <value>Масштаб: {0}</value>
   </data>

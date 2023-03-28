@@ -10,6 +10,9 @@ using GMap.NET;
 using System.Drawing;
 using System.Data.Entity.Infrastructure;
 using System.Data;
+using static System.Net.Mime.MediaTypeNames;
+using P3tr0viCh;
+using GMap.NET.Internals;
 
 namespace TileExplorer
 {
@@ -44,15 +47,21 @@ namespace TileExplorer
             public Bitmap Image;
         }
 
-        public struct TileModel
+        public enum TileStatus
         {
-            public int Id;
+            Unknown = 0,
+            Visited = 1,
+            Cluster = 2,
+            MaxCluster = 3,
+            MaxSquare = 4
+        }
 
+        public class TileModel
+        {
             public int X;
             public int Y;
 
-            public double Lat;
-            public double Lng;
+            public TileStatus Status;
         }
 
         public Database(string fileName)
@@ -84,11 +93,7 @@ namespace TileExplorer
             command = new SQLiteCommand(commandText, Connection);
             command.ExecuteNonQuery();
 
-            commandText = "CREATE TABLE IF NOT EXISTS tiles (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, x INTEGER NOT NULL, y INTEGER NOT NULL, lat REAL NOT NULL, lng REAL NOT NULL)";
-            command = new SQLiteCommand(commandText, Connection);
-            command.ExecuteNonQuery();
-
-            commandText = "CREATE INDEX IF NOT EXISTS index_tiles ON tiles (x, y)";
+            commandText = "CREATE TABLE IF NOT EXISTS tiles (x INTEGER NOT NULL, y INTEGER NOT NULL, lat REAL NOT NULL, lng REAL NOT NULL, status INTEGER DEFAULT 0, PRIMARY KEY(x, y))";
             command = new SQLiteCommand(commandText, Connection);
             command.ExecuteNonQuery();
 
@@ -164,14 +169,9 @@ namespace TileExplorer
             return list;
         }
 
-        public TileModel LoadTile(int x, int y)
+        public bool LoadTile(TileModel tile)
         {
-            var tile = new TileModel
-            {
-                Id = -1,
-                X = x,
-                Y = y
-            };
+            bool result = false;
 
             Connection.Open();
 
@@ -179,8 +179,8 @@ namespace TileExplorer
 
             SQLiteCommand command = new SQLiteCommand(commandText, Connection);
 
-            command.Parameters.AddWithValue("x", x);
-            command.Parameters.AddWithValue("y", y);
+            command.Parameters.AddWithValue("x", tile.X);
+            command.Parameters.AddWithValue("y", tile.Y);
 
             SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
 
@@ -190,31 +190,85 @@ namespace TileExplorer
 
             if (table.Rows.Count > 0)
             {
-                tile.Id = Convert.ToInt32(table.Rows[0]["id"]);
+                tile.Status = (TileStatus)Convert.ToInt32(table.Rows[0]["status"]);
 
-                tile.Lat = Convert.ToDouble(table.Rows[0]["lat"]);
-                tile.Lng = Convert.ToDouble(table.Rows[0]["lng"]);
+                result = true;
             }
 
             Connection.Close();
 
-            return tile;
+            return result;
+        }
+
+        public List<TileModel> LoadTiles()
+        {
+            var tiles = new List<TileModel>();
+
+            Connection.Open();
+            string commandText = "SELECT x, y, status FROM tiles WHERE STATUS > 0 ORDER BY x, y;";
+
+            SQLiteDataAdapter adapter = new SQLiteDataAdapter(commandText, Connection);
+
+            DataTable table = new DataTable();
+
+            adapter.Fill(table);
+
+            foreach (DataRow row in table.Rows)
+            {
+                tiles.Add(new TileModel
+                {
+                    X = Convert.ToInt32(row["x"]),
+                    Y = Convert.ToInt32(row["y"]),
+
+                    Status = (TileStatus)Convert.ToInt32(table.Rows[0]["status"])
+                });
+            }
+
+            Connection.Close();
+
+            return tiles;
         }
 
         public void SaveTile(TileModel tile)
         {
             Connection.Open();
 
-            string commandText = "INSERT INTO tiles(x, y, lat, lng) VALUES (:x, :y, :lat, :lng);";
+            string commandText = "INSERT OR REPLACE INTO tiles(x, y, status) VALUES (:x, :y, :status);";
 
             SQLiteCommand command = new SQLiteCommand(commandText, Connection);
 
             command.Parameters.AddWithValue("x", tile.X);
             command.Parameters.AddWithValue("y", tile.Y);
-            command.Parameters.AddWithValue("lat", tile.Lat);
-            command.Parameters.AddWithValue("lng", tile.Lng);
+
+            command.Parameters.AddWithValue("status", (int)tile.Status);
 
             command.ExecuteNonQuery();
+
+            Connection.Close();
+        }
+
+        public void SaveTiles(List<TileModel> tiles)
+        {
+            Connection.Open();
+
+            using (var transaction = Connection.BeginTransaction())
+            {
+                string commandText = "INSERT OR REPLACE INTO tiles(x, y, status) VALUES (:x, :y, :status);";
+
+                SQLiteCommand command = new SQLiteCommand(commandText, Connection);
+
+                foreach (TileModel tile in tiles)
+                {
+                    command.Parameters.AddWithValue("x", tile.X);
+                    command.Parameters.AddWithValue("y", tile.Y);
+
+                    command.Parameters.AddWithValue("status", (int)tile.Status);
+
+                    command.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+            }
 
             Connection.Close();
         }

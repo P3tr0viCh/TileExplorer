@@ -70,6 +70,33 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Плитка: {0} x {1}.
+        /// </summary>
+        internal static string StatusTileId {
+            get {
+                return ResourceManager.GetString("StatusTileId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Кластер: {0}.
+        /// </summary>
+        internal static string StatusTilesMaxCluster {
+            get {
+                return ResourceManager.GetString("StatusTilesMaxCluster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Открыто: {0}.
+        /// </summary>
+        internal static string StatusTilesVisited {
+            get {
+                return ResourceManager.GetString("StatusTilesVisited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Масштаб: {0}.
         /// </summary>
         internal static string StatusZoom {

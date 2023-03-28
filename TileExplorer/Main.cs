@@ -1,29 +1,31 @@
-﻿using P3tr0viCh;
-
-using GMap.NET;
+﻿using GMap.NET;
+using GMap.NET.Internals;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using P3tr0viCh;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using TileExplorer.Properties;
-using System.Reflection;
-using System.IO;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
     public partial class Main : Form
     {
-        Database DB;
+        readonly Database DB;
 
-        GMapOverlay tiles;
-        GMapOverlay images;
-        GMapOverlay markers;
+        readonly GMapOverlay tilesOverlay;
+        readonly GMapOverlay imagesOverlay;
+        readonly GMapOverlay markersOverlay;
 
         public const int TILE_ZOOM = 14;
+        public const int TILE_MAX = 16384;// 2 ^ TILE_ZOOM;
 
         public Main()
         {
@@ -31,9 +33,9 @@ namespace TileExplorer
 
             DB = new Database(Path.ChangeExtension(Application.ExecutablePath, ".sqlite"));
 
-            tiles = new GMapOverlay("tiles");
-            images = new GMapOverlay("images");
-            markers = new GMapOverlay("markers");
+            tilesOverlay = new GMapOverlay("tiles");
+            imagesOverlay = new GMapOverlay("images");
+            markersOverlay = new GMapOverlay("markers");
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -53,8 +55,15 @@ namespace TileExplorer
             }
 
             CreateTiles();
+
             CreateImages();
             CreateMarkers();
+
+            miMainImages.Checked = Settings.Default.ImagesVisible;
+            miMainMarkers.Checked = Settings.Default.MarkersVisible;
+
+            imagesOverlay.IsVisibile = miMainImages.Checked;
+            markersOverlay.IsVisibile = miMainMarkers.Checked;
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -70,6 +79,9 @@ namespace TileExplorer
                 Settings.Default.MainMaximized = false;
                 Settings.Default.MainBounds = Bounds;
             }
+
+            Settings.Default.ImagesVisible = miMainImages.Checked;
+            Settings.Default.MarkersVisible = miMainMarkers.Checked;
 
             Settings.Default.Save();
         }
@@ -89,7 +101,7 @@ namespace TileExplorer
             gMapControl.MinZoom = 2;
             gMapControl.MaxZoom = 16;
 
-            gMapControl.Zoom = 13;
+            gMapControl.Zoom = 11;
             gMapControl.Position = new PointLatLng(51.1977, 58.2961);
 
             gMapControl.MouseWheelZoomType = MouseWheelZoomType.ViewCenter;
@@ -97,12 +109,13 @@ namespace TileExplorer
             gMapControl.CanDragMap = true;
             gMapControl.DragButton = MouseButtons.Left;
 
-            gMapControl.Overlays.Add(tiles);
-            gMapControl.Overlays.Add(images);
-            gMapControl.Overlays.Add(markers);
+            gMapControl.Overlays.Add(tilesOverlay);
+            gMapControl.Overlays.Add(imagesOverlay);
+            gMapControl.Overlays.Add(markersOverlay);
 
             GMapControl_OnMapZoomChanged();
             GMapControl_OnPositionChanged(gMapControl.Position);
+            UpdateStatusTileId(gMapControl.Position);
         }
 
         private void GMapControl_OnMapZoomChanged()
@@ -158,32 +171,28 @@ namespace TileExplorer
             }
         }
 
-        public enum TileType
-        {
-            None,
-            Visited,
-            Cluster,
-            MaxSquare
-        }
-
-        private GMapPolygon CreateTile(TileType type, PointLatLng point1, PointLatLng point2)
+        private GMapPolygon CreateTile(TileModel tile)
         {
             Color colorFill;
             Color colorStroke;
 
-            switch (type)
+            switch (tile.Status)
             {
-                case TileType.Visited:
-                    colorFill = Color.FromArgb(50, Color.Red);
-                    colorStroke = Color.FromArgb(80, Color.Red);
+                case TileStatus.Visited:
+                    colorFill = Color.FromArgb(25, Color.Red);
+                    colorStroke = Color.FromArgb(25, Color.Red);
                     break;
-                case TileType.Cluster:
-                    colorFill = Color.FromArgb(50, Color.Green);
+                case TileStatus.Cluster:
+                    colorFill = Color.FromArgb(40, Color.GreenYellow);
+                    colorStroke = Color.FromArgb(80, Color.GreenYellow);
+                    break;
+                case TileStatus.MaxCluster:
+                    colorFill = Color.FromArgb(40, Color.Green);
                     colorStroke = Color.FromArgb(80, Color.Green);
                     break;
-                case TileType.MaxSquare:
-                    colorFill = Color.FromArgb(50, Color.Blue);
-                    colorStroke = Color.FromArgb(80, Color.Blue);
+                case TileStatus.MaxSquare:
+                    colorFill = Color.FromArgb(25, Color.Blue);
+                    colorStroke = Color.FromArgb(25, Color.Blue);
                     break;
                 default:
                     colorFill = Color.Empty;
@@ -191,12 +200,18 @@ namespace TileExplorer
                     break;
             }
 
+            double lat1 = Osm.TileYToLat(tile.Y, TILE_ZOOM);
+            double lng1 = Osm.TileXToLng(tile.X, TILE_ZOOM);
+
+            double lat2 = Osm.TileYToLat(tile.Y + 1, TILE_ZOOM);
+            double lng2 = Osm.TileXToLng(tile.X + 1, TILE_ZOOM);
+
             return new GMapPolygon(new List<PointLatLng>
             {
-                new PointLatLng(point1.Lat, point1.Lng),
-                new PointLatLng(point1.Lat, point2.Lng),
-                new PointLatLng(point2.Lat, point2.Lng),
-                new PointLatLng(point2.Lat, point1.Lng)
+                new PointLatLng(lat1, lng1),
+                new PointLatLng(lat1, lng2),
+                new PointLatLng(lat2, lng2),
+                new PointLatLng(lat2, lng1)
             }, "")
             {
                 Fill = new SolidBrush(colorFill),
@@ -204,44 +219,139 @@ namespace TileExplorer
             };
         }
 
-        private PointLatLng TileToPoint(int x, int y)
+        private void DummyTiles()
         {
-            TileModel tile = DB.LoadTile(x, y);
+            Random rand = new Random();
 
-            if (tile.Id < 0)
+            var tiles = new List<TileModel>();
+
+            for (int x = 10820; x < 10870; x++)
             {
-                tile.Lat = Osm.TileYToLat(y, TILE_ZOOM);
-                tile.Lng = Osm.TileXToLng(x, TILE_ZOOM);
-
-                DB.SaveTile(tile);
+                for (int y = 5456; y < 5484; y++)
+                {
+                    tiles.Add(new TileModel()
+                    {
+                        X = x,
+                        Y = y,
+                        Status = rand.Next(4) == 1 ? TileStatus.Unknown : TileStatus.Visited,
+                    });
+                }
             }
 
-            return new PointLatLng(tile.Lat, tile.Lng);
+            DB.SaveTiles(tiles);
+        }
+
+        private void SetTileStatus(TileStatus[,] status, int[,] cluster, int x, int y, int clusterId)
+        {
+            if (status[x, y] != TileStatus.Cluster || cluster[x, y] != 0) return;
+
+            cluster[x, y] = clusterId;
+
+            SetTileStatus(status, cluster, x, y - 1, clusterId);
+            SetTileStatus(status, cluster, x, y + 1, clusterId);
+            SetTileStatus(status, cluster, x - 1, y, clusterId);
+            SetTileStatus(status, cluster, x + 1, y, clusterId);
+        }
+
+        private void CalcTiles(List<TileModel> tiles)
+        {
+            int tilesCluster = 0;
+
+            TileStatus[,] status = new TileStatus[TILE_MAX, TILE_MAX];
+
+            foreach (TileModel tile in tiles)
+            {
+                status[tile.X, tile.Y] = tile.Status;
+            }
+
+            foreach (TileModel tile in tiles)
+            {
+                if (tile.X == 0 || tile.X == TILE_MAX - 1 || tile.Y == 0 || tile.Y == TILE_MAX - 1) continue;
+
+                if (status[tile.X, tile.Y - 1] == TileStatus.Unknown) continue;
+                if (status[tile.X, tile.Y + 1] == TileStatus.Unknown) continue;
+                if (status[tile.X - 1, tile.Y] == TileStatus.Unknown) continue;
+                if (status[tile.X + 1, tile.Y] == TileStatus.Unknown) continue;
+
+                tile.Status = TileStatus.Cluster;
+
+                tilesCluster++;
+
+                status[tile.X, tile.Y] = tile.Status;
+            }
+
+            int[,] cluster = new int[TILE_MAX, TILE_MAX];
+
+            int clusterId = 0;
+
+            foreach (TileModel tile in tiles)
+            {
+                if (status[tile.X, tile.Y] == TileStatus.Cluster) clusterId++;
+
+                SetTileStatus(status, cluster, tile.X, tile.Y, clusterId);
+            }
+
+            int[] maxClusters = new int[clusterId + 1];
+
+            foreach (TileModel tile in tiles)
+            {
+                if (status[tile.X, tile.Y] != TileStatus.Cluster) continue;
+
+                maxClusters[cluster[tile.X, tile.Y]]++;
+            }
+
+            int maxCluster = 0;
+
+            for (int i = 0; i < maxClusters.Length; i++)
+            {
+                if (maxClusters[i] > maxCluster)
+                {
+                    maxCluster = maxClusters[i];
+                }
+            }
+
+            foreach (TileModel tile in tiles)
+            {
+                if (maxClusters[cluster[tile.X, tile.Y]] == maxCluster)
+                {
+                    tile.Status = TileStatus.MaxCluster;
+                }
+            }
+
+            foreach (TileModel tile in tiles)
+            {
+                break;
+                if (status[tile.X, tile.Y] == TileStatus.Cluster)
+                {
+                    markersOverlay.Markers.Add(CreateMarker(
+                        new MarkerModel()
+                        {
+                            Lat = Osm.TileYToLat(tile.Y, TILE_ZOOM),
+                            Lng = Osm.TileXToLng(tile.X, TILE_ZOOM),
+                            Text = cluster[tile.X, tile.Y].ToString() + "|" + maxClusters[cluster[tile.X, tile.Y]].ToString(),
+                        }));
+                }
+            }
+
+            slTilesVisited.Text = string.Format(Resources.StatusTilesVisited, tiles.Count);
+            slTilesMaxCluster.Text = string.Format(Resources.StatusTilesMaxCluster, maxCluster);
         }
 
         private void CreateTiles()
         {
-            int tileX;
-            int tileY;
+            DummyTiles();
 
-            tileX = 10844;
-            tileY = 5470;
-            tiles.Polygons.Add(CreateTile(TileType.None, TileToPoint(tileX, tileY), TileToPoint(tileX + 1, tileY + 1)));
+            List<TileModel> tiles = DB.LoadTiles();
 
-            tileX = 10845;
-            tileY = 5470;
-            tiles.Polygons.Add(CreateTile(TileType.Visited, TileToPoint(tileX, tileY), TileToPoint(tileX + 1, tileY + 1)));
+            CalcTiles(tiles);
 
-            tileX = 10844;
-            tileY = 5471;
-            tiles.Polygons.Add(CreateTile(TileType.Cluster, TileToPoint(tileX, tileY), TileToPoint(tileX + 1, tileY + 1)));
-
-            tileX = 10843;
-            tileY = 5471;
-            tiles.Polygons.Add(CreateTile(TileType.MaxSquare, TileToPoint(tileX, tileY), TileToPoint(tileX + 1, tileY + 1)));
+            foreach (TileModel tile in tiles)
+            {
+                tilesOverlay.Polygons.Add(CreateTile(tile));
+            }
         }
 
-        private GMapMarker CreateMarker(Database.MarkerModel marker)
+        private GMapMarker CreateMarker(MarkerModel marker)
         {
             GMapMarker gMapMarker = new GMarkerGoogle(new PointLatLng(marker.Lat, marker.Lng), GMarkerGoogleType.blue)
             {
@@ -260,28 +370,28 @@ namespace TileExplorer
 
         private void CreateMarkers()
         {
-            List<Database.MarkerModel> markerList = DB.LoadMarkers();
+            List<MarkerModel> markers = DB.LoadMarkers();
 
-            foreach (Database.MarkerModel marker in markerList)
+            foreach (MarkerModel marker in markers)
             {
-                markers.Markers.Add(CreateMarker(marker));
+                markersOverlay.Markers.Add(CreateMarker(marker));
             }
         }
 
-        private GMapMarker CreateImage(Database.ImageModel image)
+        private GMapMarker CreateImage(ImageModel image)
         {
             return new GMarkerGoogle(new PointLatLng(image.Lat, image.Lng), image.Image);
         }
 
         private void CreateImages()
         {
-            List<Database.ImageModel> imageList = DB.LoadImages();
+            List<ImageModel> images = DB.LoadImages();
 
-            foreach (Database.ImageModel image in imageList)
+            foreach (ImageModel image in images)
             {
-                markers.Markers.Add(CreateImage(image));
+                imagesOverlay.Markers.Add(CreateImage(image));
             }
-         }
+        }
 
         Rectangle FullScreenBounds;
 
@@ -332,12 +442,28 @@ namespace TileExplorer
                 assemblyVersion.Version + Environment.NewLine +
                 assemblyCopyright.Copyright;
 
-            MessageBox.Show(text, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Msg.Info(text);
         }
 
-        private void gMapControl_OnMarkerClick(GMapMarker item, MouseEventArgs e)
+        private void UpdateStatusTileId(PointLatLng point)
         {
-            MessageBox.Show(item.ToString(), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            slTileId.Text = string.Format(Resources.StatusTileId,
+                Osm.LngToTileX(point.Lng, TILE_ZOOM), Osm.LatToTileY(point.Lat, TILE_ZOOM));
+        }
+
+        private void GMapControl_MouseClick(object sender, MouseEventArgs e)
+        {
+            UpdateStatusTileId(gMapControl.FromLocalToLatLng(e.X, e.Y));
+        }
+
+        private void MiMainMarkers_Click(object sender, EventArgs e)
+        {
+            markersOverlay.IsVisibile = miMainMarkers.Checked;
+        }
+
+        private void MiMainImages_Click(object sender, EventArgs e)
+        {
+            imagesOverlay.IsVisibile = miMainImages.Checked;
         }
     }
 }

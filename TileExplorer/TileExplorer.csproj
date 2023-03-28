@@ -99,6 +99,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\!UtilsAndComps\UtilsMsg.cs">
+      <Link>UtilsMsg.cs</Link>
+    </Compile>
     <Compile Include="..\..\!UtilsAndComps\UtilsOsm.cs">
       <Link>UtilsOsm.cs</Link>
     </Compile>
