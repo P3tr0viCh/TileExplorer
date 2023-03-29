@@ -1,18 +1,10 @@
-﻿using System;
+﻿using GMap.NET.Internals;
+using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.IO;
-using GMap.NET;
-using System.Drawing;
-using System.Data.Entity.Infrastructure;
 using System.Data;
-using static System.Net.Mime.MediaTypeNames;
-using P3tr0viCh;
-using GMap.NET.Internals;
+using System.Data.SQLite;
+using System.Drawing;
+using System.IO;
 
 namespace TileExplorer
 {
@@ -22,9 +14,9 @@ namespace TileExplorer
 
         private readonly SQLiteConnection Connection;
 
-        public struct MarkerModel
+        public class MarkerModel
         {
-            public int Id;
+            public long Id;
 
             public double Lat;
             public double Lng;
@@ -35,7 +27,7 @@ namespace TileExplorer
             public int OffsetY;
         }
 
-        public struct ImageModel
+        public class ImageModel
         {
             public int Id;
 
@@ -108,31 +100,90 @@ namespace TileExplorer
 
             string commandText = "SELECT * FROM markers;";
 
-            SQLiteDataAdapter adapter = new SQLiteDataAdapter(commandText, Connection);
-
-            DataTable table = new DataTable();
-
-            adapter.Fill(table);
-
-            foreach (DataRow row in table.Rows)
+            using (var adapter = new SQLiteDataAdapter(commandText, Connection))
+            using (var table = new DataTable())
             {
-                list.Add(new MarkerModel
+                adapter.Fill(table);
+
+                foreach (DataRow row in table.Rows)
                 {
-                    Id = Convert.ToInt32(row["id"]),
+                    list.Add(new MarkerModel
+                    {
+                        Id = Convert.ToInt32(row["id"]),
 
-                    Lat = Convert.ToDouble(row["lat"]),
-                    Lng = Convert.ToDouble(row["lng"]),
+                        Lat = Convert.ToDouble(row["lat"]),
+                        Lng = Convert.ToDouble(row["lng"]),
 
-                    Text = row["text"].GetType() != typeof(DBNull) ? Convert.ToString(row["text"]) : "",
+                        Text = row["text"].GetType() != typeof(DBNull) ? Convert.ToString(row["text"]) : "",
 
-                    OffsetX = row["offset_x"].GetType() != typeof(DBNull) ? Convert.ToInt32(row["offset_x"]) : 0,
-                    OffsetY = row["offset_y"].GetType() != typeof(DBNull) ? Convert.ToInt32(row["offset_y"]) : 0
-                });
+                        OffsetX = row["offset_x"].GetType() != typeof(DBNull) ? Convert.ToInt32(row["offset_x"]) : 0,
+                        OffsetY = row["offset_y"].GetType() != typeof(DBNull) ? Convert.ToInt32(row["offset_y"]) : 0
+                    });
+                }
             }
 
             Connection.Close();
 
             return list;
+        }
+
+        public void SaveMarker(MarkerModel marker)
+        {
+            Connection.Open();
+
+            string commandText;
+
+            if (marker.Id == 0)
+            {
+                commandText = "INSERT INTO markers(lat, lng, text, offset_x, offset_y)" +
+                    " VALUES (:lat, :lng, :text, :offset_x, :offset_y);";
+            }
+            else
+            {
+                commandText = "INSERT OR REPLACE INTO markers(id, lat, lng, text, offset_x, offset_y)" +
+                    " VALUES (:id, :lat, :lng, :text, :offset_x, :offset_y);";
+            }
+
+            using (var command = new SQLiteCommand(commandText, Connection))
+            {
+                if (marker.Id != 0)
+                {
+                    command.Parameters.AddWithValue("id", marker.Id);
+                }
+
+                command.Parameters.AddWithValue("lat", marker.Lat);
+                command.Parameters.AddWithValue("lng", marker.Lng);
+
+                command.Parameters.AddWithValue("text", marker.Text);
+
+                command.Parameters.AddWithValue("offset_x", marker.OffsetX);
+                command.Parameters.AddWithValue("offset_y", marker.OffsetY);
+
+                command.ExecuteNonQuery();
+            }
+
+            if (marker.Id == 0)
+            {
+                marker.Id = Connection.LastInsertRowId;
+            }
+
+            Connection.Close();
+        }
+
+        public void DeleteMarker(MarkerModel marker)
+        {
+            Connection.Open();
+
+            string commandText = "DELETE FROM markers WHERE id = :id;";
+
+            using (var command = new SQLiteCommand(commandText, Connection))
+            {
+                command.Parameters.AddWithValue("id", marker.Id);
+
+                command.ExecuteNonQuery();
+            }
+
+            Connection.Close();
         }
 
         public List<ImageModel> LoadImages()
@@ -143,25 +194,25 @@ namespace TileExplorer
 
             string commandText = "SELECT * FROM images;";
 
-            SQLiteDataAdapter adapter = new SQLiteDataAdapter(commandText, Connection);
-
-            DataTable table = new DataTable();
-
-            adapter.Fill(table);
-
-            foreach (DataRow row in table.Rows)
+            using (var adapter = new SQLiteDataAdapter(commandText, Connection))
+            using (var table = new DataTable())
             {
-                list.Add(new ImageModel
+                adapter.Fill(table);
+
+                foreach (DataRow row in table.Rows)
                 {
-                    Id = Convert.ToInt32(row["id"]),
+                    list.Add(new ImageModel
+                    {
+                        Id = Convert.ToInt32(row["id"]),
 
-                    Lat = Convert.ToDouble(row["lat"]),
-                    Lng = Convert.ToDouble(row["lng"]),
+                        Lat = Convert.ToDouble(row["lat"]),
+                        Lng = Convert.ToDouble(row["lng"]),
 
-                    Name = row["name"].GetType() != typeof(DBNull) ? Convert.ToString(row["name"]) : "",
+                        Name = row["name"].GetType() != typeof(DBNull) ? Convert.ToString(row["name"]) : "",
 
-                    Image = new Bitmap(new MemoryStream((byte[])row["image"]))
-                });
+                        Image = new Bitmap(new MemoryStream((byte[])row["image"]))
+                    });
+                }
             }
 
             Connection.Close();
@@ -177,22 +228,23 @@ namespace TileExplorer
 
             string commandText = "SELECT * FROM tiles WHERE x = :x AND y = :y;";
 
-            SQLiteCommand command = new SQLiteCommand(commandText, Connection);
-
-            command.Parameters.AddWithValue("x", tile.X);
-            command.Parameters.AddWithValue("y", tile.Y);
-
-            SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
-
-            DataTable table = new DataTable();
-
-            adapter.Fill(table);
-
-            if (table.Rows.Count > 0)
+            using (var command = new SQLiteCommand(commandText, Connection))
             {
-                tile.Status = (TileStatus)Convert.ToInt32(table.Rows[0]["status"]);
+                command.Parameters.AddWithValue("x", tile.X);
+                command.Parameters.AddWithValue("y", tile.Y);
 
-                result = true;
+                using (var adapter = new SQLiteDataAdapter(command))
+                using (var table = new DataTable())
+                {
+                    adapter.Fill(table);
+
+                    if (table.Rows.Count > 0)
+                    {
+                        tile.Status = (TileStatus)Convert.ToInt32(table.Rows[0]["status"]);
+
+                        result = true;
+                    }
+                }
             }
 
             Connection.Close();
@@ -207,21 +259,21 @@ namespace TileExplorer
             Connection.Open();
             string commandText = "SELECT x, y, status FROM tiles WHERE STATUS > 0 ORDER BY x, y;";
 
-            SQLiteDataAdapter adapter = new SQLiteDataAdapter(commandText, Connection);
-
-            DataTable table = new DataTable();
-
-            adapter.Fill(table);
-
-            foreach (DataRow row in table.Rows)
+            using (var adapter = new SQLiteDataAdapter(commandText, Connection))
+            using (var table = new DataTable())
             {
-                tiles.Add(new TileModel
-                {
-                    X = Convert.ToInt32(row["x"]),
-                    Y = Convert.ToInt32(row["y"]),
+                adapter.Fill(table);
 
-                    Status = (TileStatus)Convert.ToInt32(table.Rows[0]["status"])
-                });
+                foreach (DataRow row in table.Rows)
+                {
+                    tiles.Add(new TileModel
+                    {
+                        X = Convert.ToInt32(row["x"]),
+                        Y = Convert.ToInt32(row["y"]),
+
+                        Status = (TileStatus)Convert.ToInt32(table.Rows[0]["status"])
+                    });
+                }
             }
 
             Connection.Close();
@@ -235,14 +287,15 @@ namespace TileExplorer
 
             string commandText = "INSERT OR REPLACE INTO tiles(x, y, status) VALUES (:x, :y, :status);";
 
-            SQLiteCommand command = new SQLiteCommand(commandText, Connection);
+            using (var command = new SQLiteCommand(commandText, Connection))
+            {
+                command.Parameters.AddWithValue("x", tile.X);
+                command.Parameters.AddWithValue("y", tile.Y);
 
-            command.Parameters.AddWithValue("x", tile.X);
-            command.Parameters.AddWithValue("y", tile.Y);
+                command.Parameters.AddWithValue("status", (int)tile.Status);
 
-            command.Parameters.AddWithValue("status", (int)tile.Status);
-
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
 
             Connection.Close();
         }
@@ -255,19 +308,20 @@ namespace TileExplorer
             {
                 string commandText = "INSERT OR REPLACE INTO tiles(x, y, status) VALUES (:x, :y, :status);";
 
-                SQLiteCommand command = new SQLiteCommand(commandText, Connection);
-
-                foreach (TileModel tile in tiles)
+                using (var command = new SQLiteCommand(commandText, Connection))
                 {
-                    command.Parameters.AddWithValue("x", tile.X);
-                    command.Parameters.AddWithValue("y", tile.Y);
+                    foreach (TileModel tile in tiles)
+                    {
+                        command.Parameters.AddWithValue("x", tile.X);
+                        command.Parameters.AddWithValue("y", tile.Y);
 
-                    command.Parameters.AddWithValue("status", (int)tile.Status);
+                        command.Parameters.AddWithValue("status", (int)tile.Status);
 
-                    command.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
                 }
-
-                transaction.Commit();
             }
 
             Connection.Close();

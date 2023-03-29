@@ -61,6 +61,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Удалить подпись «{0}»?.
+        /// </summary>
+        internal static string QuestionMarkerDelete {
+            get {
+                return ResourceManager.GetString("QuestionMarkerDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Центр: {0:F6}, {1:F6}.
         /// </summary>
         internal static string StatusPosition {

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -43,27 +44,36 @@
             this.miMainClose = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainMap = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainMarkers = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainImages = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.miMainImages = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmMarker = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.miMarkerMove = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMarkerDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmMap = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.miMapMarkerAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
+            this.cmMarker.SuspendLayout();
+            this.cmMap.SuspendLayout();
             this.SuspendLayout();
             // 
             // gMapControl
             // 
             this.gMapControl.Bearing = 0F;
             this.gMapControl.CanDragMap = true;
+            this.gMapControl.Cursor = System.Windows.Forms.Cursors.Default;
             this.gMapControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gMapControl.EmptyTileColor = System.Drawing.Color.Navy;
+            this.gMapControl.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.gMapControl.GrayScaleMode = false;
             this.gMapControl.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
             this.gMapControl.LevelsKeepInMemmory = 5;
@@ -85,10 +95,12 @@
             this.gMapControl.Size = new System.Drawing.Size(584, 415);
             this.gMapControl.TabIndex = 0;
             this.gMapControl.Zoom = 0D;
+            this.gMapControl.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.GMapControl_OnMarkerClick);
             this.gMapControl.OnPositionChanged += new GMap.NET.PositionChanged(this.GMapControl_OnPositionChanged);
             this.gMapControl.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.GMapControl_OnMapZoomChanged);
             this.gMapControl.Load += new System.EventHandler(this.GMapControl_Load);
             this.gMapControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseClick);
+            this.gMapControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseMove);
             // 
             // statusStrip
             // 
@@ -196,6 +208,16 @@
             this.miMainMarkers.Text = "Подписи";
             this.miMainMarkers.Click += new System.EventHandler(this.MiMainMarkers_Click);
             // 
+            // miMainImages
+            // 
+            this.miMainImages.Checked = true;
+            this.miMainImages.CheckOnClick = true;
+            this.miMainImages.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.miMainImages.Name = "miMainImages";
+            this.miMainImages.Size = new System.Drawing.Size(232, 22);
+            this.miMainImages.Text = "Изображения";
+            this.miMainImages.Click += new System.EventHandler(this.MiMainImages_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -251,15 +273,42 @@
             this.saveFileDialog.DefaultExt = "png";
             this.saveFileDialog.Filter = "PNG|*.png|Все файлы|*.*";
             // 
-            // miMainImages
+            // cmMarker
             // 
-            this.miMainImages.Checked = true;
-            this.miMainImages.CheckOnClick = true;
-            this.miMainImages.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.miMainImages.Name = "miMainImages";
-            this.miMainImages.Size = new System.Drawing.Size(232, 22);
-            this.miMainImages.Text = "Изображения";
-            this.miMainImages.Click += new System.EventHandler(this.MiMainImages_Click);
+            this.cmMarker.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miMarkerMove,
+            this.miMarkerDelete});
+            this.cmMarker.Name = "cmMarker";
+            this.cmMarker.Size = new System.Drawing.Size(147, 48);
+            // 
+            // miMarkerMove
+            // 
+            this.miMarkerMove.Name = "miMarkerMove";
+            this.miMarkerMove.Size = new System.Drawing.Size(146, 22);
+            this.miMarkerMove.Text = "Переместить";
+            this.miMarkerMove.Click += new System.EventHandler(this.MiMarkerMove_Click);
+            // 
+            // miMarkerDelete
+            // 
+            this.miMarkerDelete.Name = "miMarkerDelete";
+            this.miMarkerDelete.Size = new System.Drawing.Size(146, 22);
+            this.miMarkerDelete.Text = "Удалить";
+            this.miMarkerDelete.Click += new System.EventHandler(this.MiMarkerDelete_Click);
+            // 
+            // cmMap
+            // 
+            this.cmMap.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miMapMarkerAdd});
+            this.cmMap.Name = "cmMap";
+            this.cmMap.Size = new System.Drawing.Size(185, 26);
+            this.cmMap.Opening += new System.ComponentModel.CancelEventHandler(this.CmMap_Opening);
+            // 
+            // miMapMarkerAdd
+            // 
+            this.miMapMarkerAdd.Name = "miMapMarkerAdd";
+            this.miMapMarkerAdd.Size = new System.Drawing.Size(184, 22);
+            this.miMapMarkerAdd.Text = "Добавить подпись...";
+            this.miMapMarkerAdd.Click += new System.EventHandler(this.MiMapMarkerAdd_Click);
             // 
             // Main
             // 
@@ -269,12 +318,14 @@
             this.Controls.Add(this.toolStripContainer);
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Main";
             this.Text = "TileExplorer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyDown);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.menuStrip.ResumeLayout(false);
@@ -286,6 +337,8 @@
             this.toolStripContainer.TopToolStripPanel.PerformLayout();
             this.toolStripContainer.ResumeLayout(false);
             this.toolStripContainer.PerformLayout();
+            this.cmMarker.ResumeLayout(false);
+            this.cmMap.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -313,6 +366,11 @@
         private System.Windows.Forms.ToolStripMenuItem miMainMarkers;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem miMainImages;
+        private System.Windows.Forms.ContextMenuStrip cmMarker;
+        private System.Windows.Forms.ToolStripMenuItem miMarkerDelete;
+        private System.Windows.Forms.ContextMenuStrip cmMap;
+        private System.Windows.Forms.ToolStripMenuItem miMapMarkerAdd;
+        private System.Windows.Forms.ToolStripMenuItem miMarkerMove;
     }
 }
 
