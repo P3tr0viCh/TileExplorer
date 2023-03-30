@@ -1,11 +1,11 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using Newtonsoft.Json.Linq;
 using P3tr0viCh;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
@@ -67,7 +67,7 @@ namespace TileExplorer
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SetFullScreen(false);
+            FullScreen = false;
 
             if (WindowState == FormWindowState.Maximized)
             {
@@ -88,7 +88,6 @@ namespace TileExplorer
         private void GMapControl_Load(object sender, EventArgs e)
         {
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
-            //gMapControl.CacheLocation = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
 
             GMap.NET.MapProviders.GMapProvider.UserAgent = "xxx/1.0";
 
@@ -170,7 +169,7 @@ namespace TileExplorer
             }
         }
 
-        private GMapPolygon CreateTile(TileModel tile)
+        private GMapPolygon TileFromModel(TileModel tile)
         {
             Color colorFill;
             Color colorStroke;
@@ -178,20 +177,28 @@ namespace TileExplorer
             switch (tile.Status)
             {
                 case TileStatus.Visited:
-                    colorFill = Color.FromArgb(25, Color.Red);
-                    colorStroke = Color.FromArgb(25, Color.Red);
+                    colorFill = Color.FromArgb(
+                        Settings.Default.ColorTileVisitedAlpha, Settings.Default.ColorTileVisited);
+                    colorStroke = Color.FromArgb(
+                        Settings.Default.ColorTileVisitedLineAlpha, Settings.Default.ColorTileVisited);
                     break;
                 case TileStatus.Cluster:
-                    colorFill = Color.FromArgb(40, Color.GreenYellow);
-                    colorStroke = Color.FromArgb(80, Color.GreenYellow);
+                    colorFill = Color.FromArgb(
+                        Settings.Default.ColorTileClusterAlpha, Settings.Default.ColorTileCluster);
+                    colorStroke = Color.FromArgb(
+                        Settings.Default.ColorTileClusterLineAlpha, Settings.Default.ColorTileCluster);
                     break;
                 case TileStatus.MaxCluster:
-                    colorFill = Color.FromArgb(40, Color.Green);
-                    colorStroke = Color.FromArgb(80, Color.Green);
+                    colorFill = Color.FromArgb(
+                        Settings.Default.ColorTileMaxClusterAlpha, Settings.Default.ColorTileMaxCluster);
+                    colorStroke = Color.FromArgb(
+                        Settings.Default.ColorTileMaxClusterLineAlpha, Settings.Default.ColorTileMaxCluster);
                     break;
                 case TileStatus.MaxSquare:
-                    colorFill = Color.FromArgb(25, Color.Blue);
-                    colorStroke = Color.FromArgb(25, Color.Blue);
+                    colorFill = Color.FromArgb(
+                        Settings.Default.ColorTileMaxSquareAlpha, Settings.Default.ColorTileMaxSquare);
+                    colorStroke = Color.FromArgb(
+                        Settings.Default.ColorTileMaxSquareLineAlpha, Settings.Default.ColorTileMaxSquare);
                     break;
                 default:
                     colorFill = Color.Empty;
@@ -331,103 +338,139 @@ namespace TileExplorer
 
             foreach (TileModel tile in tiles)
             {
-                tilesOverlay.Polygons.Add(CreateTile(tile));
+                tilesOverlay.Polygons.Add(TileFromModel(tile));
             }
         }
 
-        public class GMapToolTipSquare : GMapToolTip
+        private enum MarkerType
         {
-            private const int MARKER_OFFSET_X = 20;
-            private const int MARKER_OFFSET_Y = -30;
-
-            public GMapToolTipSquare(GMapMarker marker) : base(marker)
-            {
-            }
-
-            public override void OnRender(Graphics g)
-            {
-                Size size = g.MeasureString(Marker.ToolTipText, Font).ToSize();
-
-                checked
-                {
-                    Rectangle rectangle = new Rectangle(Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y - size.Height,
-                        size.Width + TextPadding.Width, size.Height + TextPadding.Height);
-
-                    rectangle.Offset(MARKER_OFFSET_X + Offset.X, MARKER_OFFSET_Y - Offset.Y);
-
-                    g.DrawLine(Stroke, Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y,
-                        rectangle.X, rectangle.Y + unchecked(rectangle.Height / 2));
-
-                    g.FillRectangle(Fill, rectangle);
-
-                    g.DrawRectangle(Stroke, rectangle);
-
-                    g.DrawString(Marker.ToolTipText, Font, Foreground, rectangle, Format);
-                }
-            }
+            Marker,
+            Image
         }
 
-        private GMapMarker MarkerFromModel(MarkerModel markerModel)
+        private abstract class MapMarkerBase : GMarkerGoogle
         {
-            GMapMarker mapMarker = new GMarkerGoogle(new PointLatLng(), GMarkerGoogleType.blue)
+            private readonly MarkerType markerType;
+
+            public MapMarkerBase(MarkerType markerType) : base(new PointLatLng(), GMarkerGoogleType.blue)
             {
-                Tag = markerModel.Id,
+                this.markerType = markerType;
+            }
 
-                Position = new PointLatLng(markerModel.Lat, markerModel.Lng),
-
-                ToolTipText = markerModel.Text,
-                ToolTipMode = MarkerTooltipMode.Always
-            };
-
-            if (mapMarker.ToolTipText.Length != 0)
+            public MapMarkerBase(MarkerType markerType, Bitmap bitmap) : base(new PointLatLng(), bitmap)
             {
-                mapMarker.ToolTip = new GMapToolTipSquare(mapMarker)
+                this.markerType = markerType;
+            }
+
+            abstract public void NotifyModelUpdate();
+
+            public MarkerType MarkerType { get { return markerType; } }
+        }
+
+        private class MapMarker : MapMarkerBase
+        {
+            public MapMarker(MarkerModel markerModel) : base(MarkerType.Marker)
+            {
+                ToolTipMode = MarkerTooltipMode.Always;
+
+                ToolTip = new GMapToolTipSquare(this)
                 {
-                    Font = gMapControl.Font,
+                    Font = Settings.Default.FontMarker,
 
                     TextPadding = new Size(4, 4),
 
-                    Foreground = new SolidBrush(Color.Red),
-                    Stroke = new Pen(Color.FromArgb(140, Color.Green)),
-                    Fill = new SolidBrush(Color.FromArgb(222, Color.Yellow))
+                    Foreground = new SolidBrush(Color.FromArgb(
+                        Settings.Default.ColorMarkerTextAlpha, Settings.Default.ColorMarkerText)),
+                    Stroke = new Pen(Color.FromArgb(
+                        Settings.Default.ColorMarkerLineAlpha, Settings.Default.ColorMarkerLine)),
+                    Fill = new SolidBrush(Color.FromArgb(
+                        Settings.Default.ColorMarkerFillAlpha, Settings.Default.ColorMarkerFill))
                 };
 
-                mapMarker.ToolTip.Stroke.Width = 1f;
+                ToolTip.Stroke.Width = 1f;
 
-                mapMarker.ToolTip.Format.LineAlignment = StringAlignment.Center;
-                mapMarker.ToolTip.Format.Alignment = StringAlignment.Center;
+                ToolTip.Format.LineAlignment = StringAlignment.Center;
+                ToolTip.Format.Alignment = StringAlignment.Center;
 
-                mapMarker.ToolTip.Offset.X = markerModel.OffsetX;
-                mapMarker.ToolTip.Offset.Y = markerModel.OffsetY;
+                MarkerModel = markerModel;
             }
 
-            return mapMarker;
+            private readonly MarkerModel markerModel = new MarkerModel();
+
+            public MarkerModel MarkerModel
+            {
+                get
+                {
+                    return markerModel;
+                }
+                set
+                {
+                    markerModel.Id = value.Id;
+
+                    markerModel.Text = value.Text;
+
+                    markerModel.Lat = value.Lat;
+                    markerModel.Lng = value.Lng;
+
+                    markerModel.OffsetX = value.OffsetX;
+                    markerModel.OffsetY = value.OffsetY;
+
+                    ToolTipText = markerModel.Text;
+
+                    Position = new PointLatLng(markerModel.Lat, markerModel.Lng);
+
+                    ToolTip.Offset.X = markerModel.OffsetX;
+                    ToolTip.Offset.Y = markerModel.OffsetY;
+                }
+            }
+
+            public override void NotifyModelUpdate()
+            {
+                markerModel.Lat = Position.Lat;
+                markerModel.Lng = Position.Lng;
+
+                markerModel.Text = ToolTipText;
+
+                markerModel.OffsetX = ToolTip.Offset.X;
+                markerModel.OffsetY = ToolTip.Offset.Y;
+            }
         }
 
-        private MarkerModel MarkerToModel(GMapMarker mapMarker)
+        private class MapMarkerImage : MapMarkerBase
         {
-            MarkerModel markerModel = new MarkerModel()
+            public MapMarkerImage(ImageModel imageModel) : base(MarkerType.Image, imageModel.Image)
             {
-                Id = (long)mapMarker.Tag,
-
-                Lat = mapMarker.Position.Lat,
-                Lng = mapMarker.Position.Lng,
-
-                Text = mapMarker.ToolTipText
-            };
-
-            if (mapMarker.ToolTip != null)
-            {
-                markerModel.OffsetX = mapMarker.ToolTip.Offset.X;
-                markerModel.OffsetY = mapMarker.ToolTip.Offset.Y;
-            }
-            else
-            {
-                markerModel.OffsetX = 0;
-                markerModel.OffsetY = 0;
+                ImageModel = imageModel;
             }
 
-            return markerModel;
+            private readonly ImageModel imageModel = new ImageModel();
+
+            public ImageModel ImageModel
+            {
+                get
+                {
+                    return imageModel;
+                }
+                set
+                {
+                    imageModel.Id = value.Id;
+
+                    imageModel.Lat = value.Lat;
+                    imageModel.Lng = value.Lng;
+
+                    imageModel.Name = value.Name;
+
+                    imageModel.Image = value.Image;
+
+                    Position = new PointLatLng(imageModel.Lat, imageModel.Lng);
+                }
+            }
+
+            public override void NotifyModelUpdate()
+            {
+                imageModel.Lat = Position.Lat;
+                imageModel.Lng = Position.Lng;
+            }
         }
 
         private void CreateMarkers()
@@ -436,13 +479,8 @@ namespace TileExplorer
 
             foreach (MarkerModel marker in markers)
             {
-                markersOverlay.Markers.Add(MarkerFromModel(marker));
+                markersOverlay.Markers.Add(new MapMarker(marker));
             }
-        }
-
-        private GMapMarker CreateImage(ImageModel image)
-        {
-            return new GMarkerGoogle(new PointLatLng(image.Lat, image.Lng), image.Image);
         }
 
         private void CreateImages()
@@ -451,45 +489,58 @@ namespace TileExplorer
 
             foreach (ImageModel image in images)
             {
-                imagesOverlay.Markers.Add(CreateImage(image));
+                imagesOverlay.Markers.Add(new MapMarkerImage(image));
             }
         }
 
-        Rectangle FullScreenBounds;
+        private Rectangle savedScreenBounds;
 
-        private void SetFullScreen(bool value)
+        private bool fullScreen;
+
+        private bool FullScreen
         {
-            if (miMainFullScreen.Checked == value) return;
-
-            miMainFullScreen.Checked = value;
-
-            TopMost = value;
-
-            if (value)
+            get
             {
-                FormBorderStyle = FormBorderStyle.None;
-
-                toolStripContainer.TopToolStripPanel.Visible = false;
-                toolStripContainer.BottomToolStripPanel.Visible = false;
-
-                FullScreenBounds = Bounds;
-
-                SetBounds(0, 0, Screen.FromControl(this).Bounds.Width, Screen.FromControl(this).Bounds.Height);
+                return fullScreen;
             }
-            else
+            set
             {
-                FormBorderStyle = FormBorderStyle.Sizable;
+                if (fullScreen == value) return;
 
-                toolStripContainer.TopToolStripPanel.Visible = true;
-                toolStripContainer.BottomToolStripPanel.Visible = true;
+                fullScreen = value;
 
-                Bounds = FullScreenBounds;
+                TopMost = value;
+
+                gMapControl.Visible = false;
+
+                if (value)
+                {
+                    savedScreenBounds = Bounds;
+
+                    FormBorderStyle = FormBorderStyle.None;
+
+                    toolStripContainer.TopToolStripPanel.Visible = false;
+                    toolStripContainer.BottomToolStripPanel.Visible = false;
+
+                    SetBounds(0, 0, Screen.FromControl(this).Bounds.Width, Screen.FromControl(this).Bounds.Height);
+                }
+                else
+                {
+                    FormBorderStyle = FormBorderStyle.Sizable;
+
+                    toolStripContainer.TopToolStripPanel.Visible = true;
+                    toolStripContainer.BottomToolStripPanel.Visible = true;
+
+                    Bounds = savedScreenBounds;
+                }
+
+                gMapControl.Visible = true;
             }
         }
 
         private void MiMainFullScreen_Click(object sender, EventArgs e)
         {
-            SetFullScreen(!miMainFullScreen.Checked);
+            FullScreen = !FullScreen;
         }
 
         private void MiMainAbout_Click(object sender, EventArgs e)
@@ -515,6 +566,8 @@ namespace TileExplorer
 
         private bool MarkerMoving;
 
+        private MapMarkerBase SelectedMarker;
+
         private void GMapControl_MouseClick(object sender, MouseEventArgs e)
         {
             UpdateStatusTileId(gMapControl.FromLocalToLatLng(e.X, e.Y));
@@ -522,13 +575,24 @@ namespace TileExplorer
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    MarkerMoving = false;
-
-                    if (SelectedMarker != null)
+                    if (MarkerMoving)
                     {
-                        MarkerMove(SelectedMarker);
+                        MarkerMoving = false;
 
-                        SelectedMarker = null;
+                        if (SelectedMarker != null)
+                        {
+                            switch (SelectedMarker.MarkerType)
+                            {
+                                case MarkerType.Marker:
+                                    MarkerMove((MapMarker)SelectedMarker);
+                                    break;
+                                case MarkerType.Image:
+                                    MarkerImageMove((MapMarkerImage)SelectedMarker);
+                                    break;
+                            }
+
+                            SelectedMarker = null;
+                        }
                     }
 
                     break;
@@ -549,7 +613,38 @@ namespace TileExplorer
             imagesOverlay.IsVisibile = miMainImages.Checked;
         }
 
-        GMapMarker SelectedMarker;
+        private bool ShowFrmMarker(MarkerModel markerModel)
+        {
+            bool Result;
+
+            using (var frmMarker = new FrmMarker())
+            {
+                frmMarker.MarkerText = markerModel.Text;
+
+                frmMarker.MarkerLat = markerModel.Lat;
+                frmMarker.MarkerLng = markerModel.Lng;
+
+                frmMarker.OffsetX = markerModel.OffsetX;
+                frmMarker.OffsetY = markerModel.OffsetY;
+
+                Result = frmMarker.ShowDialog(this) == DialogResult.OK;
+
+                if (Result)
+                {
+                    markerModel.Text = frmMarker.MarkerText;
+
+                    markerModel.Lat = frmMarker.MarkerLat;
+                    markerModel.Lng = frmMarker.MarkerLng;
+
+                    markerModel.OffsetX = frmMarker.OffsetX;
+                    markerModel.OffsetY = frmMarker.OffsetY;
+
+                    DB.SaveMarker(markerModel);
+                }
+            }
+
+            return Result;
+        }
 
         private void MarkerAdd(PointLatLng point)
         {
@@ -557,21 +652,21 @@ namespace TileExplorer
             {
                 Lat = point.Lat,
                 Lng = point.Lng,
+
+#if DEBUG
+                Text = DateTime.Now.ToString(),
+#endif
             };
 
-            GMapMarker markerTemp = MarkerFromModel(markerModel);
+            GMapMarker markerTemp = new GMarkerGoogle(point, GMarkerGoogleType.red);
 
             markersOverlay.Markers.Add(markerTemp);
 
-            if (Msg.Question("add marker?"))
+            if (ShowFrmMarker(markerModel))
             {
-                markerModel.Text = DateTime.Now.ToString();
-
-                DB.SaveMarker(markerModel);
-
                 markersOverlay.Markers.Remove(markerTemp);
 
-                markersOverlay.Markers.Add(MarkerFromModel(markerModel));
+                markersOverlay.Markers.Add(new MapMarker(markerModel));
             }
             else
             {
@@ -579,23 +674,45 @@ namespace TileExplorer
             }
         }
 
-        private void MarkerRemove(GMapMarker marker)
+        private void MarkerChange(MapMarker marker)
         {
-            DB.DeleteMarker(MarkerToModel(marker));
+            MarkerModel markerModel = marker.MarkerModel;
+
+            if (ShowFrmMarker(markerModel))
+            {
+                marker.MarkerModel = markerModel;
+            }
+        }
+
+        private void MarkerRemove(MapMarker marker)
+        {
+            DB.DeleteMarker(marker.MarkerModel);
 
             markersOverlay.Markers.Remove(marker);
         }
-
-        private void MarkerMove(GMapMarker marker)
+        
+        private void ImageRemove(MapMarkerImage image)
         {
-            DB.SaveMarker(MarkerToModel(marker));
+            DB.DeleteImage(image.ImageModel);
+
+            imagesOverlay.Markers.Remove(image);
+        }
+
+        private void MarkerMove(MapMarker marker)
+        {
+            DB.SaveMarker(marker.MarkerModel);
+        }
+
+        private void MarkerImageMove(MapMarkerImage image)
+        {
+            DB.SaveImage(image.ImageModel);
         }
 
         private void GMapControl_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
             MarkerMoving = false;
 
-            SelectedMarker = item;
+            SelectedMarker = (MapMarkerBase)item;
 
             if (e.Button == MouseButtons.Right)
             {
@@ -615,20 +732,59 @@ namespace TileExplorer
             MarkerAdd(gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y));
         }
 
-        private void MiMarkerDelete_Click(object sender, EventArgs e)
+        private void MiMarkerChange_Click(object sender, EventArgs e)
         {
-            if (SelectedMarker == null)
-            {
-                return;
-            }
+            if (SelectedMarker == null) return;
 
-            if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, SelectedMarker.ToolTipText)))
+            if (SelectedMarker.MarkerType == MarkerType.Marker)
             {
-                MarkerRemove(SelectedMarker);
+                MarkerChange((MapMarker)SelectedMarker);
             }
         }
 
-        PointLatLng SelectedMarkerPosistion;
+        private void MiMarkerDelete_Click(object sender, EventArgs e)
+        {
+            if (SelectedMarker == null) return;
+
+            string Question = null;
+            string Name = null;
+
+            switch (SelectedMarker.MarkerType)
+            {
+                case MarkerType.Marker:
+                    Question = Resources.QuestionMarkerDelete;
+                    Name = ((MapMarker)SelectedMarker).MarkerModel.Text;
+                    
+                    break;
+                case MarkerType.Image:
+                    Question = Resources.QuestionImageDelete;
+                    Name = ((MapMarkerImage)SelectedMarker).ImageModel.Name;
+
+                    break;
+            }
+            
+            if (Name == "")
+            {
+                Name = SelectedMarker.Position.Lat.ToString() + ":" + SelectedMarker.Position.Lng.ToString(); 
+            }
+
+            if (Msg.Question(string.Format(Question, Name)))
+            {
+                switch (SelectedMarker.MarkerType)
+                {
+                    case MarkerType.Marker:
+                        MarkerRemove((MapMarker)SelectedMarker);
+
+                        break;
+                    case MarkerType.Image:
+                        ImageRemove((MapMarkerImage)SelectedMarker);
+
+                        break;
+                }
+            }
+        }
+
+        PointLatLng SelectedMarkerPosition;
 
         private void MiMarkerMove_Click(object sender, EventArgs e)
         {
@@ -636,7 +792,7 @@ namespace TileExplorer
 
             MarkerMoving = true;
 
-            SelectedMarkerPosistion = SelectedMarker.Position;
+            SelectedMarkerPosition = SelectedMarker.Position;
 
             GPoint gPoint = gMapControl.FromLatLngToLocal(SelectedMarker.Position);
 
@@ -650,6 +806,7 @@ namespace TileExplorer
             if (SelectedMarker == null) return;
 
             SelectedMarker.Position = gMapControl.FromLocalToLatLng(e.X, e.Y);
+            SelectedMarker.NotifyModelUpdate();
         }
 
         private void Main_KeyDown(object sender, KeyEventArgs e)
@@ -660,17 +817,17 @@ namespace TileExplorer
                 {
                     if (SelectedMarker != null)
                     {
-                        SelectedMarker.Position = SelectedMarkerPosistion;
+                        SelectedMarker.Position = SelectedMarkerPosition;
+                        SelectedMarker.NotifyModelUpdate();
                     }
 
                     MarkerMoving = false;
-
                 }
                 else
                 {
                     if (miMainFullScreen.Checked)
                     {
-                        SetFullScreen(false);
+                        FullScreen = false;
                     }
                 }
             }

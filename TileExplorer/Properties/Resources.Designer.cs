@@ -61,6 +61,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Удалить изображение «{0}»?.
+        /// </summary>
+        internal static string QuestionImageDelete {
+            get {
+                return ResourceManager.GetString("QuestionImageDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Удалить подпись «{0}»?.
         /// </summary>
         internal static string QuestionMarkerDelete {

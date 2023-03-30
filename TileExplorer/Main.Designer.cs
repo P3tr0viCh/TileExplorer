@@ -56,6 +56,7 @@
             this.miMarkerDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.cmMap = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miMapMarkerAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMarkerChange = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -276,22 +277,23 @@
             // cmMarker
             // 
             this.cmMarker.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miMarkerChange,
             this.miMarkerMove,
             this.miMarkerDelete});
             this.cmMarker.Name = "cmMarker";
-            this.cmMarker.Size = new System.Drawing.Size(147, 48);
+            this.cmMarker.Size = new System.Drawing.Size(181, 92);
             // 
             // miMarkerMove
             // 
             this.miMarkerMove.Name = "miMarkerMove";
-            this.miMarkerMove.Size = new System.Drawing.Size(146, 22);
+            this.miMarkerMove.Size = new System.Drawing.Size(180, 22);
             this.miMarkerMove.Text = "Переместить";
             this.miMarkerMove.Click += new System.EventHandler(this.MiMarkerMove_Click);
             // 
             // miMarkerDelete
             // 
             this.miMarkerDelete.Name = "miMarkerDelete";
-            this.miMarkerDelete.Size = new System.Drawing.Size(146, 22);
+            this.miMarkerDelete.Size = new System.Drawing.Size(180, 22);
             this.miMarkerDelete.Text = "Удалить";
             this.miMarkerDelete.Click += new System.EventHandler(this.MiMarkerDelete_Click);
             // 
@@ -309,6 +311,13 @@
             this.miMapMarkerAdd.Size = new System.Drawing.Size(184, 22);
             this.miMapMarkerAdd.Text = "Добавить подпись...";
             this.miMapMarkerAdd.Click += new System.EventHandler(this.MiMapMarkerAdd_Click);
+            // 
+            // miMarkerChange
+            // 
+            this.miMarkerChange.Name = "miMarkerChange";
+            this.miMarkerChange.Size = new System.Drawing.Size(180, 22);
+            this.miMarkerChange.Text = "Изменить...";
+            this.miMarkerChange.Click += new System.EventHandler(this.MiMarkerChange_Click);
             // 
             // Main
             // 
@@ -371,6 +380,7 @@
         private System.Windows.Forms.ContextMenuStrip cmMap;
         private System.Windows.Forms.ToolStripMenuItem miMapMarkerAdd;
         private System.Windows.Forms.ToolStripMenuItem miMarkerMove;
+        private System.Windows.Forms.ToolStripMenuItem miMarkerChange;
     }
 }
 

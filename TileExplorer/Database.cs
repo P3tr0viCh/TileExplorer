@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TileExplorer
 {
@@ -29,7 +30,7 @@ namespace TileExplorer
 
         public class ImageModel
         {
-            public int Id;
+            public long Id;
 
             public double Lat;
             public double Lng;
@@ -72,22 +73,24 @@ namespace TileExplorer
                 SQLiteConnection.CreateFile(FileName);
             }
 
-            string commandText;
-            SQLiteCommand command;
-
             Connection.Open();
 
-            commandText = "CREATE TABLE IF NOT EXISTS markers (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lat REAL NOT NULL, lng REAL NOT NULL, text TEXT, offset_x INTEGER, offset_y INTEGER)";
-            command = new SQLiteCommand(commandText, Connection);
-            command.ExecuteNonQuery();
+            using (var command = new SQLiteCommand(Connection))
+            {
+                string commandText;
 
-            commandText = "CREATE TABLE IF NOT EXISTS images (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lat REAL NOT NULL, lng REAL NOT NULL, name TEXT, image BLOB NOT NULL)";
-            command = new SQLiteCommand(commandText, Connection);
-            command.ExecuteNonQuery();
+                commandText = "CREATE TABLE IF NOT EXISTS markers (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lat REAL NOT NULL, lng REAL NOT NULL, text TEXT, offset_x INTEGER, offset_y INTEGER)";
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
 
-            commandText = "CREATE TABLE IF NOT EXISTS tiles (x INTEGER NOT NULL, y INTEGER NOT NULL, lat REAL NOT NULL, lng REAL NOT NULL, status INTEGER DEFAULT 0, PRIMARY KEY(x, y))";
-            command = new SQLiteCommand(commandText, Connection);
-            command.ExecuteNonQuery();
+                commandText = "CREATE TABLE IF NOT EXISTS images (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lat REAL NOT NULL, lng REAL NOT NULL, name TEXT, image BLOB NOT NULL)";
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+
+                commandText = "CREATE TABLE IF NOT EXISTS tiles (x INTEGER NOT NULL, y INTEGER NOT NULL, lat REAL NOT NULL, lng REAL NOT NULL, status INTEGER DEFAULT 0, PRIMARY KEY(x, y))";
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+            }
 
             Connection.Close();
         }
@@ -160,11 +163,11 @@ namespace TileExplorer
                 command.Parameters.AddWithValue("offset_y", marker.OffsetY);
 
                 command.ExecuteNonQuery();
-            }
 
-            if (marker.Id == 0)
-            {
-                marker.Id = Connection.LastInsertRowId;
+                if (marker.Id == 0)
+                {
+                    marker.Id = Connection.LastInsertRowId;
+                }
             }
 
             Connection.Close();
@@ -179,6 +182,70 @@ namespace TileExplorer
             using (var command = new SQLiteCommand(commandText, Connection))
             {
                 command.Parameters.AddWithValue("id", marker.Id);
+
+                command.ExecuteNonQuery();
+            }
+
+            Connection.Close();
+        }
+
+        public void SaveImage(ImageModel image)
+        {
+            Connection.Open();
+
+            string commandText;
+
+            if (image.Id == 0)
+            {
+                commandText = "INSERT INTO images(lat, lng, name, image)" +
+                    " VALUES (:lat, :lng, :name, :image);";
+            }
+            else
+            {
+                commandText = "INSERT OR REPLACE INTO images(id, lat, lng, name, image)" +
+                    " VALUES (:id, :lat, :lng, :name, :image);";
+            }
+
+            using (var command = new SQLiteCommand(commandText, Connection))
+            {
+                if (image.Id != 0)
+                {
+                    command.Parameters.AddWithValue("id", image.Id);
+                }
+
+                command.Parameters.AddWithValue("lat", image.Lat);
+                command.Parameters.AddWithValue("lng", image.Lng);
+
+                command.Parameters.AddWithValue("name", image.Name);
+
+                MemoryStream ms = new MemoryStream();
+
+                image.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+
+                byte[] data = ms.ToArray();
+
+                command.Parameters.AddWithValue("image", data);
+
+                command.ExecuteNonQuery();
+
+                if (image.Id == 0)
+                {
+                    image.Id = Connection.LastInsertRowId;
+                }
+            }
+
+            Connection.Close();
+        }
+
+        public void DeleteImage(ImageModel image)
+        {
+            Connection.Open();
+
+            string commandText = "DELETE FROM images WHERE id = :id;";
+
+            using (var command = new SQLiteCommand(commandText, Connection))
+            {
+                command.Parameters.AddWithValue("id", image.Id);
 
                 command.ExecuteNonQuery();
             }
