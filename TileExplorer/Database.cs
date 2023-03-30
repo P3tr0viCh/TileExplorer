@@ -87,7 +87,7 @@ namespace TileExplorer
                 command.CommandText = commandText;
                 command.ExecuteNonQuery();
 
-                commandText = "CREATE TABLE IF NOT EXISTS tiles (x INTEGER NOT NULL, y INTEGER NOT NULL, lat REAL NOT NULL, lng REAL NOT NULL, status INTEGER DEFAULT 0, PRIMARY KEY(x, y))";
+                commandText = "CREATE TABLE IF NOT EXISTS tiles (x INTEGER NOT NULL, y INTEGER NOT NULL, status INTEGER DEFAULT 0, PRIMARY KEY(x, y))";
                 command.CommandText = commandText;
                 command.ExecuteNonQuery();
             }
