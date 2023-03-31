@@ -1,10 +1,13 @@
-﻿using GMap.NET.Internals;
+﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace TileExplorer
@@ -15,17 +18,19 @@ namespace TileExplorer
 
         private readonly SQLiteConnection Connection;
 
+        [Table("markers")]
         public class MarkerModel
         {
-            public long Id;
+            [Key]
+            public int Id { get; set; }
 
-            public double Lat;
-            public double Lng;
+            public double Lat { get; set; }
+            public double Lng { get; set; }
 
-            public string Text;
+            public string Text { get; set; }
 
-            public int OffsetX;
-            public int OffsetY;
+            public int OffsetX { get; set; }
+            public int OffsetY { get; set; }
         }
 
         public class ImageModel
@@ -49,12 +54,15 @@ namespace TileExplorer
             MaxSquare = 4
         }
 
+        [Table("tiles")]
         public class TileModel
         {
-            public int X;
-            public int Y;
+            [Key]
+            public int X { get; set; }
+            [Key]
+            public int Y { get; set; }
 
-            public TileStatus Status;
+            public TileStatus Status { get; set; }
         }
 
         public Database(string fileName)
@@ -71,122 +79,38 @@ namespace TileExplorer
             if (!File.Exists(FileName))
             {
                 SQLiteConnection.CreateFile(FileName);
+
+                Connection.Execute("CREATE TABLE IF NOT EXISTS markers (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "lat REAL NOT NULL, lng REAL NOT NULL, text TEXT, " +
+                    "offsetx INTEGER, offsety INTEGER);");
+                Connection.Execute("CREATE TABLE IF NOT EXISTS images (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "lat REAL NOT NULL, lng REAL NOT NULL, name TEXT, image BLOB NOT NULL);");
+                Connection.Execute("CREATE TABLE IF NOT EXISTS tiles (" +
+                    "x INTEGER NOT NULL, y INTEGER NOT NULL, status INTEGER DEFAULT 0, PRIMARY KEY(x, y));");
             }
-
-            Connection.Open();
-
-            using (var command = new SQLiteCommand(Connection))
-            {
-                string commandText;
-
-                commandText = "CREATE TABLE IF NOT EXISTS markers (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lat REAL NOT NULL, lng REAL NOT NULL, text TEXT, offset_x INTEGER, offset_y INTEGER)";
-                command.CommandText = commandText;
-                command.ExecuteNonQuery();
-
-                commandText = "CREATE TABLE IF NOT EXISTS images (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, lat REAL NOT NULL, lng REAL NOT NULL, name TEXT, image BLOB NOT NULL)";
-                command.CommandText = commandText;
-                command.ExecuteNonQuery();
-
-                commandText = "CREATE TABLE IF NOT EXISTS tiles (x INTEGER NOT NULL, y INTEGER NOT NULL, status INTEGER DEFAULT 0, PRIMARY KEY(x, y))";
-                command.CommandText = commandText;
-                command.ExecuteNonQuery();
-            }
-
-            Connection.Close();
         }
 
         public List<MarkerModel> LoadMarkers()
         {
-            var list = new List<MarkerModel>();
-
-            Connection.Open();
-
-            string commandText = "SELECT * FROM markers;";
-
-            using (var adapter = new SQLiteDataAdapter(commandText, Connection))
-            using (var table = new DataTable())
-            {
-                adapter.Fill(table);
-
-                foreach (DataRow row in table.Rows)
-                {
-                    list.Add(new MarkerModel
-                    {
-                        Id = Convert.ToInt32(row["id"]),
-
-                        Lat = Convert.ToDouble(row["lat"]),
-                        Lng = Convert.ToDouble(row["lng"]),
-
-                        Text = row["text"].GetType() != typeof(DBNull) ? Convert.ToString(row["text"]) : "",
-
-                        OffsetX = row["offset_x"].GetType() != typeof(DBNull) ? Convert.ToInt32(row["offset_x"]) : 0,
-                        OffsetY = row["offset_y"].GetType() != typeof(DBNull) ? Convert.ToInt32(row["offset_y"]) : 0
-                    });
-                }
-            }
-
-            Connection.Close();
-
-            return list;
+            return Connection.GetAll<MarkerModel>().ToList();
         }
 
         public void SaveMarker(MarkerModel marker)
         {
-            Connection.Open();
-
-            string commandText;
-
             if (marker.Id == 0)
             {
-                commandText = "INSERT INTO markers(lat, lng, text, offset_x, offset_y)" +
-                    " VALUES (:lat, :lng, :text, :offset_x, :offset_y);";
-            }
-            else
+                Connection.Insert(marker);
+            } else
             {
-                commandText = "INSERT OR REPLACE INTO markers(id, lat, lng, text, offset_x, offset_y)" +
-                    " VALUES (:id, :lat, :lng, :text, :offset_x, :offset_y);";
+                Connection.Update<MarkerModel>(marker);
             }
-
-            using (var command = new SQLiteCommand(commandText, Connection))
-            {
-                if (marker.Id != 0)
-                {
-                    command.Parameters.AddWithValue("id", marker.Id);
-                }
-
-                command.Parameters.AddWithValue("lat", marker.Lat);
-                command.Parameters.AddWithValue("lng", marker.Lng);
-
-                command.Parameters.AddWithValue("text", marker.Text);
-
-                command.Parameters.AddWithValue("offset_x", marker.OffsetX);
-                command.Parameters.AddWithValue("offset_y", marker.OffsetY);
-
-                command.ExecuteNonQuery();
-
-                if (marker.Id == 0)
-                {
-                    marker.Id = Connection.LastInsertRowId;
-                }
-            }
-
-            Connection.Close();
         }
 
         public void DeleteMarker(MarkerModel marker)
         {
-            Connection.Open();
-
-            string commandText = "DELETE FROM markers WHERE id = :id;";
-
-            using (var command = new SQLiteCommand(commandText, Connection))
-            {
-                command.Parameters.AddWithValue("id", marker.Id);
-
-                command.ExecuteNonQuery();
-            }
-
-            Connection.Close();
+            Connection.Delete(marker);
         }
 
         public void SaveImage(ImageModel image)
@@ -255,6 +179,7 @@ namespace TileExplorer
 
         public List<ImageModel> LoadImages()
         {
+            //return Connection.Query<ImageModel>("SELECT * FROM images;").ToList();
             var list = new List<ImageModel>();
 
             Connection.Open();
@@ -321,31 +246,7 @@ namespace TileExplorer
 
         public List<TileModel> LoadTiles()
         {
-            var tiles = new List<TileModel>();
-
-            Connection.Open();
-            string commandText = "SELECT x, y, status FROM tiles WHERE STATUS > 0 ORDER BY x, y;";
-
-            using (var adapter = new SQLiteDataAdapter(commandText, Connection))
-            using (var table = new DataTable())
-            {
-                adapter.Fill(table);
-
-                foreach (DataRow row in table.Rows)
-                {
-                    tiles.Add(new TileModel
-                    {
-                        X = Convert.ToInt32(row["x"]),
-                        Y = Convert.ToInt32(row["y"]),
-
-                        Status = (TileStatus)Convert.ToInt32(table.Rows[0]["status"])
-                    });
-                }
-            }
-
-            Connection.Close();
-
-            return tiles;
+            return Connection.Query<TileModel>("SELECT * FROM tiles WHERE STATUS > 0 ORDER BY x, y;").ToList();
         }
 
         public void SaveTile(TileModel tile)
@@ -373,22 +274,10 @@ namespace TileExplorer
 
             using (var transaction = Connection.BeginTransaction())
             {
-                string commandText = "INSERT OR REPLACE INTO tiles(x, y, status) VALUES (:x, :y, :status);";
+                Connection.Execute("INSERT OR REPLACE INTO tiles(x, y, status) VALUES (:x, :y, :status);",
+                    tiles, transaction);
 
-                using (var command = new SQLiteCommand(commandText, Connection))
-                {
-                    foreach (TileModel tile in tiles)
-                    {
-                        command.Parameters.AddWithValue("x", tile.X);
-                        command.Parameters.AddWithValue("y", tile.Y);
-
-                        command.Parameters.AddWithValue("status", (int)tile.Status);
-
-                        command.ExecuteNonQuery();
-                    }
-
-                    transaction.Commit();
-                }
+                transaction.Commit();
             }
 
             Connection.Close();

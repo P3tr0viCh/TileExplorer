@@ -69,7 +69,7 @@
       <Value Profile="(Default)">80</Value>
     </Setting>
     <Setting Name="FontMarker" Type="System.Drawing.Font" Scope="User">
-      <Value Profile="(Default)">Courier New, 10pt</Value>
+      <Value Profile="(Default)">Arial, 10pt</Value>
     </Setting>
   </Settings>
 </SettingsFile>

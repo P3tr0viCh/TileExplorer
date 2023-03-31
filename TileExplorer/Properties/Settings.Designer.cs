@@ -289,7 +289,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Courier New, 10pt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial, 10pt")]
         public global::System.Drawing.Font FontMarker {
             get {
                 return ((global::System.Drawing.Font)(this["FontMarker"]));
