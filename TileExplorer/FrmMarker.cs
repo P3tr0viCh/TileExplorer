@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using static TileExplorer.Database;
 
 namespace TileExplorer
 {
@@ -9,64 +10,39 @@ namespace TileExplorer
             InitializeComponent();
         }
 
-        public string MarkerText
+        public static bool Show(IWin32Window owner, MarkerModel markerModel)
         {
-            get
-            {
-                return tbText.Text;
-            }
-            set
-            {
-                tbText.Text = value;
-            }
-        }
+            bool Result;
 
-        public double MarkerLat
-        {
-            get
+            using (var frmMarker = new FrmMarker())
             {
-                return (double)udPointLat.Value;
-            }
-            set
-            {
-                udPointLat.Value = (decimal)value;
-            }
-        }
+                frmMarker.tbText.Text = markerModel.Text;
 
-        public double MarkerLng
-        {
-            get
-            {
-                return (double)udPointLng.Value;
-            }
-            set
-            {
-                udPointLng.Value = (decimal)value;
-            }
-        }
+                frmMarker.udPointLat.Value = (decimal)markerModel.Lat;
+                frmMarker.udPointLng.Value = (decimal)markerModel.Lng;
 
-        public int OffsetX
-        {
-            get
-            {
-                return (int)udOffsetX.Value;
-            }
-            set
-            {
-                udOffsetX.Value = value;
-            }
-        }
+                frmMarker.udOffsetX.Value = markerModel.OffsetX;
+                frmMarker.udOffsetY.Value = markerModel.OffsetY;
 
-        public int OffsetY
-        {
-            get
-            {
-                return (int)udOffsetY.Value;
+                frmMarker.cboxTextVisible.Checked = markerModel.IsTextVisible;
+
+                Result = frmMarker.ShowDialog(owner) == DialogResult.OK;
+
+                if (Result)
+                {
+                    markerModel.Text = frmMarker.tbText.Text;
+
+                    markerModel.Lat = (double)frmMarker.udPointLat.Value;
+                    markerModel.Lng = (double)frmMarker.udPointLng.Value;
+
+                    markerModel.OffsetX = (int)frmMarker.udOffsetX.Value;
+                    markerModel.OffsetY = (int)frmMarker.udOffsetY.Value;
+
+                    markerModel.IsTextVisible = frmMarker.cboxTextVisible.Checked;
+                }
             }
-            set
-            {
-                udOffsetY.Value = value;
-            }
+
+            return Result;
         }
     }
 }

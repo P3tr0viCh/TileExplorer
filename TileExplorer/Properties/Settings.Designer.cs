@@ -50,18 +50,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ImagesVisible {
-            get {
-                return ((bool)(this["ImagesVisible"]));
-            }
-            set {
-                this["ImagesVisible"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool MarkersVisible {
             get {
                 return ((bool)(this["MarkersVisible"]));
@@ -74,24 +62,24 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("LightGray")]
-        public global::System.Drawing.Color ColorMarkerFill {
+        public global::System.Drawing.Color ColorMarkerTextFill {
             get {
-                return ((global::System.Drawing.Color)(this["ColorMarkerFill"]));
+                return ((global::System.Drawing.Color)(this["ColorMarkerTextFill"]));
             }
             set {
-                this["ColorMarkerFill"] = value;
+                this["ColorMarkerTextFill"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("220")]
-        public byte ColorMarkerFillAlpha {
+        public byte ColorMarkerTextFillAlpha {
             get {
-                return ((byte)(this["ColorMarkerFillAlpha"]));
+                return ((byte)(this["ColorMarkerTextFillAlpha"]));
             }
             set {
-                this["ColorMarkerFillAlpha"] = value;
+                this["ColorMarkerTextFillAlpha"] = value;
             }
         }
         
@@ -296,6 +284,30 @@ namespace TileExplorer.Properties {
             }
             set {
                 this["FontMarker"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Green")]
+        public global::System.Drawing.Color ColorMarkerFill {
+            get {
+                return ((global::System.Drawing.Color)(this["ColorMarkerFill"]));
+            }
+            set {
+                this["ColorMarkerFill"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("220")]
+        public byte ColorMarkerFillAlpha {
+            get {
+                return ((byte)(this["ColorMarkerFillAlpha"]));
+            }
+            set {
+                this["ColorMarkerFillAlpha"] = value;
             }
         }
     }

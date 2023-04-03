@@ -8,16 +8,13 @@
     <Setting Name="MainMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="ImagesVisible" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="MarkersVisible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ColorMarkerFill" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="ColorMarkerTextFill" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">LightGray</Value>
     </Setting>
-    <Setting Name="ColorMarkerFillAlpha" Type="System.Byte" Scope="User">
+    <Setting Name="ColorMarkerTextFillAlpha" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">220</Value>
     </Setting>
     <Setting Name="ColorMarkerLine" Type="System.Drawing.Color" Scope="User">
@@ -70,6 +67,12 @@
     </Setting>
     <Setting Name="FontMarker" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Arial, 10pt</Value>
+    </Setting>
+    <Setting Name="ColorMarkerFill" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Green</Value>
+    </Setting>
+    <Setting Name="ColorMarkerFillAlpha" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">220</Value>
     </Setting>
   </Settings>
 </SettingsFile>

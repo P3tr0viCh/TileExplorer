@@ -61,20 +61,20 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Удалить изображение «{0}»?.
-        /// </summary>
-        internal static string QuestionImageDelete {
-            get {
-                return ResourceManager.GetString("QuestionImageDelete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Удалить подпись «{0}»?.
+        ///   Looks up a localized string similar to Удалить маркер «{0}»?.
         /// </summary>
         internal static string QuestionMarkerDelete {
             get {
                 return ResourceManager.GetString("QuestionMarkerDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Курсор: {0:F6}, {1:F6}.
+        /// </summary>
+        internal static string StatusMousePosition {
+            get {
+                return ResourceManager.GetString("StatusMousePosition", resourceCulture);
             }
         }
         
@@ -88,7 +88,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Плитка: {0} x {1}.
+        ///   Looks up a localized string similar to Плитка: {0}, {1}.
         /// </summary>
         internal static string StatusTileId {
             get {
@@ -102,6 +102,15 @@ namespace TileExplorer.Properties {
         internal static string StatusTilesMaxCluster {
             get {
                 return ResourceManager.GetString("StatusTilesMaxCluster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Квадрат: {0}.
+        /// </summary>
+        internal static string StatusTilesMaxSquare {
+            get {
+                return ResourceManager.GetString("StatusTilesMaxSquare", resourceCulture);
             }
         }
         

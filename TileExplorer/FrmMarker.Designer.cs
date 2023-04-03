@@ -40,6 +40,7 @@
             this.udOffsetX = new System.Windows.Forms.NumericUpDown();
             this.lblOffsetY = new System.Windows.Forms.Label();
             this.lblOffsetX = new System.Windows.Forms.Label();
+            this.cboxTextVisible = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.udPointLat)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udPointLng)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udOffsetY)).BeginInit();
@@ -49,20 +50,20 @@
             // btnOk
             // 
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOk.Location = new System.Drawing.Point(136, 192);
+            this.btnOk.Location = new System.Drawing.Point(136, 224);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
-            this.btnOk.TabIndex = 10;
+            this.btnOk.TabIndex = 11;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(224, 192);
+            this.btnCancel.Location = new System.Drawing.Point(224, 224);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
-            this.btnCancel.TabIndex = 11;
+            this.btnCancel.TabIndex = 12;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -178,11 +179,24 @@
             this.lblOffsetX.TabIndex = 6;
             this.lblOffsetX.Text = "Смещение текста X";
             // 
+            // cboxTextVisible
+            // 
+            this.cboxTextVisible.AutoSize = true;
+            this.cboxTextVisible.Checked = true;
+            this.cboxTextVisible.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cboxTextVisible.Location = new System.Drawing.Point(8, 184);
+            this.cboxTextVisible.Name = "cboxTextVisible";
+            this.cboxTextVisible.Size = new System.Drawing.Size(139, 23);
+            this.cboxTextVisible.TabIndex = 10;
+            this.cboxTextVisible.Text = "Показывать текст";
+            this.cboxTextVisible.UseVisualStyleBackColor = true;
+            // 
             // FrmMarker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(312, 233);
+            this.ClientSize = new System.Drawing.Size(312, 265);
+            this.Controls.Add(this.cboxTextVisible);
             this.Controls.Add(this.udOffsetY);
             this.Controls.Add(this.udOffsetX);
             this.Controls.Add(this.lblOffsetY);
@@ -200,7 +214,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmMarker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Подпись";
+            this.Text = "Маркер";
             ((System.ComponentModel.ISupportInitialize)(this.udPointLat)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udPointLng)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udOffsetY)).EndInit();
@@ -224,5 +238,6 @@
         private System.Windows.Forms.NumericUpDown udOffsetX;
         private System.Windows.Forms.Label lblOffsetY;
         private System.Windows.Forms.Label lblOffsetX;
+        private System.Windows.Forms.CheckBox cboxTextVisible;
     }
 }
