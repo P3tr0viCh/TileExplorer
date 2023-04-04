@@ -3,15 +3,25 @@
 using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using Newtonsoft.Json.Linq;
 using P3tr0viCh;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
 using TileExplorer.Properties;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static TileExplorer.Database;
 using static TileExplorer.StatusStripPresenter;
 
@@ -19,10 +29,11 @@ namespace TileExplorer
 {
     public partial class Main : Form, IStatusStripView
     {
-        readonly Database DB;
+        private readonly Database DB;
 
-        readonly GMapOverlay tilesOverlay;
-        readonly GMapOverlay markersOverlay;
+        private readonly GMapOverlay tilesOverlay;
+        private readonly GMapOverlay tracksOverlay;
+        private readonly GMapOverlay markersOverlay;
 
         private readonly StatusStripPresenter statusStripPresenter;
 
@@ -41,6 +52,8 @@ namespace TileExplorer
             DB = new Database(Path.ChangeExtension(Application.ExecutablePath, ".sqlite"));
 
             tilesOverlay = new GMapOverlay("tiles");
+
+            tracksOverlay = new GMapOverlay("tracks");
 
             markersOverlay = new GMapOverlay("markers");
 
@@ -65,9 +78,13 @@ namespace TileExplorer
 
             slEmpty.Text = string.Empty;
 
-            CreateTiles();
+#if DEBUG
+            DummyTiles();
 
-            CreateMarkers();
+            DummyTracks();
+#endif           
+
+            DataUpdate();
 
             miMainMarkers.Checked = Settings.Default.MarkersVisible;
 
@@ -116,11 +133,11 @@ namespace TileExplorer
             gMapControl.DragButton = MouseButtons.Left;
 
             gMapControl.Overlays.Add(tilesOverlay);
+            gMapControl.Overlays.Add(tracksOverlay);
             gMapControl.Overlays.Add(markersOverlay);
 
-            GMapControl_OnMapZoomChanged();
-            GMapControl_OnPositionChanged(gMapControl.Position);
-
+            statusStripPresenter.Zoom = gMapControl.Zoom;
+            statusStripPresenter.Position = gMapControl.Position;
             statusStripPresenter.TileId = gMapControl.Position;
             statusStripPresenter.MousePosition = gMapControl.Position;
         }
@@ -178,64 +195,8 @@ namespace TileExplorer
             }
         }
 
-        private GMapPolygon TileFromModel(TileModel tile)
-        {
-            Color colorFill;
-            Color colorStroke;
-
-            switch (tile.Status)
-            {
-                case TileStatus.Visited:
-                    colorFill = Color.FromArgb(
-                        Settings.Default.ColorTileVisitedAlpha, Settings.Default.ColorTileVisited);
-                    colorStroke = Color.FromArgb(
-                        Settings.Default.ColorTileVisitedLineAlpha, Settings.Default.ColorTileVisited);
-                    break;
-                case TileStatus.Cluster:
-                    colorFill = Color.FromArgb(
-                        Settings.Default.ColorTileClusterAlpha, Settings.Default.ColorTileCluster);
-                    colorStroke = Color.FromArgb(
-                        Settings.Default.ColorTileClusterLineAlpha, Settings.Default.ColorTileCluster);
-                    break;
-                case TileStatus.MaxCluster:
-                    colorFill = Color.FromArgb(
-                        Settings.Default.ColorTileMaxClusterAlpha, Settings.Default.ColorTileMaxCluster);
-                    colorStroke = Color.FromArgb(
-                        Settings.Default.ColorTileMaxClusterLineAlpha, Settings.Default.ColorTileMaxCluster);
-                    break;
-                case TileStatus.MaxSquare:
-                    colorFill = Color.FromArgb(
-                        Settings.Default.ColorTileMaxSquareAlpha, Settings.Default.ColorTileMaxSquare);
-                    colorStroke = Color.FromArgb(
-                        Settings.Default.ColorTileMaxSquareLineAlpha, Settings.Default.ColorTileMaxSquare);
-                    break;
-                default:
-                    colorFill = Color.Empty;
-                    colorStroke = Color.FromArgb(100, Color.Gray);
-                    break;
-            }
-
-            double lat1 = Osm.TileYToLat(tile.Y, Const.TILE_ZOOM);
-            double lng1 = Osm.TileXToLng(tile.X, Const.TILE_ZOOM);
-
-            double lat2 = Osm.TileYToLat(tile.Y + 1, Const.TILE_ZOOM);
-            double lng2 = Osm.TileXToLng(tile.X + 1, Const.TILE_ZOOM);
-
-            return new GMapPolygon(new List<PointLatLng>
-            {
-                new PointLatLng(lat1, lng1),
-                new PointLatLng(lat1, lng2),
-                new PointLatLng(lat2, lng2),
-                new PointLatLng(lat2, lng1)
-            }, "")
-            {
-                Fill = new SolidBrush(colorFill),
-                Stroke = new Pen(colorStroke, 1)
-            };
-        }
-
 #if DEBUG
-        private List<TileModel> DummyTiles()
+        private void DummyTiles()
         {
             Random rand = new Random();
 
@@ -251,7 +212,6 @@ namespace TileExplorer
                         {
                             X = x,
                             Y = y,
-                            Status = TileStatus.Visited,
                         });
                     }
                 }
@@ -260,23 +220,56 @@ namespace TileExplorer
             DB.DropTiles();
 
             DB.SaveTiles(tiles);
-
-            return tiles;
         }
 #endif
 
-        private void CreateTiles()
-        {
-            List<TileModel> tiles =
 #if DEBUG
-            DummyTiles();
-#else
-            DB.LoadTiles();
+        private void DummyTracks()
+        {
+            //Random rand = new Random();
+
+            /*            var track = new TrackModel
+                        {
+                            Text = "track " + DateTime.Now.ToString(),
+
+                            DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+
+                            TrackPoints = new List<TrackPointModel>()
+                        };
+
+                        track.TrackPoints.Add(new TrackPointModel()
+                        {
+                            TrackId = track.Id,
+
+                            Lat = 51.295417,
+                            Lng = 57.886963,
+                        });
+                        track.TrackPoints.Add(new TrackPointModel()
+                        {
+                            TrackId = track.Id,
+
+                            Lat = 51.131108,
+                            Lng = 58.153381,
+                        });
+            */
+            //DB.DropTracks();
+
+            //            DB.SaveTrack(track);
+
+            //var track = OpenTrackFromFile("d:\\!Temp\\track.gpx");
+
+            //DB.SaveTrack(track);
+        }
+#endif
+
+        private void LoadTiles()
+        {
+            List<TileModel> tiles = DB.LoadTiles();
+
             foreach (var tile in tiles)
             {
                 tile.Status = TileStatus.Visited;
             }
-#endif
 
             Utils.CalcResult calcResult = Utils.CalcTiles(tiles);
 
@@ -286,7 +279,7 @@ namespace TileExplorer
 
             foreach (TileModel tile in tiles)
             {
-                tilesOverlay.Polygons.Add(TileFromModel(tile));
+                tilesOverlay.Polygons.Add(new MapTile(tile));
 
 #if DEBUG && CHECK_TILES
                 if (tile.Status != TileStatus.Unknown && tile.Text != string.Empty)
@@ -303,11 +296,17 @@ namespace TileExplorer
             }
         }
 
-        private void CreateMarkers()
+        private void LoadTracks()
         {
-            var markers = DB.LoadMarkers();
+            foreach (var track in DB.LoadTracks())
+            {
+                tracksOverlay.Routes.Add(new MapTrack(track));
+            }
+        }
 
-            foreach (var marker in markers)
+        private void LoadMarkers()
+        {
+            foreach (var marker in DB.LoadMarkers())
             {
                 markersOverlay.Markers.Add(new MapMarker(marker));
             }
@@ -394,8 +393,6 @@ namespace TileExplorer
                         if (SelectedMarker != null)
                         {
                             MarkerMove(SelectedMarker);
-
-                            SelectedMarker = null;
                         }
                     }
 
@@ -405,6 +402,8 @@ namespace TileExplorer
 
                     break;
             }
+
+            SelectedMarker = null;
         }
 
         private void MiMainMarkers_Click(object sender, EventArgs e)
@@ -435,7 +434,7 @@ namespace TileExplorer
 
             markersOverlay.Markers.Add(markerTemp);
 
-            if (FrmMarker.Show(this, markerModel))
+            if (FrmMarker.ShowDlg(this, markerModel))
             {
                 DB.SaveMarker(markerModel);
 
@@ -453,7 +452,7 @@ namespace TileExplorer
 
         private void MarkerChange(MapMarker marker)
         {
-            if (FrmMarker.Show(this, marker.MarkerModel))
+            if (FrmMarker.ShowDlg(this, marker.MarkerModel))
             {
                 DB.SaveMarker(marker.MarkerModel);
 
@@ -575,6 +574,204 @@ namespace TileExplorer
                     }
                 }
             }
+        }
+
+        private void DataUpdate()
+        {
+            tilesOverlay.Clear();
+
+            tracksOverlay.Clear();
+
+            markersOverlay.Clear();
+
+            LoadTiles();
+
+            LoadTracks();
+
+            LoadMarkers();
+        }
+
+        private void MiMainDataUpdate_Click(object sender, EventArgs e)
+        {
+            DataUpdate();
+        }
+
+        private void AddTileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PointLatLng position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
+
+            try
+            {
+                DB.SaveTile(new TileModel()
+                {
+                    X = Osm.LngToTileX(position.Lng, Const.TILE_ZOOM),
+                    Y = Osm.LatToTileY(position.Lat, Const.TILE_ZOOM)
+                });
+
+                DataUpdate();
+            }
+            catch (Exception)
+            {
+                Msg.Error("tile exists");
+            }
+        }
+
+        private void DeleteTileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PointLatLng position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
+
+            DB.DeleteTile(new TileModel()
+            {
+                X = Osm.LngToTileX(position.Lng, Const.TILE_ZOOM),
+                Y = Osm.LatToTileY(position.Lat, Const.TILE_ZOOM)
+            });
+
+            DataUpdate();
+        }
+
+        private void MiMainMapDesign_Click(object sender, EventArgs e)
+        {
+            if (FrmMapDesign.ShowDlg(this))
+            {
+                markersOverlay.IsVisibile = false;
+
+                foreach (var marker in markersOverlay.Markers)
+                {
+                    marker.ToolTip.Font = Settings.Default.FontMarker;
+                    marker.ToolTip.Foreground = new SolidBrush(Color.FromArgb(
+                        Settings.Default.ColorMarkerTextAlpha, Settings.Default.ColorMarkerText));
+                }
+
+                markersOverlay.IsVisibile = true;
+            }
+        }
+
+        private void GMapControl_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (SelectedMarker == null)
+                {
+                    MarkerAdd(gMapControl.FromLocalToLatLng(e.X, e.Y));
+                }
+                else
+                {
+                    MarkerChange(SelectedMarker);
+                }
+            }
+        }
+
+        private void GMapControl_OnRouteClick(GMapRoute item, MouseEventArgs e)
+        {
+            SelectedMarker = null;
+
+            Msg.Info(item.Name);
+        }
+
+        private void OpenTrackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var track = OpenTrackFromFile(openFileDialog.FileName);
+
+                DB.SaveTrack(track);
+
+                DataUpdate();
+
+                //                Msg.Info(track.Text + "\n" + track.DateTime + "\n" + track.TrackPoints.Count);
+            }
+        }
+
+        private string XmlGetText(XmlNode node)
+        {
+            return node != null ? node.InnerText : string.Empty;
+        }
+
+        private TrackModel OpenTrackFromFile(string path)
+        {
+            UseWaitCursor = true;
+
+            var trackXml = new XmlDocument();
+
+            var track = new TrackModel();
+
+            try
+            {
+                Debug.WriteLine(path);
+
+                trackXml.Load(path);
+
+                Debug.WriteLine("xml loaded");
+
+                track.TrackPoints = new List<TrackPointModel>();
+
+                var trkseg = trackXml.DocumentElement["trk"]?["trkseg"];
+
+                if (trkseg != null)
+                {
+                    Debug.WriteLine("trkseg count: " + trkseg.ChildNodes.Count);
+
+                    foreach (XmlNode trkpt in trkseg)
+                    {
+                        if (trkpt.Attributes["lat"] != null && trkpt.Attributes["lon"] != null)
+                        {
+                            track.TrackPoints.Add(new TrackPointModel()
+                            {
+                                Lat = double.Parse(trkpt.Attributes["lat"].Value, CultureInfo.InvariantCulture),
+                                Lng = double.Parse(trkpt.Attributes["lon"].Value, CultureInfo.InvariantCulture)
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception("trkseg is null");
+                }
+
+                string trkname = XmlGetText(trackXml.DocumentElement["trk"]?["name"]);
+
+                if (trkname == string.Empty)
+                {
+                    trkname = XmlGetText(trackXml.DocumentElement["metadata"]?["name"]);
+                }
+                if (trkname == string.Empty)
+                {
+                    trkname = Path.GetFileNameWithoutExtension(path);
+                }
+
+                track.Text = trkname;
+
+                string trktime = XmlGetText(trackXml.DocumentElement["metadata"]?["time"]);
+
+                if (trktime != string.Empty)
+                {
+                    try
+                    {
+                        track.DateTime = DateTimeOffset.ParseExact(trktime, "yyyy-MM-ddTHH:mm:ssZ", null)
+                            .ToString("yyyy-MM-dd HH:mm:ss.fff");
+                    }
+                    catch (Exception)
+                    {
+                        track.DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                    }
+                }
+                else
+                {
+                    track.DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("error: " + e.Message);
+
+                Msg.Error("error: " + e.Message);
+            }
+
+            UseWaitCursor = false;
+
+            Debug.WriteLine("end open xml");
+
+            return track;
         }
     }
 }

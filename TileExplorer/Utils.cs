@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using static TileExplorer.Database;
 
@@ -153,7 +154,7 @@ namespace TileExplorer
                     }
                 }
             }
-
+            
             return new CalcResult { Visited = visited, MaxCluster = maxCluster, MaxSquare = maxSquare };
         }
     }

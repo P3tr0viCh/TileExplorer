@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
+using GMap.NET.Internals;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,7 +30,7 @@ namespace TileExplorer
         public class MarkerModel
         {
             [Key]
-            public int Id { get; set; }
+            public long Id { get; set; }
 
             public double Lat { get; set; }
             public double Lng { get; set; }
@@ -59,7 +60,7 @@ namespace TileExplorer
         public class TileModel
         {
             [Key]
-            public int Id { get; set; }
+            public long Id { get; set; }
 
             public int X { get; set; }
             public int Y { get; set; }
@@ -73,6 +74,34 @@ namespace TileExplorer
             [Computed]
             public string Text { get; set; } = string.Empty;
 #endif
+        }
+
+        [Table("tracks")]
+        public class TrackModel
+        {
+            [Key]
+            public long Id { get; set; }
+
+            public string Text { get; set; }
+
+            public string DateTime { get; set; }
+
+            public int Distance { get; set; }
+
+            [Write(false)]
+            [Computed]
+            public List<TrackPointModel> TrackPoints { get; set; }
+        }
+
+        [Table("tracks_points")]
+        public class TrackPointModel
+        {
+            [Key]
+            public long Id { get; set; }
+            public long TrackId { get; set; }
+
+            public double Lat { get; set; }
+            public double Lng { get; set; }
         }
 
         public Database(string fileName)
@@ -90,17 +119,28 @@ namespace TileExplorer
             {
                 SQLiteConnection.CreateFile(FileName);
 
-                Connection.Execute("CREATE TABLE IF NOT EXISTS markers (" +
+                Connection.Execute("CREATE TABLE markers (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                     "lat REAL NOT NULL, lng REAL NOT NULL, " +
                     "text TEXT, istextvisible INTEGER, " +
                     "offsetx INTEGER, offsety INTEGER, image BLOB, imagetype INTEGER DEFAULT 0);");
 
-                Connection.Execute("CREATE TABLE IF NOT EXISTS tiles (" +
+                Connection.Execute("CREATE TABLE tiles (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "x INTEGER NOT NULL, y INTEGER NOT NULL, status INTEGER DEFAULT 0, " +
+                    "x INTEGER NOT NULL, y INTEGER NOT NULL, " +
                     "UNIQUE(x, y));");
             }
+
+            Connection.Execute("CREATE TABLE IF NOT EXISTS tracks (" +
+                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                "text TEXT, datetime TEXT, distance INTEGER);");
+
+            Connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
+                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                "trackid INTEGER, lat REAL NOT NULL, lng REAL NOT NULL);");
+
+            Connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
+                "tracks_points (trackid);");
         }
 
         public List<MarkerModel> LoadMarkers()
@@ -256,6 +296,66 @@ namespace TileExplorer
             }
 
             Connection.Close();
+        }
+
+        public void SaveTile(TileModel tile)
+        {
+            Connection.Insert(tile);
+        }
+
+        public void DeleteTile(TileModel tile)
+        {
+            Connection.Execute("DELETE FROM tiles WHERE x = :x AND y = :y", new { x = tile.X, y = tile.Y });
+        }
+
+        public void DropTracks()
+        {
+            Connection.Open();
+
+            using (var transaction = Connection.BeginTransaction())
+            {
+                Connection.DeleteAll<TrackModel>(transaction);
+
+                Connection.DeleteAll<TrackPointModel>(transaction);
+
+                transaction.Commit();
+            }
+
+            Connection.Close();
+        }
+
+        public void SaveTrack(TrackModel track)
+        {
+            Connection.Open();
+
+            using (var transaction = Connection.BeginTransaction())
+            {
+                var id = Connection.Insert(track, transaction);
+
+                foreach (var trackPoint in track.TrackPoints)
+                {
+                    trackPoint.TrackId = id;
+                }
+
+                Connection.Insert(track.TrackPoints, transaction);
+
+                transaction.Commit();
+            }
+
+            Connection.Close();
+        }
+
+        public List<TrackModel> LoadTracks()
+        {
+            var tracks = Connection.GetAll<TrackModel>().ToList();
+
+            foreach (var track in tracks)
+            {
+                track.TrackPoints = Connection.Query<TrackPointModel>(
+                    "SELECT * FROM tracks_points WHERE trackid = :trackid", new { trackid = track.Id }).ToList();
+            }
+
+            return tracks;
         }
     }
 }

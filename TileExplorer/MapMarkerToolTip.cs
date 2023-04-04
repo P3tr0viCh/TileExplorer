@@ -6,7 +6,7 @@ namespace TileExplorer
     internal class MapMarkerToolTip : GMapToolTip
     {
         private const int MARKER_OFFSET_X = 20;
-        private const int MARKER_OFFSET_Y = -30;
+        private const int MARKER_OFFSET_Y = -10;
 
         public MapMarkerToolTip(MapMarker marker) : base(marker)
         {

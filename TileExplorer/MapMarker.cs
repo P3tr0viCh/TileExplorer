@@ -1,6 +1,5 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
-using GMap.NET.WindowsForms.Markers;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
