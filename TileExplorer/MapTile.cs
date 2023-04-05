@@ -59,7 +59,7 @@ namespace TileExplorer
             Points.Add(new PointLatLng(lat2, lng1));
 
             Fill = new SolidBrush(colorFill);
-            Stroke = new Pen(colorStroke, 1);
+            Stroke = new Pen(colorStroke, 1f);
         }
     }
 }

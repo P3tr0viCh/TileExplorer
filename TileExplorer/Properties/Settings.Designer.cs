@@ -50,12 +50,12 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool MarkersVisible {
+        public bool MapMarkersVisible {
             get {
-                return ((bool)(this["MarkersVisible"]));
+                return ((bool)(this["MapMarkersVisible"]));
             }
             set {
-                this["MarkersVisible"] = value;
+                this["MapMarkersVisible"] = value;
             }
         }
         
@@ -308,6 +308,54 @@ namespace TileExplorer.Properties {
             }
             set {
                 this["ColorMarkerFillAlpha"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MapTrackVisible {
+            get {
+                return ((bool)(this["MapTrackVisible"]));
+            }
+            set {
+                this["MapTrackVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
+        public global::System.Drawing.Color ColorTrack {
+            get {
+                return ((global::System.Drawing.Color)(this["ColorTrack"]));
+            }
+            set {
+                this["ColorTrack"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("144")]
+        public byte ColorTrackAlpha {
+            get {
+                return ((byte)(this["ColorTrackAlpha"]));
+            }
+            set {
+                this["ColorTrackAlpha"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public float WidthTrack {
+            get {
+                return ((float)(this["WidthTrack"]));
+            }
+            set {
+                this["WidthTrack"] = value;
             }
         }
     }

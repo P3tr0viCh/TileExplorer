@@ -14,6 +14,8 @@ namespace TileExplorer
             ToolStripStatusLabel StatusLabelPosition { get; }
             ToolStripStatusLabel StatusLabelMousePosition { get; }
 
+            ToolStripStatusLabel StatusLabelStatus { get; }
+
             ToolStripStatusLabel StatusLabelTilesVisited { get; }
             ToolStripStatusLabel StatusLabelTilesMaxCluster { get; }
             ToolStripStatusLabel StatusLabelTilesMaxSquare { get; }
@@ -29,6 +31,8 @@ namespace TileExplorer
             TileId = PointLatLng.Empty;
             Position = PointLatLng.Empty;
             MousePosition = new PointLatLng(0, 0);
+
+            Status = string.Empty;
 
             TilesVisited = 0;
             TilesMaxCluster = 0;
@@ -65,6 +69,14 @@ namespace TileExplorer
             set
             {
                 view.StatusLabelMousePosition.Text = string.Format(Resources.StatusMousePosition, value.Lat, value.Lng);
+            }
+        }
+
+        public string Status
+        {
+            set
+            {
+                view.StatusLabelStatus.Text = value;
             }
         }
 

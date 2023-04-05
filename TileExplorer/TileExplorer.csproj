@@ -105,6 +105,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\!UtilsAndComps\UtilsGeo.cs">
+      <Link>UtilsGeo.cs</Link>
+    </Compile>
     <Compile Include="..\..\!UtilsAndComps\UtilsMsg.cs">
       <Link>UtilsMsg.cs</Link>
     </Compile>

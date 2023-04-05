@@ -1,47 +1,73 @@
-﻿using System;
+﻿using GMap.NET.Internals;
+using P3tr0viCh;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Xml;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
     internal static class Utils
     {
-
-        private static void SetTileStatus(TileStatus[,] status, int[,] cluster, int x, int y, int clusterId)
+        private static TileModel GetTileByXY(List<TileModel> tiles, int x, int y)
         {
-            if (status[x, y] != TileStatus.Cluster || cluster[x, y] != 0) return;
-
-            cluster[x, y] = clusterId;
-
-            SetTileStatus(status, cluster, x, y - 1, clusterId);
-            SetTileStatus(status, cluster, x, y + 1, clusterId);
-            SetTileStatus(status, cluster, x - 1, y, clusterId);
-            SetTileStatus(status, cluster, x + 1, y, clusterId);
+            return tiles.Find(t => t.X == x && t.Y == y);
         }
 
-        private static int CheckMaxSquare(TileStatus[,] status, int x, int y, int square)
+        private static TileStatus GetTileStatus(List<TileModel> tiles, int x, int y)
         {
-            if (status[x, y] == TileStatus.Unknown) return 0;
+            TileModel tile = GetTileByXY(tiles, x, y);
+
+            return tile != null ? tile.Status : TileStatus.Unknown;
+        }
+
+        private static bool SetTileClusterId(List<TileModel> tiles, int x, int y, int clusterId)
+        {
+            TileModel tile = GetTileByXY(tiles, x, y);
+
+            if (tile == null) return false;
+
+            if (tile.Status != TileStatus.Cluster) return false;
+
+            if (tile.ClusterId >= 0) return false;
+
+            tile.ClusterId = clusterId;
+
+            SetTileClusterId(tiles, x, y - 1, clusterId);
+            SetTileClusterId(tiles, x, y + 1, clusterId);
+            SetTileClusterId(tiles, x - 1, y, clusterId);
+            SetTileClusterId(tiles, x + 1, y, clusterId);
+
+            return true;
+        }
+
+        private static int CheckMaxSquare(List<TileModel> tiles, int x, int y, int square)
+        {
+            if (GetTileStatus(tiles, x, y) == TileStatus.Unknown) return 0;
 
             square++;
 
             for (int i = x; i < x + square + 1; i++)
             {
-                if (status[i, y + square] == TileStatus.Unknown)
+                if (GetTileStatus(tiles, i, y + square) == TileStatus.Unknown)
                 {
                     return square;
                 }
             }
             for (int i = y; i < y + square + 1; i++)
             {
-                if (status[x + square, i] == TileStatus.Unknown)
+                if (GetTileStatus(tiles, x + square, i) == TileStatus.Unknown)
                 {
                     return square;
                 }
             }
 
-            return CheckMaxSquare(status, x, y, square);
+            return CheckMaxSquare(tiles, x, y, square);
         }
 
         public struct CalcResult
@@ -53,109 +79,193 @@ namespace TileExplorer
 
         public static CalcResult CalcTiles(List<TileModel> tiles)
         {
-            TileStatus[,] status = new TileStatus[Const.TILE_MAX, Const.TILE_MAX];
+            CalcResult result = new CalcResult();
 
-            int visited = 0;
-
-            foreach (TileModel tile in tiles)
+            foreach (var tile in tiles)
             {
-                status[tile.X, tile.Y] = tile.Status;
-
-                if (tile.Status == TileStatus.Visited) visited++;
+                if (tile.Status == TileStatus.Visited) result.Visited++;
             }
 
-            if (visited == 0)
+            if (result.Visited == 0)
             {
-                return new CalcResult { Visited = 0, MaxCluster = 0, MaxSquare = 0 };
+                return result;
             }
 
-            foreach (TileModel tile in tiles)
+            foreach (var tile in tiles)
             {
                 if (tile.X == 0 || tile.X == Const.TILE_MAX - 1 || tile.Y == 0 || tile.Y == Const.TILE_MAX - 1) continue;
 
                 if (tile.Status == TileStatus.Unknown) continue;
 
-                if (status[tile.X, tile.Y - 1] == TileStatus.Unknown) continue;
-                if (status[tile.X, tile.Y + 1] == TileStatus.Unknown) continue;
-                if (status[tile.X - 1, tile.Y] == TileStatus.Unknown) continue;
-                if (status[tile.X + 1, tile.Y] == TileStatus.Unknown) continue;
+                if (GetTileStatus(tiles, tile.X, tile.Y - 1) == TileStatus.Unknown) continue;
+                if (GetTileStatus(tiles, tile.X, tile.Y + 1) == TileStatus.Unknown) continue;
+                if (GetTileStatus(tiles, tile.X - 1, tile.Y) == TileStatus.Unknown) continue;
+                if (GetTileStatus(tiles, tile.X + 1, tile.Y) == TileStatus.Unknown) continue;
 
                 tile.Status = TileStatus.Cluster;
-
-                status[tile.X, tile.Y] = tile.Status;
             }
-
-            int[,] cluster = new int[Const.TILE_MAX, Const.TILE_MAX];
 
             int clusterId = 0;
 
-            foreach (TileModel tile in tiles)
+            foreach (var tile in tiles)
             {
-                if (status[tile.X, tile.Y] == TileStatus.Cluster) clusterId++;
-
-                SetTileStatus(status, cluster, tile.X, tile.Y, clusterId);
-            }
-
-            int[] maxClusters = new int[clusterId + 1];
-
-            foreach (TileModel tile in tiles)
-            {
-                if (status[tile.X, tile.Y] != TileStatus.Cluster) continue;
-
-                maxClusters[cluster[tile.X, tile.Y]]++;
-            }
-
-            int maxCluster = 0;
-
-            for (int i = 0; i < maxClusters.Length; i++)
-            {
-                if (maxClusters[i] > maxCluster)
+                if (SetTileClusterId(tiles, tile.X, tile.Y, clusterId))
                 {
-                    maxCluster = maxClusters[i];
+                    clusterId++;
                 }
             }
 
-            foreach (TileModel tile in tiles)
+            int[] clusterCapacity = new int[clusterId];
+
+            foreach (var tile in tiles)
             {
-                if (maxClusters[cluster[tile.X, tile.Y]] == maxCluster)
+                if (tile.Status != TileStatus.Cluster) continue;
+
+                clusterCapacity[tile.ClusterId]++;
+            }
+
+            int maxClusterId = -1;
+
+            for (int i = 0; i < clusterCapacity.Length; i++)
+            {
+                if (clusterCapacity[i] > result.MaxCluster)
                 {
-                    tile.Status = TileStatus.MaxCluster;
+                    result.MaxCluster = clusterCapacity[i];
+                    maxClusterId = i;
                 }
             }
 
-            int maxSquare = 0;
-            int maxSquareX = 0;
-            int maxSquareY = 0;
+            Debug.WriteLine("clusters: " + clusterId + ", maxClusterId: " + maxClusterId);
 
-            int checkMaxSquare;
-
-            foreach (TileModel tile in tiles)
+            if (maxClusterId >= 0)
             {
-                checkMaxSquare = CheckMaxSquare(status, tile.X, tile.Y, 0);
-
-                if (checkMaxSquare > maxSquare)
+                foreach (var tile in tiles)
                 {
-                    maxSquare = checkMaxSquare;
-                    maxSquareX = tile.X;
-                    maxSquareY = tile.Y;
-                }
-#if DEBUG
-                if (checkMaxSquare > 1) tile.Text = checkMaxSquare.ToString();
-#endif
-            }
-
-            if (maxSquare > 1)
-            {
-                for (int x = maxSquareX; x < maxSquareX + maxSquare; x++)
-                {
-                    for (int y = maxSquareY; y < maxSquareY + maxSquare; y++)
+                    if (tile.ClusterId == maxClusterId)
                     {
-                        tiles.Where(tile => tile.X == x && tile.Y == y).First().Status = TileStatus.MaxSquare;
+                        tile.Status = TileStatus.MaxCluster;
                     }
                 }
             }
-            
-            return new CalcResult { Visited = visited, MaxCluster = maxCluster, MaxSquare = maxSquare };
+
+            int maxSquare;
+
+            int maxSquareX = 0;
+            int maxSquareY = 0;
+
+            foreach (var tile in tiles)
+            {
+                maxSquare = CheckMaxSquare(tiles, tile.X, tile.Y, 0);
+
+                if (maxSquare > result.MaxSquare)
+                {
+                    result.MaxSquare = maxSquare;
+                    
+                    maxSquareX = tile.X;
+                    maxSquareY = tile.Y;
+                }
+            }
+
+            if (result.MaxSquare > 1)
+            {
+                foreach (var tile in tiles.Where(tile =>
+                    tile.X >= maxSquareX && tile.X < maxSquareX + result.MaxSquare && 
+                    tile.Y >= maxSquareY && tile.Y < maxSquareY + result.MaxSquare))
+                {
+                    tile.Status = TileStatus.MaxSquare;
+                }
+            }
+
+            return result;
+        }
+
+        private static string XmlGetText(XmlNode node)
+        {
+            return node != null ? node.InnerText : string.Empty;
+        }
+
+        public static TrackModel OpenTrackFromFile(string path)
+        {
+            var trackXml = new XmlDocument();
+
+            var track = new TrackModel();
+
+            try
+            {
+                Debug.WriteLine(path);
+
+                trackXml.Load(path);
+
+                Debug.WriteLine("xml loaded");
+
+                track.TrackPoints = new List<TrackPointModel>();
+
+                var trkseg = trackXml.DocumentElement["trk"]?["trkseg"];
+
+                if (trkseg != null)
+                {
+                    Debug.WriteLine("trkseg count: " + trkseg.ChildNodes.Count);
+
+                    foreach (XmlNode trkpt in trkseg)
+                    {
+                        if (trkpt.Attributes["lat"] != null && trkpt.Attributes["lon"] != null)
+                        {
+                            track.TrackPoints.Add(new TrackPointModel()
+                            {
+                                Lat = double.Parse(trkpt.Attributes["lat"].Value, CultureInfo.InvariantCulture),
+                                Lng = double.Parse(trkpt.Attributes["lon"].Value, CultureInfo.InvariantCulture)
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception("trkseg is null");
+                }
+
+                string trkname = XmlGetText(trackXml.DocumentElement["trk"]?["name"]);
+
+                if (trkname == string.Empty)
+                {
+                    trkname = XmlGetText(trackXml.DocumentElement["metadata"]?["name"]);
+                }
+                if (trkname == string.Empty)
+                {
+                    trkname = Path.GetFileNameWithoutExtension(path);
+                }
+
+                track.Text = trkname;
+
+                string trktime = XmlGetText(trackXml.DocumentElement["metadata"]?["time"]);
+
+                Debug.WriteLine("trktime: " + trktime);
+
+                if (trktime != string.Empty)
+                {
+                    try
+                    {
+                        track.DateTime = DateTimeOffset.ParseExact(trktime, Const.DATETIME_FORMAT_GPX, null).DateTime;
+                    }
+                    catch (Exception)
+                    {
+                        track.DateTime = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    track.DateTime = DateTime.Now;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("error: " + e.Message);
+
+                Msg.Error("error: " + e.Message);
+            }
+
+            Debug.WriteLine("end open xml");
+
+            return track;
         }
     }
 }

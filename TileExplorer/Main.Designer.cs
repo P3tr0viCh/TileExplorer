@@ -36,7 +36,7 @@
             this.slPosition = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTileId = new System.Windows.Forms.ToolStripStatusLabel();
             this.slMousePosition = new System.Windows.Forms.ToolStripStatusLabel();
-            this.slEmpty = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTilesVisited = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTilesMaxCluster = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTilesMaxSquare = new System.Windows.Forms.ToolStripStatusLabel();
@@ -46,12 +46,15 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainClose = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainMap = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMainMarkers = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainShowTracks = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainShowMarkers = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainMapDesign = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainData = new System.Windows.Forms.ToolStripMenuItem();
+            this.openTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,8 +68,6 @@
             this.miMapMarkerAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.addTileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
@@ -124,7 +125,7 @@
             this.slPosition,
             this.slTileId,
             this.slMousePosition,
-            this.slEmpty,
+            this.slStatus,
             this.slTilesVisited,
             this.slTilesMaxCluster,
             this.slTilesMaxSquare});
@@ -157,12 +158,12 @@
             this.slMousePosition.Size = new System.Drawing.Size(79, 17);
             this.slMousePosition.Text = "mouse: xx, yy";
             // 
-            // slEmpty
+            // slStatus
             // 
-            this.slEmpty.Name = "slEmpty";
-            this.slEmpty.Size = new System.Drawing.Size(204, 17);
-            this.slEmpty.Spring = true;
-            this.slEmpty.Text = "empty";
+            this.slStatus.Name = "slStatus";
+            this.slStatus.Size = new System.Drawing.Size(204, 17);
+            this.slStatus.Spring = true;
+            this.slStatus.Text = "status";
             // 
             // slTilesVisited
             // 
@@ -227,7 +228,8 @@
             // miMainMap
             // 
             this.miMainMap.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miMainMarkers,
+            this.miMainShowTracks,
+            this.miMainShowMarkers,
             this.toolStripSeparator2,
             this.miMainFullScreen,
             this.toolStripSeparator3,
@@ -236,15 +238,25 @@
             this.miMainMap.Size = new System.Drawing.Size(50, 20);
             this.miMainMap.Text = "Карта";
             // 
-            // miMainMarkers
+            // miMainShowTracks
             // 
-            this.miMainMarkers.Checked = true;
-            this.miMainMarkers.CheckOnClick = true;
-            this.miMainMarkers.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.miMainMarkers.Name = "miMainMarkers";
-            this.miMainMarkers.Size = new System.Drawing.Size(232, 22);
-            this.miMainMarkers.Text = "Отображать маркеры";
-            this.miMainMarkers.Click += new System.EventHandler(this.MiMainMarkers_Click);
+            this.miMainShowTracks.Checked = true;
+            this.miMainShowTracks.CheckOnClick = true;
+            this.miMainShowTracks.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.miMainShowTracks.Name = "miMainShowTracks";
+            this.miMainShowTracks.Size = new System.Drawing.Size(232, 22);
+            this.miMainShowTracks.Text = "Отображать треки";
+            this.miMainShowTracks.Click += new System.EventHandler(this.MiMainShowTracks_Click);
+            // 
+            // miMainShowMarkers
+            // 
+            this.miMainShowMarkers.Checked = true;
+            this.miMainShowMarkers.CheckOnClick = true;
+            this.miMainShowMarkers.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.miMainShowMarkers.Name = "miMainShowMarkers";
+            this.miMainShowMarkers.Size = new System.Drawing.Size(232, 22);
+            this.miMainShowMarkers.Text = "Отображать маркеры";
+            this.miMainShowMarkers.Click += new System.EventHandler(this.MiMainShowMarkers_Click);
             // 
             // toolStripSeparator2
             // 
@@ -280,6 +292,19 @@
             this.miMainData.Name = "miMainData";
             this.miMainData.Size = new System.Drawing.Size(62, 20);
             this.miMainData.Text = "Данные";
+            // 
+            // openTrackToolStripMenuItem
+            // 
+            this.openTrackToolStripMenuItem.Name = "openTrackToolStripMenuItem";
+            this.openTrackToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openTrackToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.openTrackToolStripMenuItem.Text = "open track...";
+            this.openTrackToolStripMenuItem.Click += new System.EventHandler(this.OpenTrackToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(179, 6);
             // 
             // miMainDataUpdate
             // 
@@ -392,28 +417,15 @@
             this.deleteTileToolStripMenuItem.Text = "delete tile";
             this.deleteTileToolStripMenuItem.Click += new System.EventHandler(this.DeleteTileToolStripMenuItem_Click);
             // 
-            // openTrackToolStripMenuItem
-            // 
-            this.openTrackToolStripMenuItem.Name = "openTrackToolStripMenuItem";
-            this.openTrackToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openTrackToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.openTrackToolStripMenuItem.Text = "open track...";
-            this.openTrackToolStripMenuItem.Click += new System.EventHandler(this.OpenTrackToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(179, 6);
-            // 
             // openFileDialog
             // 
             this.openFileDialog.DefaultExt = "gpx";
             this.openFileDialog.Filter = "GPX|*.gpx|Все файлы|*.*";
+            this.openFileDialog.Multiselect = true;
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(720, 461);
             this.Controls.Add(this.toolStripContainer);
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -463,7 +475,7 @@
         private System.Windows.Forms.ToolStripStatusLabel slTilesMaxCluster;
         private System.Windows.Forms.ToolStripMenuItem miMainSaveToImage;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem miMainMarkers;
+        private System.Windows.Forms.ToolStripMenuItem miMainShowMarkers;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ContextMenuStrip cmMarker;
         private System.Windows.Forms.ToolStripMenuItem miMarkerDelete;
@@ -472,7 +484,7 @@
         private System.Windows.Forms.ToolStripMenuItem miMarkerMove;
         private System.Windows.Forms.ToolStripMenuItem miMarkerChange;
         private System.Windows.Forms.ToolStripStatusLabel slMousePosition;
-        private System.Windows.Forms.ToolStripStatusLabel slEmpty;
+        private System.Windows.Forms.ToolStripStatusLabel slStatus;
         private System.Windows.Forms.ToolStripStatusLabel slTilesMaxSquare;
         private System.Windows.Forms.ToolStripMenuItem miMainData;
         private System.Windows.Forms.ToolStripMenuItem miMainDataUpdate;
@@ -483,6 +495,7 @@
         private System.Windows.Forms.ToolStripMenuItem openTrackToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.ToolStripMenuItem miMainShowTracks;
     }
 }
 

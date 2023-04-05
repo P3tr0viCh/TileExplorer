@@ -8,7 +8,7 @@
     <Setting Name="MainMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="MarkersVisible" Type="System.Boolean" Scope="User">
+    <Setting Name="MapMarkersVisible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ColorMarkerTextFill" Type="System.Drawing.Color" Scope="User">
@@ -73,6 +73,18 @@
     </Setting>
     <Setting Name="ColorMarkerFillAlpha" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">220</Value>
+    </Setting>
+    <Setting Name="MapTrackVisible" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ColorTrack" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Red</Value>
+    </Setting>
+    <Setting Name="ColorTrackAlpha" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">144</Value>
+    </Setting>
+    <Setting Name="WidthTrack" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">2</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -1,15 +1,12 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
-using GMap.NET.Internals;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Data.SQLite;
-using System.Drawing;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
+using System.Threading.Tasks;
 
 namespace TileExplorer
 {
@@ -69,11 +66,9 @@ namespace TileExplorer
             [Computed]
             public TileStatus Status { get; set; } = TileStatus.Unknown;
 
-#if DEBUG
             [Write(false)]
             [Computed]
-            public string Text { get; set; } = string.Empty;
-#endif
+            public int ClusterId { get; set; } = -1;
         }
 
         [Table("tracks")]
@@ -84,7 +79,7 @@ namespace TileExplorer
 
             public string Text { get; set; }
 
-            public string DateTime { get; set; }
+            public DateTime DateTime { get; set; }
 
             public int Distance { get; set; }
 
@@ -141,28 +136,33 @@ namespace TileExplorer
 
             Connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
                 "tracks_points (trackid);");
+
+            Connection.Execute("CREATE TRIGGER IF NOT EXISTS tracks_delete " +
+                "BEFORE DELETE ON tracks " +
+                    "FOR EACH ROW BEGIN DELETE FROM tracks_points WHERE tracks_points.trackid = OLD.id; " +
+                "END;");
         }
 
-        public List<MarkerModel> LoadMarkers()
+        public async Task<List<MarkerModel>> LoadMarkersAsync()
         {
-            return Connection.GetAll<MarkerModel>().ToList();
+            return (List<MarkerModel>)await Task.Run(() => Connection.GetAllAsync<MarkerModel>());
         }
 
-        public void SaveMarker(MarkerModel marker)
+        public async Task SaveMarkerAsync(MarkerModel marker)
         {
             if (marker.Id == 0)
             {
-                Connection.Insert(marker);
+                await Connection.InsertAsync(marker);
             }
             else
             {
-                Connection.Update<MarkerModel>(marker);
+                await Connection.UpdateAsync(marker);
             }
         }
 
-        public void DeleteMarker(MarkerModel marker)
+        public async Task DeleteMarkerAsync(MarkerModel marker)
         {
-            Connection.Delete(marker);
+            await Connection.DeleteAsync(marker);
         }
 
         /*        public void SaveImage(ImageModel image)
@@ -265,9 +265,9 @@ namespace TileExplorer
                 }
         */
 
-        public List<TileModel> LoadTiles()
+        public async Task<List<TileModel>> LoadTilesAsync()
         {
-            return Connection.GetAll<TileModel>().ToList();
+            return (List<TileModel>)await Task.Run(() => Connection.GetAllAsync<TileModel>());
         }
 
         public void DropTiles()
@@ -324,38 +324,44 @@ namespace TileExplorer
             Connection.Close();
         }
 
-        public void SaveTrack(TrackModel track)
+        public async Task SaveTrackAsync(TrackModel track)
         {
-            Connection.Open();
-
-            using (var transaction = Connection.BeginTransaction())
+            await Task.Run(() =>
             {
-                var id = Connection.Insert(track, transaction);
+                Connection.Open();
 
-                foreach (var trackPoint in track.TrackPoints)
+                using (var transaction = Connection.BeginTransaction())
                 {
-                    trackPoint.TrackId = id;
+                    var id = Connection.Insert(track, transaction);
+
+                    foreach (var trackPoint in track.TrackPoints)
+                    {
+                        trackPoint.TrackId = id;
+                    }
+
+                    Connection.Insert(track.TrackPoints, transaction);
+
+                    transaction.Commit();
                 }
 
-                Connection.Insert(track.TrackPoints, transaction);
-
-                transaction.Commit();
-            }
-
-            Connection.Close();
+                Connection.Close();
+            });
         }
 
-        public List<TrackModel> LoadTracks()
+        public async Task<List<TrackModel>> LoadTracksAsync()
         {
-            var tracks = Connection.GetAll<TrackModel>().ToList();
-
-            foreach (var track in tracks)
+            return await Task.Run(() =>
             {
-                track.TrackPoints = Connection.Query<TrackPointModel>(
-                    "SELECT * FROM tracks_points WHERE trackid = :trackid", new { trackid = track.Id }).ToList();
-            }
+                var tracks = Connection.GetAll<TrackModel>().ToList();
 
-            return tracks;
+                foreach (var track in tracks)
+                {
+                    track.TrackPoints = Connection.Query<TrackPointModel>(
+                        "SELECT * FROM tracks_points WHERE trackid = :trackid", new { trackid = track.Id }).ToList();
+                }
+
+                return tracks;
+            });
         }
     }
 }
