@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
+using static TileExplorer.Main;
 using static TileExplorer.StatusStripPresenter;
 
 namespace TileExplorer
@@ -38,6 +39,9 @@ namespace TileExplorer
         public ToolStripStatusLabel StatusLabelTilesVisited => slTilesVisited;
         public ToolStripStatusLabel StatusLabelTilesMaxCluster => slTilesMaxCluster;
         public ToolStripStatusLabel StatusLabelTilesMaxSquare => slTilesMaxSquare;
+
+        private readonly FrmTrackList frmTrackList = new FrmTrackList();
+        private readonly FrmMarkerList frmMarkerList = new FrmMarkerList();
 
         public Main()
         {
@@ -75,6 +79,9 @@ namespace TileExplorer
 
             tracksOverlay.IsVisibile = miMainShowTracks.Checked;
             markersOverlay.IsVisibile = miMainShowMarkers.Checked;
+
+            frmTrackList.Visible = true;
+            frmMarkerList.Visible = true;
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -174,14 +181,6 @@ namespace TileExplorer
             }
         }
 
-        private void SaveToImageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                SaveToImage(saveFileDialog.FileName);
-            }
-        }
-
 #if DEBUG
         private void DummyTiles()
         {
@@ -204,11 +203,21 @@ namespace TileExplorer
                 }
             }
 
-            DB.DropTiles();
+            DropTilesAsync();
 
-            DB.SaveTiles(tiles);
+            SaveTilesAsync(tiles);
         }
 #endif
+
+        private async void DropTilesAsync()
+        {
+            await DB.DropTilesAsync();
+        }
+
+        private async void SaveTilesAsync(List<TileModel> tiles)
+        {
+            await DB.SaveTilesAsync(tiles);
+        }
 
         private async Task LoadTilesAsync()
         {
@@ -285,6 +294,8 @@ namespace TileExplorer
                 }
 #endif
             }
+
+            frmTrackList.Tracks = tracks;
         }
 
         private async Task LoadMarkersAsync()
@@ -297,6 +308,8 @@ namespace TileExplorer
             {
                 markersOverlay.Markers.Add(new MapMarker(marker));
             }
+
+            frmMarkerList.Markers = markers;
         }
 
         public enum ProgramStatus
@@ -338,6 +351,31 @@ namespace TileExplorer
             Status = ProgramStatus.Idle;
         }
 
+        private async void SaveTileAsync(TileModel tile)
+        {
+            await DB.SaveTileAsync(tile);
+        }
+
+        private async void DeleteTileAsync(TileModel tile)
+        {
+            await DB.DeleteTileAsync(tile);
+        }
+
+        private async void DeleteMarkerAsync(MarkerModel marker)
+        {
+            await DB.DeleteMarkerAsync(marker);
+        }
+
+        private async void DeleteTrackAsync(TrackModel track)
+        {
+            await DB.DeleteTrackAsync(track);
+        }
+
+        private async void SaveMarkerAsync(MarkerModel marker)
+        {
+            await DB.SaveMarkerAsync(marker);
+        }
+
         private FormWindowState savedWindowState;
 
         private bool fullScreen;
@@ -366,9 +404,9 @@ namespace TileExplorer
                     savedWindowState = WindowState;
 
                     WindowState = FormWindowState.Normal;
-                    
+
                     FormBorderStyle = FormBorderStyle.None;
-                    
+
                     WindowState = FormWindowState.Maximized;
                 }
                 else
@@ -407,7 +445,9 @@ namespace TileExplorer
 
         private bool MarkerMoving;
 
-        private MapMarker SelectedMarker;
+        private MapTrack SelectedTrack = null;
+
+        private MapMarker SelectedMarker = null;
 
         private void GMapControl_MouseClick(object sender, MouseEventArgs e)
         {
@@ -420,7 +460,7 @@ namespace TileExplorer
 
                         if (SelectedMarker != null)
                         {
-                            MarkerMove(SelectedMarker);
+                            SaveMarkerAsync(SelectedMarker.MarkerModel);
                         }
                     }
 
@@ -431,7 +471,74 @@ namespace TileExplorer
                     break;
             }
 
+            SelectedTrack = null;
             SelectedMarker = null;
+        }
+
+        private void GMapControl_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (SelectedMarker == null)
+                {
+                    if (SelectedTrack == null)
+                    {
+                        MarkerAdd(gMapControl.FromLocalToLatLng(e.X, e.Y));
+                    }
+                    else
+                    {
+                        var track = SelectedTrack.TrackModel;
+
+                        Msg.Info(track.Text + "\n" + track.DateTime + "\n" +
+                            track.TrackPoints.Count + "\n" + SelectedTrack.Points.Count + "\n" +
+                            track.Distance / 1000.0 + "\n" + SelectedTrack.Distance);
+                    }
+                }
+                else
+                {
+                    MarkerChange(SelectedMarker);
+                }
+            }
+        }
+
+        private void GMapControl_OnMarkerClick(GMapMarker item, MouseEventArgs e)
+        {
+            MarkerMoving = false;
+
+            SelectedTrack = null;
+
+            SelectedMarker = (MapMarker)item;
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+
+                    break;
+                case MouseButtons.Right:
+                    cmMarker.Show(gMapControl, e.Location);
+
+                    break;
+            }
+        }
+
+        private void GMapControl_OnRouteClick(GMapRoute item, MouseEventArgs e)
+        {
+            MarkerMoving = false;
+
+            SelectedMarker = null;
+
+            SelectedTrack = (MapTrack)item;
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+
+                    break;
+                case MouseButtons.Right:
+                    cmTrack.Show(gMapControl, e.Location);
+
+                    break;
+            }
         }
 
         private void MiMainShowMarkers_Click(object sender, EventArgs e)
@@ -444,7 +551,7 @@ namespace TileExplorer
             tracksOverlay.IsVisibile = miMainShowTracks.Checked;
         }
 
-        private async void MarkerAdd(PointLatLng point)
+        private void MarkerAdd(PointLatLng point)
         {
             bool prevMarkersVisible = markersOverlay.IsVisibile;
 
@@ -469,7 +576,7 @@ namespace TileExplorer
 
             if (FrmMarker.ShowDlg(this, markerModel))
             {
-                await DB.SaveMarkerAsync(markerModel);
+                SaveMarkerAsync(markerModel);
 
                 markersOverlay.Markers.Remove(markerTemp);
 
@@ -483,37 +590,13 @@ namespace TileExplorer
             markersOverlay.IsVisibile = prevMarkersVisible;
         }
 
-        private async void MarkerChange(MapMarker marker)
+        private void MarkerChange(MapMarker marker)
         {
             if (FrmMarker.ShowDlg(this, marker.MarkerModel))
             {
-                await DB.SaveMarkerAsync(marker.MarkerModel);
+                SaveMarkerAsync(marker.MarkerModel);
 
                 marker.NotifyModelChanged();
-            }
-        }
-
-        private async void MarkerRemove(MapMarker marker)
-        {
-            await DB.DeleteMarkerAsync(marker.MarkerModel);
-
-            markersOverlay.Markers.Remove(marker);
-        }
-
-        private async void MarkerMove(MapMarker marker)
-        {
-            await DB.SaveMarkerAsync(marker.MarkerModel);
-        }
-
-        private void GMapControl_OnMarkerClick(GMapMarker item, MouseEventArgs e)
-        {
-            MarkerMoving = false;
-
-            SelectedMarker = (MapMarker)item;
-
-            if (e.Button == MouseButtons.Right)
-            {
-                cmMarker.Show(gMapControl, e.Location);
             }
         }
 
@@ -549,7 +632,28 @@ namespace TileExplorer
 
             if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, Name)))
             {
-                MarkerRemove(SelectedMarker);
+                DeleteMarkerAsync(SelectedMarker.MarkerModel);
+
+                markersOverlay.Markers.Remove(SelectedMarker);
+            }
+        }
+
+        private void MiTrackDelete_Click(object sender, EventArgs e)
+        {
+            if (SelectedTrack == null) return;
+
+            string Name = SelectedTrack.TrackModel.Text;
+
+            if (Name == "")
+            {
+                Name = SelectedTrack.TrackModel.DateTime.ToString();
+            }
+
+            if (Msg.Question(string.Format(Resources.QuestionTrackDelete, Name)))
+            {
+                DeleteTrackAsync(SelectedTrack.TrackModel);
+
+                tracksOverlay.Routes.Remove(SelectedTrack);
             }
         }
 
@@ -617,7 +721,7 @@ namespace TileExplorer
 
             try
             {
-                DB.SaveTile(new TileModel()
+                SaveTileAsync(new TileModel()
                 {
                     X = Osm.LngToTileX(position.Lng, Const.TILE_ZOOM),
                     Y = Osm.LatToTileY(position.Lat, Const.TILE_ZOOM)
@@ -635,7 +739,7 @@ namespace TileExplorer
         {
             PointLatLng position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
 
-            DB.DeleteTile(new TileModel()
+            DeleteTileAsync(new TileModel()
             {
                 X = Osm.LngToTileX(position.Lng, Const.TILE_ZOOM),
                 Y = Osm.LatToTileY(position.Lat, Const.TILE_ZOOM)
@@ -661,31 +765,11 @@ namespace TileExplorer
             }
         }
 
-        private void GMapControl_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void MiMainSaveToImage_Click(object sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (SelectedMarker == null)
-                {
-                    MarkerAdd(gMapControl.FromLocalToLatLng(e.X, e.Y));
-                }
-                else
-                {
-                    MarkerChange(SelectedMarker);
-                }
-            }
-        }
-
-        private void GMapControl_OnRouteClick(GMapRoute item, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                SelectedMarker = null;
-
-                var track = ((MapTrack)item).TrackModel;
-
-                Msg.Info(track.Text + "\n" + track.DateTime + "\n" +
-                    track.TrackPoints.Count + "\n" + item.Points.Count);
+                SaveToImage(saveFileDialog.FileName);
             }
         }
 
@@ -705,12 +789,22 @@ namespace TileExplorer
                     var track = await OpenTrackFromFileAsync(file);
 
                     await DB.SaveTrackAsync(track);
+
+                    tracksOverlay.Routes.Add(new MapTrack(track));
                 }
 
                 Status = ProgramStatus.Idle;
-
-                DataUpdateAsync();
             }
+        }
+
+        private void MiMainDataMarkerList_Click(object sender, EventArgs e)
+        {
+            frmMarkerList.Visible = !frmMarkerList.Visible;
+        }
+
+        private void MiMainDataTrackList_Click(object sender, EventArgs e)
+        {
+            frmTrackList.Visible = !frmTrackList.Visible;
         }
     }
 }

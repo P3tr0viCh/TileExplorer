@@ -32,9 +32,11 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.fontDialog = new System.Windows.Forms.FontDialog();
             this.gbMarker = new System.Windows.Forms.GroupBox();
+            this.btnColorMarkerText = new System.Windows.Forms.Button();
             this.tbColorMarkerText = new System.Windows.Forms.TextBox();
             this.btnFontMarker = new System.Windows.Forms.Button();
             this.tbFontMarker = new System.Windows.Forms.TextBox();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.gbMarker.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,6 +67,7 @@
             // 
             // gbMarker
             // 
+            this.gbMarker.Controls.Add(this.btnColorMarkerText);
             this.gbMarker.Controls.Add(this.tbColorMarkerText);
             this.gbMarker.Controls.Add(this.btnFontMarker);
             this.gbMarker.Controls.Add(this.tbFontMarker);
@@ -75,9 +78,19 @@
             this.gbMarker.TabStop = false;
             this.gbMarker.Text = "Маркер";
             // 
+            // btnColorMarkerText
+            // 
+            this.btnColorMarkerText.Location = new System.Drawing.Point(241, 60);
+            this.btnColorMarkerText.Name = "btnColorMarkerText";
+            this.btnColorMarkerText.Size = new System.Drawing.Size(56, 26);
+            this.btnColorMarkerText.TabIndex = 20;
+            this.btnColorMarkerText.Text = "...";
+            this.btnColorMarkerText.UseVisualStyleBackColor = true;
+            this.btnColorMarkerText.Click += new System.EventHandler(this.BtnFontColorMarker_Click);
+            // 
             // tbColorMarkerText
             // 
-            this.tbColorMarkerText.Location = new System.Drawing.Point(8, 59);
+            this.tbColorMarkerText.Location = new System.Drawing.Point(135, 59);
             this.tbColorMarkerText.Name = "tbColorMarkerText";
             this.tbColorMarkerText.Size = new System.Drawing.Size(100, 27);
             this.tbColorMarkerText.TabIndex = 19;
@@ -130,5 +143,7 @@
         private System.Windows.Forms.TextBox tbColorMarkerText;
         private System.Windows.Forms.Button btnFontMarker;
         private System.Windows.Forms.TextBox tbFontMarker;
+        private System.Windows.Forms.Button btnColorMarkerText;
+        private System.Windows.Forms.ColorDialog colorDialog;
     }
 }

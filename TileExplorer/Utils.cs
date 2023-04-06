@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -160,7 +161,7 @@ namespace TileExplorer
                 if (maxSquare > result.MaxSquare)
                 {
                     result.MaxSquare = maxSquare;
-                    
+
                     maxSquareX = tile.X;
                     maxSquareY = tile.Y;
                 }
@@ -169,7 +170,7 @@ namespace TileExplorer
             if (result.MaxSquare > 1)
             {
                 foreach (var tile in tiles.Where(tile =>
-                    tile.X >= maxSquareX && tile.X < maxSquareX + result.MaxSquare && 
+                    tile.X >= maxSquareX && tile.X < maxSquareX + result.MaxSquare &&
                     tile.Y >= maxSquareY && tile.Y < maxSquareY + result.MaxSquare))
                 {
                     tile.Status = TileStatus.MaxSquare;
@@ -217,6 +218,40 @@ namespace TileExplorer
                             });
                         }
                     }
+
+                    if (track.TrackPoints.Count == 0)
+                    {
+                        throw new Exception("empty track");
+                    }
+
+                    double latPrev = track.TrackPoints[0].Lat;
+                    double lngPrev = track.TrackPoints[0].Lng;
+
+                    track.TrackPoints[0].IsUsedForDraw = true;
+
+                    double lat, lng;
+                    
+                    double distance = 0, pointsDistance;
+
+                    for (int i = 1; i < track.TrackPoints.Count; i++)
+                    {
+                        lat = track.TrackPoints[i].Lat;
+                        lng = track.TrackPoints[i].Lng;
+
+                        distance += Geo.Haversine(track.TrackPoints[i - 1].Lat, track.TrackPoints[i - 1].Lng, lat, lng);
+
+                        pointsDistance = Geo.Haversine(latPrev, lngPrev, lat, lng);
+
+                        if (pointsDistance >= Settings.Default.TrackMinDistancePoint)
+                        {
+                            latPrev = lat;
+                            lngPrev = lng;
+
+                            track.TrackPoints[i].IsUsedForDraw = true;
+                        }
+                    }
+
+                    track.Distance = (int)distance;
                 }
                 else
                 {

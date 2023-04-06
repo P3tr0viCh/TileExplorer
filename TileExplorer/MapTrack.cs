@@ -49,7 +49,8 @@ namespace TileExplorer
                 lat2 = trackPoint.Lat;
                 lng2 = trackPoint.Lng;
 
-                if (Geo.Haversine(lat1, lng1, lat2, lng2) < 100) continue;
+//                if (Geo.Haversine(lat1, lng1, lat2, lng2) < Settings.Default.TrackMinDistancePoint) continue;
+                if (!trackPoint.IsUsedForDraw) continue;
 
                 Points.Add(new PointLatLng(trackPoint.Lat, trackPoint.Lng));
 

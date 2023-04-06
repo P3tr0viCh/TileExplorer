@@ -90,5 +90,17 @@ namespace TileExplorer
                 DialogResult = DialogResult.OK;
             }
         }
+
+        private void BtnFontColorMarker_Click(object sender, EventArgs e)
+        {
+            colorDialog.Color = ColorMarkerText;
+
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                ColorMarkerText = colorDialog.Color;
+
+                tbColorMarkerText.Text = new ColorConverter().ConvertToString(ColorMarkerText);
+            }
+        }
     }
 }

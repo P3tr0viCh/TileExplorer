@@ -54,6 +54,7 @@
             this.miMainMapDesign = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainData = new System.Windows.Forms.ToolStripMenuItem();
             this.openTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainDataMarkerList = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainHelp = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,6 +70,9 @@
             this.addTileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.cmTrack = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainDataTrackList = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -77,6 +81,7 @@
             this.toolStripContainer.SuspendLayout();
             this.cmMarker.SuspendLayout();
             this.cmMap.SuspendLayout();
+            this.cmTrack.SuspendLayout();
             this.SuspendLayout();
             // 
             // gMapControl
@@ -195,7 +200,7 @@
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(720, 24);
             this.menuStrip.TabIndex = 2;
-            this.menuStrip.Text = "menuStrip1";
+            this.menuStrip.Text = "menuStrip";
             // 
             // miMainFile
             // 
@@ -212,6 +217,7 @@
             this.miMainSaveToImage.Name = "miMainSaveToImage";
             this.miMainSaveToImage.Size = new System.Drawing.Size(219, 22);
             this.miMainSaveToImage.Text = "Сохранить изображение...";
+            this.miMainSaveToImage.Click += new System.EventHandler(this.MiMainSaveToImage_Click);
             // 
             // toolStripSeparator1
             // 
@@ -287,6 +293,8 @@
             // 
             this.miMainData.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openTrackToolStripMenuItem,
+            this.miMainDataTrackList,
+            this.miMainDataMarkerList,
             this.toolStripSeparator4,
             this.miMainDataUpdate});
             this.miMainData.Name = "miMainData";
@@ -300,6 +308,13 @@
             this.openTrackToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.openTrackToolStripMenuItem.Text = "open track...";
             this.openTrackToolStripMenuItem.Click += new System.EventHandler(this.OpenTrackToolStripMenuItem_Click);
+            // 
+            // miMainDataMarkerList
+            // 
+            this.miMainDataMarkerList.Name = "miMainDataMarkerList";
+            this.miMainDataMarkerList.Size = new System.Drawing.Size(182, 22);
+            this.miMainDataMarkerList.Text = "Маркеры";
+            this.miMainDataMarkerList.Click += new System.EventHandler(this.MiMainDataMarkerList_Click);
             // 
             // toolStripSeparator4
             // 
@@ -423,6 +438,27 @@
             this.openFileDialog.Filter = "GPX|*.gpx|Все файлы|*.*";
             this.openFileDialog.Multiselect = true;
             // 
+            // cmTrack
+            // 
+            this.cmTrack.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miTrackDelete});
+            this.cmTrack.Name = "cmTrack";
+            this.cmTrack.Size = new System.Drawing.Size(119, 26);
+            // 
+            // miTrackDelete
+            // 
+            this.miTrackDelete.Name = "miTrackDelete";
+            this.miTrackDelete.Size = new System.Drawing.Size(118, 22);
+            this.miTrackDelete.Text = "Удалить";
+            this.miTrackDelete.Click += new System.EventHandler(this.MiTrackDelete_Click);
+            // 
+            // miMainDataTrackList
+            // 
+            this.miMainDataTrackList.Name = "miMainDataTrackList";
+            this.miMainDataTrackList.Size = new System.Drawing.Size(182, 22);
+            this.miMainDataTrackList.Text = "Треки";
+            this.miMainDataTrackList.Click += new System.EventHandler(this.MiMainDataTrackList_Click);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -451,6 +487,7 @@
             this.toolStripContainer.PerformLayout();
             this.cmMarker.ResumeLayout(false);
             this.cmMap.ResumeLayout(false);
+            this.cmTrack.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -496,6 +533,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripMenuItem miMainShowTracks;
+        private System.Windows.Forms.ContextMenuStrip cmTrack;
+        private System.Windows.Forms.ToolStripMenuItem miTrackDelete;
+        private System.Windows.Forms.ToolStripMenuItem miMainDataMarkerList;
+        private System.Windows.Forms.ToolStripMenuItem miMainDataTrackList;
     }
 }
 

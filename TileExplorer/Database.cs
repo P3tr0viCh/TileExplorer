@@ -97,6 +97,8 @@ namespace TileExplorer
 
             public double Lat { get; set; }
             public double Lng { get; set; }
+
+            public bool IsUsedForDraw { get; set; } = false;
         }
 
         public Database(string fileName)
@@ -132,7 +134,7 @@ namespace TileExplorer
 
             Connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                "trackid INTEGER, lat REAL NOT NULL, lng REAL NOT NULL);");
+                "trackid INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, isusedfordraw INTEGER);");
 
             Connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
                 "tracks_points (trackid);");
@@ -145,7 +147,28 @@ namespace TileExplorer
 
         public async Task<List<MarkerModel>> LoadMarkersAsync()
         {
-            return (List<MarkerModel>)await Task.Run(() => Connection.GetAllAsync<MarkerModel>());
+            return await Task.Run(() => Connection.GetAll<MarkerModel>().ToList());
+        }
+
+        public async Task<List<TileModel>> LoadTilesAsync()
+        {
+            return await Task.Run(() => Connection.GetAll<TileModel>().ToList());
+        }
+
+        public async Task<List<TrackModel>> LoadTracksAsync()
+        {
+            return await Task.Run(() =>
+            {
+                var tracks = Connection.GetAll<TrackModel>().ToList();
+
+                foreach (var track in tracks)
+                {
+                    track.TrackPoints = Connection.Query<TrackPointModel>(
+                        "SELECT * FROM tracks_points WHERE trackid = :trackid", new { trackid = track.Id }).ToList();
+                }
+
+                return tracks;
+            });
         }
 
         public async Task SaveMarkerAsync(MarkerModel marker)
@@ -265,18 +288,13 @@ namespace TileExplorer
                 }
         */
 
-        public async Task<List<TileModel>> LoadTilesAsync()
-        {
-            return (List<TileModel>)await Task.Run(() => Connection.GetAllAsync<TileModel>());
-        }
-
-        public void DropTiles()
+        public async Task DropTilesAsync()
         {
             Connection.Open();
 
             using (var transaction = Connection.BeginTransaction())
             {
-                Connection.DeleteAll<TileModel>(transaction);
+                await Connection.DeleteAllAsync<TileModel>(transaction);
 
                 transaction.Commit();
             }
@@ -284,13 +302,13 @@ namespace TileExplorer
             Connection.Close();
         }
 
-        public void SaveTiles(List<TileModel> tiles)
+        public async Task SaveTilesAsync(List<TileModel> tiles)
         {
             Connection.Open();
 
             using (var transaction = Connection.BeginTransaction())
             {
-                Connection.Insert(tiles, transaction);
+                await Connection.InsertAsync(tiles, transaction);
 
                 transaction.Commit();
             }
@@ -298,14 +316,14 @@ namespace TileExplorer
             Connection.Close();
         }
 
-        public void SaveTile(TileModel tile)
+        public async Task<int> SaveTileAsync(TileModel tile)
         {
-            Connection.Insert(tile);
+            return await Connection.InsertAsync(tile);
         }
 
-        public void DeleteTile(TileModel tile)
+        public async Task<int> DeleteTileAsync(TileModel tile)
         {
-            Connection.Execute("DELETE FROM tiles WHERE x = :x AND y = :y", new { x = tile.X, y = tile.Y });
+            return await Connection.ExecuteAsync("DELETE FROM tiles WHERE x = :x AND y = :y", new { x = tile.X, y = tile.Y });
         }
 
         public void DropTracks()
@@ -316,12 +334,15 @@ namespace TileExplorer
             {
                 Connection.DeleteAll<TrackModel>(transaction);
 
-                Connection.DeleteAll<TrackPointModel>(transaction);
-
                 transaction.Commit();
             }
 
             Connection.Close();
+        }
+
+        public async Task DeleteTrackAsync(TrackModel track)
+        {
+            await Connection.DeleteAsync(track);
         }
 
         public async Task SaveTrackAsync(TrackModel track)
@@ -345,22 +366,6 @@ namespace TileExplorer
                 }
 
                 Connection.Close();
-            });
-        }
-
-        public async Task<List<TrackModel>> LoadTracksAsync()
-        {
-            return await Task.Run(() =>
-            {
-                var tracks = Connection.GetAll<TrackModel>().ToList();
-
-                foreach (var track in tracks)
-                {
-                    track.TrackPoints = Connection.Query<TrackPointModel>(
-                        "SELECT * FROM tracks_points WHERE trackid = :trackid", new { trackid = track.Id }).ToList();
-                }
-
-                return tracks;
             });
         }
     }
