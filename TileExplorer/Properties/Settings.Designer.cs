@@ -25,37 +25,13 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1, -1, 0, 0")]
-        public global::System.Drawing.Rectangle MainBounds {
-            get {
-                return ((global::System.Drawing.Rectangle)(this["MainBounds"]));
-            }
-            set {
-                this["MainBounds"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MainMaximized {
-            get {
-                return ((bool)(this["MainMaximized"]));
-            }
-            set {
-                this["MainMaximized"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool MapMarkersVisible {
+        public bool VisibleMarkers {
             get {
-                return ((bool)(this["MapMarkersVisible"]));
+                return ((bool)(this["VisibleMarkers"]));
             }
             set {
-                this["MapMarkersVisible"] = value;
+                this["VisibleMarkers"] = value;
             }
         }
         
@@ -314,12 +290,12 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool MapTrackVisible {
+        public bool VisibleTracks {
             get {
-                return ((bool)(this["MapTrackVisible"]));
+                return ((bool)(this["VisibleTracks"]));
             }
             set {
-                this["MapTrackVisible"] = value;
+                this["VisibleTracks"] = value;
             }
         }
         
@@ -365,6 +341,102 @@ namespace TileExplorer.Properties {
         public int TrackMinDistancePoint {
             get {
                 return ((int)(this["TrackMinDistancePoint"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool VisibleListMarkers {
+            get {
+                return ((bool)(this["VisibleListMarkers"]));
+            }
+            set {
+                this["VisibleListMarkers"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool VisibleListTracks {
+            get {
+                return ((bool)(this["VisibleListTracks"]));
+            }
+            set {
+                this["VisibleListTracks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkSlateBlue")]
+        public global::System.Drawing.Color ColorMarkerSelectedLine {
+            get {
+                return ((global::System.Drawing.Color)(this["ColorMarkerSelectedLine"]));
+            }
+            set {
+                this["ColorMarkerSelectedLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public float WidthTrackSelected {
+            get {
+                return ((float)(this["WidthTrackSelected"]));
+            }
+            set {
+                this["WidthTrackSelected"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public float WidthMarkerLineSelected {
+            get {
+                return ((float)(this["WidthMarkerLineSelected"]));
+            }
+            set {
+                this["WidthMarkerLineSelected"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public float WidthMarkerLine {
+            get {
+                return ((float)(this["WidthMarkerLine"]));
+            }
+            set {
+                this["WidthMarkerLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkSlateBlue")]
+        public global::System.Drawing.Color ColorMarkerSelectedFill {
+            get {
+                return ((global::System.Drawing.Color)(this["ColorMarkerSelectedFill"]));
+            }
+            set {
+                this["ColorMarkerSelectedFill"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkSlateBlue")]
+        public global::System.Drawing.Color ColorTrackSelected {
+            get {
+                return ((global::System.Drawing.Color)(this["ColorTrackSelected"]));
+            }
+            set {
+                this["ColorTrackSelected"] = value;
             }
         }
     }

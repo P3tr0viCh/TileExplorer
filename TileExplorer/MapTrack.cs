@@ -1,23 +1,39 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
 using P3tr0viCh;
+using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 using TileExplorer.Properties;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    internal class MapTrack : GMapRoute
+    public class MapTrack : GMapRoute
     {
         private TrackModel trackModel;
+
+        public static readonly Pen DefaultSelectedStroke;
+
+        [NonSerialized]
+        public Pen SelectedStroke = DefaultSelectedStroke;
+
+        static MapTrack()
+        {
+            DefaultStroke.Color = Color.FromArgb(Settings.Default.ColorTrackAlpha, Settings.Default.ColorTrack);
+            DefaultStroke.Width = Settings.Default.WidthTrack;
+
+            DefaultSelectedStroke = new Pen(Color.FromArgb(Settings.Default.ColorTrackAlpha, 
+                Settings.Default.ColorTrackSelected), Settings.Default.WidthTrackSelected);
+        }
 
         public MapTrack(TrackModel track) : base(track.Text)
         {
             IsHitTestVisible = true;
 
-            Stroke = new Pen(Color.FromArgb(Settings.Default.ColorTrackAlpha, Settings.Default.ColorTrack),
-                Settings.Default.WidthTrack);
+            UpdateColors();
 
             TrackModel = track;
         }
@@ -42,20 +58,34 @@ namespace TileExplorer
 
             Points.Clear();
 
-            double lat1 = 0, lng1 = 0, lat2, lng2;
-
             foreach (var trackPoint in trackModel.TrackPoints)
             {
-                lat2 = trackPoint.Lat;
-                lng2 = trackPoint.Lng;
-
-//                if (Geo.Haversine(lat1, lng1, lat2, lng2) < Settings.Default.TrackMinDistancePoint) continue;
                 if (!trackPoint.IsUsedForDraw) continue;
 
                 Points.Add(new PointLatLng(trackPoint.Lat, trackPoint.Lng));
+            }
+        }
 
-                lat1 = lat2;
-                lng1 = lng2;
+        private void UpdateColors()
+        {
+            Stroke = Selected ? DefaultSelectedStroke : DefaultStroke;
+        }
+
+        private bool selected = false;
+
+        public bool Selected
+        {
+            get
+            {
+                return selected;
+            }
+            set
+            {
+                if (selected == value) return;
+
+                selected = value;
+
+                UpdateColors();
             }
         }
     }

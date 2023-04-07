@@ -7,10 +7,10 @@ using GMap.NET.WindowsForms.Markers;
 using P3tr0viCh;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,7 +21,7 @@ using static TileExplorer.StatusStripPresenter;
 
 namespace TileExplorer
 {
-    public partial class Main : Form, IStatusStripView
+    public partial class Main : Form, IStatusStripView, IMainForm
     {
         private readonly Database DB;
 
@@ -41,7 +41,7 @@ namespace TileExplorer
         public ToolStripStatusLabel StatusLabelTilesMaxSquare => slTilesMaxSquare;
 
         private readonly FrmTrackList frmTrackList = new FrmTrackList();
-        private readonly FrmMarkerList frmMarkerList = new FrmMarkerList();
+        private readonly FrmMarkerList frmMarkerList;
 
         public Main()
         {
@@ -50,23 +50,13 @@ namespace TileExplorer
             DB = new Database(Path.ChangeExtension(Application.ExecutablePath, ".sqlite"));
 
             statusStripPresenter = new StatusStripPresenter(this);
+
+            frmMarkerList = new FrmMarkerList(this);
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
-            var mainBounds = Settings.Default.MainBounds;
-
-            if (mainBounds.X < 0) mainBounds.X = (Screen.FromControl(this).WorkingArea.Width - Width) / 2;
-            if (mainBounds.Y < 0) mainBounds.Y = (Screen.FromControl(this).WorkingArea.Height - Height) / 2;
-            if (mainBounds.Width < Width) mainBounds.Width = Width;
-            if (mainBounds.Height < Height) mainBounds.Height = Height;
-
-            Bounds = mainBounds;
-
-            if (Settings.Default.MainMaximized)
-            {
-                WindowState = FormWindowState.Maximized;
-            }
+            SettingsExt.LoadFormBounds(this);
 
 #if DEBUG
             DummyTiles();
@@ -74,32 +64,27 @@ namespace TileExplorer
 
             DataUpdateAsync();
 
-            miMainShowTracks.Checked = Settings.Default.MapTrackVisible;
-            miMainShowMarkers.Checked = Settings.Default.MapMarkersVisible;
+            miMainShowTracks.Checked = Settings.Default.VisibleTracks;
+            miMainShowMarkers.Checked = Settings.Default.VisibleMarkers;
 
             tracksOverlay.IsVisibile = miMainShowTracks.Checked;
             markersOverlay.IsVisibile = miMainShowMarkers.Checked;
 
-            frmTrackList.Visible = true;
-            frmMarkerList.Visible = true;
+            frmTrackList.Visible = Settings.Default.VisibleListTracks;
+            frmMarkerList.Visible = Settings.Default.VisibleListMarkers;
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             FullScreen = false;
 
-            if (WindowState == FormWindowState.Maximized)
-            {
-                Settings.Default.MainMaximized = true;
-            }
-            else
-            {
-                Settings.Default.MainMaximized = false;
-                Settings.Default.MainBounds = Bounds;
-            }
+            SettingsExt.SaveFormBounds(this);
 
-            Settings.Default.MapTrackVisible = miMainShowTracks.Checked;
-            Settings.Default.MapMarkersVisible = miMainShowMarkers.Checked;
+            Settings.Default.VisibleTracks = miMainShowTracks.Checked;
+            Settings.Default.VisibleMarkers = miMainShowMarkers.Checked;
+
+            Settings.Default.VisibleListTracks = frmTrackList.Visible;
+            Settings.Default.VisibleListMarkers = frmMarkerList.Visible;
 
             Settings.Default.Save();
         }
@@ -445,9 +430,59 @@ namespace TileExplorer
 
         private bool MarkerMoving;
 
-        private MapTrack SelectedTrack = null;
+        private MapTrack selectedTrack = null;
 
-        private MapMarker SelectedMarker = null;
+        public MapTrack SelectedTrack
+        {
+            get
+            {
+                return selectedTrack;
+            }
+            set
+            {
+                if (selectedTrack == value) return;
+
+                if (selectedTrack != null)
+                {
+                    selectedTrack.Selected = false;
+                }
+
+                selectedTrack = value;
+
+                if (selectedTrack != null)
+                {
+                    selectedTrack.Selected = true;
+                }
+            }
+        }
+
+        private MapMarker selectedMarker = null;
+
+        public MapMarker SelectedMarker
+        {
+            get
+            {
+                return selectedMarker;
+            }
+            set
+            {
+                if (selectedMarker == value) return;
+
+                if (selectedMarker != null)
+                {
+                    selectedMarker.Selected = false;
+                }
+
+                selectedMarker = value;
+
+                if (selectedMarker != null)
+                {
+                    selectedMarker.Selected = true;
+
+                    frmMarkerList.SelectedMarker = selectedMarker.MarkerModel;
+                }
+            }
+        }
 
         private void GMapControl_MouseClick(object sender, MouseEventArgs e)
         {
@@ -557,7 +592,7 @@ namespace TileExplorer
 
             markersOverlay.IsVisibile = true;
 
-            MarkerModel markerModel = new MarkerModel()
+            MarkerModel marker = new MarkerModel()
             {
                 Lat = point.Lat,
                 Lng = point.Lng,
@@ -574,13 +609,15 @@ namespace TileExplorer
 
             markersOverlay.Markers.Add(markerTemp);
 
-            if (FrmMarker.ShowDlg(this, markerModel))
+            if (FrmMarker.ShowDlg(this, marker))
             {
-                SaveMarkerAsync(markerModel);
+                SaveMarkerAsync(marker);
 
                 markersOverlay.Markers.Remove(markerTemp);
 
-                markersOverlay.Markers.Add(new MapMarker(markerModel));
+                markersOverlay.Markers.Add(new MapMarker(marker));
+
+                frmMarkerList.AddMarker(marker);
             }
             else
             {
@@ -805,6 +842,45 @@ namespace TileExplorer
         private void MiMainDataTrackList_Click(object sender, EventArgs e)
         {
             frmTrackList.Visible = !frmTrackList.Visible;
+        }
+
+        public interface IMainForm
+        {
+            void SelectMarkerById(long id);
+        }
+
+        public void SelectMarkerById(long id)
+        {
+            foreach (var marker in from MapMarker marker in markersOverlay.Markers
+                                   where marker.MarkerModel.Id == id
+                                   select marker)
+            {
+                SelectedMarker = marker;
+
+                if (ActiveForm != this) gMapControl.Invalidate();
+
+                break;
+            }
+        }
+
+        private void UpdateChildFormState(Form childForm)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                if (childForm.Visible) childForm.WindowState = FormWindowState.Minimized;
+            }
+            else
+            {
+                if (childForm.Visible) childForm.WindowState = FormWindowState.Normal;
+            }
+        }
+
+        private void Main_SizeChanged(object sender, EventArgs e)
+        {
+            for (int i = 1; i < Application.OpenForms.Count; i++)
+            {
+                UpdateChildFormState(Application.OpenForms[i]);
+            }
         }
     }
 }

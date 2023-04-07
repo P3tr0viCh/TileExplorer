@@ -54,6 +54,7 @@
             this.miMainMapDesign = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainData = new System.Windows.Forms.ToolStripMenuItem();
             this.openTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainDataTrackList = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainDataMarkerList = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataUpdate = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,7 +73,6 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.cmTrack = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMainDataTrackList = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -86,6 +86,7 @@
             // 
             // gMapControl
             // 
+            this.gMapControl.BackColor = System.Drawing.SystemColors.Control;
             this.gMapControl.Bearing = 0F;
             this.gMapControl.CanDragMap = true;
             this.gMapControl.Cursor = System.Windows.Forms.Cursors.Default;
@@ -309,6 +310,13 @@
             this.openTrackToolStripMenuItem.Text = "open track...";
             this.openTrackToolStripMenuItem.Click += new System.EventHandler(this.OpenTrackToolStripMenuItem_Click);
             // 
+            // miMainDataTrackList
+            // 
+            this.miMainDataTrackList.Name = "miMainDataTrackList";
+            this.miMainDataTrackList.Size = new System.Drawing.Size(182, 22);
+            this.miMainDataTrackList.Text = "Треки";
+            this.miMainDataTrackList.Click += new System.EventHandler(this.MiMainDataTrackList_Click);
+            // 
             // miMainDataMarkerList
             // 
             this.miMainDataMarkerList.Name = "miMainDataMarkerList";
@@ -452,13 +460,6 @@
             this.miTrackDelete.Text = "Удалить";
             this.miTrackDelete.Click += new System.EventHandler(this.MiTrackDelete_Click);
             // 
-            // miMainDataTrackList
-            // 
-            this.miMainDataTrackList.Name = "miMainDataTrackList";
-            this.miMainDataTrackList.Size = new System.Drawing.Size(182, 22);
-            this.miMainDataTrackList.Text = "Треки";
-            this.miMainDataTrackList.Click += new System.EventHandler(this.MiMainDataTrackList_Click);
-            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -473,6 +474,7 @@
             this.Text = "TileExplorer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
+            this.SizeChanged += new System.EventHandler(this.Main_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyDown);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();

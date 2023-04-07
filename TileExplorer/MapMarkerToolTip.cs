@@ -1,5 +1,7 @@
 ﻿using GMap.NET.WindowsForms;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using TileExplorer.Properties;
 
 namespace TileExplorer
 {
@@ -8,8 +10,20 @@ namespace TileExplorer
         private const int MARKER_OFFSET_X = 20;
         private const int MARKER_OFFSET_Y = -10;
 
+        static MapMarkerToolTip()
+        {
+            ((SolidBrush)DefaultFill).Color = Color.FromArgb(
+                    Settings.Default.ColorMarkerTextFillAlpha, Settings.Default.ColorMarkerTextFill);
+
+            ((SolidBrush)DefaultForeground).Color = Color.FromArgb(
+                Settings.Default.ColorMarkerTextAlpha, Settings.Default.ColorMarkerText);
+        }
+
         public MapMarkerToolTip(MapMarker marker) : base(marker)
         {
+            Font = Settings.Default.FontMarker;
+
+            TextPadding = new Size(4, 4);
         }
 
         public override void OnRender(Graphics g)

@@ -8,7 +8,7 @@ using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    internal class MapTile : GMapPolygon
+    public class MapTile : GMapPolygon
     {
         public MapTile(TileModel tile) : base(new List<PointLatLng>(), "")
         {
