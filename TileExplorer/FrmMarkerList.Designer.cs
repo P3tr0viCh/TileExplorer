@@ -56,7 +56,6 @@
             this.dataGridView.RowHeadersWidth = 32;
             this.dataGridView.Size = new System.Drawing.Size(458, 287);
             this.dataGridView.TabIndex = 0;
-            this.dataGridView.SelectionChanged += new System.EventHandler(this.DataGridView_SelectionChanged);
             // 
             // ColumnId
             // 
@@ -100,8 +99,6 @@
             this.ShowInTaskbar = false;
             this.Text = "Маркеры";
             this.TopMost = true;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMarkerList_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMarkerList_FormClosed);
             this.Load += new System.EventHandler(this.FrmMarkerList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);

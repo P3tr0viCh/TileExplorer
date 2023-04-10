@@ -140,8 +140,13 @@
             // udOffsetY
             // 
             this.udOffsetY.Location = new System.Drawing.Point(160, 144);
+            this.udOffsetY.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.udOffsetY.Minimum = new decimal(new int[] {
-            100,
+            200,
             0,
             0,
             -2147483648});
@@ -152,8 +157,13 @@
             // udOffsetX
             // 
             this.udOffsetX.Location = new System.Drawing.Point(8, 144);
+            this.udOffsetX.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.udOffsetX.Minimum = new decimal(new int[] {
-            100,
+            200,
             0,
             0,
             -2147483648});

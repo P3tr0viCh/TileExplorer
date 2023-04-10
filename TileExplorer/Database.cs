@@ -3,7 +3,6 @@ using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,12 +22,15 @@ namespace TileExplorer
             None
         }
 
-        [Table("markers")]
-        public class MarkerModel
+        public class BaseModelId
         {
             [Key]
             public long Id { get; set; }
+        }
 
+        [Table("markers")]
+        public class MarkerModel : BaseModelId
+        {
             public double Lat { get; set; }
             public double Lng { get; set; }
 
@@ -54,11 +56,8 @@ namespace TileExplorer
         }
 
         [Table("tiles")]
-        public class TileModel
+        public class TileModel : BaseModelId
         {
-            [Key]
-            public long Id { get; set; }
-
             public int X { get; set; }
             public int Y { get; set; }
 
@@ -72,11 +71,8 @@ namespace TileExplorer
         }
 
         [Table("tracks")]
-        public class TrackModel
+        public class TrackModel : BaseModelId
         {
-            [Key]
-            public long Id { get; set; }
-
             public string Text { get; set; }
 
             public DateTime DateTime { get; set; }
@@ -89,16 +85,14 @@ namespace TileExplorer
         }
 
         [Table("tracks_points")]
-        public class TrackPointModel
+        public class TrackPointModel : BaseModelId
         {
-            [Key]
-            public long Id { get; set; }
             public long TrackId { get; set; }
 
             public double Lat { get; set; }
             public double Lng { get; set; }
 
-            public bool IsUsedForDraw { get; set; } = false;
+            public double Distance { get; set; }
         }
 
         public Database(string fileName)
@@ -134,7 +128,7 @@ namespace TileExplorer
 
             Connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                "trackid INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, isusedfordraw INTEGER);");
+                "trackid INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, distance REAL);");
 
             Connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
                 "tracks_points (trackid);");

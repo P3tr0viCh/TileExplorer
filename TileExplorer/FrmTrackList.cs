@@ -1,38 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using static TileExplorer.Database;
+using static TileExplorer.Main;
 
 namespace TileExplorer
 {
-    public partial class FrmTrackList : Form
+    public partial class FrmTrackList : BaseFrmTrackList
     {
-        public FrmTrackList()
+        public FrmTrackList(IMainForm mainForm) : base(mainForm)
         {
             InitializeComponent();
         }
 
-        private void FrmTrackList_FormClosing(object sender, FormClosingEventArgs e)
+        public override DataGridView DataGridView => dataGridView;
+        public override DataGridViewColumn ColumnFind => ColumnId;
+        public override DataGridViewColumn ColumnSelect => ColumnText;
+
+        private void FrmTrackList_Load(object sender, EventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                e.Cancel = true;
-                Hide();
-            }
+#if !DEBUG
+            ColumnId.Visible = false;
+#endif
         }
 
-        public List<TrackModel> Tracks
+        public override void Set(int rowIndex, TrackModel track)
         {
-            set
-            {
-                dataGridView.Rows.Clear();
+            dataGridView.Rows[rowIndex].Cells[ColumnId.Name].Value = track.Id;
 
-                foreach (var track in value)
-                {
-                    dataGridView.Rows.Add(
-                        track.Text, track.DateTime, track.Distance / 1000.0
-                    );
-                }
-            }
+            dataGridView.Rows[rowIndex].Cells[ColumnText.Name].Value = track.Text;
+
+            dataGridView.Rows[rowIndex].Cells[ColumnDateTime.Name].Value = track.DateTime;
+
+            dataGridView.Rows[rowIndex].Cells[ColumnDistance.Name].Value = track.Distance / 1000.0;
         }
     }
 }

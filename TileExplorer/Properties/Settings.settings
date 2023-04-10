@@ -107,5 +107,17 @@
     <Setting Name="ColorTrackSelected" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">DarkSlateBlue</Value>
     </Setting>
+    <Setting Name="MapGrayScale" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="HomeLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">51.196369</Value>
+    </Setting>
+    <Setting Name="HomeLng" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">58.298527</Value>
+    </Setting>
+    <Setting Name="HomeZoom" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1,4 +1,5 @@
-﻿using GMap.NET.Internals;
+﻿using GMap.NET;
+using GMap.NET.Internals;
 using P3tr0viCh;
 using System;
 using System.Collections.Generic;
@@ -224,34 +225,22 @@ namespace TileExplorer
                         throw new Exception("empty track");
                     }
 
-                    double latPrev = track.TrackPoints[0].Lat;
-                    double lngPrev = track.TrackPoints[0].Lng;
+                    double lat, lng, latPrev = 0, lngPrev = 0;
 
-                    track.TrackPoints[0].IsUsedForDraw = true;
-
-                    double lat, lng;
-                    
-                    double distance = 0, pointsDistance;
-
-                    for (int i = 1; i < track.TrackPoints.Count; i++)
+                    foreach (var point in track.TrackPoints)
                     {
-                        lat = track.TrackPoints[i].Lat;
-                        lng = track.TrackPoints[i].Lng;
+                        lat = point.Lat;
+                        lng = point.Lng;
 
-                        distance += Geo.Haversine(track.TrackPoints[i - 1].Lat, track.TrackPoints[i - 1].Lng, lat, lng);
+                        point.Distance = Geo.Haversine(latPrev, lngPrev, lat, lng);
 
-                        pointsDistance = Geo.Haversine(latPrev, lngPrev, lat, lng);
-
-                        if (pointsDistance >= Settings.Default.TrackMinDistancePoint)
-                        {
-                            latPrev = lat;
-                            lngPrev = lng;
-
-                            track.TrackPoints[i].IsUsedForDraw = true;
-                        }
+                        latPrev = lat;
+                        lngPrev = lng;
                     }
 
-                    track.Distance = (int)distance;
+                    track.TrackPoints[0].Distance = 0;
+
+                    track.Distance += (int)track.TrackPoints.Sum(p => p.Distance);
                 }
                 else
                 {
@@ -301,6 +290,11 @@ namespace TileExplorer
             Debug.WriteLine("end open xml");
 
             return track;
+        }
+
+        public static PointLatLng TrackPointToPointLatLng(TrackPointModel trackPointModel)
+        {
+            return new PointLatLng(trackPointModel.Lat, trackPointModel.Lng);
         }
     }
 }

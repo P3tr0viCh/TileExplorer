@@ -4,6 +4,7 @@ using P3tr0viCh;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
@@ -25,7 +26,7 @@ namespace TileExplorer
             DefaultStroke.Color = Color.FromArgb(Settings.Default.ColorTrackAlpha, Settings.Default.ColorTrack);
             DefaultStroke.Width = Settings.Default.WidthTrack;
 
-            DefaultSelectedStroke = new Pen(Color.FromArgb(Settings.Default.ColorTrackAlpha, 
+            DefaultSelectedStroke = new Pen(Color.FromArgb(Settings.Default.ColorTrackAlpha,
                 Settings.Default.ColorTrackSelected), Settings.Default.WidthTrackSelected);
         }
 
@@ -58,12 +59,26 @@ namespace TileExplorer
 
             Points.Clear();
 
-            foreach (var trackPoint in trackModel.TrackPoints)
-            {
-                if (!trackPoint.IsUsedForDraw) continue;
+            double distance = 0;
 
-                Points.Add(new PointLatLng(trackPoint.Lat, trackPoint.Lng));
+            if (trackModel.TrackPoints.Count < 2) return;
+
+            Points.Add(Utils.TrackPointToPointLatLng(trackModel.TrackPoints.First()));
+
+            for (var i = 1; i < trackModel.TrackPoints.Count - 1; i++)
+            {
+                if (distance >= Settings.Default.TrackMinDistancePoint)
+                {
+                    distance = 0;
+
+                    Points.Add(Utils.TrackPointToPointLatLng(trackModel.TrackPoints[i]));
+                }
+                else {
+                    distance += trackModel.TrackPoints[i].Distance;
+                }
             }
+
+            Points.Add(Utils.TrackPointToPointLatLng(trackModel.TrackPoints.Last()));
         }
 
         private void UpdateColors()

@@ -117,40 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CoordFmt" xml:space="preserve">
-    <value>{0:F6}</value>
-  </data>
-  <data name="ProgramStatusLoadData" xml:space="preserve">
-    <value>Загрузка...</value>
-  </data>
-  <data name="ProgramStatusLoadGpx" xml:space="preserve">
-    <value>Чтение...</value>
-  </data>
-  <data name="QuestionMarkerDelete" xml:space="preserve">
-    <value>Удалить маркер «{0}»?</value>
-  </data>
-  <data name="QuestionTrackDelete" xml:space="preserve">
-    <value>Удалить трек «{0}»?</value>
-  </data>
-  <data name="StatusMousePosition" xml:space="preserve">
-    <value>Курсор: {0:F6}, {1:F6}</value>
-  </data>
-  <data name="StatusPosition" xml:space="preserve">
-    <value>Центр: {0:F6}, {1:F6}</value>
-  </data>
-  <data name="StatusTileId" xml:space="preserve">
-    <value>Плитка: {0}, {1}</value>
-  </data>
-  <data name="StatusTilesMaxCluster" xml:space="preserve">
-    <value>Кластер: {0}</value>
-  </data>
-  <data name="StatusTilesMaxSquare" xml:space="preserve">
-    <value>Квадрат: {0}</value>
-  </data>
-  <data name="StatusTilesVisited" xml:space="preserve">
-    <value>Открыто: {0}</value>
-  </data>
-  <data name="StatusZoom" xml:space="preserve">
-    <value>Масштаб: {0}</value>
-  </data>
 </root>

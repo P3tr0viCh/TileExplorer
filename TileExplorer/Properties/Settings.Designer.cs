@@ -439,5 +439,53 @@ namespace TileExplorer.Properties {
                 this["ColorTrackSelected"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MapGrayScale {
+            get {
+                return ((bool)(this["MapGrayScale"]));
+            }
+            set {
+                this["MapGrayScale"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("51.196369")]
+        public double HomeLat {
+            get {
+                return ((double)(this["HomeLat"]));
+            }
+            set {
+                this["HomeLat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("58.298527")]
+        public double HomeLng {
+            get {
+                return ((double)(this["HomeLng"]));
+            }
+            set {
+                this["HomeLng"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
+        public int HomeZoom {
+            get {
+                return ((int)(this["HomeZoom"]));
+            }
+            set {
+                this["HomeZoom"] = value;
+            }
+        }
     }
 }
