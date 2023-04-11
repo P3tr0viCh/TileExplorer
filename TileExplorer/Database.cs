@@ -3,6 +3,7 @@ using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,8 +13,6 @@ namespace TileExplorer
     public class Database
     {
         private readonly string FileName;
-
-        private readonly SQLiteConnection Connection;
 
         public enum MarkerImageType
         {
@@ -95,13 +94,24 @@ namespace TileExplorer
             public double Distance { get; set; }
         }
 
+        [Table("tracks_tiles")]
+        public class TracksTilesModel : BaseModelId
+        {
+            public long TrackId { get; set; }
+
+            public long TileId { get; set; }
+        }
+
         public Database(string fileName)
         {
             FileName = fileName;
-
-            Connection = new SQLiteConnection("Data Source=" + FileName + ";Version=3;");
-
+            Debug.WriteLine(FileName);
             CreateDatabase();
+        }
+
+        private SQLiteConnection GetConnection()
+        {
+            return new SQLiteConnection("data source=" + FileName + ";version=3;foreign keys=true;");
         }
 
         private void CreateDatabase()
@@ -109,77 +119,116 @@ namespace TileExplorer
             if (!File.Exists(FileName))
             {
                 SQLiteConnection.CreateFile(FileName);
-
-                Connection.Execute("CREATE TABLE markers (" +
+#if DEBUG
+            }
+#endif
+            using (var connection = GetConnection())
+            {
+                /* tables */
+                connection.Execute("CREATE TABLE IF NOT EXISTS markers (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                     "lat REAL NOT NULL, lng REAL NOT NULL, " +
                     "text TEXT, istextvisible INTEGER, " +
                     "offsetx INTEGER, offsety INTEGER, image BLOB, imagetype INTEGER DEFAULT 0);");
 
-                Connection.Execute("CREATE TABLE tiles (" +
+                connection.Execute("CREATE TABLE IF NOT EXISTS tiles (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                     "x INTEGER NOT NULL, y INTEGER NOT NULL, " +
                     "UNIQUE(x, y));");
+
+                connection.Execute("CREATE TABLE IF NOT EXISTS tracks (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "text TEXT, datetime TEXT, distance INTEGER);");
+
+                connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "trackid INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, distance REAL, " +
+                    "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
+
+                connection.Execute("CREATE TABLE IF NOT EXISTS tracks_tiles (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "trackid INTEGER, tileid INTEGER, " +
+                    "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
+
+                /* indexes */
+                connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
+                    "tracks_points (trackid);");
+
+                /* triggers */
+                connection.Execute("CREATE TRIGGER IF NOT EXISTS tracks_tiles_ad AFTER DELETE ON tracks_tiles " +
+                    "WHEN " +
+                        "(SELECT COUNT(*) FROM tracks_tiles WHERE tileid=OLD.tileid) = 0 " +
+                    "BEGIN " +
+                        "DELETE FROM tiles WHERE id=OLD.tileid; " +
+                    "END;");
             }
-
-            Connection.Execute("CREATE TABLE IF NOT EXISTS tracks (" +
-                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                "text TEXT, datetime TEXT, distance INTEGER);");
-
-            Connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
-                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                "trackid INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, distance REAL);");
-
-            Connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
-                "tracks_points (trackid);");
-
-            Connection.Execute("CREATE TRIGGER IF NOT EXISTS tracks_delete " +
-                "BEFORE DELETE ON tracks " +
-                    "FOR EACH ROW BEGIN DELETE FROM tracks_points WHERE tracks_points.trackid = OLD.id; " +
-                "END;");
+#if !DEBUG
+            }
+#endif
         }
 
         public async Task<List<MarkerModel>> LoadMarkersAsync()
         {
-            return await Task.Run(() => Connection.GetAll<MarkerModel>().ToList());
+            return await Task.Run(() =>
+            {
+                using (var connection = GetConnection())
+                {
+                    return connection.GetAll<MarkerModel>().ToList();
+                }
+            });
         }
 
         public async Task<List<TileModel>> LoadTilesAsync()
         {
-            return await Task.Run(() => Connection.GetAll<TileModel>().ToList());
+            return await Task.Run(() =>
+            {
+                using (var connection = GetConnection())
+                {
+                    return connection.GetAll<TileModel>().ToList();
+                }
+            });
         }
 
         public async Task<List<TrackModel>> LoadTracksAsync()
         {
             return await Task.Run(() =>
             {
-                var tracks = Connection.GetAll<TrackModel>().ToList();
-
-                foreach (var track in tracks)
+                using (var connection = GetConnection())
                 {
-                    track.TrackPoints = Connection.Query<TrackPointModel>(
-                        "SELECT * FROM tracks_points WHERE trackid = :trackid", new { trackid = track.Id }).ToList();
-                }
+                    var tracks = connection.GetAll<TrackModel>().ToList();
 
-                return tracks;
+                    foreach (var track in tracks)
+                    {
+                        track.TrackPoints = connection.Query<TrackPointModel>(
+                            "SELECT * FROM tracks_points WHERE trackid = :trackid", new { trackid = track.Id }).ToList();
+                    }
+
+                    return tracks;
+                }
             });
         }
 
         public async Task SaveMarkerAsync(MarkerModel marker)
         {
-            if (marker.Id == 0)
+            using (var connection = GetConnection())
             {
-                await Connection.InsertAsync(marker);
-            }
-            else
-            {
-                await Connection.UpdateAsync(marker);
+                if (marker.Id == 0)
+                {
+                    await connection.InsertAsync(marker);
+                }
+                else
+                {
+                    await connection.UpdateAsync(marker);
+                }
             }
         }
 
         public async Task DeleteMarkerAsync(MarkerModel marker)
         {
-            await Connection.DeleteAsync(marker);
+            using (var connection = GetConnection())
+            {
+                await connection.DeleteAsync(marker);
+            }
         }
 
         /*        public void SaveImage(ImageModel image)
@@ -282,85 +331,86 @@ namespace TileExplorer
                 }
         */
 
-        public async Task DropTilesAsync()
-        {
-            Connection.Open();
-
-            using (var transaction = Connection.BeginTransaction())
-            {
-                await Connection.DeleteAllAsync<TileModel>(transaction);
-
-                transaction.Commit();
-            }
-
-            Connection.Close();
-        }
-
         public async Task SaveTilesAsync(List<TileModel> tiles)
         {
-            Connection.Open();
-
-            using (var transaction = Connection.BeginTransaction())
+            await Task.Run(() =>
             {
-                await Connection.InsertAsync(tiles, transaction);
+                using (var connection = GetConnection())
+                {
+                    connection.Open();
 
-                transaction.Commit();
-            }
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        foreach (var tile in tiles)
+                        {
+                            tile.Id = connection.Insert(tile, transaction);
+                        }
 
-            Connection.Close();
+                        transaction.Commit();
+                    }
+                }
+            });
         }
 
         public async Task<int> SaveTileAsync(TileModel tile)
         {
-            return await Connection.InsertAsync(tile);
+            using (var connection = GetConnection())
+            {
+                return await connection.InsertAsync(tile);
+            }
         }
 
         public async Task<int> DeleteTileAsync(TileModel tile)
         {
-            return await Connection.ExecuteAsync("DELETE FROM tiles WHERE x = :x AND y = :y", new { x = tile.X, y = tile.Y });
-        }
-
-        public void DropTracks()
-        {
-            Connection.Open();
-
-            using (var transaction = Connection.BeginTransaction())
+            using (var connection = GetConnection())
             {
-                Connection.DeleteAll<TrackModel>(transaction);
-
-                transaction.Commit();
+                return await connection.ExecuteAsync("DELETE FROM tiles WHERE x = :x AND y = :y", new { x = tile.X, y = tile.Y });
             }
-
-            Connection.Close();
         }
 
         public async Task DeleteTrackAsync(TrackModel track)
         {
-            await Connection.DeleteAsync(track);
+            using (var connection = GetConnection())
+            {
+                await connection.DeleteAsync(track);
+            }
         }
 
-        public async Task SaveTrackAsync(TrackModel track)
+        public async Task<long> SaveTrackAsync(TrackModel track)
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
-                Connection.Open();
-
-                using (var transaction = Connection.BeginTransaction())
+                using (var connection = GetConnection())
                 {
-                    var id = Connection.Insert(track, transaction);
+                    connection.Open();
 
-                    foreach (var trackPoint in track.TrackPoints)
+                    long trackId;
+
+                    using (var transaction = connection.BeginTransaction())
                     {
-                        trackPoint.TrackId = id;
+                        trackId = connection.Insert(track, transaction);
+
+                        foreach (var trackPoint in track.TrackPoints)
+                        {
+                            trackPoint.TrackId = trackId;
+                        }
+
+                        connection.Insert(track.TrackPoints, transaction);
+
+                        transaction.Commit();
                     }
 
-                    Connection.Insert(track.TrackPoints, transaction);
-
-                    transaction.Commit();
+                    return trackId;
                 }
-
-                Connection.Close();
             });
+        }
+
+        public async Task SaveTracksTilesAsync(List<TracksTilesModel> tracksTiles)
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.InsertAsync(tracksTiles);
+            }
         }
     }
 }

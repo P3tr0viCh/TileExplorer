@@ -78,7 +78,7 @@ namespace TileExplorer
 
             textBox.Focus();
 
-            Msg.Error();
+            UtilsFiles.Error();
 
             return false;
         }

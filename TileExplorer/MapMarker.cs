@@ -32,7 +32,7 @@ namespace TileExplorer
         [NonSerialized]
         public SolidBrush SelectedFill = DefaultSelectedFill;
 
-        private MarkerModel markerModel;
+        private MarkerModel marker;
 
         static MapMarker()
         {
@@ -62,20 +62,20 @@ namespace TileExplorer
 
             ToolTip = new MapMarkerToolTip(this);
 
-            MarkerModel = markerModel;
+            Marker = markerModel;
 
             UpdateColors();
         }
 
-        public MarkerModel MarkerModel
+        public MarkerModel Marker
         {
             get
             {
-                return markerModel;
+                return marker;
             }
             set
             {
-                markerModel = value;
+                marker = value;
 
                 NotifyModelChanged();
             }
@@ -83,13 +83,13 @@ namespace TileExplorer
 
         public void NotifyModelChanged()
         {
-            ToolTipText = markerModel.Text;
-            ToolTipMode = markerModel.IsTextVisible ? MarkerTooltipMode.Always : MarkerTooltipMode.OnMouseOver;
+            ToolTipText = marker.Text;
+            ToolTipMode = marker.IsTextVisible ? MarkerTooltipMode.Always : MarkerTooltipMode.OnMouseOver;
 
-            Position = new PointLatLng(markerModel.Lat, markerModel.Lng);
+            Position = new PointLatLng(marker.Lat, marker.Lng);
 
-            ToolTip.Offset.X = markerModel.OffsetX;
-            ToolTip.Offset.Y = markerModel.OffsetY;
+            ToolTip.Offset.X = marker.OffsetX;
+            ToolTip.Offset.Y = marker.OffsetY;
         }
 
         public override void OnRender(Graphics g)

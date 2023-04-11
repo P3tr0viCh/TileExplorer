@@ -12,7 +12,6 @@ namespace TileExplorer
     {
         public override DataGridView DataGridView => null;
         public override DataGridViewColumn ColumnFind => null;
-        public override DataGridViewColumn ColumnSelect => null;
 
         public BaseFrmTrackList() : base(null)
         {
@@ -32,7 +31,6 @@ namespace TileExplorer
     {
         public override DataGridView DataGridView => null;
         public override DataGridViewColumn ColumnFind => null;
-        public override DataGridViewColumn ColumnSelect => null;
 
         public BaseFrmMarkerList() : base(null)
         {
@@ -54,7 +52,6 @@ namespace TileExplorer
 
         public abstract DataGridView DataGridView { get; }
         public abstract DataGridViewColumn ColumnFind { get; }
-        public abstract DataGridViewColumn ColumnSelect { get; }
 
         protected FrmList(IMainForm mainForm)
         {
@@ -88,13 +85,15 @@ namespace TileExplorer
         {
             set
             {
+                if (!Visible) return;
+
                 int rowIndex = Find(value);
 
                 if (rowIndex == -1) return;
 
                 if (rowIndex == DataGridView.CurrentCell.RowIndex) return;
 
-                DataGridView.CurrentCell = DataGridView[ColumnSelect.DisplayIndex, rowIndex];
+                DataGridView.CurrentCell = DataGridView[0, rowIndex];
             }
         }
 
@@ -135,7 +134,10 @@ namespace TileExplorer
         private void FrmList_Load(object sender, EventArgs e)
         {
             if (DataGridView != null)
+            {
                 DataGridView.SelectionChanged += new EventHandler(DataGridView_SelectionChanged);
+                DataGridView.MouseDoubleClick += new MouseEventHandler(DataGridView_MouseDoubleClick);
+            }
         }
 
         private void FrmList_FormClosing(object sender, FormClosingEventArgs e)
@@ -156,6 +158,11 @@ namespace TileExplorer
             if (cellValue == null) return;
 
             MainForm.SelectById(this, (long)cellValue);
+        }
+
+        private void DataGridView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            MainForm.ChangeSelected(this);
         }
     }
 }

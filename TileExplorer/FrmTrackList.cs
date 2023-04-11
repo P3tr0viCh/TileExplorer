@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using static TileExplorer.Database;
 using static TileExplorer.Main;
@@ -15,7 +14,6 @@ namespace TileExplorer
 
         public override DataGridView DataGridView => dataGridView;
         public override DataGridViewColumn ColumnFind => ColumnId;
-        public override DataGridViewColumn ColumnSelect => ColumnText;
 
         private void FrmTrackList_Load(object sender, EventArgs e)
         {

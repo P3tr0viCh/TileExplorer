@@ -10,35 +10,35 @@ namespace TileExplorer
             InitializeComponent();
         }
 
-        public static bool ShowDlg(IWin32Window owner, MarkerModel markerModel)
+        public static bool ShowDlg(IWin32Window owner, MarkerModel marker)
         {
             bool Result;
 
             using (var frm = new FrmMarker())
             {
-                frm.tbText.Text = markerModel.Text;
+                frm.tbText.Text = marker.Text;
 
-                frm.udPointLat.Value = (decimal)markerModel.Lat;
-                frm.udPointLng.Value = (decimal)markerModel.Lng;
+                frm.udPointLat.Value = (decimal)marker.Lat;
+                frm.udPointLng.Value = (decimal)marker.Lng;
 
-                frm.udOffsetX.Value = markerModel.OffsetX;
-                frm.udOffsetY.Value = markerModel.OffsetY;
+                frm.udOffsetX.Value = marker.OffsetX;
+                frm.udOffsetY.Value = marker.OffsetY;
 
-                frm.cboxTextVisible.Checked = markerModel.IsTextVisible;
+                frm.cboxTextVisible.Checked = marker.IsTextVisible;
 
                 Result = frm.ShowDialog(owner) == DialogResult.OK;
 
                 if (Result)
                 {
-                    markerModel.Text = frm.tbText.Text;
+                    marker.Text = frm.tbText.Text;
 
-                    markerModel.Lat = (double)frm.udPointLat.Value;
-                    markerModel.Lng = (double)frm.udPointLng.Value;
+                    marker.Lat = (double)frm.udPointLat.Value;
+                    marker.Lng = (double)frm.udPointLng.Value;
 
-                    markerModel.OffsetX = (int)frm.udOffsetX.Value;
-                    markerModel.OffsetY = (int)frm.udOffsetY.Value;
+                    marker.OffsetX = (int)frm.udOffsetX.Value;
+                    marker.OffsetY = (int)frm.udOffsetY.Value;
 
-                    markerModel.IsTextVisible = frm.cboxTextVisible.Checked;
+                    marker.IsTextVisible = frm.cboxTextVisible.Checked;
                 }
             }
 

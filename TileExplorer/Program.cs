@@ -1,7 +1,4 @@
-﻿using Bluegrams.Application;
-using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System;
 using System.Windows.Forms;
 
 namespace TileExplorer
@@ -16,15 +13,6 @@ namespace TileExplorer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
-            PortableSettingsProvider.SettingsFileName = "portable.config";
-            PortableSettingsProviderBase.SettingsDirectory = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-                Path.GetFileNameWithoutExtension(Application.ExecutablePath));
-            Debug.WriteLine(PortableSettingsProviderBase.SettingsDirectory);
-            Directory.CreateDirectory(PortableSettingsProviderBase.SettingsDirectory);
-            PortableSettingsProvider.ApplyProvider(Properties.Settings.Default);
-            
             Application.Run(new Main());
         }
     }

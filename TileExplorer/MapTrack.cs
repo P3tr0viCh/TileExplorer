@@ -14,7 +14,7 @@ namespace TileExplorer
 {
     public class MapTrack : GMapRoute
     {
-        private TrackModel trackModel;
+        private TrackModel track;
 
         public static readonly Pen DefaultSelectedStroke;
 
@@ -36,18 +36,18 @@ namespace TileExplorer
 
             UpdateColors();
 
-            TrackModel = track;
+            Track = track;
         }
 
-        public TrackModel TrackModel
+        public TrackModel Track
         {
             get
             {
-                return trackModel;
+                return track;
             }
             set
             {
-                trackModel = value;
+                track = value;
 
                 NotifyModelChanged();
             }
@@ -55,30 +55,30 @@ namespace TileExplorer
 
         public void NotifyModelChanged()
         {
-            Name = trackModel.Text;
+            Name = track.Text;
 
             Points.Clear();
 
             double distance = 0;
 
-            if (trackModel.TrackPoints.Count < 2) return;
+            if (track.TrackPoints.Count < 2) return;
 
-            Points.Add(Utils.TrackPointToPointLatLng(trackModel.TrackPoints.First()));
+            Points.Add(Utils.TrackPointToPointLatLng(track.TrackPoints.First()));
 
-            for (var i = 1; i < trackModel.TrackPoints.Count - 1; i++)
+            for (var i = 1; i < track.TrackPoints.Count - 1; i++)
             {
                 if (distance >= Settings.Default.TrackMinDistancePoint)
                 {
                     distance = 0;
 
-                    Points.Add(Utils.TrackPointToPointLatLng(trackModel.TrackPoints[i]));
+                    Points.Add(Utils.TrackPointToPointLatLng(track.TrackPoints[i]));
                 }
                 else {
-                    distance += trackModel.TrackPoints[i].Distance;
+                    distance += track.TrackPoints[i].Distance;
                 }
             }
 
-            Points.Add(Utils.TrackPointToPointLatLng(trackModel.TrackPoints.Last()));
+            Points.Add(Utils.TrackPointToPointLatLng(track.TrackPoints.Last()));
         }
 
         private void UpdateColors()

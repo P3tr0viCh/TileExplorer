@@ -88,6 +88,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Сохранение....
+        /// </summary>
+        internal static string ProgramStatusSaveData {
+            get {
+                return ResourceManager.GetString("ProgramStatusSaveData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Удалить маркер «{0}»?.
         /// </summary>
         internal static string QuestionMarkerDelete {

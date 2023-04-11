@@ -15,7 +15,6 @@ namespace TileExplorer
 
         public override DataGridView DataGridView => dataGridView;
         public override DataGridViewColumn ColumnFind => ColumnId;
-        public override DataGridViewColumn ColumnSelect => ColumnText;
 
         private void FrmMarkerList_Load(object sender, EventArgs e)
         {

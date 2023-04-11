@@ -203,8 +203,10 @@
             // 
             // FrmMarker
             // 
+            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(312, 265);
             this.Controls.Add(this.cboxTextVisible);
             this.Controls.Add(this.udOffsetY);

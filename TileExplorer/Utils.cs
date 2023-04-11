@@ -14,7 +14,7 @@ using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    internal static class Utils
+    public static class Utils
     {
         private static TileModel GetTileByXY(List<TileModel> tiles, int x, int y)
         {
@@ -284,12 +284,32 @@ namespace TileExplorer
             {
                 Debug.WriteLine("error: " + e.Message);
 
-                Msg.Error("error: " + e.Message);
+                UtilsFiles.Error("error: " + e.Message);
             }
 
             Debug.WriteLine("end open xml");
 
             return track;
+        }
+
+        public static List<TileModel> GetTilesFromTrack(TrackModel track)
+        {
+            var tiles = new List<TileModel>();
+
+            int x, y;
+
+            foreach (var point in track.TrackPoints)
+            {
+                x = Osm.LngToTileX(point.Lng, Const.TILE_ZOOM);
+                y = Osm.LatToTileY(point.Lat, Const.TILE_ZOOM);
+
+                if (tiles.FindIndex(tile => tile.X == x && tile.Y == y) == -1)
+                {
+                    tiles.Add(new TileModel() { X = x, Y = y });
+                }
+            }
+
+            return tiles;
         }
 
         public static PointLatLng TrackPointToPointLatLng(TrackPointModel trackPointModel)
