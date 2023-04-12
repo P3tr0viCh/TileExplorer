@@ -26,7 +26,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool VisibleMarkers {
             get {
                 return ((bool)(this["VisibleMarkers"]));
@@ -39,7 +38,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("LightGray")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorMarkerTextFill {
             get {
                 return ((global::System.Drawing.Color)(this["ColorMarkerTextFill"]));
@@ -52,7 +50,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("220")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorMarkerTextFillAlpha {
             get {
                 return ((byte)(this["ColorMarkerTextFillAlpha"]));
@@ -65,7 +62,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Gray")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorMarkerLine {
             get {
                 return ((global::System.Drawing.Color)(this["ColorMarkerLine"]));
@@ -78,7 +74,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("240")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorMarkerLineAlpha {
             get {
                 return ((byte)(this["ColorMarkerLineAlpha"]));
@@ -91,7 +86,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Green")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorMarkerText {
             get {
                 return ((global::System.Drawing.Color)(this["ColorMarkerText"]));
@@ -104,7 +98,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("255")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorMarkerTextAlpha {
             get {
                 return ((byte)(this["ColorMarkerTextAlpha"]));
@@ -117,7 +110,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Red")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorTileVisited {
             get {
                 return ((global::System.Drawing.Color)(this["ColorTileVisited"]));
@@ -130,7 +122,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("25")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorTileVisitedAlpha {
             get {
                 return ((byte)(this["ColorTileVisitedAlpha"]));
@@ -143,7 +134,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("GreenYellow")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorTileCluster {
             get {
                 return ((global::System.Drawing.Color)(this["ColorTileCluster"]));
@@ -156,7 +146,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("40")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorTileClusterAlpha {
             get {
                 return ((byte)(this["ColorTileClusterAlpha"]));
@@ -169,7 +158,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Green")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorTileMaxCluster {
             get {
                 return ((global::System.Drawing.Color)(this["ColorTileMaxCluster"]));
@@ -182,7 +170,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("40")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorTileMaxClusterAlpha {
             get {
                 return ((byte)(this["ColorTileMaxClusterAlpha"]));
@@ -195,7 +182,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorTileMaxSquare {
             get {
                 return ((global::System.Drawing.Color)(this["ColorTileMaxSquare"]));
@@ -208,7 +194,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("40")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorTileMaxSquareAlpha {
             get {
                 return ((byte)(this["ColorTileMaxSquareAlpha"]));
@@ -221,7 +206,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("25")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorTileVisitedLineAlpha {
             get {
                 return ((byte)(this["ColorTileVisitedLineAlpha"]));
@@ -234,7 +218,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("80")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorTileClusterLineAlpha {
             get {
                 return ((byte)(this["ColorTileClusterLineAlpha"]));
@@ -247,7 +230,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("80")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorTileMaxClusterLineAlpha {
             get {
                 return ((byte)(this["ColorTileMaxClusterLineAlpha"]));
@@ -260,7 +242,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("80")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorTileMaxSquareLineAlpha {
             get {
                 return ((byte)(this["ColorTileMaxSquareLineAlpha"]));
@@ -273,7 +254,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Arial, 10pt")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Font FontMarker {
             get {
                 return ((global::System.Drawing.Font)(this["FontMarker"]));
@@ -286,7 +266,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Green")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorMarkerFill {
             get {
                 return ((global::System.Drawing.Color)(this["ColorMarkerFill"]));
@@ -299,7 +278,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("220")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorMarkerFillAlpha {
             get {
                 return ((byte)(this["ColorMarkerFillAlpha"]));
@@ -312,7 +290,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool VisibleTracks {
             get {
                 return ((bool)(this["VisibleTracks"]));
@@ -325,7 +302,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Red")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorTrack {
             get {
                 return ((global::System.Drawing.Color)(this["ColorTrack"]));
@@ -338,7 +314,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("144")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public byte ColorTrackAlpha {
             get {
                 return ((byte)(this["ColorTrackAlpha"]));
@@ -351,7 +326,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public float WidthTrack {
             get {
                 return ((float)(this["WidthTrack"]));
@@ -373,7 +347,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool VisibleListMarkers {
             get {
                 return ((bool)(this["VisibleListMarkers"]));
@@ -386,7 +359,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool VisibleListTracks {
             get {
                 return ((bool)(this["VisibleListTracks"]));
@@ -399,7 +371,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DarkSlateBlue")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorMarkerSelectedLine {
             get {
                 return ((global::System.Drawing.Color)(this["ColorMarkerSelectedLine"]));
@@ -412,7 +383,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("4")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public float WidthTrackSelected {
             get {
                 return ((float)(this["WidthTrackSelected"]));
@@ -425,7 +395,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public float WidthMarkerLineSelected {
             get {
                 return ((float)(this["WidthMarkerLineSelected"]));
@@ -438,7 +407,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public float WidthMarkerLine {
             get {
                 return ((float)(this["WidthMarkerLine"]));
@@ -451,7 +419,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DarkSlateBlue")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorMarkerSelectedFill {
             get {
                 return ((global::System.Drawing.Color)(this["ColorMarkerSelectedFill"]));
@@ -464,7 +431,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DarkSlateBlue")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color ColorTrackSelected {
             get {
                 return ((global::System.Drawing.Color)(this["ColorTrackSelected"]));
@@ -477,7 +443,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool MapGrayScale {
             get {
                 return ((bool)(this["MapGrayScale"]));
@@ -490,7 +455,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("51.196369")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public double HomeLat {
             get {
                 return ((double)(this["HomeLat"]));
@@ -503,7 +467,6 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("58.298527")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public double HomeLng {
             get {
                 return ((double)(this["HomeLng"]));
@@ -516,13 +479,48 @@ namespace TileExplorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("11")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int HomeZoom {
             get {
                 return ((int)(this["HomeZoom"]));
             }
             set {
                 this["HomeZoom"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.00")]
+        public string FormatDistance {
+            get {
+                return ((string)(this["FormatDistance"]));
+            }
+            set {
+                this["FormatDistance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyyy.MM.dd HH:mm")]
+        public string FormatDateTime {
+            get {
+                return ((string)(this["FormatDateTime"]));
+            }
+            set {
+                this["FormatDateTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.000000")]
+        public string FormatLatLng {
+            get {
+                return ((string)(this["FormatLatLng"]));
+            }
+            set {
+                this["FormatLatLng"] = value;
             }
         }
     }

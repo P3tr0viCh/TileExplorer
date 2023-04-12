@@ -1,5 +1,9 @@
-﻿using System;
+﻿#define HIDE_ID
+
+using System;
+using System.ComponentModel;
 using System.Windows.Forms;
+using TileExplorer.Properties;
 using static TileExplorer.Database;
 using static TileExplorer.Main;
 
@@ -17,9 +21,13 @@ namespace TileExplorer
 
         private void FrmTrackList_Load(object sender, EventArgs e)
         {
-#if !DEBUG
+#if !DEBUG || HIDE_ID
             ColumnId.Visible = false;
 #endif
+            dataGridView.Sort(ColumnDateTime, ListSortDirection.Ascending);
+
+            ColumnDateTime.DefaultCellStyle.Format = Settings.Default.FormatDateTime;
+            ColumnDistance.DefaultCellStyle.Format = Settings.Default.FormatDistance;
         }
 
         public override void Set(int rowIndex, TrackModel track)

@@ -61,15 +61,6 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0:F6}.
-        /// </summary>
-        internal static string CoordFmt {
-            get {
-                return ResourceManager.GetString("CoordFmt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Загрузка....
         /// </summary>
         internal static string ProgramStatusLoadData {

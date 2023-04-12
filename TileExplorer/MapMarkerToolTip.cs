@@ -28,11 +28,11 @@ namespace TileExplorer
 
         public override void OnRender(Graphics g)
         {
-            Size size = g.MeasureString(Marker.ToolTipText, Font).ToSize();
+            var size = g.MeasureString(Marker.ToolTipText, Font).ToSize();
 
             checked
             {
-                Rectangle rectangle = new Rectangle(Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y - size.Height,
+                var rectangle = new Rectangle(Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y - size.Height,
                     size.Width + TextPadding.Width, size.Height + TextPadding.Height);
 
                 rectangle.Offset(MARKER_OFFSET_X + Offset.X, MARKER_OFFSET_Y - Offset.Y);

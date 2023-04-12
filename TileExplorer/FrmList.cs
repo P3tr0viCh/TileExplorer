@@ -93,7 +93,8 @@ namespace TileExplorer
 
                 if (rowIndex == DataGridView.CurrentCell.RowIndex) return;
 
-                DataGridView.CurrentCell = DataGridView[0, rowIndex];
+                DataGridView.CurrentCell = DataGridView[
+                    DataGridView.Columns.GetFirstColumn(DataGridViewElementStates.Displayed).Index, rowIndex];
             }
         }
 
@@ -107,6 +108,9 @@ namespace TileExplorer
         public void Update(T model)
         {
             Set(Find(model), model);
+
+            DataGridView.Sort(DataGridView.SortedColumn, 
+                DataGridView.SortOrder == SortOrder.Ascending ? ListSortDirection.Ascending: ListSortDirection.Descending);
         }
         
         public void Delete(T model)
@@ -149,20 +153,33 @@ namespace TileExplorer
             }
         }
 
-        private void DataGridView_SelectionChanged(object sender, EventArgs e)
+        private long GetSelectedId()
         {
-            if (DataGridView.SelectedCells.Count == 0) return;
+            if (DataGridView.SelectedCells.Count == 0) return -1;
 
             var cellValue = DataGridView[ColumnFind.Index, DataGridView.SelectedCells[0].RowIndex].Value;
 
-            if (cellValue == null) return;
+            if (cellValue == null) return -1;
 
-            MainForm.SelectById(this, (long)cellValue);
+            return (long)cellValue;
+        }
+
+        private void DataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            var id = GetSelectedId();
+
+            if (id == -1) return;
+
+            MainForm.SelectById(this, id);
         }
 
         private void DataGridView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            MainForm.ChangeSelected(this);
+            var id = GetSelectedId();
+
+            if (id == -1) return;
+
+            MainForm.ChangeById(this, id);
         }
     }
 }

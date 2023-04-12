@@ -4,7 +4,6 @@
 
 using Bluegrams.Application;
 using GMap.NET;
-using GMap.NET.Internals;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using P3tr0viCh;
@@ -15,7 +14,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -55,6 +53,7 @@ namespace TileExplorer
             PortableSettingsProviderBase.SettingsDirectory = Files.SettingsDirectory();
             Directory.CreateDirectory(PortableSettingsProviderBase.SettingsDirectory);
             PortableSettingsProvider.ApplyProvider(Settings.Default);
+            PortableSettingsProviderBase.AllRoaming = true;
 
             DB = new Database(Files.DatabaseFileName());
 
@@ -70,6 +69,9 @@ namespace TileExplorer
 
             SettingsExt.Default.LoadFormBounds(frmTrackList);
             SettingsExt.Default.LoadFormBounds(frmMarkerList);
+
+            SettingsExt.Default.LoadDataGridColumns(frmTrackList.DataGridView);
+            SettingsExt.Default.LoadDataGridColumns(frmMarkerList.DataGridView);
 
 #if DEBUG && DUMMY_TILES
             DummyTiles();
@@ -98,6 +100,9 @@ namespace TileExplorer
 
             SettingsExt.Default.SaveFormBounds(frmTrackList);
             SettingsExt.Default.SaveFormBounds(frmMarkerList);
+
+            SettingsExt.Default.SaveDataGridColumns(frmTrackList.DataGridView);
+            SettingsExt.Default.SaveDataGridColumns(frmMarkerList.DataGridView);
 
             Settings.Default.VisibleTracks = miMainShowTracks.Checked;
             Settings.Default.VisibleMarkers = miMainShowMarkers.Checked;
@@ -239,7 +244,7 @@ namespace TileExplorer
             {
                 return Utils.CalcTiles(tiles);
             });
-
+            
             statusStripPresenter.TilesVisited = calcResult.Visited;
             statusStripPresenter.TilesMaxCluster = calcResult.MaxCluster;
             statusStripPresenter.TilesMaxSquare = calcResult.MaxSquare;
@@ -443,17 +448,7 @@ namespace TileExplorer
 
         private void MiMainAbout_Click(object sender, EventArgs e)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            var assemblyTitle = (AssemblyTitleAttribute)assembly.GetCustomAttribute(typeof(AssemblyTitleAttribute));
-            var assemblyVersion = (AssemblyFileVersionAttribute)assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute));
-            var assemblyCopyright = (AssemblyCopyrightAttribute)assembly.GetCustomAttribute(typeof(AssemblyCopyrightAttribute));
-
-            var text = assemblyTitle.Title + Environment.NewLine +
-                assemblyVersion.Version + Environment.NewLine +
-                assemblyCopyright.Copyright;
-
-            UtilsFiles.Info(text);
+            FrmAbout.Show();
         }
 
         private bool MarkerMoving;
@@ -554,11 +549,7 @@ namespace TileExplorer
                     }
                     else
                     {
-                        var track = SelectedTrack.Track;
-
-                        UtilsFiles.Info(track.Text + "\n" + track.DateTime + "\n" +
-                            track.TrackPoints.Count + "\n" + SelectedTrack.Points.Count + "\n" +
-                            track.Distance / 1000.0 + "\n" + SelectedTrack.Distance);
+                        TrackChangeAsync(SelectedTrack);
                     }
                 }
                 else
@@ -719,7 +710,7 @@ namespace TileExplorer
 
             ChildFormsTopMost = false;
 
-            if (UtilsFiles.Question(string.Format(Resources.QuestionMarkerDelete, Name)))
+            if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, Name)))
             {
                 await DB.DeleteMarkerAsync(marker.Marker);
 
@@ -741,13 +732,40 @@ namespace TileExplorer
 
             if (FrmTrack.ShowDlg(this, track.Track))
             {
-                //await DB.SaveMarkerAsync(marker.MarkerModel);
+                await DB.SaveTrackAsync(track.Track);
 
                 track.NotifyModelChanged();
 
                 frmTrackList.Update(track.Track);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
+            }
+
+            ChildFormsTopMost = true;
+        }
+
+        private async void TrackDeleteAsync(MapTrack track)
+        {
+            if (SelectedTrack == null) return;
+
+            string Name = SelectedTrack.Track.Text;
+
+            if (Name == "")
+            {
+                Name = SelectedTrack.Track.DateTime.ToString();
+            }
+
+            ChildFormsTopMost = false;
+
+            if (Msg.Question(string.Format(Resources.QuestionTrackDelete, Name)))
+            {
+                await DB.DeleteTrackAsync(SelectedTrack.Track);
+
+                tracksOverlay.Routes.Remove(SelectedTrack);
+
+                frmTrackList.Delete(SelectedTrack.Track);
+
+                await LoadTilesAsync();
             }
 
             ChildFormsTopMost = true;
@@ -775,31 +793,14 @@ namespace TileExplorer
             MarkerDeleteAsync(SelectedMarker);
         }
 
-        private async void MiTrackDelete_Click(object sender, EventArgs e)
+        private void MiTrackChange_Click(object sender, EventArgs e)
         {
-            if (SelectedTrack == null) return;
+            TrackChangeAsync(SelectedTrack);
+        }
 
-            string Name = SelectedTrack.Track.Text;
-
-            if (Name == "")
-            {
-                Name = SelectedTrack.Track.DateTime.ToString();
-            }
-
-            ChildFormsTopMost = false;
-
-            if (UtilsFiles.Question(string.Format(Resources.QuestionTrackDelete, Name)))
-            {
-                await DB.DeleteTrackAsync(SelectedTrack.Track);
-
-                tracksOverlay.Routes.Remove(SelectedTrack);
-
-                frmTrackList.Delete(SelectedTrack.Track);
-
-                await LoadTilesAsync();
-            }
-
-            ChildFormsTopMost = true;
+        private void MiTrackDelete_Click(object sender, EventArgs e)
+        {
+            TrackDeleteAsync(SelectedTrack);
         }
 
         PointLatLng MarkerMovingPrevPosition;
@@ -892,7 +893,7 @@ namespace TileExplorer
             }
             catch (Exception)
             {
-                UtilsFiles.Error("tile exists");
+                Msg.Error("tile exists");
             }
         }
 
@@ -1063,7 +1064,7 @@ namespace TileExplorer
         {
             void SelectById(object sender, long id);
 
-            void ChangeSelected(object sender);
+            void ChangeById(object sender, long id);
         }
 
         public void SelectTrackById(long id)
@@ -1096,12 +1097,15 @@ namespace TileExplorer
 
         public void SelectById(object sender, long id)
         {
+            Debug.WriteLine(id);
             if (sender == frmTrackList) SelectTrackById(id);
             else if (sender == frmMarkerList) SelectMarkerById(id);
         }
 
-        public void ChangeSelected(object sender)
+        public void ChangeById(object sender, long id)
         {
+            SelectById(sender, id);
+
             if (sender == frmTrackList) TrackChangeAsync(SelectedTrack);
             else if (sender == frmMarkerList) MarkerChangeAsync(SelectedMarker);
         }

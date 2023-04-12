@@ -79,6 +79,7 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.cmTrack = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -438,7 +439,7 @@
             this.miMarkerMove,
             this.miMarkerDelete});
             this.cmMarker.Name = "cmMarker";
-            this.cmMarker.Size = new System.Drawing.Size(147, 70);
+            this.cmMarker.Size = new System.Drawing.Size(181, 92);
             // 
             // miMarkerChange
             // 
@@ -501,16 +502,24 @@
             // cmTrack
             // 
             this.cmTrack.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miTrackChange,
             this.miTrackDelete});
             this.cmTrack.Name = "cmTrack";
-            this.cmTrack.Size = new System.Drawing.Size(119, 26);
+            this.cmTrack.Size = new System.Drawing.Size(138, 48);
             // 
             // miTrackDelete
             // 
             this.miTrackDelete.Name = "miTrackDelete";
-            this.miTrackDelete.Size = new System.Drawing.Size(118, 22);
+            this.miTrackDelete.Size = new System.Drawing.Size(180, 22);
             this.miTrackDelete.Text = "Удалить";
             this.miTrackDelete.Click += new System.EventHandler(this.MiTrackDelete_Click);
+            // 
+            // miTrackChange
+            // 
+            this.miTrackChange.Name = "miTrackChange";
+            this.miTrackChange.Size = new System.Drawing.Size(180, 22);
+            this.miTrackChange.Text = "Изменить...";
+            this.miTrackChange.Click += new System.EventHandler(this.MiTrackChange_Click);
             // 
             // Main
             // 
@@ -597,6 +606,7 @@
         private System.Windows.Forms.ToolStripMenuItem miMainHomeGoto;
         private System.Windows.Forms.ToolStripMenuItem miMainHomeSave;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem miTrackChange;
     }
 }
 

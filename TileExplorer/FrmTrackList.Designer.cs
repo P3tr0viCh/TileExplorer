@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.ColumnId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnText = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -74,6 +76,8 @@
             // 
             // ColumnDateTime
             // 
+            dataGridViewCellStyle1.NullValue = null;
+            this.ColumnDateTime.DefaultCellStyle = dataGridViewCellStyle1;
             this.ColumnDateTime.HeaderText = "Дата и время";
             this.ColumnDateTime.Name = "ColumnDateTime";
             this.ColumnDateTime.ReadOnly = true;
@@ -81,6 +85,9 @@
             // 
             // ColumnDistance
             // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            dataGridViewCellStyle2.NullValue = null;
+            this.ColumnDistance.DefaultCellStyle = dataGridViewCellStyle2;
             this.ColumnDistance.HeaderText = "Расстояние";
             this.ColumnDistance.Name = "ColumnDistance";
             this.ColumnDistance.ReadOnly = true;

@@ -284,7 +284,7 @@ namespace TileExplorer
             {
                 Debug.WriteLine("error: " + e.Message);
 
-                UtilsFiles.Error("error: " + e.Message);
+                Msg.Error("error: " + e.Message);
             }
 
             Debug.WriteLine("end open xml");

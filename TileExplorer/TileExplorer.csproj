@@ -109,6 +109,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\!UtilsAndComps\FrmAbout.cs">
+      <Link>FrmAbout.cs</Link>
+    </Compile>
     <Compile Include="..\..\!UtilsAndComps\UtilsFiles.cs">
       <Link>UtilsFiles.cs</Link>
     </Compile>

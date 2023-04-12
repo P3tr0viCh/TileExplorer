@@ -24,7 +24,7 @@ namespace TileExplorer
         public class BaseModelId
         {
             [Key]
-            public long Id { get; set; }
+            public long Id { get; set; } = 0;
         }
 
         [Table("markers")]
@@ -86,7 +86,7 @@ namespace TileExplorer
         [Table("tracks_points")]
         public class TrackPointModel : BaseModelId
         {
-            public long TrackId { get; set; }
+            public long TrackId { get; set; } = 0;
 
             public double Lat { get; set; }
             public double Lng { get; set; }
@@ -97,9 +97,9 @@ namespace TileExplorer
         [Table("tracks_tiles")]
         public class TracksTilesModel : BaseModelId
         {
-            public long TrackId { get; set; }
+            public long TrackId { get; set; } = 0;
 
-            public long TileId { get; set; }
+            public long TileId { get; set; } = 0;
         }
 
         public Database(string fileName)
@@ -173,7 +173,7 @@ namespace TileExplorer
             {
                 using (var connection = GetConnection())
                 {
-                    return connection.GetAll<MarkerModel>().ToList();
+                    return connection.GetAll<MarkerModel>().OrderBy(m => m.Text).ToList();
                 }
             });
         }
@@ -195,7 +195,7 @@ namespace TileExplorer
             {
                 using (var connection = GetConnection())
                 {
-                    var tracks = connection.GetAll<TrackModel>().ToList();
+                    var tracks = connection.GetAll<TrackModel>().OrderBy(t => t.DateTime).ToList();
 
                     foreach (var track in tracks)
                     {
@@ -376,31 +376,34 @@ namespace TileExplorer
             }
         }
 
-        public async Task<long> SaveTrackAsync(TrackModel track)
+        public async Task SaveTrackAsync(TrackModel track)
         {
-            return await Task.Run(() =>
+            await Task.Run(() =>
             {
                 using (var connection = GetConnection())
                 {
-                    connection.Open();
-
-                    long trackId;
-
-                    using (var transaction = connection.BeginTransaction())
+                    if (track.Id == 0)
                     {
-                        trackId = connection.Insert(track, transaction);
+                        connection.Open();
 
-                        foreach (var trackPoint in track.TrackPoints)
+                        using (var transaction = connection.BeginTransaction())
                         {
-                            trackPoint.TrackId = trackId;
+                            connection.Insert(track, transaction);
+
+                            foreach (var trackPoint in track.TrackPoints)
+                            {
+                                trackPoint.TrackId = track.Id;
+                            }
+
+                            connection.Insert(track.TrackPoints, transaction);
+
+                            transaction.Commit();
                         }
-
-                        connection.Insert(track.TrackPoints, transaction);
-
-                        transaction.Commit();
                     }
-
-                    return trackId;
+                    else
+                    {
+                        connection.Update<TrackModel>(track);
+                    }
                 }
             });
         }

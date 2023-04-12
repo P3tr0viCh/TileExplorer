@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define HIDE_ID
+
+using System;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
@@ -18,9 +20,13 @@ namespace TileExplorer
 
         private void FrmMarkerList_Load(object sender, EventArgs e)
         {
-#if !DEBUG
+#if !DEBUG || HIDE_ID
             ColumnId.Visible = false;
 #endif
+            dataGridView.Sort(ColumnText, System.ComponentModel.ListSortDirection.Ascending);
+
+            ColumnLat.DefaultCellStyle.Format = Settings.Default.FormatLatLng;
+            ColumnLng.DefaultCellStyle.Format = Settings.Default.FormatLatLng;
         }
 
         public override void Set(int rowIndex, MarkerModel marker)
@@ -29,8 +35,8 @@ namespace TileExplorer
 
             dataGridView.Rows[rowIndex].Cells[ColumnText.Name].Value = marker.Text;
 
-            dataGridView.Rows[rowIndex].Cells[ColumnLat.Name].Value = string.Format(Resources.CoordFmt, marker.Lat);
-            dataGridView.Rows[rowIndex].Cells[ColumnLng.Name].Value = string.Format(Resources.CoordFmt, marker.Lng);
+            dataGridView.Rows[rowIndex].Cells[ColumnLat.Name].Value = marker.Lat;
+            dataGridView.Rows[rowIndex].Cells[ColumnLng.Name].Value = marker.Lng;
         }
     }
 }

@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.ColumnId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnText = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -73,12 +75,16 @@
             // 
             // ColumnLat
             // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.ColumnLat.DefaultCellStyle = dataGridViewCellStyle1;
             this.ColumnLat.HeaderText = "Широта";
             this.ColumnLat.Name = "ColumnLat";
             this.ColumnLat.ReadOnly = true;
             // 
             // ColumnLng
             // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.ColumnLng.DefaultCellStyle = dataGridViewCellStyle2;
             this.ColumnLng.HeaderText = "Долгота";
             this.ColumnLng.Name = "ColumnLng";
             this.ColumnLng.ReadOnly = true;
