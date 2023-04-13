@@ -74,12 +74,14 @@
             this.miMarkerDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.cmMap = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miMapMarkerAdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.addTileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteTileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapTileAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapTileDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.cmTrack = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
+            this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.slTracksCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slTracksDistance = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -139,6 +141,8 @@
             this.slTileId,
             this.slMousePosition,
             this.slStatus,
+            this.slTracksCount,
+            this.slTracksDistance,
             this.slTilesVisited,
             this.slTilesMaxCluster,
             this.slTilesMaxSquare});
@@ -174,7 +178,7 @@
             // slStatus
             // 
             this.slStatus.Name = "slStatus";
-            this.slStatus.Size = new System.Drawing.Size(204, 17);
+            this.slStatus.Size = new System.Drawing.Size(52, 17);
             this.slStatus.Spring = true;
             this.slStatus.Text = "status";
             // 
@@ -439,7 +443,7 @@
             this.miMarkerMove,
             this.miMarkerDelete});
             this.cmMarker.Name = "cmMarker";
-            this.cmMarker.Size = new System.Drawing.Size(181, 92);
+            this.cmMarker.Size = new System.Drawing.Size(147, 70);
             // 
             // miMarkerChange
             // 
@@ -466,8 +470,8 @@
             // 
             this.cmMap.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miMapMarkerAdd,
-            this.addTileToolStripMenuItem,
-            this.deleteTileToolStripMenuItem});
+            this.miMapTileAdd,
+            this.miMapTileDelete});
             this.cmMap.Name = "cmMap";
             this.cmMap.Size = new System.Drawing.Size(180, 70);
             this.cmMap.Opening += new System.ComponentModel.CancelEventHandler(this.CmMap_Opening);
@@ -479,19 +483,19 @@
             this.miMapMarkerAdd.Text = "Добавить маркер...";
             this.miMapMarkerAdd.Click += new System.EventHandler(this.MiMapMarkerAdd_Click);
             // 
-            // addTileToolStripMenuItem
+            // miMapTileAdd
             // 
-            this.addTileToolStripMenuItem.Name = "addTileToolStripMenuItem";
-            this.addTileToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.addTileToolStripMenuItem.Text = "add tile";
-            this.addTileToolStripMenuItem.Click += new System.EventHandler(this.AddTileToolStripMenuItem_Click);
+            this.miMapTileAdd.Name = "miMapTileAdd";
+            this.miMapTileAdd.Size = new System.Drawing.Size(179, 22);
+            this.miMapTileAdd.Text = "add tile";
+            this.miMapTileAdd.Click += new System.EventHandler(this.MiMapTileAdd_Click);
             // 
-            // deleteTileToolStripMenuItem
+            // miMapTileDelete
             // 
-            this.deleteTileToolStripMenuItem.Name = "deleteTileToolStripMenuItem";
-            this.deleteTileToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.deleteTileToolStripMenuItem.Text = "delete tile";
-            this.deleteTileToolStripMenuItem.Click += new System.EventHandler(this.DeleteTileToolStripMenuItem_Click);
+            this.miMapTileDelete.Name = "miMapTileDelete";
+            this.miMapTileDelete.Size = new System.Drawing.Size(179, 22);
+            this.miMapTileDelete.Text = "delete tile";
+            this.miMapTileDelete.Click += new System.EventHandler(this.MiMapTileDelete_Click);
             // 
             // openFileDialog
             // 
@@ -507,19 +511,31 @@
             this.cmTrack.Name = "cmTrack";
             this.cmTrack.Size = new System.Drawing.Size(138, 48);
             // 
-            // miTrackDelete
-            // 
-            this.miTrackDelete.Name = "miTrackDelete";
-            this.miTrackDelete.Size = new System.Drawing.Size(180, 22);
-            this.miTrackDelete.Text = "Удалить";
-            this.miTrackDelete.Click += new System.EventHandler(this.MiTrackDelete_Click);
-            // 
             // miTrackChange
             // 
             this.miTrackChange.Name = "miTrackChange";
-            this.miTrackChange.Size = new System.Drawing.Size(180, 22);
+            this.miTrackChange.Size = new System.Drawing.Size(137, 22);
             this.miTrackChange.Text = "Изменить...";
             this.miTrackChange.Click += new System.EventHandler(this.MiTrackChange_Click);
+            // 
+            // miTrackDelete
+            // 
+            this.miTrackDelete.Name = "miTrackDelete";
+            this.miTrackDelete.Size = new System.Drawing.Size(137, 22);
+            this.miTrackDelete.Text = "Удалить";
+            this.miTrackDelete.Click += new System.EventHandler(this.MiTrackDelete_Click);
+            // 
+            // slTracksCount
+            // 
+            this.slTracksCount.Name = "slTracksCount";
+            this.slTracksCount.Size = new System.Drawing.Size(62, 17);
+            this.slTracksCount.Text = "count: xxx";
+            // 
+            // slTracksDistance
+            // 
+            this.slTracksDistance.Name = "slTracksDistance";
+            this.slTracksDistance.Size = new System.Drawing.Size(90, 17);
+            this.slTracksDistance.Text = "distance: xxx.xx";
             // 
             // Main
             // 
@@ -588,8 +604,8 @@
         private System.Windows.Forms.ToolStripStatusLabel slTilesMaxSquare;
         private System.Windows.Forms.ToolStripMenuItem miMainData;
         private System.Windows.Forms.ToolStripMenuItem miMainDataUpdate;
-        private System.Windows.Forms.ToolStripMenuItem addTileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteTileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem miMapTileAdd;
+        private System.Windows.Forms.ToolStripMenuItem miMapTileDelete;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem miMainMapDesign;
         private System.Windows.Forms.ToolStripMenuItem miMainDataOpenTrack;
@@ -607,6 +623,8 @@
         private System.Windows.Forms.ToolStripMenuItem miMainHomeSave;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem miTrackChange;
+        private System.Windows.Forms.ToolStripStatusLabel slTracksCount;
+        private System.Windows.Forms.ToolStripStatusLabel slTracksDistance;
     }
 }
 

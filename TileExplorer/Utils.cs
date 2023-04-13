@@ -202,50 +202,43 @@ namespace TileExplorer
 
                 track.TrackPoints = new List<TrackPointModel>();
 
-                var trkseg = trackXml.DocumentElement["trk"]?["trkseg"];
+                var trkptList = trackXml.GetElementsByTagName("trkpt");
 
-                if (trkseg != null)
+                Debug.WriteLine("trkptList count: " + trkptList.Count);
+
+                foreach (XmlNode trkpt in trkptList)
                 {
-                    Debug.WriteLine("trkseg count: " + trkseg.ChildNodes.Count);
-
-                    foreach (XmlNode trkpt in trkseg)
+                    if (trkpt.Attributes["lat"] != null && trkpt.Attributes["lon"] != null)
                     {
-                        if (trkpt.Attributes["lat"] != null && trkpt.Attributes["lon"] != null)
+                        track.TrackPoints.Add(new TrackPointModel()
                         {
-                            track.TrackPoints.Add(new TrackPointModel()
-                            {
-                                Lat = double.Parse(trkpt.Attributes["lat"].Value, CultureInfo.InvariantCulture),
-                                Lng = double.Parse(trkpt.Attributes["lon"].Value, CultureInfo.InvariantCulture)
-                            });
-                        }
+                            Lat = double.Parse(trkpt.Attributes["lat"].Value, CultureInfo.InvariantCulture),
+                            Lng = double.Parse(trkpt.Attributes["lon"].Value, CultureInfo.InvariantCulture)
+                        });
                     }
-
-                    if (track.TrackPoints.Count == 0)
-                    {
-                        throw new Exception("empty track");
-                    }
-
-                    double lat, lng, latPrev = 0, lngPrev = 0;
-
-                    foreach (var point in track.TrackPoints)
-                    {
-                        lat = point.Lat;
-                        lng = point.Lng;
-
-                        point.Distance = Geo.Haversine(latPrev, lngPrev, lat, lng);
-
-                        latPrev = lat;
-                        lngPrev = lng;
-                    }
-
-                    track.TrackPoints[0].Distance = 0;
-
-                    track.Distance += (int)track.TrackPoints.Sum(p => p.Distance);
                 }
-                else
+
+                if (track.TrackPoints.Count == 0)
                 {
-                    throw new Exception("trkseg is null");
+                    throw new Exception("empty track");
                 }
+
+                double lat, lng, latPrev = 0, lngPrev = 0;
+
+                foreach (var point in track.TrackPoints)
+                {
+                    lat = point.Lat;
+                    lng = point.Lng;
+
+                    point.Distance = Geo.Haversine(latPrev, lngPrev, lat, lng);
+
+                    latPrev = lat;
+                    lngPrev = lng;
+                }
+
+                track.TrackPoints[0].Distance = 0;
+
+                track.Distance += (int)track.TrackPoints.Sum(p => p.Distance);
 
                 string trkname = XmlGetText(trackXml.DocumentElement["trk"]?["name"]);
 

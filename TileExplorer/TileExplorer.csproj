@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
+    <Deterministic>false</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
@@ -126,6 +126,9 @@
     </Compile>
     <Compile Include="..\..\!UtilsAndComps\UtilsSettings.cs">
       <Link>UtilsSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\!UtilsAndComps\UtilsStr.cs">
+      <Link>UtilsStr.cs</Link>
     </Compile>
     <Compile Include="FrmTrack.cs">
       <SubType>Form</SubType>

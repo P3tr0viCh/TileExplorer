@@ -33,14 +33,16 @@ namespace TileExplorer
 
         private readonly StatusStripPresenter statusStripPresenter;
 
-        public ToolStripStatusLabel StatusLabelZoom => slZoom;
-        public ToolStripStatusLabel StatusLabelTileId => slTileId;
-        public ToolStripStatusLabel StatusLabelPosition => slPosition;
-        public ToolStripStatusLabel StatusLabelMousePosition => slMousePosition;
-        public ToolStripStatusLabel StatusLabelStatus => slStatus;
-        public ToolStripStatusLabel StatusLabelTilesVisited => slTilesVisited;
-        public ToolStripStatusLabel StatusLabelTilesMaxCluster => slTilesMaxCluster;
-        public ToolStripStatusLabel StatusLabelTilesMaxSquare => slTilesMaxSquare;
+        public ToolStripStatusLabel LabelZoom => slZoom;
+        public ToolStripStatusLabel LabelTileId => slTileId;
+        public ToolStripStatusLabel LabelPosition => slPosition;
+        public ToolStripStatusLabel LabelMousePosition => slMousePosition;
+        public ToolStripStatusLabel LabelStatus => slStatus;
+        public ToolStripStatusLabel LabelTracksCount => slTracksCount;
+        public ToolStripStatusLabel LabelTracksDistance => slTracksDistance;
+        public ToolStripStatusLabel LabelTilesVisited => slTilesVisited;
+        public ToolStripStatusLabel LabelTilesMaxCluster => slTilesMaxCluster;
+        public ToolStripStatusLabel LabelTilesMaxSquare => slTilesMaxSquare;
 
         private readonly FrmTrackList frmTrackList;
         private readonly FrmMarkerList frmMarkerList;
@@ -58,7 +60,7 @@ namespace TileExplorer
             DB = new Database(Files.DatabaseFileName());
 
             statusStripPresenter = new StatusStripPresenter(this);
-            
+
             frmTrackList = new FrmTrackList(this);
             frmMarkerList = new FrmMarkerList(this);
         }
@@ -75,10 +77,12 @@ namespace TileExplorer
 
 #if DEBUG && DUMMY_TILES
             DummyTiles();
-#endif           
+#endif
 
-            DataUpdateAsync();
-
+#if !DEBUG
+            miMapTileAdd.Visible = false;
+            miMapTileDelete.Visible = false;
+#endif
             miMainShowTracks.Checked = Settings.Default.VisibleTracks;
             miMainShowMarkers.Checked = Settings.Default.VisibleMarkers;
 
@@ -90,6 +94,14 @@ namespace TileExplorer
 
             frmTrackList.Visible = Settings.Default.VisibleListTracks;
             frmMarkerList.Visible = Settings.Default.VisibleListMarkers;
+
+            var load = DataLoad.Tiles | DataLoad.TracksInfo;
+
+            if (frmTrackList.Visible || miMainShowTracks.Checked) load |= DataLoad.Tracks;
+
+            if (frmMarkerList.Visible || miMainShowMarkers.Checked) load |= DataLoad.Markers;
+
+            _ = DataUpdateAsync(load);
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -244,7 +256,7 @@ namespace TileExplorer
             {
                 return Utils.CalcTiles(tiles);
             });
-            
+
             statusStripPresenter.TilesVisited = calcResult.Visited;
             statusStripPresenter.TilesMaxCluster = calcResult.MaxCluster;
             statusStripPresenter.TilesMaxSquare = calcResult.MaxSquare;
@@ -252,6 +264,8 @@ namespace TileExplorer
 
         private async Task LoadTilesAsync()
         {
+            Debug.WriteLine("LoadTilesAsync: start");
+
             tilesOverlay.Clear();
 
             var tiles = await DB.LoadTilesAsync();
@@ -275,10 +289,14 @@ namespace TileExplorer
                 }
 #endif
             }
+
+            Debug.WriteLine("LoadTilesAsync: end");
         }
 
         private async Task LoadTracksAsync()
         {
+            Debug.WriteLine("LoadTracksAsync: start");
+
             tracksOverlay.Clear();
 
             var tracks = await DB.LoadTracksAsync();
@@ -318,10 +336,14 @@ namespace TileExplorer
             }
 
             frmTrackList.List = tracks;
+
+            Debug.WriteLine("LoadTracksAsync: end");
         }
 
         private async Task LoadMarkersAsync()
         {
+            Debug.WriteLine("LoadMarkersAsync: start");
+
             markersOverlay.Clear();
 
             var markers = await DB.LoadMarkersAsync();
@@ -332,6 +354,20 @@ namespace TileExplorer
             }
 
             frmMarkerList.List = markers;
+
+            Debug.WriteLine("LoadMarkersAsync: end");
+        }
+
+        private async Task LoadTracksInfoAsync()
+        {
+            Debug.WriteLine("LoadTracksInfoAsync: start");
+
+            var tracksInfo = await DB.LoadTracksInfoAsync();
+
+            statusStripPresenter.TracksCount = tracksInfo.Count;
+            statusStripPresenter.TracksDistance = tracksInfo.Distance / 1000.0;
+
+            Debug.WriteLine("LoadTracksInfoAsync: end");
         }
 
         public enum ProgramStatus
@@ -364,15 +400,38 @@ namespace TileExplorer
             }
         }
 
-        private async void DataUpdateAsync()
+        [Flags]
+        private enum DataLoad
+        {
+            Tiles = 1,
+            Tracks = 2,
+            Markers = 4,
+            TracksInfo = 8
+        }
+
+        private async Task DataUpdateAsync(DataLoad load = default)
         {
             Status = ProgramStatus.LoadData;
 
-            await LoadTilesAsync();
+            if (load == default)
+            {
+                load = DataLoad.Tiles | DataLoad.Tracks | DataLoad.Markers | DataLoad.TracksInfo;
+            }
 
-            await LoadTracksAsync();
+            if (load.HasFlag(DataLoad.Tracks))
+            {
+                load |= DataLoad.TracksInfo;
+            }
+            
+            Debug.WriteLine($"Loading data {load}");
 
-            await LoadMarkersAsync();
+            if (load.HasFlag(DataLoad.Tiles)) await LoadTilesAsync();
+
+            if (load.HasFlag(DataLoad.Tracks)) await LoadTracksAsync();
+
+            if (load.HasFlag(DataLoad.TracksInfo)) await LoadTracksInfoAsync();
+
+            if (load.HasFlag(DataLoad.Markers)) await LoadMarkersAsync();
 
             Status = ProgramStatus.Idle;
         }
@@ -599,14 +658,37 @@ namespace TileExplorer
             }
         }
 
+        private void CheckAndLoadData(DataLoad load)
+        {
+            switch (load)
+            {
+                case DataLoad.Tracks:
+                    if (tracksOverlay.Routes.Count == 0)
+                    {
+                        _ = DataUpdateAsync(DataLoad.Tracks);
+                    }
+                    break;
+                case DataLoad.Markers:
+                    if (markersOverlay.Markers.Count == 0)
+                    {
+                        _ = DataUpdateAsync(DataLoad.Markers);
+                    }
+                    break;
+            }
+        }
+
         private void MiMainShowMarkers_Click(object sender, EventArgs e)
         {
             markersOverlay.IsVisibile = miMainShowMarkers.Checked;
+
+            CheckAndLoadData(DataLoad.Markers);
         }
 
         private void MiMainShowTracks_Click(object sender, EventArgs e)
         {
             tracksOverlay.IsVisibile = miMainShowTracks.Checked;
+
+            CheckAndLoadData(DataLoad.Tracks);
         }
 
         private void HomeGoto()
@@ -765,7 +847,7 @@ namespace TileExplorer
 
                 frmTrackList.Delete(SelectedTrack.Track);
 
-                await LoadTilesAsync();
+                await DataUpdateAsync(DataLoad.Tiles);
             }
 
             ChildFormsTopMost = true;
@@ -775,7 +857,7 @@ namespace TileExplorer
 
         private void CmMap_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            MenuPopupPoint = gMapControl.PointToClient(MousePosition);
+            MenuPopupPoint = gMapControl.PointToClient(Control.MousePosition);
         }
 
         private void MiMapMarkerAdd_Click(object sender, EventArgs e)
@@ -858,28 +940,19 @@ namespace TileExplorer
 
         private void MiMainDataUpdate_Click(object sender, EventArgs e)
         {
-            DataUpdateAsync();
+            _ = DataUpdateAsync();
         }
 
         private async void AddTileAsync(TileModel tile)
         {
-            try
-            {
-                Status = ProgramStatus.SaveData;
+            Status = ProgramStatus.SaveData;
 
-                await DB.SaveTileAsync(tile);
+            await DB.SaveTileAsync(tile);
 
-                Status = ProgramStatus.LoadData;
-
-                await LoadTilesAsync();
-            }
-            finally
-            {
-                Status = ProgramStatus.Idle;
-            }
+            await DataUpdateAsync(DataLoad.Tiles);
         }
 
-        private void AddTileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MiMapTileAdd_Click(object sender, EventArgs e)
         {
             PointLatLng position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
 
@@ -899,23 +972,14 @@ namespace TileExplorer
 
         private async void DeleteTileAsync(TileModel tile)
         {
-            try
-            {
-                Status = ProgramStatus.SaveData;
+            Status = ProgramStatus.SaveData;
 
-                await DB.DeleteTileAsync(tile);
+            await DB.DeleteTileAsync(tile);
 
-                Status = ProgramStatus.LoadData;
-
-                await LoadTilesAsync();
-            }
-            finally
-            {
-                Status = ProgramStatus.Idle;
-            }
+            await DataUpdateAsync(DataLoad.Tiles);
         }
 
-        private void DeleteTileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MiMapTileDelete_Click(object sender, EventArgs e)
         {
             PointLatLng position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
 
@@ -947,7 +1011,7 @@ namespace TileExplorer
         {
             ChildFormsTopMost = false;
 
-            bool save = saveFileDialog.ShowDialog() == DialogResult.OK;
+            bool save = saveFileDialog.ShowDialog(this) == DialogResult.OK;
 
             ChildFormsTopMost = true;
 
@@ -969,6 +1033,8 @@ namespace TileExplorer
 
         private async Task OpenTracksAsync(string[] files)
         {
+            Status = ProgramStatus.LoadGpx;
+
             TrackModel track;
 
             List<TileModel> trackTiles;
@@ -983,7 +1049,12 @@ namespace TileExplorer
 
                 frmTrackList.Add(track);
 
-                tracksOverlay.Routes.Add(new MapTrack(track));
+                var mapTrack = new MapTrack(track);
+
+                tracksOverlay.Routes.Add(mapTrack);
+
+                SelectedMarker = null;
+                SelectedTrack = mapTrack;
 
                 trackTiles = await GetTilesFromTrackAsync(track);
 
@@ -1009,11 +1080,10 @@ namespace TileExplorer
 
                 await DB.SaveTilesAsync(saveTiles);
 
-                List<TracksTilesModel> tracksTiles = new List<TracksTilesModel>();
+                var tracksTiles = new List<TracksTilesModel>();
 
                 foreach (var tile in trackTiles)
                 {
-                    Debug.WriteLine(tile.Id);
                     tracksTiles.Add(new TracksTilesModel()
                     {
                         TrackId = track.Id,
@@ -1024,35 +1094,39 @@ namespace TileExplorer
                 await DB.SaveTracksTilesAsync(tracksTiles);
             }
 
-            await LoadTilesAsync();
+            Status = ProgramStatus.Idle;
         }
 
         private async void MiMainDataOpenTrack_Click(object sender, EventArgs e)
         {
             ChildFormsTopMost = false;
 
-            bool open = openFileDialog.ShowDialog() == DialogResult.OK;
+            openFileDialog.FileName = string.Empty;
+
+            bool open = openFileDialog.ShowDialog(this) == DialogResult.OK;
 
             ChildFormsTopMost = true;
 
             if (open)
             {
-                Status = ProgramStatus.LoadGpx;
-
                 await OpenTracksAsync(openFileDialog.FileNames);
 
-                Status = ProgramStatus.Idle;
+                await DataUpdateAsync(DataLoad.Tiles);
             }
         }
 
         private void MiMainDataMarkerList_Click(object sender, EventArgs e)
         {
             frmMarkerList.Visible = !frmMarkerList.Visible;
+
+            CheckAndLoadData(DataLoad.Markers);
         }
 
         private void MiMainDataTrackList_Click(object sender, EventArgs e)
         {
             frmTrackList.Visible = !frmTrackList.Visible;
+
+            CheckAndLoadData(DataLoad.Tracks);
         }
 
         private void MiMainGrayScale_Click(object sender, EventArgs e)

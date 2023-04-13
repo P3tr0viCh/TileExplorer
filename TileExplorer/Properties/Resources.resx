@@ -150,6 +150,12 @@
   <data name="StatusTilesVisited" xml:space="preserve">
     <value>Открыто: {0}</value>
   </data>
+  <data name="StatusTracksCount" xml:space="preserve">
+    <value>Треки: {0}</value>
+  </data>
+  <data name="StatusTracksDistance" xml:space="preserve">
+    <value>Расстояние: {0:F0}</value>
+  </data>
   <data name="StatusZoom" xml:space="preserve">
     <value>Масштаб: {0}</value>
   </data>

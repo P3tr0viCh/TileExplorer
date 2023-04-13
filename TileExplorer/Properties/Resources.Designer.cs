@@ -160,6 +160,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Треки: {0}.
+        /// </summary>
+        internal static string StatusTracksCount {
+            get {
+                return ResourceManager.GetString("StatusTracksCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Расстояние: {0:F0}.
+        /// </summary>
+        internal static string StatusTracksDistance {
+            get {
+                return ResourceManager.GetString("StatusTracksDistance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Масштаб: {0}.
         /// </summary>
         internal static string StatusZoom {
