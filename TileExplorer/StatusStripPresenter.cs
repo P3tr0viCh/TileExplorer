@@ -37,6 +37,9 @@ namespace TileExplorer
 
             Status = string.Empty;
 
+            TracksCount = 0;
+            TracksDistance = 0;
+
             TilesVisited = 0;
             TilesMaxCluster = 0;
             TilesMaxSquare = 0;

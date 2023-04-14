@@ -175,15 +175,18 @@ namespace TileExplorer
 
         private void SaveToImage(string fileName)
         {
+            SuspendLayout();
             toolStripContainer.ContentPanel.SuspendLayout();
 
-            gMapControl.Dock = DockStyle.None;
+            var savedBounds = gMapControl.Bounds;
 
             var imageSize = new Size(Screen.PrimaryScreen.Bounds.Width,
                 Screen.PrimaryScreen.Bounds.Height);
 
             try
             {
+                gMapControl.Dock = DockStyle.None;
+
                 gMapControl.SetBounds(
                     (toolStripContainer.ContentPanel.Width - imageSize.Width) / 2,
                     (toolStripContainer.ContentPanel.Height - imageSize.Height) / 2,
@@ -194,12 +197,13 @@ namespace TileExplorer
             }
             finally
             {
-                gMapControl.SetBounds(0, 0,
-                    toolStripContainer.ContentPanel.Width, toolStripContainer.ContentPanel.Height);
+                gMapControl.Bounds = savedBounds;
 
                 gMapControl.Dock = DockStyle.Fill;
 
-                toolStripContainer.ContentPanel.PerformLayout();
+                toolStripContainer.ContentPanel.ResumeLayout(false);
+                toolStripContainer.PerformLayout();
+                ResumeLayout(false);
             }
         }
 
@@ -397,6 +401,9 @@ namespace TileExplorer
                         statusStripPresenter.Status = Resources.ProgramStatusSaveData;
                         break;
                 }
+
+                frmTrackList.Updating = value != ProgramStatus.Idle;
+                frmMarkerList.Updating = value != ProgramStatus.Idle;
             }
         }
 
@@ -422,14 +429,14 @@ namespace TileExplorer
             {
                 load |= DataLoad.TracksInfo;
             }
-            
+
             Debug.WriteLine($"Loading data {load}");
 
             if (load.HasFlag(DataLoad.Tiles)) await LoadTilesAsync();
 
-            if (load.HasFlag(DataLoad.Tracks)) await LoadTracksAsync();
-
             if (load.HasFlag(DataLoad.TracksInfo)) await LoadTracksInfoAsync();
+
+            if (load.HasFlag(DataLoad.Tracks)) await LoadTracksAsync();
 
             if (load.HasFlag(DataLoad.Markers)) await LoadMarkersAsync();
 
@@ -1009,6 +1016,9 @@ namespace TileExplorer
 
         private void MiMainSaveToImage_Click(object sender, EventArgs e)
         {
+#if DEBUG
+            SaveToImage(Path.Combine(Path.GetTempPath(), "xxx.png"));
+#else
             ChildFormsTopMost = false;
 
             bool save = saveFileDialog.ShowDialog(this) == DialogResult.OK;
@@ -1019,6 +1029,7 @@ namespace TileExplorer
             {
                 SaveToImage(saveFileDialog.FileName);
             }
+#endif
         }
 
         private async Task<TrackModel> OpenTrackFromFileAsync(string path)
@@ -1111,7 +1122,7 @@ namespace TileExplorer
             {
                 await OpenTracksAsync(openFileDialog.FileNames);
 
-                await DataUpdateAsync(DataLoad.Tiles);
+                await DataUpdateAsync(DataLoad.Tiles | DataLoad.TracksInfo);
             }
         }
 

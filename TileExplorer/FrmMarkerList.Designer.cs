@@ -56,7 +56,7 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersWidth = 32;
-            this.dataGridView.Size = new System.Drawing.Size(458, 287);
+            this.dataGridView.Size = new System.Drawing.Size(468, 287);
             this.dataGridView.TabIndex = 0;
             // 
             // ColumnId
@@ -93,7 +93,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(458, 287);
+            this.ClientSize = new System.Drawing.Size(468, 287);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
@@ -106,6 +106,7 @@
             this.Text = "Маркеры";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FrmMarkerList_Load);
+            this.Controls.SetChildIndex(this.dataGridView, 0);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 

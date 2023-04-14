@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
+using TileExplorer.Properties;
 using static TileExplorer.Database;
 using static TileExplorer.Main;
 
@@ -53,6 +55,9 @@ namespace TileExplorer
         public abstract DataGridView DataGridView { get; }
         public abstract DataGridViewColumn ColumnFind { get; }
 
+        private Panel pnlUpdating;
+        private Label lblUpdating;
+
         protected FrmList(IMainForm mainForm)
         {
             MainForm = mainForm;
@@ -62,8 +67,29 @@ namespace TileExplorer
 
         private void InitializeComponent()
         {
+            SuspendLayout();
+
+            pnlUpdating = new Panel
+            {
+                Parent = this,
+                BorderStyle = BorderStyle.FixedSingle,
+            };
+
+            lblUpdating = new Label
+            {
+                Parent = pnlUpdating,
+                Text = Resources.ProgramStatusUpdating,
+                AutoSize = true,
+                Location = new Point(16, 16) 
+            };
+
+            pnlUpdating.Size = new Size(lblUpdating.Width + 56, lblUpdating.Height + 40);
+
+            ResumeLayout(false);
+
             Load += new EventHandler(FrmList_Load);
             FormClosing += new FormClosingEventHandler(FrmList_FormClosing);
+            SizeChanged += new EventHandler(FrmList_SizeChanged);
         }
 
         public int Find(T value)
@@ -135,10 +161,18 @@ namespace TileExplorer
             }
         }
 
+        public bool Updating { set
+            {
+                pnlUpdating.Visible = value;
+            }
+        }
+
         private void FrmList_Load(object sender, EventArgs e)
         {
             if (DataGridView != null)
             {
+                DataGridView.SendToBack();
+
                 DataGridView.SelectionChanged += new EventHandler(DataGridView_SelectionChanged);
                 DataGridView.MouseDoubleClick += new MouseEventHandler(DataGridView_MouseDoubleClick);
             }
@@ -151,6 +185,12 @@ namespace TileExplorer
                 e.Cancel = true;
                 Hide();
             }
+        }
+
+        private void FrmList_SizeChanged(object sender, EventArgs e)
+        {
+            pnlUpdating.SetBounds((ClientSize.Width - pnlUpdating.Width) / 2, (ClientSize.Height - pnlUpdating.Height) / 2, 
+                pnlUpdating.Width, pnlUpdating.Height);
         }
 
         private long GetSelectedId()

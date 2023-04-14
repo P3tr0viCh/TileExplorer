@@ -126,6 +126,9 @@
   <data name="ProgramStatusSaveData" xml:space="preserve">
     <value>Сохранение...</value>
   </data>
+  <data name="ProgramStatusUpdating" xml:space="preserve">
+    <value>Обновление...</value>
+  </data>
   <data name="QuestionMarkerDelete" xml:space="preserve">
     <value>Удалить маркер «{0}»?</value>
   </data>

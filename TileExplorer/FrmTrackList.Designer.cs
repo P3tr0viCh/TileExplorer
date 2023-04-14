@@ -57,7 +57,7 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersWidth = 32;
-            this.dataGridView.Size = new System.Drawing.Size(484, 337);
+            this.dataGridView.Size = new System.Drawing.Size(501, 337);
             this.dataGridView.TabIndex = 1;
             // 
             // ColumnId
@@ -96,7 +96,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 337);
+            this.ClientSize = new System.Drawing.Size(501, 337);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
@@ -107,6 +107,7 @@
             this.Text = "Треки";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FrmTrackList_Load);
+            this.Controls.SetChildIndex(this.dataGridView, 0);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 

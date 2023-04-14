@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System.Diagnostics;
+using System;
+using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
 
@@ -32,9 +34,24 @@ namespace TileExplorer
             return Result;
         }
 
-        private void FrmTrack_Load(object sender, System.EventArgs e)
+        private TimeSpan UtcOffset
+        {
+            get
+            {
+                return TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+            }
+        }
+
+        private void FrmTrack_Load(object sender, EventArgs e)
         {
             dtpDateTime.CustomFormat = Settings.Default.FormatDateTime;
+
+            miDateTimeAddTimeZone.Text = string.Format(miDateTimeAddTimeZone.Text, UtcOffset.TotalHours);
+        }
+
+        private void MiDateTimeAddTimeZone_Click(object sender, EventArgs e)
+        {
+            dtpDateTime.Value += UtcOffset;
         }
     }
 }
