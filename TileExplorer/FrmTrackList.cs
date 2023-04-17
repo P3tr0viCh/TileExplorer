@@ -5,13 +5,12 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
-using static TileExplorer.Main;
 
 namespace TileExplorer
 {
     public partial class FrmTrackList : BaseFrmTrackList
     {
-        public FrmTrackList(IMainForm mainForm) : base(mainForm)
+        public FrmTrackList(Form owner) : base(owner)
         {
             InitializeComponent();
         }

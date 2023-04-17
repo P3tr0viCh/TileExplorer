@@ -25,7 +25,19 @@ namespace TileExplorer
 {
     public partial class Main : Form, IStatusStripView, IMainForm
     {
+        public interface IMainForm
+        {
+            Filter Filter { get; }
+
+            void SelectById(object sender, long id);
+
+            void ChangeById(object sender, long id);
+        }
+
         private readonly Database DB;
+
+        private readonly Filter filter = new Filter();
+        public Filter Filter => filter;
 
         private readonly GMapOverlay tilesOverlay = new GMapOverlay("tiles");
         private readonly GMapOverlay tracksOverlay = new GMapOverlay("tracks");
@@ -47,6 +59,8 @@ namespace TileExplorer
         private readonly FrmTrackList frmTrackList;
         private readonly FrmMarkerList frmMarkerList;
 
+        private readonly FrmFilter frmFilter;
+
         public Main()
         {
             InitializeComponent();
@@ -63,6 +77,26 @@ namespace TileExplorer
 
             frmTrackList = new FrmTrackList(this);
             frmMarkerList = new FrmMarkerList(this);
+
+            filter.Day = Settings.Default.FilterDay;
+            filter.DateFrom = Settings.Default.FilterDateFrom;
+            filter.DateTo = Settings.Default.FilterDateTo;
+            filter.Years = SettingsExt.Default.LoadIntArray("FilterYears");
+
+            frmFilter = new FrmFilter(this);
+
+            filter.OnChanged += Filter_OnChanged;
+        }
+
+        private void Filter_OnChanged()
+        {
+            Debug.WriteLine("Filter_OnChanged");
+
+            var load = DataLoad.Tiles | DataLoad.TracksInfo;
+
+            if (frmTrackList.Visible || miMainShowTracks.Checked) load |= DataLoad.Tracks;
+
+            _ = DataUpdateAsync(load);
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -71,6 +105,8 @@ namespace TileExplorer
 
             SettingsExt.Default.LoadFormBounds(frmTrackList);
             SettingsExt.Default.LoadFormBounds(frmMarkerList);
+
+            SettingsExt.Default.LoadFormBounds(frmFilter);
 
             SettingsExt.Default.LoadDataGridColumns(frmTrackList.DataGridView);
             SettingsExt.Default.LoadDataGridColumns(frmMarkerList.DataGridView);
@@ -95,6 +131,8 @@ namespace TileExplorer
             frmTrackList.Visible = Settings.Default.VisibleListTracks;
             frmMarkerList.Visible = Settings.Default.VisibleListMarkers;
 
+            frmFilter.Visible = Settings.Default.VisibleFilter;
+
             var load = DataLoad.Tiles | DataLoad.TracksInfo;
 
             if (frmTrackList.Visible || miMainShowTracks.Checked) load |= DataLoad.Tracks;
@@ -113,6 +151,8 @@ namespace TileExplorer
             SettingsExt.Default.SaveFormBounds(frmTrackList);
             SettingsExt.Default.SaveFormBounds(frmMarkerList);
 
+            SettingsExt.Default.SaveFormBounds(frmFilter);
+
             SettingsExt.Default.SaveDataGridColumns(frmTrackList.DataGridView);
             SettingsExt.Default.SaveDataGridColumns(frmMarkerList.DataGridView);
 
@@ -123,6 +163,13 @@ namespace TileExplorer
 
             Settings.Default.VisibleListTracks = frmTrackList.Visible;
             Settings.Default.VisibleListMarkers = frmMarkerList.Visible;
+
+            Settings.Default.VisibleFilter = frmFilter.Visible;
+
+            Settings.Default.FilterDay = filter.Day;
+            Settings.Default.FilterDateFrom = filter.DateFrom;
+            Settings.Default.FilterDateTo = filter.DateTo;
+            SettingsExt.Default.SaveIntArray("FilterYears", filter.Years);
 
             Settings.Default.Save();
         }
@@ -256,7 +303,7 @@ namespace TileExplorer
                 tile.Status = TileStatus.Visited;
             }
 
-            Utils.CalcResult calcResult = await Task.Run(() =>
+            var calcResult = await Task.Run(() =>
             {
                 return Utils.CalcTiles(tiles);
             });
@@ -272,7 +319,7 @@ namespace TileExplorer
 
             tilesOverlay.Clear();
 
-            var tiles = await DB.LoadTilesAsync();
+            var tiles = await DB.LoadTilesAsync(filter);
 
             await CalcTilesAsync(tiles);
 
@@ -303,7 +350,7 @@ namespace TileExplorer
 
             tracksOverlay.Clear();
 
-            var tracks = await DB.LoadTracksAsync();
+            var tracks = await DB.LoadTracksAsync(filter);
 
             foreach (var track in tracks)
             {
@@ -366,7 +413,7 @@ namespace TileExplorer
         {
             Debug.WriteLine("LoadTracksInfoAsync: start");
 
-            var tracksInfo = await DB.LoadTracksInfoAsync();
+            var tracksInfo = await DB.LoadTracksInfoAsync(filter);
 
             statusStripPresenter.TracksCount = tracksInfo.Count;
             statusStripPresenter.TracksDistance = tracksInfo.Distance / 1000.0;
@@ -404,6 +451,8 @@ namespace TileExplorer
 
                 frmTrackList.Updating = value != ProgramStatus.Idle;
                 frmMarkerList.Updating = value != ProgramStatus.Idle;
+
+                frmFilter.Updating = value != ProgramStatus.Idle;
             }
         }
 
@@ -486,24 +535,6 @@ namespace TileExplorer
                 }
 
                 gMapControl.Visible = true;
-            }
-        }
-
-        private bool childFormsTopMost = true;
-        public bool ChildFormsTopMost
-        {
-            get
-            {
-                return childFormsTopMost;
-            }
-            set
-            {
-                if (childFormsTopMost == value) return;
-
-                childFormsTopMost = value;
-
-                frmTrackList.TopMost = value;
-                frmMarkerList.TopMost = value;
             }
         }
 
@@ -723,8 +754,6 @@ namespace TileExplorer
 
         private async void MarkerAddAsync(PointLatLng point)
         {
-            ChildFormsTopMost = false;
-
             bool prevMarkersVisible = markersOverlay.IsVisibile;
 
             markersOverlay.IsVisibile = true;
@@ -762,15 +791,11 @@ namespace TileExplorer
             }
 
             markersOverlay.IsVisibile = prevMarkersVisible;
-
-            ChildFormsTopMost = true;
         }
 
         private async void MarkerChangeAsync(MapMarker marker)
         {
             if (marker == null) return;
-
-            ChildFormsTopMost = false;
 
             if (FrmMarker.ShowDlg(this, marker.Marker))
             {
@@ -782,8 +807,6 @@ namespace TileExplorer
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
-
-            ChildFormsTopMost = true;
         }
 
         private async void MarkerDeleteAsync(MapMarker marker)
@@ -797,8 +820,6 @@ namespace TileExplorer
                 Name = marker.Position.Lat.ToString() + ":" + marker.Position.Lng.ToString();
             }
 
-            ChildFormsTopMost = false;
-
             if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, Name)))
             {
                 await DB.DeleteMarkerAsync(marker.Marker);
@@ -809,15 +830,11 @@ namespace TileExplorer
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
-
-            ChildFormsTopMost = true;
         }
 
         private async void TrackChangeAsync(MapTrack track)
         {
             if (track == null) return;
-
-            ChildFormsTopMost = false;
 
             if (FrmTrack.ShowDlg(this, track.Track))
             {
@@ -829,35 +846,29 @@ namespace TileExplorer
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
-
-            ChildFormsTopMost = true;
         }
 
         private async void TrackDeleteAsync(MapTrack track)
         {
-            if (SelectedTrack == null) return;
+            if (track == null) return;
 
-            string Name = SelectedTrack.Track.Text;
+            string Name = track.Track.Text;
 
             if (Name == "")
             {
-                Name = SelectedTrack.Track.DateTime.ToString();
+                Name = track.Track.DateTime.ToString();
             }
-
-            ChildFormsTopMost = false;
 
             if (Msg.Question(string.Format(Resources.QuestionTrackDelete, Name)))
             {
-                await DB.DeleteTrackAsync(SelectedTrack.Track);
+                await DB.DeleteTrackAsync(track.Track);
 
-                tracksOverlay.Routes.Remove(SelectedTrack);
+                tracksOverlay.Routes.Remove(track);
 
-                frmTrackList.Delete(SelectedTrack.Track);
+                frmTrackList.Delete(track.Track);
 
-                await DataUpdateAsync(DataLoad.Tiles);
+                await DataUpdateAsync(DataLoad.Tiles | DataLoad.TracksInfo);
             }
-
-            ChildFormsTopMost = true;
         }
 
         Point MenuPopupPoint;
@@ -1019,13 +1030,7 @@ namespace TileExplorer
 #if DEBUG
             SaveToImage(Path.Combine(Path.GetTempPath(), "xxx.png"));
 #else
-            ChildFormsTopMost = false;
-
-            bool save = saveFileDialog.ShowDialog(this) == DialogResult.OK;
-
-            ChildFormsTopMost = true;
-
-            if (save)
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 SaveToImage(saveFileDialog.FileName);
             }
@@ -1050,8 +1055,6 @@ namespace TileExplorer
 
             List<TileModel> trackTiles;
 
-            var tiles = await DB.LoadTilesAsync();
-
             foreach (var file in files)
             {
                 track = await OpenTrackFromFileAsync(file);
@@ -1071,23 +1074,25 @@ namespace TileExplorer
 
                 var saveTiles = new List<TileModel>();
 
-                int index;
+                int id;
 
                 foreach (var trackTile in trackTiles)
                 {
-                    index = tiles.FindIndex(tile => tile.X == trackTile.X && tile.Y == trackTile.Y);
+                    id = await DB.ExistsTileAsync(trackTile);
 
-                    if (index == -1)
+                    Debug.WriteLine(id);
+
+                    if (id == 0)
                     {
-                        tiles.Add(trackTile);
-
                         saveTiles.Add(trackTile);
                     }
                     else
                     {
-                        trackTile.Id = tiles[index].Id;
+                        trackTile.Id = id;
                     }
                 }
+
+                Debug.WriteLine("saveTiles count: " + saveTiles.Count);
 
                 await DB.SaveTilesAsync(saveTiles);
 
@@ -1104,21 +1109,17 @@ namespace TileExplorer
 
                 await DB.SaveTracksTilesAsync(tracksTiles);
             }
+            
+            frmTrackList.Sort();
 
             Status = ProgramStatus.Idle;
         }
 
         private async void MiMainDataOpenTrack_Click(object sender, EventArgs e)
         {
-            ChildFormsTopMost = false;
-
             openFileDialog.FileName = string.Empty;
 
-            bool open = openFileDialog.ShowDialog(this) == DialogResult.OK;
-
-            ChildFormsTopMost = true;
-
-            if (open)
+            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 await OpenTracksAsync(openFileDialog.FileNames);
 
@@ -1140,16 +1141,14 @@ namespace TileExplorer
             CheckAndLoadData(DataLoad.Tracks);
         }
 
+        private void MiMainDataFilter_Click(object sender, EventArgs e)
+        {
+            frmFilter.Visible = !frmFilter.Visible;
+        }
+
         private void MiMainGrayScale_Click(object sender, EventArgs e)
         {
             gMapControl.GrayScaleMode = miMainGrayScale.Checked;
-        }
-
-        public interface IMainForm
-        {
-            void SelectById(object sender, long id);
-
-            void ChangeById(object sender, long id);
         }
 
         public void SelectTrackById(long id)
@@ -1193,26 +1192,6 @@ namespace TileExplorer
 
             if (sender == frmTrackList) TrackChangeAsync(SelectedTrack);
             else if (sender == frmMarkerList) MarkerChangeAsync(SelectedMarker);
-        }
-
-        private void UpdateChildFormState(Form childForm)
-        {
-            if (WindowState == FormWindowState.Minimized)
-            {
-                childForm.TopMost = false;
-                if (childForm.Visible) childForm.WindowState = FormWindowState.Minimized;
-            }
-            else
-            {
-                if (childForm.Visible) childForm.WindowState = FormWindowState.Normal;
-                childForm.TopMost = true;
-            }
-        }
-
-        private void Main_SizeChanged(object sender, EventArgs e)
-        {
-            UpdateChildFormState(frmTrackList);
-            UpdateChildFormState(frmMarkerList);
         }
     }
 }

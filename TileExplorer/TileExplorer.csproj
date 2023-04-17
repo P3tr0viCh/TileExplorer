@@ -130,6 +130,7 @@
     <Compile Include="..\..\!UtilsAndComps\UtilsStr.cs">
       <Link>UtilsStr.cs</Link>
     </Compile>
+    <Compile Include="Database.Filter.cs" />
     <Compile Include="FrmTrack.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +152,13 @@
     <Compile Include="FrmMarkerList.Designer.cs">
       <DependentUpon>FrmMarkerList.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmFilter.Designer.cs">
+      <DependentUpon>FrmFilter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IFrmChild.cs" />
     <Compile Include="MapTrack.cs" />
     <Compile Include="MapTile.cs" />
     <Compile Include="FrmMapDesign.cs">
@@ -197,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMarker.resx">
       <DependentUpon>FrmMarker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmFilter.resx">
+      <DependentUpon>FrmFilter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>

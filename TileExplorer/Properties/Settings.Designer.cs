@@ -523,5 +523,74 @@ namespace TileExplorer.Properties {
                 this["FormatLatLng"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool VisibleFilter {
+            get {
+                return ((bool)(this["VisibleFilter"]));
+            }
+            set {
+                this["VisibleFilter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyyy.MM.dd")]
+        public string FormatDate {
+            get {
+                return ((string)(this["FormatDate"]));
+            }
+            set {
+                this["FormatDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime FilterDay {
+            get {
+                return ((global::System.DateTime)(this["FilterDay"]));
+            }
+            set {
+                this["FilterDay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime FilterDateFrom {
+            get {
+                return ((global::System.DateTime)(this["FilterDateFrom"]));
+            }
+            set {
+                this["FilterDateFrom"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime FilterDateTo {
+            get {
+                return ((global::System.DateTime)(this["FilterDateTo"]));
+            }
+            set {
+                this["FilterDateTo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterYears {
+            get {
+                return ((string)(this["FilterYears"]));
+            }
+            set {
+                this["FilterYears"] = value;
+            }
+        }
     }
 }

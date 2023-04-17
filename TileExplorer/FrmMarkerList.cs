@@ -10,7 +10,7 @@ namespace TileExplorer
 {
     public partial class FrmMarkerList : BaseFrmMarkerList
     {
-        public FrmMarkerList(IMainForm mainForm) : base(mainForm)
+        public FrmMarkerList(Form owner) : base(owner)
         {
             InitializeComponent();
         }

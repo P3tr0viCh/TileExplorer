@@ -104,7 +104,6 @@
             this.Name = "FrmMarkerList";
             this.ShowInTaskbar = false;
             this.Text = "Маркеры";
-            this.TopMost = true;
             this.Load += new System.EventHandler(this.FrmMarkerList_Load);
             this.Controls.SetChildIndex(this.dataGridView, 0);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();

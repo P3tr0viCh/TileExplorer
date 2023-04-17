@@ -1,6 +1,5 @@
 ﻿using GMap.NET.WindowsForms;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using TileExplorer.Properties;
 
 namespace TileExplorer

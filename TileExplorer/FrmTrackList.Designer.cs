@@ -105,7 +105,6 @@
             this.Name = "FrmTrackList";
             this.ShowInTaskbar = false;
             this.Text = "Треки";
-            this.TopMost = true;
             this.Load += new System.EventHandler(this.FrmTrackList_Load);
             this.Controls.SetChildIndex(this.dataGridView, 0);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();

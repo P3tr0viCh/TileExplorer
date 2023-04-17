@@ -19,7 +19,7 @@ namespace TileExplorer
         {
         }
 
-        public BaseFrmTrackList(IMainForm mainForm) : base(mainForm)
+        public BaseFrmTrackList(Form owner) : base(owner)
         {
         }
 
@@ -38,7 +38,7 @@ namespace TileExplorer
         {
         }
 
-        public BaseFrmMarkerList(IMainForm mainForm) : base(mainForm)
+        public BaseFrmMarkerList(Form owner) : base(owner)
         {
         }
 
@@ -48,19 +48,17 @@ namespace TileExplorer
         }
     }
 
-    public abstract class FrmList<T> : Form where T : BaseModelId
+    public abstract class FrmList<T> : Form, IFrmChild where T : BaseModelId
     {
-        public IMainForm MainForm;
-
         public abstract DataGridView DataGridView { get; }
         public abstract DataGridViewColumn ColumnFind { get; }
 
         private Panel pnlUpdating;
         private Label lblUpdating;
 
-        protected FrmList(IMainForm mainForm)
+        protected FrmList(Form owner)
         {
-            MainForm = mainForm;
+            Owner = owner;
 
             InitializeComponent();
         }
@@ -135,10 +133,9 @@ namespace TileExplorer
         {
             Set(Find(model), model);
 
-            DataGridView.Sort(DataGridView.SortedColumn, 
-                DataGridView.SortOrder == SortOrder.Ascending ? ListSortDirection.Ascending: ListSortDirection.Descending);
+            Sort();
         }
-        
+                
         public void Delete(T model)
         {
             int rowIndex = Find(model);
@@ -146,6 +143,12 @@ namespace TileExplorer
             if (rowIndex == -1) return;
 
             DataGridView.Rows.RemoveAt(rowIndex);
+        }
+
+        public void Sort()
+        {
+            DataGridView.Sort(DataGridView.SortedColumn,
+                DataGridView.SortOrder == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
         }
 
         public List<T> List
@@ -164,6 +167,7 @@ namespace TileExplorer
         public bool Updating { set
             {
                 pnlUpdating.Visible = value;
+                UseWaitCursor = value;
             }
         }
 
@@ -210,7 +214,7 @@ namespace TileExplorer
 
             if (id == -1) return;
 
-            MainForm.SelectById(this, id);
+            (Owner as IMainForm).SelectById(this, id);
         }
 
         private void DataGridView_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -219,7 +223,7 @@ namespace TileExplorer
 
             if (id == -1) return;
 
-            MainForm.ChangeById(this, id);
+            (Owner as IMainForm).ChangeById(this, id);
         }
     }
 }

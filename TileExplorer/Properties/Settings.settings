@@ -128,5 +128,23 @@
     <Setting Name="FormatLatLng" Type="System.String" Scope="User">
       <Value Profile="(Default)">0.000000</Value>
     </Setting>
+    <Setting Name="VisibleFilter" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="FormatDate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">yyyy.MM.dd</Value>
+    </Setting>
+    <Setting Name="FilterDay" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FilterDateFrom" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FilterDateTo" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FilterYears" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
