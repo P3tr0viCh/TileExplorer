@@ -559,62 +559,6 @@ namespace TileExplorer
 
         private bool MarkerMoving;
 
-        /*       private MapTrack selectedTrack = null;
-
-               public MapTrack SelectedTrack
-               {
-                   get
-                   {
-                       return selectedTrack;
-                   }
-                   set
-                   {
-                       if (selectedTrack == value) return;
-
-                       if (selectedTrack != null)
-                       {
-                           selectedTrack.Selected = false;
-                       }
-
-                       selectedTrack = value;
-
-                       if (selectedTrack != null)
-                       {
-                           selectedTrack.Selected = true;
-
-                           frmTrackList.Selected = selectedTrack.Model;
-                       }
-                   }
-               }
-
-               private MapMarker selectedMarker = null;
-
-               public MapMarker SelectedMarker
-               {
-                   get
-                   {
-                       return selectedMarker;
-                   }
-                   set
-                   {
-                       if (selectedMarker == value) return;
-
-                       if (selectedMarker != null)
-                       {
-                           selectedMarker.Selected = false;
-                       }
-
-                       selectedMarker = value;
-
-                       if (selectedMarker != null)
-                       {
-                           selectedMarker.Selected = true;
-
-                           frmMarkerList.Selected = selectedMarker.Model;
-                       }
-                   }
-               }
-       */
         private IMapItem selected = null;
 
         public IMapItem Selected
