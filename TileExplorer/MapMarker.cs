@@ -8,8 +8,10 @@ using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public class MapMarker : GMapMarker
+    public class MapMarker : GMapMarker, IMapItem
     {
+        public MapItemType Type => MapItemType.Marker;
+
         private const int DEFAULT_SIZE = 20;
 
         private const int DEFAULT_IMAGE_SIZE = 6;
@@ -32,7 +34,7 @@ namespace TileExplorer
         [NonSerialized]
         public SolidBrush SelectedFill = DefaultSelectedFill;
 
-        private MarkerModel marker;
+        private readonly MapItem<MarkerModel> item;
 
         static MapMarker()
         {
@@ -55,41 +57,33 @@ namespace TileExplorer
             DefaultSelectedFill = new SolidBrush(Color.FromArgb(Settings.Default.ColorMarkerFillAlpha, Settings.Default.ColorMarkerSelectedFill));
         }
 
-        public MapMarker(MarkerModel markerModel) : base(new PointLatLng())
+        public MapMarker(MarkerModel marker) : base(new PointLatLng())
         {
+            item = new MapItem<MarkerModel>(this, marker);
+
             Size = new Size(DEFAULT_SIZE, DEFAULT_SIZE);
             Offset = new Point(-DEFAULT_SIZE / 2, -DEFAULT_SIZE / 2);
 
             ToolTip = new MapMarkerToolTip(this);
 
-            Marker = markerModel;
-
+            NotifyModelChanged();
             UpdateColors();
         }
 
-        public MarkerModel Marker
-        {
-            get
-            {
-                return marker;
-            }
-            set
-            {
-                marker = value;
+        public MarkerModel Model { get => item.Model; set => item.Model = value; }
+        BaseModelId IMapItem.Model { get => Model; set => Model = (MarkerModel)value; }
 
-                NotifyModelChanged();
-            }
-        }
+        public bool Selected { get => item.Selected; set => item.Selected = value; }
 
         public void NotifyModelChanged()
         {
-            ToolTipText = marker.Text;
-            ToolTipMode = marker.IsTextVisible ? MarkerTooltipMode.Always : MarkerTooltipMode.OnMouseOver;
+            ToolTipText = Model.Text;
+            ToolTipMode = Model.IsTextVisible ? MarkerTooltipMode.Always : MarkerTooltipMode.OnMouseOver;
 
-            Position = new PointLatLng(marker.Lat, marker.Lng);
+            Position = new PointLatLng(Model.Lat, Model.Lng);
 
-            ToolTip.Offset.X = marker.OffsetX;
-            ToolTip.Offset.Y = marker.OffsetY;
+            ToolTip.Offset.X = Model.OffsetX;
+            ToolTip.Offset.Y = Model.OffsetY;
         }
 
         public override void OnRender(Graphics g)
@@ -104,7 +98,7 @@ namespace TileExplorer
             g.DrawEllipse(Stroke, rectangle);
         }
 
-        private void UpdateColors()
+        public void UpdateColors()
         {
             if (Selected)
             {
@@ -120,24 +114,6 @@ namespace TileExplorer
                 Stroke = DefaultStroke;
 
                 ToolTip.Stroke = DefaultStroke;
-            }
-        }
-
-        private bool selected = false;
-
-        public bool Selected
-        {
-            get
-            {
-                return selected;
-            }
-            set
-            {
-                if (selected == value) return;
-
-                selected = value;
-
-                UpdateColors();
             }
         }
     }

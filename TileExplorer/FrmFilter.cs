@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
 using static TileExplorer.Database.Filter;
-using static TileExplorer.Main;
 
 namespace TileExplorer
 {
     public partial class FrmFilter : Form, IFrmChild
     {
+        public FrmListType Type => FrmListType.Filter;
+
         private Filter Filter => (Owner as IMainForm).Filter;
 
         public FrmFilter(Form owner)
@@ -46,10 +46,10 @@ namespace TileExplorer
             rbtnFilterNone.Checked = true;
 
             dtpDay.Value = Filter.Day != default ? Filter.Day : DateTime.Now;
-            
+
             dtpDateFrom.Value = Filter.DateFrom != default ? Filter.DateFrom : DateTime.Now;
             dtpDateTo.Value = Filter.DateTo != default ? Filter.DateTo : DateTime.Now;
-            
+
             tbYears.Text = Filter.Years != default ? string.Join(", ", Filter.Years) : string.Empty;
 
             selfChange = false;

@@ -8,32 +8,33 @@ using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using P3tr0viCh;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
-using static TileExplorer.Main;
 using static TileExplorer.StatusStripPresenter;
 
 namespace TileExplorer
 {
+    public interface IMainForm
+    {
+        Filter Filter { get; }
+
+        void SelectById(object sender, long id);
+
+        void ChangeById(object sender, long id);
+    }
+
     public partial class Main : Form, IStatusStripView, IMainForm
     {
-        public interface IMainForm
-        {
-            Filter Filter { get; }
-
-            void SelectById(object sender, long id);
-
-            void ChangeById(object sender, long id);
-        }
-
         private readonly Database DB;
 
         private readonly Filter filter = new Filter();
@@ -56,10 +57,10 @@ namespace TileExplorer
         public ToolStripStatusLabel LabelTilesMaxCluster => slTilesMaxCluster;
         public ToolStripStatusLabel LabelTilesMaxSquare => slTilesMaxSquare;
 
+        private readonly FrmFilter frmFilter;
+
         private readonly FrmTrackList frmTrackList;
         private readonly FrmMarkerList frmMarkerList;
-
-        private readonly FrmFilter frmFilter;
 
         public Main()
         {
@@ -178,10 +179,18 @@ namespace TileExplorer
         {
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
 
-            GMap.NET.MapProviders.GMapProvider.UserAgent = "xxx/1.0";
+            var assemblyName = Assembly.GetExecutingAssembly().GetName();
+
+            GMap.NET.MapProviders.GMapProvider.UserAgent =
+                string.Format("{0}/{1}.{2}", assemblyName.Name, assemblyName.Version.Major, assemblyName.Version.Minor);
+#if DEBUG
+            GMap.NET.MapProviders.GMapProvider.UserAgent += " (debug)";
+#endif
+
+            Debug.WriteLine(GMap.NET.MapProviders.GMapProvider.UserAgent);
 
             gMapControl.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
-            gMapControl.MapProvider.RefererUrl = "debug";
+            gMapControl.MapProvider.RefererUrl = Settings.Default.MapRefererUrl;
 
             gMapControl.ShowCenter = false;
 
@@ -190,7 +199,7 @@ namespace TileExplorer
 
             HomeGoto();
 
-            gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
+            gMapControl.MouseWheelZoomType = MouseWheelZoomType.ViewCenter;
 
             gMapControl.CanDragMap = true;
             gMapControl.DragButton = MouseButtons.Left;
@@ -550,59 +559,119 @@ namespace TileExplorer
 
         private bool MarkerMoving;
 
-        private MapTrack selectedTrack = null;
+        /*       private MapTrack selectedTrack = null;
 
-        public MapTrack SelectedTrack
+               public MapTrack SelectedTrack
+               {
+                   get
+                   {
+                       return selectedTrack;
+                   }
+                   set
+                   {
+                       if (selectedTrack == value) return;
+
+                       if (selectedTrack != null)
+                       {
+                           selectedTrack.Selected = false;
+                       }
+
+                       selectedTrack = value;
+
+                       if (selectedTrack != null)
+                       {
+                           selectedTrack.Selected = true;
+
+                           frmTrackList.Selected = selectedTrack.Model;
+                       }
+                   }
+               }
+
+               private MapMarker selectedMarker = null;
+
+               public MapMarker SelectedMarker
+               {
+                   get
+                   {
+                       return selectedMarker;
+                   }
+                   set
+                   {
+                       if (selectedMarker == value) return;
+
+                       if (selectedMarker != null)
+                       {
+                           selectedMarker.Selected = false;
+                       }
+
+                       selectedMarker = value;
+
+                       if (selectedMarker != null)
+                       {
+                           selectedMarker.Selected = true;
+
+                           frmMarkerList.Selected = selectedMarker.Model;
+                       }
+                   }
+               }
+       */
+        private IMapItem selected = null;
+
+        public IMapItem Selected
         {
             get
             {
-                return selectedTrack;
+                return selected;
             }
             set
             {
-                if (selectedTrack == value) return;
+                if (selected == value) return;
 
-                if (selectedTrack != null)
+                if (selected != null)
                 {
-                    selectedTrack.Selected = false;
+                    selected.Selected = false;
                 }
 
-                selectedTrack = value;
+                selected = value;
 
-                if (selectedTrack != null)
+                if (selected != null)
                 {
-                    selectedTrack.Selected = true;
+                    selected.Selected = true;
 
-                    frmTrackList.Selected = selectedTrack.Track;
+                    switch (selected.Type)
+                    {
+                        case MapItemType.Marker:
+                            frmMarkerList.Selected = (MarkerModel)selected.Model;
+                            break;
+                        case MapItemType.Track:
+                            frmTrackList.Selected = (TrackModel)selected.Model;
+                            break;
+                    }
                 }
             }
         }
-
-        private MapMarker selectedMarker = null;
 
         public MapMarker SelectedMarker
         {
             get
             {
-                return selectedMarker;
+                if (Selected == null) return null;
+
+                if (Selected.Type != MapItemType.Marker) return null;
+
+                return (MapMarker)selected;
             }
-            set
+        }
+
+        public MapTrack SelectedTrack
+        {
+            get
             {
-                if (selectedMarker == value) return;
+                if (Selected == null) return null;
 
-                if (selectedMarker != null)
-                {
-                    selectedMarker.Selected = false;
-                }
+                if (Selected.Type != MapItemType.Track) return null;
 
-                selectedMarker = value;
-
-                if (selectedMarker != null)
-                {
-                    selectedMarker.Selected = true;
-
-                    frmMarkerList.Selected = selectedMarker.Marker;
-                }
+                return (MapTrack)selected;
             }
         }
 
@@ -617,9 +686,9 @@ namespace TileExplorer
 
                         if (SelectedMarker != null)
                         {
-                            await DB.SaveMarkerAsync(SelectedMarker.Marker);
+                            await DB.SaveMarkerAsync(SelectedMarker.Model);
 
-                            frmMarkerList.Update(SelectedMarker.Marker);
+                            frmMarkerList.Update(SelectedMarker.Model);
                         }
                     }
 
@@ -630,8 +699,7 @@ namespace TileExplorer
                     break;
             }
 
-            SelectedTrack = null;
-            SelectedMarker = null;
+            Selected = null;
         }
 
         private void GMapControl_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -660,9 +728,7 @@ namespace TileExplorer
         {
             MarkerMoving = false;
 
-            SelectedTrack = null;
-
-            SelectedMarker = (MapMarker)item;
+            Selected = (MapMarker)item;
 
             switch (e.Button)
             {
@@ -680,9 +746,7 @@ namespace TileExplorer
         {
             MarkerMoving = false;
 
-            SelectedMarker = null;
-
-            SelectedTrack = (MapTrack)item;
+            Selected = (MapTrack)item;
 
             switch (e.Button)
             {
@@ -797,13 +861,13 @@ namespace TileExplorer
         {
             if (marker == null) return;
 
-            if (FrmMarker.ShowDlg(this, marker.Marker))
+            if (FrmMarker.ShowDlg(this, marker.Model))
             {
-                await DB.SaveMarkerAsync(marker.Marker);
+                await DB.SaveMarkerAsync(marker.Model);
 
                 marker.NotifyModelChanged();
 
-                frmMarkerList.Update(marker.Marker);
+                frmMarkerList.Update(marker.Model);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
@@ -813,7 +877,7 @@ namespace TileExplorer
         {
             if (marker == null) return;
 
-            string Name = marker.Marker.Text;
+            string Name = marker.Model.Text;
 
             if (Name == "")
             {
@@ -822,11 +886,11 @@ namespace TileExplorer
 
             if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, Name)))
             {
-                await DB.DeleteMarkerAsync(marker.Marker);
+                await DB.DeleteMarkerAsync(marker.Model);
 
                 markersOverlay.Markers.Remove(marker);
 
-                frmMarkerList.Delete(marker.Marker);
+                frmMarkerList.Delete(marker.Model);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
@@ -836,13 +900,13 @@ namespace TileExplorer
         {
             if (track == null) return;
 
-            if (FrmTrack.ShowDlg(this, track.Track))
+            if (FrmTrack.ShowDlg(this, track.Model))
             {
-                await DB.SaveTrackAsync(track.Track);
+                await DB.SaveTrackAsync(track.Model);
 
                 track.NotifyModelChanged();
 
-                frmTrackList.Update(track.Track);
+                frmTrackList.Update(track.Model);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
@@ -852,20 +916,20 @@ namespace TileExplorer
         {
             if (track == null) return;
 
-            string Name = track.Track.Text;
+            string Name = track.Model.Text;
 
             if (Name == "")
             {
-                Name = track.Track.DateTime.ToString();
+                Name = track.Model.DateTime.ToString();
             }
 
             if (Msg.Question(string.Format(Resources.QuestionTrackDelete, Name)))
             {
-                await DB.DeleteTrackAsync(track.Track);
+                await DB.DeleteTrackAsync(track.Model);
 
                 tracksOverlay.Routes.Remove(track);
 
-                frmTrackList.Delete(track.Track);
+                frmTrackList.Delete(track.Model);
 
                 await DataUpdateAsync(DataLoad.Tiles | DataLoad.TracksInfo);
             }
@@ -929,8 +993,8 @@ namespace TileExplorer
 
             if (SelectedMarker == null) return;
 
-            SelectedMarker.Marker.Lat = position.Lat;
-            SelectedMarker.Marker.Lng = position.Lng;
+            SelectedMarker.Model.Lat = position.Lat;
+            SelectedMarker.Model.Lng = position.Lng;
             SelectedMarker.NotifyModelChanged();
         }
 
@@ -942,8 +1006,8 @@ namespace TileExplorer
                 {
                     if (SelectedMarker != null)
                     {
-                        SelectedMarker.Marker.Lat = MarkerMovingPrevPosition.Lat;
-                        SelectedMarker.Marker.Lng = MarkerMovingPrevPosition.Lng;
+                        SelectedMarker.Model.Lat = MarkerMovingPrevPosition.Lat;
+                        SelectedMarker.Model.Lng = MarkerMovingPrevPosition.Lng;
                         SelectedMarker.NotifyModelChanged();
                     }
 
@@ -1067,8 +1131,7 @@ namespace TileExplorer
 
                 tracksOverlay.Routes.Add(mapTrack);
 
-                SelectedMarker = null;
-                SelectedTrack = mapTrack;
+                Selected = mapTrack;
 
                 trackTiles = await GetTilesFromTrackAsync(track);
 
@@ -1109,7 +1172,7 @@ namespace TileExplorer
 
                 await DB.SaveTracksTilesAsync(tracksTiles);
             }
-            
+
             frmTrackList.Sort();
 
             Status = ProgramStatus.Idle;
@@ -1151,47 +1214,47 @@ namespace TileExplorer
             gMapControl.GrayScaleMode = miMainGrayScale.Checked;
         }
 
-        public void SelectTrackById(long id)
-        {
-            foreach (var track in from MapTrack track in tracksOverlay.Routes
-                                  where track.Track.Id == id
-                                  select track)
-            {
-                SelectedTrack = track;
-
-                if (ActiveForm != this) gMapControl.Invalidate();
-
-                break;
-            }
-        }
-
-        public void SelectMarkerById(long id)
-        {
-            foreach (var marker in from MapMarker marker in markersOverlay.Markers
-                                   where marker.Marker.Id == id
-                                   select marker)
-            {
-                SelectedMarker = marker;
-
-                if (ActiveForm != this) gMapControl.Invalidate();
-
-                break;
-            }
-        }
-
         public void SelectById(object sender, long id)
         {
-            Debug.WriteLine(id);
-            if (sender == frmTrackList) SelectTrackById(id);
-            else if (sender == frmMarkerList) SelectMarkerById(id);
+            IEnumerable items = null;
+
+            switch (((IFrmChild)sender).Type)
+            {
+                case FrmListType.Markers:
+                    items = markersOverlay.Markers;
+                    break;
+                case FrmListType.Tracks:
+                    items = tracksOverlay.Routes;
+                    break;
+                default:
+                    return;
+            }
+
+            foreach (var item in from IMapItem item in items
+                                 where item.Model.Id == id
+                                 select item)
+            {
+                Selected = item;
+
+                if (ActiveForm != this) gMapControl.Invalidate();
+
+                break;
+            }
         }
 
         public void ChangeById(object sender, long id)
         {
             SelectById(sender, id);
 
-            if (sender == frmTrackList) TrackChangeAsync(SelectedTrack);
-            else if (sender == frmMarkerList) MarkerChangeAsync(SelectedMarker);
+            switch (((IFrmChild)sender).Type)
+            {
+                case FrmListType.Markers:
+                    MarkerChangeAsync(SelectedMarker);
+                    break;
+                case FrmListType.Tracks:
+                    TrackChangeAsync(SelectedTrack);
+                    break;
+            }
         }
     }
 }

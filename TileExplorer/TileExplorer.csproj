@@ -131,26 +131,23 @@
       <Link>UtilsStr.cs</Link>
     </Compile>
     <Compile Include="Database.Filter.cs" />
+    <Compile Include="FrmList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmList.Designer.cs">
+      <DependentUpon>FrmList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmListBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FrmTrack.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmTrack.Designer.cs">
       <DependentUpon>FrmTrack.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmTrackList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmTrackList.Designer.cs">
-      <DependentUpon>FrmTrackList.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrmMarkerList.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmMarkerList.Designer.cs">
-      <DependentUpon>FrmMarkerList.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmFilter.cs">
       <SubType>Form</SubType>
@@ -158,7 +155,10 @@
     <Compile Include="FrmFilter.Designer.cs">
       <DependentUpon>FrmFilter.cs</DependentUpon>
     </Compile>
-    <Compile Include="IFrmChild.cs" />
+    <Compile Include="FrmTrackList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapItem.cs" />
     <Compile Include="MapTrack.cs" />
     <Compile Include="MapTile.cs" />
     <Compile Include="FrmMapDesign.cs">
@@ -188,17 +188,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
-    <EmbeddedResource Include="FrmTrack.resx">
-      <DependentUpon>FrmTrack.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FrmList.resx">
       <DependentUpon>FrmList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmTrackList.resx">
-      <DependentUpon>FrmTrackList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmMarkerList.resx">
-      <DependentUpon>FrmMarkerList.cs</DependentUpon>
+    <EmbeddedResource Include="FrmTrack.resx">
+      <DependentUpon>FrmTrack.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMapDesign.resx">
       <DependentUpon>FrmMapDesign.cs</DependentUpon>

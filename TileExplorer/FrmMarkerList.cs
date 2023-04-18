@@ -1,42 +1,63 @@
-﻿#define HIDE_ID
-
-using System;
+﻿using System.ComponentModel;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
-using static TileExplorer.Main;
 
 namespace TileExplorer
 {
-    public partial class FrmMarkerList : BaseFrmMarkerList
+    public class FrmMarkerList : FrmListBase<MarkerModel>
     {
+        public override FrmListType Type => FrmListType.Markers;
+
+        private readonly DataGridViewTextBoxColumn ColumnText = new DataGridViewTextBoxColumn();
+        private readonly DataGridViewTextBoxColumn ColumnLat = new DataGridViewTextBoxColumn();
+        private readonly DataGridViewTextBoxColumn ColumnLng = new DataGridViewTextBoxColumn();
+
         public FrmMarkerList(Form owner) : base(owner)
         {
-            InitializeComponent();
+            Name = "FrmMarkerList";
         }
 
-        public override DataGridView DataGridView => dataGridView;
-        public override DataGridViewColumn ColumnFind => ColumnId;
-
-        private void FrmMarkerList_Load(object sender, EventArgs e)
+        public override void Set(int rowIndex, MarkerModel model)
         {
-#if !DEBUG || HIDE_ID
-            ColumnId.Visible = false;
-#endif
-            dataGridView.Sort(ColumnText, System.ComponentModel.ListSortDirection.Ascending);
+            DataGridView.Rows[rowIndex].Cells[ColumnId.Name].Value = model.Id;
 
-            ColumnLat.DefaultCellStyle.Format = Settings.Default.FormatLatLng;
-            ColumnLng.DefaultCellStyle.Format = Settings.Default.FormatLatLng;
+            DataGridView.Rows[rowIndex].Cells[ColumnText.Name].Value = model.Text;
+
+            DataGridView.Rows[rowIndex].Cells[ColumnLat.Name].Value = model.Lat;
+            DataGridView.Rows[rowIndex].Cells[ColumnLng.Name].Value = model.Lng;
         }
 
-        public override void Set(int rowIndex, MarkerModel marker)
+        public override void InitializeComponent()
         {
-            dataGridView.Rows[rowIndex].Cells[ColumnId.Name].Value = marker.Id;
+            Text = "Маркеры";
 
-            dataGridView.Rows[rowIndex].Cells[ColumnText.Name].Value = marker.Text;
+            ColumnText.HeaderText = "Текст";
+            ColumnText.Name = "ColumnText";
+            ColumnText.ReadOnly = true;
+            ColumnText.Width = 144;
 
-            dataGridView.Rows[rowIndex].Cells[ColumnLat.Name].Value = marker.Lat;
-            dataGridView.Rows[rowIndex].Cells[ColumnLng.Name].Value = marker.Lng;
+            ColumnLat.DefaultCellStyle = new DataGridViewCellStyle()
+            {
+                Alignment = DataGridViewContentAlignment.TopRight,
+                Format = Settings.Default.FormatLatLng
+            };
+            ColumnLat.HeaderText = "Широта";
+            ColumnLat.Name = "ColumnLat";
+            ColumnLat.ReadOnly = true;
+
+            ColumnLng.DefaultCellStyle = new DataGridViewCellStyle()
+            {
+                Alignment = DataGridViewContentAlignment.TopRight,
+                Format = Settings.Default.FormatLatLng
+            };
+            ColumnLng.HeaderText = "Долгота";
+            ColumnLng.Name = "ColumnLng";
+            ColumnLng.ReadOnly = true;
+
+            DataGridView.Columns.AddRange(new DataGridViewColumn[] { ColumnText, ColumnLat, ColumnLng });
+
+            DataGridView.Sort(ColumnText, ListSortDirection.Ascending);
         }
     }
 }

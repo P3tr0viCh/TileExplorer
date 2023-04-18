@@ -1,25 +1,22 @@
-﻿using GMap.NET;
-using GMap.NET.WindowsForms;
-using P3tr0viCh;
+﻿using GMap.NET.WindowsForms;
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Windows.Forms;
 using TileExplorer.Properties;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public class MapTrack : GMapRoute
+    public class MapTrack : GMapRoute, IMapItem
     {
-        private TrackModel track;
+        public MapItemType Type => MapItemType.Track;
 
         public static readonly Pen DefaultSelectedStroke;
 
         [NonSerialized]
         public Pen SelectedStroke = DefaultSelectedStroke;
+
+        private readonly MapItem<TrackModel> item;
 
         static MapTrack()
         {
@@ -32,76 +29,51 @@ namespace TileExplorer
 
         public MapTrack(TrackModel track) : base(track.Text)
         {
+            item = new MapItem<TrackModel>(this, track);
+
             IsHitTestVisible = true;
 
+            NotifyModelChanged();
             UpdateColors();
-
-            Track = track;
         }
 
-        public TrackModel Track
-        {
-            get
-            {
-                return track;
-            }
-            set
-            {
-                track = value;
+        public TrackModel Model { get => item.Model; set => item.Model = value; }
+        BaseModelId IMapItem.Model { get => Model; set => Model = (TrackModel)value; }
 
-                NotifyModelChanged();
-            }
-        }
+        public bool Selected { get => item.Selected; set => item.Selected = value; }
 
         public void NotifyModelChanged()
         {
-            Name = track.Text;
+            Name = Model.Text;
 
             Points.Clear();
 
             double distance = 0;
 
-            if (track.TrackPoints.Count < 2) return;
+            if (Model.TrackPoints.Count < 2) return;
 
-            Points.Add(Utils.TrackPointToPointLatLng(track.TrackPoints.First()));
+            Points.Add(Utils.TrackPointToPointLatLng(Model.TrackPoints.First()));
 
-            for (var i = 1; i < track.TrackPoints.Count - 1; i++)
+            for (var i = 1; i < Model.TrackPoints.Count - 1; i++)
             {
                 if (distance >= Settings.Default.TrackMinDistancePoint)
                 {
                     distance = 0;
 
-                    Points.Add(Utils.TrackPointToPointLatLng(track.TrackPoints[i]));
+                    Points.Add(Utils.TrackPointToPointLatLng(Model.TrackPoints[i]));
                 }
-                else {
-                    distance += track.TrackPoints[i].Distance;
+                else
+                {
+                    distance += Model.TrackPoints[i].Distance;
                 }
             }
 
-            Points.Add(Utils.TrackPointToPointLatLng(track.TrackPoints.Last()));
+            Points.Add(Utils.TrackPointToPointLatLng(Model.TrackPoints.Last()));
         }
 
-        private void UpdateColors()
+        public void UpdateColors()
         {
             Stroke = Selected ? DefaultSelectedStroke : DefaultStroke;
-        }
-
-        private bool selected = false;
-
-        public bool Selected
-        {
-            get
-            {
-                return selected;
-            }
-            set
-            {
-                if (selected == value) return;
-
-                selected = value;
-
-                UpdateColors();
-            }
         }
     }
 }

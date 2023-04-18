@@ -1,43 +1,66 @@
-﻿#define HIDE_ID
-
-using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public partial class FrmTrackList : BaseFrmTrackList
+    public class FrmTrackList : FrmListBase<TrackModel>
     {
+        public override FrmListType Type => FrmListType.Tracks;
+
+        private readonly DataGridViewTextBoxColumn ColumnText = new DataGridViewTextBoxColumn();
+        private readonly DataGridViewTextBoxColumn ColumnDateTime = new DataGridViewTextBoxColumn();
+        private readonly DataGridViewTextBoxColumn ColumnDistance = new DataGridViewTextBoxColumn();
+
         public FrmTrackList(Form owner) : base(owner)
         {
-            InitializeComponent();
+            Name = "FrmTrackList";
         }
 
-        public override DataGridView DataGridView => dataGridView;
-        public override DataGridViewColumn ColumnFind => ColumnId;
-
-        private void FrmTrackList_Load(object sender, EventArgs e)
+        public override void Set(int rowIndex, TrackModel model)
         {
-#if !DEBUG || HIDE_ID
-            ColumnId.Visible = false;
-#endif
-            dataGridView.Sort(ColumnDateTime, ListSortDirection.Ascending);
+            DataGridView.Rows[rowIndex].Cells[ColumnId.Name].Value = model.Id;
 
-            ColumnDateTime.DefaultCellStyle.Format = Settings.Default.FormatDateTime;
-            ColumnDistance.DefaultCellStyle.Format = Settings.Default.FormatDistance;
+            DataGridView.Rows[rowIndex].Cells[ColumnText.Name].Value = model.Text;
+
+            DataGridView.Rows[rowIndex].Cells[ColumnDateTime.Name].Value = model.DateTime;
+
+            DataGridView.Rows[rowIndex].Cells[ColumnDistance.Name].Value = model.Distance / 1000.0;
         }
 
-        public override void Set(int rowIndex, TrackModel track)
+        public override void InitializeComponent()
         {
-            dataGridView.Rows[rowIndex].Cells[ColumnId.Name].Value = track.Id;
+            Text = "Треки";
 
-            dataGridView.Rows[rowIndex].Cells[ColumnText.Name].Value = track.Text;
+            ColumnText.HeaderText = "Название";
+            ColumnText.Name = "ColumnText";
+            ColumnText.ReadOnly = true;
+            ColumnText.Width = 144;
 
-            dataGridView.Rows[rowIndex].Cells[ColumnDateTime.Name].Value = track.DateTime;
+            ColumnDateTime.DefaultCellStyle = new DataGridViewCellStyle()
+            {
+                NullValue = null,
+                Format = Settings.Default.FormatDateTime
+            };
+            ColumnDateTime.HeaderText = "Дата и время";
+            ColumnDateTime.Name = "ColumnDateTime";
+            ColumnDateTime.ReadOnly = true;
+            ColumnDateTime.Width = 144;
 
-            dataGridView.Rows[rowIndex].Cells[ColumnDistance.Name].Value = track.Distance / 1000.0;
+            ColumnDistance.DefaultCellStyle = new DataGridViewCellStyle()
+            {
+                Alignment = DataGridViewContentAlignment.TopRight,
+                NullValue = null,
+                Format = Settings.Default.FormatDistance
+            };
+            ColumnDistance.HeaderText = "Расстояние";
+            ColumnDistance.Name = "ColumnDistance";
+            ColumnDistance.ReadOnly = true;
+
+            DataGridView.Columns.AddRange(new DataGridViewColumn[] { ColumnText, ColumnDateTime, ColumnDistance });
+
+            DataGridView.Sort(ColumnDateTime, ListSortDirection.Ascending);
         }
     }
 }

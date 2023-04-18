@@ -592,5 +592,14 @@ namespace TileExplorer.Properties {
                 this["FilterYears"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/P3tr0viCh/TileExplorer")]
+        public string MapRefererUrl {
+            get {
+                return ((string)(this["MapRefererUrl"]));
+            }
+        }
     }
 }

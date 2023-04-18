@@ -1,6 +1,6 @@
 ﻿namespace TileExplorer
 {
-    partial class FrmMarkerList
+    partial class FrmList
     {
         /// <summary>
         /// Required designer variable.
@@ -28,14 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.ColumnId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnText = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnLat = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnLng = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pnlUpdating = new System.Windows.Forms.Panel();
+            this.lblUpdating = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.pnlUpdating.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView
@@ -47,66 +45,60 @@
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ColumnId,
-            this.ColumnText,
-            this.ColumnLat,
-            this.ColumnLng});
+            this.colId});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView.Margin = new System.Windows.Forms.Padding(5);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersWidth = 32;
-            this.dataGridView.Size = new System.Drawing.Size(468, 287);
-            this.dataGridView.TabIndex = 0;
+            this.dataGridView.Size = new System.Drawing.Size(384, 265);
+            this.dataGridView.TabIndex = 2;
             // 
-            // ColumnId
+            // colId
             // 
-            this.ColumnId.HeaderText = "Id";
-            this.ColumnId.Name = "ColumnId";
-            this.ColumnId.ReadOnly = true;
-            this.ColumnId.Width = 64;
+            this.colId.HeaderText = "Id";
+            this.colId.Name = "colId";
+            this.colId.ReadOnly = true;
+            this.colId.Width = 64;
             // 
-            // ColumnText
+            // pnlUpdating
             // 
-            this.ColumnText.HeaderText = "Текст";
-            this.ColumnText.Name = "ColumnText";
-            this.ColumnText.ReadOnly = true;
-            this.ColumnText.Width = 144;
+            this.pnlUpdating.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlUpdating.Controls.Add(this.lblUpdating);
+            this.pnlUpdating.Location = new System.Drawing.Point(146, 99);
+            this.pnlUpdating.Name = "pnlUpdating";
+            this.pnlUpdating.Size = new System.Drawing.Size(116, 57);
+            this.pnlUpdating.TabIndex = 3;
             // 
-            // ColumnLat
+            // lblUpdating
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.ColumnLat.DefaultCellStyle = dataGridViewCellStyle1;
-            this.ColumnLat.HeaderText = "Широта";
-            this.ColumnLat.Name = "ColumnLat";
-            this.ColumnLat.ReadOnly = true;
+            this.lblUpdating.AutoSize = true;
+            this.lblUpdating.Location = new System.Drawing.Point(16, 16);
+            this.lblUpdating.Name = "lblUpdating";
+            this.lblUpdating.Size = new System.Drawing.Size(75, 19);
+            this.lblUpdating.TabIndex = 0;
+            this.lblUpdating.Text = "Updating...";
             // 
-            // ColumnLng
-            // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.ColumnLng.DefaultCellStyle = dataGridViewCellStyle2;
-            this.ColumnLng.HeaderText = "Долгота";
-            this.ColumnLng.Name = "ColumnLng";
-            this.ColumnLng.ReadOnly = true;
-            // 
-            // FrmMarkerList
+            // FrmList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(468, 287);
+            this.ClientSize = new System.Drawing.Size(384, 265);
+            this.Controls.Add(this.pnlUpdating);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(200, 100);
-            this.Name = "FrmMarkerList";
+            this.Name = "FrmList";
             this.ShowInTaskbar = false;
-            this.Text = "Маркеры";
-            this.Load += new System.EventHandler(this.FrmMarkerList_Load);
-            this.Controls.SetChildIndex(this.dataGridView, 0);
+            this.Text = "FrmList";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmList_FormClosing);
+            this.SizeChanged += new System.EventHandler(this.FrmList_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.pnlUpdating.ResumeLayout(false);
+            this.pnlUpdating.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -114,9 +106,8 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnText;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnLat;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnLng;
+        private System.Windows.Forms.Panel pnlUpdating;
+        private System.Windows.Forms.Label lblUpdating;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colId;
     }
 }
