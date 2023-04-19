@@ -5,7 +5,8 @@ namespace TileExplorer
     public enum MapItemType
     {
         Marker,
-        Track
+        Track,
+        Tile
     }
 
     public interface IMapItem

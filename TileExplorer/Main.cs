@@ -4,12 +4,14 @@
 
 using Bluegrams.Application;
 using GMap.NET;
+using GMap.NET.Internals;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using P3tr0viCh;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -41,6 +43,7 @@ namespace TileExplorer
         private readonly Filter filter = new Filter();
         public Filter Filter => filter;
 
+        private readonly GMapOverlay gridOverlay = new GMapOverlay("grid");
         private readonly GMapOverlay tilesOverlay = new GMapOverlay("tiles");
         private readonly GMapOverlay tracksOverlay = new GMapOverlay("tracks");
         private readonly GMapOverlay markersOverlay = new GMapOverlay("markers");
@@ -135,6 +138,8 @@ namespace TileExplorer
 
             frmFilter.Visible = Settings.Default.VisibleFilter;
 
+            UpdateGridAsync();
+
             var load = DataLoad.Tiles | DataLoad.TracksInfo;
 
             if (frmTrackList.Visible || miMainShowTracks.Checked) load |= DataLoad.Tracks;
@@ -199,6 +204,7 @@ namespace TileExplorer
             gMapControl.CanDragMap = true;
             gMapControl.DragButton = MouseButtons.Left;
 
+            gMapControl.Overlays.Add(gridOverlay);
             gMapControl.Overlays.Add(tilesOverlay);
             gMapControl.Overlays.Add(tracksOverlay);
             gMapControl.Overlays.Add(markersOverlay);
@@ -214,11 +220,16 @@ namespace TileExplorer
             statusStripPresenter.Zoom = gMapControl.Zoom;
 
             miMainSaveTileBoundaryToOsm.Enabled = gMapControl.Zoom >= Settings.Default.OsmTileMinZoom;
+
+            UpdateGridAsync();
         }
 
         private void GMapControl_OnPositionChanged(PointLatLng point)
         {
             statusStripPresenter.Position = point;
+
+            timerMapMove.Stop();
+            timerMapMove.Start();
         }
 
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1030,6 +1041,7 @@ namespace TileExplorer
             }
         }
 
+#if !DEBUG
         private enum SaveFileDialogType
         {
             Png, Osm
@@ -1051,6 +1063,7 @@ namespace TileExplorer
 
             return saveFileDialog.ShowDialog(this) == DialogResult.OK;
         }
+#endif
 
         private void MiMainSaveToImage_Click(object sender, EventArgs e)
         {
@@ -1080,8 +1093,8 @@ namespace TileExplorer
 
             var tiles = new List<TileModel>();
 
-            for (var x = Utils.LngToTileX(pointFrom); x < Utils.LngToTileX(pointTo); x++)
-                for (var y = Utils.LatToTileY(pointFrom); y < Utils.LatToTileY(pointTo); y++)
+            for (var x = Utils.LngToTileX(pointFrom); x <= Utils.LngToTileX(pointTo); x++)
+                for (var y = Utils.LatToTileY(pointFrom); y <= Utils.LatToTileY(pointTo); y++)
                 {
                     tiles.Add(new TileModel()
                     {
@@ -1263,6 +1276,52 @@ namespace TileExplorer
                     TrackChangeAsync(SelectedTrack);
                     break;
             }
+        }
+
+        private async Task<List<MapTile>> GetGridTiles()
+        {
+            return await Task.Run(() =>
+            {
+                var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
+                var pointTo = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
+
+                var result = new List<MapTile>();
+
+                for (var x = Utils.LngToTileX(pointFrom); x <= Utils.LngToTileX(pointTo); x++)
+                    for (var y = Utils.LatToTileY(pointFrom); y <= Utils.LatToTileY(pointTo); y++)
+                    {
+                        result.Add(new MapTile(new TileModel()
+                        {
+                            X = x,
+                            Y = y,
+                        }));
+                    }
+
+                return result;
+            });
+        }
+
+        public async void UpdateGridAsync()
+        {
+            timerMapMove.Stop();
+
+            gridOverlay.Polygons.Clear();
+
+            if (gMapControl.Zoom < Settings.Default.OsmTileMinZoom) return;
+
+            var gridTiles = await GetGridTiles();
+
+            foreach (var tile in gridTiles)
+            {
+                gridOverlay.Polygons.Add(tile);
+            }
+
+            Debug.WriteLine("gridOverlay.Polygons.Count: " + gridOverlay.Polygons.Count);
+        }
+
+        private void TimerMapMove_Tick(object sender, EventArgs e)
+        {
+            UpdateGridAsync();
         }
     }
 }

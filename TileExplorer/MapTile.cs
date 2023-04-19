@@ -1,21 +1,41 @@
 ﻿using GMap.NET;
+using GMap.NET.Internals;
 using GMap.NET.WindowsForms;
-using P3tr0viCh;
 using System.Collections.Generic;
 using System.Drawing;
 using TileExplorer.Properties;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public class MapTile : GMapPolygon
+    public class MapTile : GMapPolygon, IMapItem
     {
-        public MapTile(TileModel tile) : base(new List<PointLatLng>(), string.Format("{0}x{1}", tile.X, tile.Y))
+        public MapItemType Type => MapItemType.Tile;
+
+        private readonly MapItem<TileModel> item;
+
+        public MapTile(TileModel tile) : base(new List<PointLatLng>(), "")
         {
+            item = new MapItem<TileModel>(this, tile);
+
+            NotifyModelChanged();
+            UpdateColors();
+        }
+
+        public TileModel Model { get => item.Model; set => item.Model = value; }
+        BaseModelId IMapItem.Model { get => Model; set => Model = (TileModel)value; }
+
+        public bool Selected { get => item.Selected; set => item.Selected = value; }
+
+        public void NotifyModelChanged()
+        {
+            Name = string.Format("{0}x{1}", Model.X, Model.Y);
+            
             Color colorFill;
             Color colorStroke;
 
-            switch (tile.Status)
+            switch (Model.Status)
             {
                 case TileStatus.Visited:
                     colorFill = Color.FromArgb(
@@ -47,10 +67,15 @@ namespace TileExplorer
                     break;
             }
 
-            Points.AddRange(Utils.TilePoints(tile));
+            Points.Clear();
+            Points.AddRange(Utils.TilePoints(Model));
 
             Fill = new SolidBrush(colorFill);
             Stroke = new Pen(colorStroke, 1f);
+        }
+
+        public void UpdateColors()
+        {
         }
     }
 }

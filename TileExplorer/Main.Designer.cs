@@ -85,6 +85,7 @@
             this.cmTrack = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.timerMapMove = new System.Windows.Forms.Timer(this.components);
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -557,6 +558,11 @@
             this.miTrackDelete.Text = "Удалить";
             this.miTrackDelete.Click += new System.EventHandler(this.MiTrackDelete_Click);
             // 
+            // timerMapMove
+            // 
+            this.timerMapMove.Interval = 222;
+            this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -647,6 +653,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem miMainDataFilter;
         private System.Windows.Forms.ToolStripMenuItem miMainSaveTileBoundaryToOsm;
+        private System.Windows.Forms.Timer timerMapMove;
     }
 }
 
