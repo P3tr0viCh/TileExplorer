@@ -61,6 +61,42 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to osm.
+        /// </summary>
+        internal static string FileSaveDefaultExtOsm {
+            get {
+                return ResourceManager.GetString("FileSaveDefaultExtOsm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to png.
+        /// </summary>
+        internal static string FileSaveDefaultExtPng {
+            get {
+                return ResourceManager.GetString("FileSaveDefaultExtPng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OSM|*.osm|Все файлы|*.*.
+        /// </summary>
+        internal static string FileSaveFilterOsm {
+            get {
+                return ResourceManager.GetString("FileSaveFilterOsm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PNG|*.png|Все файлы|*.*.
+        /// </summary>
+        internal static string FileSaveFilterPng {
+            get {
+                return ResourceManager.GetString("FileSaveFilterPng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Загрузка....
         /// </summary>
         internal static string ProgramStatusLoadData {

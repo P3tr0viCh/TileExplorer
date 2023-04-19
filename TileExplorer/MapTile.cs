@@ -10,7 +10,7 @@ namespace TileExplorer
 {
     public class MapTile : GMapPolygon
     {
-        public MapTile(TileModel tile) : base(new List<PointLatLng>(), "")
+        public MapTile(TileModel tile) : base(new List<PointLatLng>(), string.Format("{0}x{1}", tile.X, tile.Y))
         {
             Color colorFill;
             Color colorStroke;
@@ -47,16 +47,7 @@ namespace TileExplorer
                     break;
             }
 
-            double lat1 = Osm.TileYToLat(tile.Y, Const.TILE_ZOOM);
-            double lng1 = Osm.TileXToLng(tile.X, Const.TILE_ZOOM);
-
-            double lat2 = Osm.TileYToLat(tile.Y + 1, Const.TILE_ZOOM);
-            double lng2 = Osm.TileXToLng(tile.X + 1, Const.TILE_ZOOM);
-
-            Points.Add(new PointLatLng(lat1, lng1));
-            Points.Add(new PointLatLng(lat1, lng2));
-            Points.Add(new PointLatLng(lat2, lng2));
-            Points.Add(new PointLatLng(lat2, lng1));
+            Points.AddRange(Utils.TilePoints(tile));
 
             Fill = new SolidBrush(colorFill);
             Stroke = new Pen(colorStroke, 1f);

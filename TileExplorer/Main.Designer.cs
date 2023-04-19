@@ -45,6 +45,7 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.miMainFile = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainSaveToImage = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainSaveTileBoundaryToOsm = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainClose = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainMap = new System.Windows.Forms.ToolStripMenuItem();
@@ -232,6 +233,7 @@
             // 
             this.miMainFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miMainSaveToImage,
+            this.miMainSaveTileBoundaryToOsm,
             this.toolStripSeparator1,
             this.miMainClose});
             this.miMainFile.Name = "miMainFile";
@@ -241,19 +243,26 @@
             // miMainSaveToImage
             // 
             this.miMainSaveToImage.Name = "miMainSaveToImage";
-            this.miMainSaveToImage.Size = new System.Drawing.Size(219, 22);
+            this.miMainSaveToImage.Size = new System.Drawing.Size(244, 22);
             this.miMainSaveToImage.Text = "Сохранить изображение...";
             this.miMainSaveToImage.Click += new System.EventHandler(this.MiMainSaveToImage_Click);
+            // 
+            // miMainSaveTileBoundaryToOsm
+            // 
+            this.miMainSaveTileBoundaryToOsm.Name = "miMainSaveTileBoundaryToOsm";
+            this.miMainSaveTileBoundaryToOsm.Size = new System.Drawing.Size(244, 22);
+            this.miMainSaveTileBoundaryToOsm.Text = "Сохранить сетку в файл OSM...";
+            this.miMainSaveTileBoundaryToOsm.Click += new System.EventHandler(this.MiMainSaveTileBoundaryToOsm_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(241, 6);
             // 
             // miMainClose
             // 
             this.miMainClose.Name = "miMainClose";
-            this.miMainClose.Size = new System.Drawing.Size(219, 22);
+            this.miMainClose.Size = new System.Drawing.Size(244, 22);
             this.miMainClose.Text = "Закрыть";
             this.miMainClose.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
@@ -459,11 +468,6 @@
             // 
             this.toolStripContainer.TopToolStripPanel.Controls.Add(this.menuStrip);
             // 
-            // saveFileDialog
-            // 
-            this.saveFileDialog.DefaultExt = "png";
-            this.saveFileDialog.Filter = "PNG|*.png|Все файлы|*.*";
-            // 
             // cmMarker
             // 
             this.cmMarker.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -642,6 +646,7 @@
         private System.Windows.Forms.ToolStripStatusLabel slTracksDistance;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem miMainDataFilter;
+        private System.Windows.Forms.ToolStripMenuItem miMainSaveTileBoundaryToOsm;
     }
 }
 

@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FileSaveDefaultExtOsm" xml:space="preserve">
+    <value>osm</value>
+  </data>
+  <data name="FileSaveDefaultExtPng" xml:space="preserve">
+    <value>png</value>
+  </data>
+  <data name="FileSaveFilterOsm" xml:space="preserve">
+    <value>OSM|*.osm|Все файлы|*.*</value>
+  </data>
+  <data name="FileSaveFilterPng" xml:space="preserve">
+    <value>PNG|*.png|Все файлы|*.*</value>
+  </data>
   <data name="ProgramStatusLoadData" xml:space="preserve">
     <value>Загрузка...</value>
   </data>

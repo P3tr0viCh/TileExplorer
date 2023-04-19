@@ -601,5 +601,38 @@ namespace TileExplorer.Properties {
                 return ((string)(this["MapRefererUrl"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("boundary")]
+        public string OsmTileKey {
+            get {
+                return ((string)(this["OsmTileKey"]));
+            }
+            set {
+                this["OsmTileKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("tile")]
+        public string OsmTileValue {
+            get {
+                return ((string)(this["OsmTileValue"]));
+            }
+            set {
+                this["OsmTileValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int OsmTileMinZoom {
+            get {
+                return ((int)(this["OsmTileMinZoom"]));
+            }
+        }
     }
 }

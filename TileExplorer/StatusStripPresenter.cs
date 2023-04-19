@@ -57,8 +57,7 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelTileId.Text = string.Format(Resources.StatusTileId,
-                    Osm.LngToTileX(value.Lng, Const.TILE_ZOOM), Osm.LatToTileY(value.Lat, Const.TILE_ZOOM));
+                view.LabelTileId.Text = string.Format(Resources.StatusTileId, Utils.LngToTileX(value), Utils.LatToTileY(value));
             }
         }
 

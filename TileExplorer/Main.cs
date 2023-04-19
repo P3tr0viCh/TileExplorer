@@ -19,6 +19,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 using static TileExplorer.Database;
 using static TileExplorer.StatusStripPresenter;
 
@@ -179,13 +180,7 @@ namespace TileExplorer
         {
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
 
-            var assemblyName = Assembly.GetExecutingAssembly().GetName();
-
-            GMap.NET.MapProviders.GMapProvider.UserAgent =
-                string.Format("{0}/{1}.{2}", assemblyName.Name, assemblyName.Version.Major, assemblyName.Version.Minor);
-#if DEBUG
-            GMap.NET.MapProviders.GMapProvider.UserAgent += " (debug)";
-#endif
+            GMap.NET.MapProviders.GMapProvider.UserAgent = Utils.AssemblyNameAndVersion();
 
             Debug.WriteLine(GMap.NET.MapProviders.GMapProvider.UserAgent);
 
@@ -217,6 +212,8 @@ namespace TileExplorer
         private void GMapControl_OnMapZoomChanged()
         {
             statusStripPresenter.Zoom = gMapControl.Zoom;
+
+            miMainSaveTileBoundaryToOsm.Enabled = gMapControl.Zoom >= Settings.Default.OsmTileMinZoom;
         }
 
         private void GMapControl_OnPositionChanged(PointLatLng point)
@@ -986,8 +983,8 @@ namespace TileExplorer
             {
                 AddTileAsync(new TileModel()
                 {
-                    X = Osm.LngToTileX(position.Lng, Const.TILE_ZOOM),
-                    Y = Osm.LatToTileY(position.Lat, Const.TILE_ZOOM)
+                    X = Utils.LngToTileX(position),
+                    Y = Utils.LatToTileY(position)
                 });
             }
             catch (Exception)
@@ -1011,8 +1008,8 @@ namespace TileExplorer
 
             DeleteTileAsync(new TileModel()
             {
-                X = Osm.LngToTileX(position.Lng, Const.TILE_ZOOM),
-                Y = Osm.LatToTileY(position.Lat, Const.TILE_ZOOM)
+                X = Utils.LngToTileX(position),
+                Y = Utils.LatToTileY(position)
             });
         }
 
@@ -1033,16 +1030,83 @@ namespace TileExplorer
             }
         }
 
+        private enum SaveFileDialogType
+        {
+            Png, Osm
+        }
+
+        private bool ShowSaveFileDialog(SaveFileDialogType type)
+        {
+            switch (type)
+            {
+                case SaveFileDialogType.Png:
+                    saveFileDialog.DefaultExt = Resources.FileSaveDefaultExtPng;
+                    saveFileDialog.Filter = Resources.FileSaveFilterPng;
+                    break;
+                case SaveFileDialogType.Osm:
+                    saveFileDialog.DefaultExt = Resources.FileSaveDefaultExtOsm;
+                    saveFileDialog.Filter = Resources.FileSaveFilterOsm;
+                    break;
+            }
+
+            return saveFileDialog.ShowDialog(this) == DialogResult.OK;
+        }
+
         private void MiMainSaveToImage_Click(object sender, EventArgs e)
         {
+            try
+            {
 #if DEBUG
-            SaveToImage(Path.Combine(Path.GetTempPath(), "xxx.png"));
+                SaveToImage(Files.TempFileName("xxx.png"));
 #else
-            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            if (ShowSaveFileDialog(SaveFileDialogType.Png))
             {
                 SaveToImage(saveFileDialog.FileName);
             }
 #endif
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+
+                Msg.Error(ex.Message);
+            }
+        }
+
+        private void MiMainSaveTileBoundaryToOsm_Click(object sender, EventArgs e)
+        {
+            var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
+            var pointTo = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
+
+            var tiles = new List<TileModel>();
+
+            for (var x = Utils.LngToTileX(pointFrom); x < Utils.LngToTileX(pointTo); x++)
+                for (var y = Utils.LatToTileY(pointFrom); y < Utils.LatToTileY(pointTo); y++)
+                {
+                    tiles.Add(new TileModel()
+                    {
+                        X = x,
+                        Y = y,
+                    });
+                }
+
+            try
+            {
+#if DEBUG
+                Utils.SaveTilesToOsm(Files.TempFileName("xxx.osm"), tiles);
+#else
+                if (ShowSaveFileDialog(SaveFileDialogType.Osm))
+                {
+                    Utils.SaveTilesToOsm(saveFileDialog.FileName, tiles);
+                }
+#endif
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+
+                Msg.Error(ex.Message);
+            }
         }
 
         private async Task<TrackModel> OpenTrackFromFileAsync(string path)

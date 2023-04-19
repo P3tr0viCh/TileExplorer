@@ -1,5 +1,6 @@
 ﻿using GMap.NET;
 using GMap.NET.Internals;
+using Newtonsoft.Json.Linq;
 using P3tr0viCh;
 using System;
 using System.Collections.Generic;
@@ -7,9 +8,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using TileExplorer.Properties;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -293,8 +298,8 @@ namespace TileExplorer
 
             foreach (var point in track.TrackPoints)
             {
-                x = Osm.LngToTileX(point.Lng, Const.TILE_ZOOM);
-                y = Osm.LatToTileY(point.Lat, Const.TILE_ZOOM);
+                x = LngToTileX(point.Lng);
+                y = LatToTileY(point.Lat);
 
                 if (tiles.FindIndex(tile => tile.X == x && tile.Y == y) == -1)
                 {
@@ -308,6 +313,223 @@ namespace TileExplorer
         public static PointLatLng TrackPointToPointLatLng(TrackPointModel trackPointModel)
         {
             return new PointLatLng(trackPointModel.Lat, trackPointModel.Lng);
+        }
+
+        public static int LngToTileX(double lng)
+        {
+            return Osm.LngToTileX(lng, Const.TILE_ZOOM);
+        }
+        public static int LngToTileX(PointLatLng point)
+        {
+            return LngToTileX(point.Lng);
+        }
+
+        public static int LatToTileY(double lat)
+        {
+            return Osm.LatToTileY(lat, Const.TILE_ZOOM);
+        }
+
+        public static int LatToTileY(PointLatLng point)
+        {
+            return LatToTileY(point.Lat);
+        }
+        public static double TileYToLat(int y)
+        {
+            return Osm.TileYToLat(y, Const.TILE_ZOOM);
+        }
+
+        public static double TileXToLng(int x)
+        {
+            return Osm.TileXToLng(x, Const.TILE_ZOOM);
+        }
+
+        public static string AssemblyNameAndVersion()
+        {
+            var assemblyName = Assembly.GetExecutingAssembly().GetName();
+
+            var result = string.Format("{0}/{1}.{2}", assemblyName.Name, assemblyName.Version.Major, assemblyName.Version.Minor);
+#if DEBUG
+            result += ".debug";
+#endif
+            return result;
+        }
+
+        public static List<PointLatLng> TilePoints(TileModel tile)
+        {
+            double lat1 = TileYToLat(tile.Y);
+            double lng1 = TileXToLng(tile.X);
+
+            double lat2 = TileYToLat(tile.Y + 1);
+            double lng2 = TileXToLng(tile.X + 1);
+
+            return new List<PointLatLng>
+            {
+                new PointLatLng(lat1, lng1),
+                new PointLatLng(lat1, lng2),
+                new PointLatLng(lat2, lng2),
+                new PointLatLng(lat2, lng1)
+            };
+        }
+        private class OsmNode
+        {
+            public int Id;
+            public PointLatLng Point;
+        }
+
+        private class OsmWay
+        {
+            public int Id;
+            public int NodeId1;
+            public int NodeId2;
+        }
+
+        public static void SaveTilesToOsm(string fileName, List<TileModel> tiles)
+        {
+            if (tiles.Count == 0) return;
+
+            var id = 0;
+
+            using (var xml = new XmlTextWriter(fileName, null))
+            {
+                xml.Formatting = Formatting.Indented;
+                xml.Indentation = 2;
+
+                xml.WriteStartDocument();
+
+                xml.WriteStartElement("osm");
+                {
+                    xml.WriteAttributeString("version", null, "0.6");
+                    xml.WriteAttributeString("generator", null, AssemblyNameAndVersion());
+                }
+
+                var osmNodes = new List<OsmNode>();
+                var osmWays = new List<OsmWay>();
+
+                OsmNode osmNode;
+                OsmWay osmWay;
+
+                var tileOsmNodesId = new List<int>();
+
+                foreach (var tile in tiles)
+                {
+                    tileOsmNodesId.Clear();
+
+                    foreach (var point in TilePoints(tile))
+                    {
+                        osmNode = osmNodes.Find(n => n.Point.Equals(point));
+
+                        if (osmNode == null)
+                        {
+                            osmNode = new OsmNode()
+                            {
+                                Id = ++id,
+                                Point = point
+                            };
+                        }
+
+                        osmNodes.Add(osmNode);
+
+                        tileOsmNodesId.Add(osmNode.Id);
+                    }
+
+                    osmWay = new OsmWay()
+                    {
+                        NodeId1 = tileOsmNodesId[0],
+                        NodeId2 = tileOsmNodesId[1]
+                    };
+
+                    if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
+                    {
+                        osmWays.Add(osmWay);
+                    }
+
+                    osmWay = new OsmWay()
+                    {
+                        NodeId1 = tileOsmNodesId[0],
+                        NodeId2 = tileOsmNodesId[3]
+                    };
+
+                    if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
+                    {
+                        osmWays.Add(osmWay);
+                    }
+
+                    osmWay = new OsmWay()
+                    {
+                        NodeId1 = tileOsmNodesId[1],
+                        NodeId2 = tileOsmNodesId[2]
+                    };
+
+                    if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
+                    {
+                        osmWays.Add(osmWay);
+                    }
+
+                    osmWay = new OsmWay()
+                    {
+                        NodeId1 = tileOsmNodesId[3],
+                        NodeId2 = tileOsmNodesId[2]
+                    };
+
+                    if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
+                    {
+                        osmWays.Add(osmWay);
+                    }
+                }
+
+                // write nodes
+
+                foreach (var node in osmNodes)
+                {
+                    xml.WriteStartElement("node");
+                    {
+                        xml.WriteAttributeString("id", null, "-" + node.Id);
+                        xml.WriteAttributeString("action", null, "modify");
+                        xml.WriteAttributeString("visible", null, "true");
+                        xml.WriteAttributeString("lat", null, node.Point.Lat.ToString(CultureInfo.InvariantCulture));
+                        xml.WriteAttributeString("lon", null, node.Point.Lng.ToString(CultureInfo.InvariantCulture));
+                    }
+                    xml.WriteEndElement();
+                }
+
+                // write ways
+
+                foreach (var way in osmWays)
+                {
+                    xml.WriteStartElement("way");
+                    {
+                        xml.WriteAttributeString("id", null, "-" + ++id);
+                        xml.WriteAttributeString("action", null, "modify");
+                        xml.WriteAttributeString("visible", null, "true");
+                        {
+                            xml.WriteStartElement("nd");
+                            xml.WriteAttributeString("ref", null, "-" + way.NodeId1);
+                            xml.WriteEndElement();
+
+                            xml.WriteStartElement("nd");
+                            xml.WriteAttributeString("ref", null, "-" + way.NodeId2);
+                            xml.WriteEndElement();
+
+                            if (!string.IsNullOrEmpty(Settings.Default.OsmTileKey))
+                            {
+                                xml.WriteStartElement("tag");
+                                xml.WriteAttributeString("k", null, Settings.Default.OsmTileKey);
+                                xml.WriteAttributeString("v", null, Settings.Default.OsmTileValue);
+                                xml.WriteEndElement();
+                            }
+                        }
+                    }
+                    xml.WriteEndElement();
+                }
+
+                xml.WriteEndElement();
+
+                xml.WriteEndDocument();
+
+                xml.Close();
+            }
+
+            Debug.WriteLine("end write osm");
         }
     }
 }

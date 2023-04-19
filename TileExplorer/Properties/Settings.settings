@@ -149,5 +149,14 @@
     <Setting Name="MapRefererUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://github.com/P3tr0viCh/TileExplorer</Value>
     </Setting>
+    <Setting Name="OsmTileKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">boundary</Value>
+    </Setting>
+    <Setting Name="OsmTileValue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">tile</Value>
+    </Setting>
+    <Setting Name="OsmTileMinZoom" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
