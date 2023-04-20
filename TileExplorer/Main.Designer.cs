@@ -49,6 +49,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainClose = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainMap = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainShowGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainShowTracks = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainShowMarkers = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -270,6 +271,7 @@
             // miMainMap
             // 
             this.miMainMap.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miMainShowGrid,
             this.miMainShowTracks,
             this.miMainShowMarkers,
             this.toolStripSeparator2,
@@ -283,14 +285,26 @@
             this.miMainMap.Size = new System.Drawing.Size(50, 20);
             this.miMainMap.Text = "Карта";
             // 
+            // miMainShowGrid
+            // 
+            this.miMainShowGrid.Checked = true;
+            this.miMainShowGrid.CheckOnClick = true;
+            this.miMainShowGrid.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.miMainShowGrid.Name = "miMainShowGrid";
+            this.miMainShowGrid.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.miMainShowGrid.Size = new System.Drawing.Size(232, 22);
+            this.miMainShowGrid.Text = "Сетка";
+            this.miMainShowGrid.Click += new System.EventHandler(this.MiMainShowGrid_Click);
+            // 
             // miMainShowTracks
             // 
             this.miMainShowTracks.Checked = true;
             this.miMainShowTracks.CheckOnClick = true;
             this.miMainShowTracks.CheckState = System.Windows.Forms.CheckState.Checked;
             this.miMainShowTracks.Name = "miMainShowTracks";
+            this.miMainShowTracks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.miMainShowTracks.Size = new System.Drawing.Size(232, 22);
-            this.miMainShowTracks.Text = "Отображать треки";
+            this.miMainShowTracks.Text = "Треки";
             this.miMainShowTracks.Click += new System.EventHandler(this.MiMainShowTracks_Click);
             // 
             // miMainShowMarkers
@@ -299,8 +313,9 @@
             this.miMainShowMarkers.CheckOnClick = true;
             this.miMainShowMarkers.CheckState = System.Windows.Forms.CheckState.Checked;
             this.miMainShowMarkers.Name = "miMainShowMarkers";
+            this.miMainShowMarkers.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
             this.miMainShowMarkers.Size = new System.Drawing.Size(232, 22);
-            this.miMainShowMarkers.Text = "Отображать маркеры";
+            this.miMainShowMarkers.Text = "Маркеры";
             this.miMainShowMarkers.Click += new System.EventHandler(this.MiMainShowMarkers_Click);
             // 
             // toolStripSeparator2
@@ -396,6 +411,8 @@
             // miMainDataTrackList
             // 
             this.miMainDataTrackList.Name = "miMainDataTrackList";
+            this.miMainDataTrackList.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.T)));
             this.miMainDataTrackList.Size = new System.Drawing.Size(205, 22);
             this.miMainDataTrackList.Text = "Треки";
             this.miMainDataTrackList.Click += new System.EventHandler(this.MiMainDataTrackList_Click);
@@ -403,6 +420,8 @@
             // miMainDataMarkerList
             // 
             this.miMainDataMarkerList.Name = "miMainDataMarkerList";
+            this.miMainDataMarkerList.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.M)));
             this.miMainDataMarkerList.Size = new System.Drawing.Size(205, 22);
             this.miMainDataMarkerList.Text = "Маркеры";
             this.miMainDataMarkerList.Click += new System.EventHandler(this.MiMainDataMarkerList_Click);
@@ -415,6 +434,7 @@
             // miMainDataFilter
             // 
             this.miMainDataFilter.Name = "miMainDataFilter";
+            this.miMainDataFilter.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.miMainDataFilter.Size = new System.Drawing.Size(205, 22);
             this.miMainDataFilter.Text = "Фильтр";
             this.miMainDataFilter.Click += new System.EventHandler(this.MiMainDataFilter_Click);
@@ -654,6 +674,7 @@
         private System.Windows.Forms.ToolStripMenuItem miMainDataFilter;
         private System.Windows.Forms.ToolStripMenuItem miMainSaveTileBoundaryToOsm;
         private System.Windows.Forms.Timer timerMapMove;
+        private System.Windows.Forms.ToolStripMenuItem miMainShowGrid;
     }
 }
 

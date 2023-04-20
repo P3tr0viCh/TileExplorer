@@ -158,5 +158,8 @@
     <Setting Name="OsmTileMinZoom" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="VisibleGrid" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

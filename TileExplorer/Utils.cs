@@ -1,6 +1,4 @@
 ﻿using GMap.NET;
-using GMap.NET.Internals;
-using Newtonsoft.Json.Linq;
 using P3tr0viCh;
 using System;
 using System.Collections.Generic;
@@ -9,12 +7,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
 using TileExplorer.Properties;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -141,8 +135,6 @@ namespace TileExplorer
                     maxClusterId = i;
                 }
             }
-
-            Debug.WriteLine("clusters: " + clusterId + ", maxClusterId: " + maxClusterId);
 
             if (maxClusterId >= 0)
             {
@@ -282,7 +274,7 @@ namespace TileExplorer
             {
                 Debug.WriteLine("error: " + e.Message);
 
-                Msg.Error("error: " + e.Message);
+                Msg.Error(e.Message);
             }
 
             Debug.WriteLine("end open xml");

@@ -634,5 +634,17 @@ namespace TileExplorer.Properties {
                 return ((int)(this["OsmTileMinZoom"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool VisibleGrid {
+            get {
+                return ((bool)(this["VisibleGrid"]));
+            }
+            set {
+                this["VisibleGrid"] = value;
+            }
+        }
     }
 }

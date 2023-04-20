@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace TileExplorer
 {
@@ -67,6 +68,11 @@ namespace TileExplorer
             [Write(false)]
             [Computed]
             public int ClusterId { get; set; } = -1;
+
+            public override string ToString()
+            {
+                return $"{GetType().Name}{{Id={Id}, X={X}, Y={Y}, Status:{Status}}}";
+            }
         }
 
         [Table("tracks")]

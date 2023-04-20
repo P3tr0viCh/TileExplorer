@@ -4,24 +4,20 @@
 
 using Bluegrams.Application;
 using GMap.NET;
-using GMap.NET.Internals;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using P3tr0viCh;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 using static TileExplorer.Database;
 using static TileExplorer.StatusStripPresenter;
 
@@ -95,8 +91,6 @@ namespace TileExplorer
 
         private void Filter_OnChanged()
         {
-            Debug.WriteLine("Filter_OnChanged");
-
             var load = DataLoad.Tiles | DataLoad.TracksInfo;
 
             if (frmTrackList.Visible || miMainShowTracks.Checked) load |= DataLoad.Tracks;
@@ -124,12 +118,14 @@ namespace TileExplorer
             miMapTileAdd.Visible = false;
             miMapTileDelete.Visible = false;
 #endif
+            miMainShowGrid.Checked = Settings.Default.VisibleGrid;
             miMainShowTracks.Checked = Settings.Default.VisibleTracks;
             miMainShowMarkers.Checked = Settings.Default.VisibleMarkers;
 
             miMainGrayScale.Checked = Settings.Default.MapGrayScale;
             gMapControl.GrayScaleMode = miMainGrayScale.Checked;
 
+            gridOverlay.IsVisibile = miMainShowGrid.Checked;
             tracksOverlay.IsVisibile = miMainShowTracks.Checked;
             markersOverlay.IsVisibile = miMainShowMarkers.Checked;
 
@@ -138,7 +134,7 @@ namespace TileExplorer
 
             frmFilter.Visible = Settings.Default.VisibleFilter;
 
-            UpdateGridAsync();
+            StartUpdateGrid();
 
             var load = DataLoad.Tiles | DataLoad.TracksInfo;
 
@@ -163,6 +159,7 @@ namespace TileExplorer
             SettingsExt.Default.SaveDataGridColumns(frmTrackList.DataGridView);
             SettingsExt.Default.SaveDataGridColumns(frmMarkerList.DataGridView);
 
+            Settings.Default.VisibleGrid = miMainShowGrid.Checked;
             Settings.Default.VisibleTracks = miMainShowTracks.Checked;
             Settings.Default.VisibleMarkers = miMainShowMarkers.Checked;
 
@@ -215,21 +212,28 @@ namespace TileExplorer
             statusStripPresenter.MousePosition = gMapControl.Position;
         }
 
+        private void StartUpdateGrid()
+        {
+            if (!miMainShowGrid.Checked) return;
+
+            timerMapMove.Stop();
+            timerMapMove.Start();
+        }
+
         private void GMapControl_OnMapZoomChanged()
         {
             statusStripPresenter.Zoom = gMapControl.Zoom;
 
             miMainSaveTileBoundaryToOsm.Enabled = gMapControl.Zoom >= Settings.Default.OsmTileMinZoom;
 
-            UpdateGridAsync();
+            StartUpdateGrid();
         }
 
         private void GMapControl_OnPositionChanged(PointLatLng point)
         {
             statusStripPresenter.Position = point;
 
-            timerMapMove.Stop();
-            timerMapMove.Start();
+            StartUpdateGrid();
         }
 
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1072,10 +1076,10 @@ namespace TileExplorer
 #if DEBUG
                 SaveToImage(Files.TempFileName("xxx.png"));
 #else
-            if (ShowSaveFileDialog(SaveFileDialogType.Png))
-            {
-                SaveToImage(saveFileDialog.FileName);
-            }
+                if (ShowSaveFileDialog(SaveFileDialogType.Png))
+                {
+                    SaveToImage(saveFileDialog.FileName);
+                }
 #endif
             }
             catch (Exception ex)
@@ -1278,50 +1282,70 @@ namespace TileExplorer
             }
         }
 
-        private async Task<List<MapTile>> GetGridTiles()
-        {
-            return await Task.Run(() =>
-            {
-                var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
-                var pointTo = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
+        private readonly TileModel TileLeftTop = new TileModel();
+        private readonly TileModel TileRightBottom = new TileModel();
 
-                var result = new List<MapTile>();
-
-                for (var x = Utils.LngToTileX(pointFrom); x <= Utils.LngToTileX(pointTo); x++)
-                    for (var y = Utils.LatToTileY(pointFrom); y <= Utils.LatToTileY(pointTo); y++)
-                    {
-                        result.Add(new MapTile(new TileModel()
-                        {
-                            X = x,
-                            Y = y,
-                        }));
-                    }
-
-                return result;
-            });
-        }
-
-        public async void UpdateGridAsync()
+        public void UpdateGrid()
         {
             timerMapMove.Stop();
 
-            gridOverlay.Polygons.Clear();
-
-            if (gMapControl.Zoom < Settings.Default.OsmTileMinZoom) return;
-
-            var gridTiles = await GetGridTiles();
-
-            foreach (var tile in gridTiles)
+            if (gMapControl.Zoom < Settings.Default.OsmTileMinZoom || !miMainShowGrid.Checked)
             {
-                gridOverlay.Polygons.Add(tile);
+                gridOverlay.IsVisibile = false;
+
+                return;
+            }
+            else
+            {
+                gridOverlay.IsVisibile = true;
             }
 
-            Debug.WriteLine("gridOverlay.Polygons.Count: " + gridOverlay.Polygons.Count);
+            var pointLeftTop = gMapControl.FromLocalToLatLng(0, 0);
+            var pointRightBottom = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
+
+            var leftTopX = Utils.LngToTileX(pointLeftTop);
+            var leftTopY = Utils.LatToTileY(pointLeftTop);
+
+            var rightBottomX = Utils.LngToTileX(pointRightBottom);
+            var rightBottomY = Utils.LatToTileY(pointRightBottom);
+
+            foreach (var tile in gridOverlay.Polygons.Cast<MapTile>().
+                Where(t => t.Model.X < TileLeftTop.X || t.Model.Y < TileLeftTop.Y ||
+                           t.Model.X > TileRightBottom.X || t.Model.Y > TileRightBottom.Y).ToList())
+            {
+                gridOverlay.Polygons.Remove(tile);
+            }
+
+            for (var x = leftTopX; x <= rightBottomX; x++)
+                for (var y = leftTopY; y <= rightBottomY; y++)
+                {
+                    if (x >= TileLeftTop.X && x <= TileRightBottom.X && y >= TileLeftTop.Y && y <= TileRightBottom.Y) continue;
+
+                    if (tilesOverlay.Polygons.Cast<MapTile>().ToList().
+                        Exists(t => t.Model.X == x && t.Model.Y == y)) continue;
+
+                    gridOverlay.Polygons.Add(new MapTile(new TileModel()
+                    {
+                        X = x,
+                        Y = y,
+                    }));
+                }
+
+            TileLeftTop.X = leftTopX;
+            TileLeftTop.Y = leftTopY;
+
+            TileRightBottom.X = rightBottomX;
+            TileRightBottom.Y = rightBottomY;
         }
 
         private void TimerMapMove_Tick(object sender, EventArgs e)
         {
-            UpdateGridAsync();
+            UpdateGrid();
+        }
+
+        private void MiMainShowGrid_Click(object sender, EventArgs e)
+        {
+            UpdateGrid();
         }
     }
 }
