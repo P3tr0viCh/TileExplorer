@@ -97,6 +97,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://github.com/P3tr0viCh/TileExplorer.
+        /// </summary>
+        internal static string GitHubLink {
+            get {
+                return ResourceManager.GetString("GitHubLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Загрузка....
         /// </summary>
         internal static string ProgramStatusLoadData {

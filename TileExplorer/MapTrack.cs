@@ -23,7 +23,7 @@ namespace TileExplorer
             DefaultStroke.Color = Color.FromArgb(Settings.Default.ColorTrackAlpha, Settings.Default.ColorTrack);
             DefaultStroke.Width = Settings.Default.WidthTrack;
 
-            DefaultSelectedStroke = new Pen(Color.FromArgb(Settings.Default.ColorTrackAlpha,
+            DefaultSelectedStroke = new Pen(Color.FromArgb(Settings.Default.ColorTrackSelectedAlpha,
                 Settings.Default.ColorTrackSelected), Settings.Default.WidthTrackSelected);
         }
 

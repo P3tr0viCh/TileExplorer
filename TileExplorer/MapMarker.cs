@@ -45,7 +45,7 @@ namespace TileExplorer
                 StartCap = LineCap.RoundAnchor
             };
 
-            DefaultSelectedStroke = new Pen(Color.FromArgb(Settings.Default.ColorMarkerLineAlpha, Settings.Default.ColorMarkerSelectedLine))
+            DefaultSelectedStroke = new Pen(Color.FromArgb(Settings.Default.ColorMarkerSelectedLineAlpha, Settings.Default.ColorMarkerSelectedLine))
             {
                 Width = Settings.Default.WidthMarkerLineSelected,
                 LineJoin = LineJoin.Round,
@@ -54,7 +54,7 @@ namespace TileExplorer
 
             DefaultFill = new SolidBrush(Color.FromArgb(Settings.Default.ColorMarkerFillAlpha, Settings.Default.ColorMarkerFill));
 
-            DefaultSelectedFill = new SolidBrush(Color.FromArgb(Settings.Default.ColorMarkerFillAlpha, Settings.Default.ColorMarkerSelectedFill));
+            DefaultSelectedFill = new SolidBrush(Color.FromArgb(Settings.Default.ColorMarkerSelectedFillAlpha, Settings.Default.ColorMarkerSelectedFill));
         }
 
         public MapMarker(MarkerModel marker) : base(new PointLatLng())

@@ -30,6 +30,10 @@ namespace TileExplorer
             ((ISupportInitialize)DataGridView).BeginInit();
             SuspendLayout();
 
+#if !DEBUG
+            ColumnId.Visible = false;
+#endif
+
             InitializeComponent();
 
             ((ISupportInitialize)DataGridView).EndInit();

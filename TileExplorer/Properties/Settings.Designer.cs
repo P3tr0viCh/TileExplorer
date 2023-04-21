@@ -73,7 +73,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("240")]
+        [global::System.Configuration.DefaultSettingValueAttribute("160")]
         public byte ColorMarkerLineAlpha {
             get {
                 return ((byte)(this["ColorMarkerLineAlpha"]));
@@ -85,7 +85,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Green")]
+        [global::System.Configuration.DefaultSettingValueAttribute("44, 165, 126")]
         public global::System.Drawing.Color ColorMarkerText {
             get {
                 return ((global::System.Drawing.Color)(this["ColorMarkerText"]));
@@ -133,7 +133,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("GreenYellow")]
+        [global::System.Configuration.DefaultSettingValueAttribute("220, 220, 20")]
         public global::System.Drawing.Color ColorTileCluster {
             get {
                 return ((global::System.Drawing.Color)(this["ColorTileCluster"]));
@@ -157,7 +157,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Green")]
+        [global::System.Configuration.DefaultSettingValueAttribute("44, 165, 126")]
         public global::System.Drawing.Color ColorTileMaxCluster {
             get {
                 return ((global::System.Drawing.Color)(this["ColorTileMaxCluster"]));
@@ -181,7 +181,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
+        [global::System.Configuration.DefaultSettingValueAttribute("66, 140, 244")]
         public global::System.Drawing.Color ColorTileMaxSquare {
             get {
                 return ((global::System.Drawing.Color)(this["ColorTileMaxSquare"]));
@@ -193,7 +193,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("40")]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public byte ColorTileMaxSquareAlpha {
             get {
                 return ((byte)(this["ColorTileMaxSquareAlpha"]));
@@ -217,7 +217,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public byte ColorTileClusterLineAlpha {
             get {
                 return ((byte)(this["ColorTileClusterLineAlpha"]));
@@ -229,7 +229,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public byte ColorTileMaxClusterLineAlpha {
             get {
                 return ((byte)(this["ColorTileMaxClusterLineAlpha"]));
@@ -241,7 +241,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public byte ColorTileMaxSquareLineAlpha {
             get {
                 return ((byte)(this["ColorTileMaxSquareLineAlpha"]));
@@ -265,7 +265,7 @@ namespace TileExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Green")]
+        [global::System.Configuration.DefaultSettingValueAttribute("44, 165, 126")]
         public global::System.Drawing.Color ColorMarkerFill {
             get {
                 return ((global::System.Drawing.Color)(this["ColorMarkerFill"]));
@@ -644,6 +644,42 @@ namespace TileExplorer.Properties {
             }
             set {
                 this["VisibleGrid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("220")]
+        public byte ColorMarkerSelectedLineAlpha {
+            get {
+                return ((byte)(this["ColorMarkerSelectedLineAlpha"]));
+            }
+            set {
+                this["ColorMarkerSelectedLineAlpha"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("220")]
+        public byte ColorMarkerSelectedFillAlpha {
+            get {
+                return ((byte)(this["ColorMarkerSelectedFillAlpha"]));
+            }
+            set {
+                this["ColorMarkerSelectedFillAlpha"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("220")]
+        public byte ColorTrackSelectedAlpha {
+            get {
+                return ((byte)(this["ColorTrackSelectedAlpha"]));
+            }
+            set {
+                this["ColorTrackSelectedAlpha"] = value;
             }
         }
     }

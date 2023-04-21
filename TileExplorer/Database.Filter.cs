@@ -95,7 +95,8 @@ namespace TileExplorer
                 {
                     return years;
                 }
-                set {
+                set
+                {
                     if (years == default && value == default) return;
 
                     if (value != default && years != default && value.SequenceEqual(years)) return;

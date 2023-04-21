@@ -432,6 +432,7 @@ namespace TileExplorer
 
                     if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
                     {
+                        osmWay.Id = ++id;
                         osmWays.Add(osmWay);
                     }
 
@@ -443,6 +444,7 @@ namespace TileExplorer
 
                     if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
                     {
+                        osmWay.Id = ++id;
                         osmWays.Add(osmWay);
                     }
 
@@ -454,6 +456,7 @@ namespace TileExplorer
 
                     if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
                     {
+                        osmWay.Id = ++id;
                         osmWays.Add(osmWay);
                     }
 
@@ -465,6 +468,7 @@ namespace TileExplorer
 
                     if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
                     {
+                        osmWay.Id = ++id;
                         osmWays.Add(osmWay);
                     }
                 }
@@ -490,7 +494,7 @@ namespace TileExplorer
                 {
                     xml.WriteStartElement("way");
                     {
-                        xml.WriteAttributeString("id", null, "-" + ++id);
+                        xml.WriteAttributeString("id", null, "-" + way.Id);
                         xml.WriteAttributeString("action", null, "modify");
                         xml.WriteAttributeString("visible", null, "true");
                         {

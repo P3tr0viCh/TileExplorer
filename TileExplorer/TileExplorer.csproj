@@ -109,11 +109,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\!UtilsAndComps\FrmAbout.cs">
-      <Link>FrmAbout.cs</Link>
-    </Compile>
     <Compile Include="..\..\!UtilsAndComps\UtilsFiles.cs">
       <Link>UtilsFiles.cs</Link>
+    </Compile>
+    <Compile Include="..\..\!UtilsAndComps\UtilsFrmAbout.cs">
+      <Link>UtilsFrmAbout.cs</Link>
     </Compile>
     <Compile Include="..\..\!UtilsAndComps\UtilsGeo.cs">
       <Link>UtilsGeo.cs</Link>

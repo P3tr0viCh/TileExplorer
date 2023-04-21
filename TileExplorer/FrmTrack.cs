@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System;
+﻿using System;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;

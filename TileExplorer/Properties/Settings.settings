@@ -15,10 +15,10 @@
       <Value Profile="(Default)">Gray</Value>
     </Setting>
     <Setting Name="ColorMarkerLineAlpha" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">240</Value>
+      <Value Profile="(Default)">160</Value>
     </Setting>
     <Setting Name="ColorMarkerText" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Green</Value>
+      <Value Profile="(Default)">44, 165, 126</Value>
     </Setting>
     <Setting Name="ColorMarkerTextAlpha" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">255</Value>
@@ -30,40 +30,40 @@
       <Value Profile="(Default)">25</Value>
     </Setting>
     <Setting Name="ColorTileCluster" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">GreenYellow</Value>
+      <Value Profile="(Default)">220, 220, 20</Value>
     </Setting>
     <Setting Name="ColorTileClusterAlpha" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">40</Value>
     </Setting>
     <Setting Name="ColorTileMaxCluster" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Green</Value>
+      <Value Profile="(Default)">44, 165, 126</Value>
     </Setting>
     <Setting Name="ColorTileMaxClusterAlpha" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">40</Value>
     </Setting>
     <Setting Name="ColorTileMaxSquare" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Blue</Value>
+      <Value Profile="(Default)">66, 140, 244</Value>
     </Setting>
     <Setting Name="ColorTileMaxSquareAlpha" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">40</Value>
+      <Value Profile="(Default)">25</Value>
     </Setting>
     <Setting Name="ColorTileVisitedLineAlpha" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">25</Value>
     </Setting>
     <Setting Name="ColorTileClusterLineAlpha" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">80</Value>
+      <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="ColorTileMaxClusterLineAlpha" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">80</Value>
+      <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="ColorTileMaxSquareLineAlpha" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">80</Value>
+      <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="FontMarker" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Arial, 10pt</Value>
     </Setting>
     <Setting Name="ColorMarkerFill" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Green</Value>
+      <Value Profile="(Default)">44, 165, 126</Value>
     </Setting>
     <Setting Name="ColorMarkerFillAlpha" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">220</Value>
@@ -160,6 +160,15 @@
     </Setting>
     <Setting Name="VisibleGrid" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ColorMarkerSelectedLineAlpha" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">220</Value>
+    </Setting>
+    <Setting Name="ColorMarkerSelectedFillAlpha" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">220</Value>
+    </Setting>
+    <Setting Name="ColorTrackSelectedAlpha" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">220</Value>
     </Setting>
   </Settings>
 </SettingsFile>

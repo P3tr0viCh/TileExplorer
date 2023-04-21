@@ -245,26 +245,29 @@
             // miMainSaveToImage
             // 
             this.miMainSaveToImage.Name = "miMainSaveToImage";
-            this.miMainSaveToImage.Size = new System.Drawing.Size(244, 22);
+            this.miMainSaveToImage.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.miMainSaveToImage.Size = new System.Drawing.Size(316, 22);
             this.miMainSaveToImage.Text = "Сохранить изображение...";
             this.miMainSaveToImage.Click += new System.EventHandler(this.MiMainSaveToImage_Click);
             // 
             // miMainSaveTileBoundaryToOsm
             // 
             this.miMainSaveTileBoundaryToOsm.Name = "miMainSaveTileBoundaryToOsm";
-            this.miMainSaveTileBoundaryToOsm.Size = new System.Drawing.Size(244, 22);
+            this.miMainSaveTileBoundaryToOsm.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.miMainSaveTileBoundaryToOsm.Size = new System.Drawing.Size(316, 22);
             this.miMainSaveTileBoundaryToOsm.Text = "Сохранить сетку в файл OSM...";
             this.miMainSaveTileBoundaryToOsm.Click += new System.EventHandler(this.MiMainSaveTileBoundaryToOsm_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(241, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(313, 6);
             // 
             // miMainClose
             // 
             this.miMainClose.Name = "miMainClose";
-            this.miMainClose.Size = new System.Drawing.Size(244, 22);
+            this.miMainClose.Size = new System.Drawing.Size(316, 22);
             this.miMainClose.Text = "Закрыть";
             this.miMainClose.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
@@ -463,7 +466,7 @@
             // miMainAbout
             // 
             this.miMainAbout.Name = "miMainAbout";
-            this.miMainAbout.Size = new System.Drawing.Size(158, 22);
+            this.miMainAbout.Size = new System.Drawing.Size(180, 22);
             this.miMainAbout.Text = "О программе...";
             this.miMainAbout.Click += new System.EventHandler(this.MiMainAbout_Click);
             // 

@@ -566,7 +566,7 @@ namespace TileExplorer
 
         private void MiMainAbout_Click(object sender, EventArgs e)
         {
-            FrmAbout.Show();
+            FrmAbout.Show(new FrmAbout.Options() { Link = Resources.GitHubLink });
         }
 
         private bool MarkerMoving;
