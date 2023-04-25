@@ -7,6 +7,7 @@ using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using P3tr0viCh;
+using P3tr0viCh.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -566,7 +568,7 @@ namespace TileExplorer
 
         private void MiMainAbout_Click(object sender, EventArgs e)
         {
-            FrmAbout.Show(new FrmAbout.Options() { Link = Resources.GitHubLink });
+            FrmAbout.Show(Assembly.GetExecutingAssembly(), new FrmAbout.Options() { Link = Resources.GitHubLink });
         }
 
         private bool MarkerMoving;

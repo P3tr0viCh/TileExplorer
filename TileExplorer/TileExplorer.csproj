@@ -76,6 +76,9 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="P3tr0viCh.Utils">
+      <HintPath>..\..\..\..\Projects.exe\P3tr0viCh.Utils\Debug\P3tr0viCh.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="PortableSettingsProvider, Version=0.2.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PortableSettingsProvider.0.2.4\lib\net45\PortableSettingsProvider.dll</HintPath>
     </Reference>
@@ -109,26 +112,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\!UtilsAndComps\UtilsFiles.cs">
-      <Link>UtilsFiles.cs</Link>
-    </Compile>
-    <Compile Include="..\..\!UtilsAndComps\UtilsFrmAbout.cs">
-      <Link>UtilsFrmAbout.cs</Link>
-    </Compile>
-    <Compile Include="..\..\!UtilsAndComps\UtilsGeo.cs">
-      <Link>UtilsGeo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\!UtilsAndComps\UtilsMsg.cs">
-      <Link>UtilsMsg.cs</Link>
-    </Compile>
-    <Compile Include="..\..\!UtilsAndComps\UtilsOsm.cs">
-      <Link>UtilsOsm.cs</Link>
-    </Compile>
     <Compile Include="..\..\!UtilsAndComps\UtilsSettings.cs">
       <Link>UtilsSettings.cs</Link>
-    </Compile>
-    <Compile Include="..\..\!UtilsAndComps\UtilsStr.cs">
-      <Link>UtilsStr.cs</Link>
     </Compile>
     <Compile Include="Database.Filter.cs" />
     <Compile Include="FrmList.cs">
