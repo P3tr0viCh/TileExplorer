@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ErrorDirectoryNotExists" xml:space="preserve">
+    <value>Каталог «{0}» не существует.</value>
+  </data>
   <data name="FileSaveDefaultExtOsm" xml:space="preserve">
     <value>osm</value>
   </data>
@@ -149,6 +152,12 @@
   </data>
   <data name="QuestionTrackDelete" xml:space="preserve">
     <value>Удалить трек «{0}»?</value>
+  </data>
+  <data name="SettingsCategoryCommon" xml:space="preserve">
+    <value>Общее</value>
+  </data>
+  <data name="SettingsCategoryDesign" xml:space="preserve">
+    <value>Оформление</value>
   </data>
   <data name="StatusMousePosition" xml:space="preserve">
     <value>Курсор: {0:F6}, {1:F6}</value>

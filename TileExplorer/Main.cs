@@ -74,7 +74,7 @@ namespace TileExplorer
             PortableSettingsProvider.ApplyProvider(Settings.Default);
             PortableSettingsProviderBase.AllRoaming = true;
 
-            DB = new Database(Files.DatabaseFileName());
+            DB = new Database(Files.DatabaseFileName(Settings.Default.DatabaseHome));
 
             statusStripPresenter = new StatusStripPresenter(this);
 
@@ -1030,23 +1030,6 @@ namespace TileExplorer
             });
         }
 
-        private void MiMainMapDesign_Click(object sender, EventArgs e)
-        {
-            if (FrmMapDesign.ShowDlg(this))
-            {
-                markersOverlay.IsVisibile = false;
-
-                foreach (var marker in markersOverlay.Markers)
-                {
-                    marker.ToolTip.Font = Settings.Default.FontMarker;
-                    marker.ToolTip.Foreground = new SolidBrush(Color.FromArgb(
-                        Settings.Default.ColorMarkerTextAlpha, Settings.Default.ColorMarkerText));
-                }
-
-                markersOverlay.IsVisibile = true;
-            }
-        }
-
 #if !DEBUG
         private enum SaveFileDialogType
         {
@@ -1348,6 +1331,23 @@ namespace TileExplorer
         private void MiMainShowGrid_Click(object sender, EventArgs e)
         {
             UpdateGrid();
+        }
+
+        private void MiMainSettings_Click(object sender, EventArgs e)
+        {
+            if (FrmSettings.ShowDlg(this))
+            {
+                markersOverlay.IsVisibile = false;
+
+                foreach (var marker in markersOverlay.Markers)
+                {
+                    marker.ToolTip.Font = Settings.Default.FontMarker;
+                    marker.ToolTip.Foreground = new SolidBrush(Color.FromArgb(
+                        Settings.Default.ColorMarkerTextAlpha, Settings.Default.ColorMarkerText));
+                }
+
+                markersOverlay.IsVisibile = true;
+            }
         }
     }
 }

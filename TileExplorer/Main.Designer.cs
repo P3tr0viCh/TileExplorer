@@ -60,7 +60,6 @@
             this.miMainHomeSave = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainGrayScale = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMainMapDesign = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainData = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainDataOpenTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -87,6 +86,8 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
+            this.miMainSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -237,6 +238,8 @@
             this.miMainSaveToImage,
             this.miMainSaveTileBoundaryToOsm,
             this.toolStripSeparator1,
+            this.miMainSettings,
+            this.toolStripSeparator8,
             this.miMainClose});
             this.miMainFile.Name = "miMainFile";
             this.miMainFile.Size = new System.Drawing.Size(48, 20);
@@ -282,8 +285,7 @@
             this.toolStripSeparator3,
             this.miMainHome,
             this.toolStripSeparator5,
-            this.miMainGrayScale,
-            this.miMainMapDesign});
+            this.miMainGrayScale});
             this.miMainMap.Name = "miMainMap";
             this.miMainMap.Size = new System.Drawing.Size(50, 20);
             this.miMainMap.Text = "Карта";
@@ -376,13 +378,6 @@
             this.miMainGrayScale.Text = "Оттенки серого";
             this.miMainGrayScale.Click += new System.EventHandler(this.MiMainGrayScale_Click);
             // 
-            // miMainMapDesign
-            // 
-            this.miMainMapDesign.Name = "miMainMapDesign";
-            this.miMainMapDesign.Size = new System.Drawing.Size(232, 22);
-            this.miMainMapDesign.Text = "Оформление...";
-            this.miMainMapDesign.Click += new System.EventHandler(this.MiMainMapDesign_Click);
-            // 
             // miMainData
             // 
             this.miMainData.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -466,7 +461,7 @@
             // miMainAbout
             // 
             this.miMainAbout.Name = "miMainAbout";
-            this.miMainAbout.Size = new System.Drawing.Size(180, 22);
+            this.miMainAbout.Size = new System.Drawing.Size(158, 22);
             this.miMainAbout.Text = "О программе...";
             this.miMainAbout.Click += new System.EventHandler(this.MiMainAbout_Click);
             // 
@@ -586,6 +581,18 @@
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
             // 
+            // miMainSettings
+            // 
+            this.miMainSettings.Name = "miMainSettings";
+            this.miMainSettings.Size = new System.Drawing.Size(316, 22);
+            this.miMainSettings.Text = "Настройки...";
+            this.miMainSettings.Click += new System.EventHandler(this.MiMainSettings_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(313, 6);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -655,7 +662,6 @@
         private System.Windows.Forms.ToolStripMenuItem miMapTileAdd;
         private System.Windows.Forms.ToolStripMenuItem miMapTileDelete;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem miMainMapDesign;
         private System.Windows.Forms.ToolStripMenuItem miMainDataOpenTrack;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
@@ -678,6 +684,8 @@
         private System.Windows.Forms.ToolStripMenuItem miMainSaveTileBoundaryToOsm;
         private System.Windows.Forms.Timer timerMapMove;
         private System.Windows.Forms.ToolStripMenuItem miMainShowGrid;
+        private System.Windows.Forms.ToolStripMenuItem miMainSettings;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
     }
 }
 

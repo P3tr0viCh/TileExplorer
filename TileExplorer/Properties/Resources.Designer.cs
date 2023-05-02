@@ -61,6 +61,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Каталог «{0}» не существует..
+        /// </summary>
+        internal static string ErrorDirectoryNotExists {
+            get {
+                return ResourceManager.GetString("ErrorDirectoryNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to osm.
         /// </summary>
         internal static string FileSaveDefaultExtOsm {
@@ -156,6 +165,24 @@ namespace TileExplorer.Properties {
         internal static string QuestionTrackDelete {
             get {
                 return ResourceManager.GetString("QuestionTrackDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Общее.
+        /// </summary>
+        internal static string SettingsCategoryCommon {
+            get {
+                return ResourceManager.GetString("SettingsCategoryCommon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Оформление.
+        /// </summary>
+        internal static string SettingsCategoryDesign {
+            get {
+                return ResourceManager.GetString("SettingsCategoryDesign", resourceCulture);
             }
         }
         

@@ -682,5 +682,17 @@ namespace TileExplorer.Properties {
                 this["ColorTrackSelectedAlpha"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DatabaseHome {
+            get {
+                return ((string)(this["DatabaseHome"]));
+            }
+            set {
+                this["DatabaseHome"] = value;
+            }
+        }
     }
 }
