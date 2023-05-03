@@ -10,7 +10,7 @@ namespace TileExplorer
             InitializeComponent();
         }
 
-        public static bool ShowDlg(IWin32Window owner, MarkerModel marker)
+        public static bool ShowDlg(IWin32Window owner, Models.Marker marker)
         {
             bool Result;
 

@@ -19,7 +19,7 @@ namespace TileExplorer
         Filter
     }
 
-    public abstract class FrmListBase<T> : FrmList, IFrmChild where T : BaseModelId
+    public abstract class FrmListBase<T> : FrmList, IFrmChild where T : Models.BaseId
     {
         public abstract FrmListType Type { get; }
 

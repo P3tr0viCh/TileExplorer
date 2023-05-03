@@ -47,6 +47,8 @@
             this.miMainSaveToImage = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainSaveTileBoundaryToOsm = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.miMainSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainClose = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainMap = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainShowGrid = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,8 +88,6 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
-            this.miMainSettings = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -129,8 +129,6 @@
             this.gMapControl.Size = new System.Drawing.Size(720, 415);
             this.gMapControl.TabIndex = 0;
             this.gMapControl.Zoom = 0D;
-            this.gMapControl.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.GMapControl_OnMarkerClick);
-            this.gMapControl.OnRouteClick += new GMap.NET.WindowsForms.RouteClick(this.GMapControl_OnRouteClick);
             this.gMapControl.OnPositionChanged += new GMap.NET.PositionChanged(this.GMapControl_OnPositionChanged);
             this.gMapControl.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.GMapControl_OnMapZoomChanged);
             this.gMapControl.Load += new System.EventHandler(this.GMapControl_Load);
@@ -266,6 +264,18 @@
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(313, 6);
+            // 
+            // miMainSettings
+            // 
+            this.miMainSettings.Name = "miMainSettings";
+            this.miMainSettings.Size = new System.Drawing.Size(316, 22);
+            this.miMainSettings.Text = "Настройки...";
+            this.miMainSettings.Click += new System.EventHandler(this.MiMainSettings_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(313, 6);
             // 
             // miMainClose
             // 
@@ -580,18 +590,6 @@
             // 
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
-            // 
-            // miMainSettings
-            // 
-            this.miMainSettings.Name = "miMainSettings";
-            this.miMainSettings.Size = new System.Drawing.Size(316, 22);
-            this.miMainSettings.Text = "Настройки...";
-            this.miMainSettings.Click += new System.EventHandler(this.MiMainSettings_Click);
-            // 
-            // toolStripSeparator8
-            // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(313, 6);
             // 
             // Main
             // 

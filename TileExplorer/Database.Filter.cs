@@ -8,6 +8,16 @@ namespace TileExplorer
     {
         public class Filter
         {
+            private static readonly Filter defaultInstance = new Filter();
+
+            public static Filter Default
+            {
+                get
+                {
+                    return defaultInstance;
+                }
+            }
+
             public delegate void Changed();
 
             public event Changed OnChanged;

@@ -2,7 +2,6 @@
 using GMap.NET.WindowsForms;
 using System.Collections.Generic;
 using System.Drawing;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -11,18 +10,18 @@ namespace TileExplorer
     {
         public MapItemType Type => MapItemType.Tile;
 
-        private readonly MapItem<TileModel> item;
+        private readonly MapItem<Models.Tile> item;
 
-        public MapTile(TileModel tile) : base(new List<PointLatLng>(), "")
+        public MapTile(Models.Tile tile) : base(new List<PointLatLng>(), "")
         {
-            item = new MapItem<TileModel>(this, tile);
+            item = new MapItem<Models.Tile>(this, tile);
 
             NotifyModelChanged();
             UpdateColors();
         }
 
-        public TileModel Model { get => item.Model; set => item.Model = value; }
-        BaseModelId IMapItem.Model { get => Model; set => Model = (TileModel)value; }
+        public Models.Tile Model { get => item.Model; set => item.Model = value; }
+        Models.BaseId IMapItem.Model { get => Model; set => Model = (Models.Tile)value; }
 
         public bool Selected { get => item.Selected; set => item.Selected = value; }
 
@@ -36,20 +35,20 @@ namespace TileExplorer
             switch (Model.Status)
             {
                 case TileStatus.Visited:
-                    colorFill = Color.FromArgb(Settings.Default.ColorTileVisitedAlpha, Settings.Default.ColorTileVisited);
-                    colorStroke = Color.FromArgb(Settings.Default.ColorTileVisitedLineAlpha, Settings.Default.ColorTileVisited);
+                    colorFill = Color.FromArgb(Properties.Settings.Default.ColorTileVisitedAlpha, Properties.Settings.Default.ColorTileVisited);
+                    colorStroke = Color.FromArgb(Properties.Settings.Default.ColorTileVisitedLineAlpha, Properties.Settings.Default.ColorTileVisited);
                     break;
                 case TileStatus.Cluster:
-                    colorFill = Color.FromArgb(Settings.Default.ColorTileClusterAlpha, Settings.Default.ColorTileCluster);
-                    colorStroke = Color.FromArgb(Settings.Default.ColorTileClusterLineAlpha, Settings.Default.ColorTileCluster);
+                    colorFill = Color.FromArgb(Properties.Settings.Default.ColorTileClusterAlpha, Properties.Settings.Default.ColorTileCluster);
+                    colorStroke = Color.FromArgb(Properties.Settings.Default.ColorTileClusterLineAlpha, Properties.Settings.Default.ColorTileCluster);
                     break;
                 case TileStatus.MaxCluster:
-                    colorFill = Color.FromArgb(Settings.Default.ColorTileMaxClusterAlpha, Settings.Default.ColorTileMaxCluster);
-                    colorStroke = Color.FromArgb(Settings.Default.ColorTileMaxClusterLineAlpha, Settings.Default.ColorTileMaxCluster);
+                    colorFill = Color.FromArgb(Properties.Settings.Default.ColorTileMaxClusterAlpha, Properties.Settings.Default.ColorTileMaxCluster);
+                    colorStroke = Color.FromArgb(Properties.Settings.Default.ColorTileMaxClusterLineAlpha, Properties.Settings.Default.ColorTileMaxCluster);
                     break;
                 case TileStatus.MaxSquare:
-                    colorFill = Color.FromArgb(Settings.Default.ColorTileMaxSquareAlpha, Settings.Default.ColorTileMaxSquare);
-                    colorStroke = Color.FromArgb(Settings.Default.ColorTileMaxSquareLineAlpha, Settings.Default.ColorTileMaxSquare);
+                    colorFill = Color.FromArgb(Properties.Settings.Default.ColorTileMaxSquareAlpha, Properties.Settings.Default.ColorTileMaxSquare);
+                    colorStroke = Color.FromArgb(Properties.Settings.Default.ColorTileMaxSquareLineAlpha, Properties.Settings.Default.ColorTileMaxSquare);
                     break;
                 default:
                     colorFill = Color.Empty;

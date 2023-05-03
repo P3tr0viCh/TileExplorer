@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public class FrmTrackList : FrmListBase<TrackModel>
+    public class FrmTrackList : FrmListBase<Models.Track>
     {
         public override FrmListType Type => FrmListType.Tracks;
 
@@ -18,7 +17,7 @@ namespace TileExplorer
             Name = "FrmTrackList";
         }
 
-        public override void Set(int rowIndex, TrackModel model)
+        public override void Set(int rowIndex, Models.Track model)
         {
             DataGridView.Rows[rowIndex].Cells[ColumnId.Name].Value = model.Id;
 
@@ -41,7 +40,7 @@ namespace TileExplorer
             ColumnDateTime.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 NullValue = null,
-                Format = Settings.Default.FormatDateTime
+                Format = Properties.Settings.Default.FormatDateTime
             };
             ColumnDateTime.HeaderText = "Дата и время";
             ColumnDateTime.Name = "ColumnDateTime";
@@ -52,7 +51,7 @@ namespace TileExplorer
             {
                 Alignment = DataGridViewContentAlignment.TopRight,
                 NullValue = null,
-                Format = Settings.Default.FormatDistance
+                Format = Properties.Settings.Default.FormatDistance
             };
             ColumnDistance.HeaderText = "Расстояние";
             ColumnDistance.Name = "ColumnDistance";

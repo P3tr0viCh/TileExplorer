@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows.Forms;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
-using static TileExplorer.Database.Filter;
 
 namespace TileExplorer
 {
     public partial class FrmFilter : Form, IFrmChild
     {
         public FrmListType Type => FrmListType.Filter;
-
-        private Filter Filter => (Owner as IMainForm).Filter;
 
         public FrmFilter(Form owner)
         {
@@ -36,21 +31,21 @@ namespace TileExplorer
 
         private void FrmFilter_Load(object sender, EventArgs e)
         {
-            dtpDay.CustomFormat = Settings.Default.FormatDate;
+            dtpDay.CustomFormat = Properties.Settings.Default.FormatDate;
 
-            dtpDateFrom.CustomFormat = Settings.Default.FormatDate;
-            dtpDateTo.CustomFormat = Settings.Default.FormatDate;
+            dtpDateFrom.CustomFormat = Properties.Settings.Default.FormatDate;
+            dtpDateTo.CustomFormat = Properties.Settings.Default.FormatDate;
 
             selfChange = true;
 
             rbtnFilterNone.Checked = true;
 
-            dtpDay.Value = Filter.Day != default ? Filter.Day : DateTime.Now;
+            dtpDay.Value = Filter.Default.Day != default ? Filter.Default.Day : DateTime.Now;
 
-            dtpDateFrom.Value = Filter.DateFrom != default ? Filter.DateFrom : DateTime.Now;
-            dtpDateTo.Value = Filter.DateTo != default ? Filter.DateTo : DateTime.Now;
+            dtpDateFrom.Value = Filter.Default.DateFrom != default ? Filter.Default.DateFrom : DateTime.Now;
+            dtpDateTo.Value = Filter.Default.DateTo != default ? Filter.Default.DateTo : DateTime.Now;
 
-            tbYears.Text = Filter.Years != default ? string.Join(", ", Filter.Years) : string.Empty;
+            tbYears.Text = Filter.Default.Years != default ? string.Join(", ", Filter.Default.Years) : string.Empty;
 
             selfChange = false;
         }
@@ -85,23 +80,21 @@ namespace TileExplorer
         {
             timer.Stop();
 
-            Debug.WriteLine("FilterChanged");
+            Filter.Default.Day = dtpDay.Value;
 
-            Filter.Day = dtpDay.Value;
+            Filter.Default.DateFrom = dtpDateFrom.Value;
+            Filter.Default.DateTo = dtpDateTo.Value;
 
-            Filter.DateFrom = dtpDateFrom.Value;
-            Filter.DateTo = dtpDateTo.Value;
-
-            Filter.Years = SplitInts(tbYears.Text);
+            Filter.Default.Years = SplitInts(tbYears.Text);
 
             if (rbtnFilterNone.Checked)
-                Filter.Type = FilterType.None;
+                Filter.Default.Type = Filter.FilterType.None;
             else if (rbtnFilterDay.Checked)
-                Filter.Type = FilterType.Day;
+                Filter.Default.Type = Filter.FilterType.Day;
             else if (rbtnFilterPeriod.Checked)
-                Filter.Type = FilterType.Period;
+                Filter.Default.Type = Filter.FilterType.Period;
             else if (rbtnFilterYears.Checked)
-                Filter.Type = FilterType.Years;
+                Filter.Default.Type = Filter.FilterType.Years;
         }
 
         private void FilterTypeChanged(object sender, EventArgs e)
@@ -113,7 +106,6 @@ namespace TileExplorer
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            Debug.WriteLine("Timer_Tick");
             FilterChanged();
         }
 

@@ -16,19 +16,15 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
-using static TileExplorer.Database;
 using static TileExplorer.StatusStripPresenter;
 
 namespace TileExplorer
 {
     public interface IMainForm
     {
-        Filter Filter { get; }
-
         void SelectById(object sender, long id);
 
         void ChangeById(object sender, long id);
@@ -36,11 +32,6 @@ namespace TileExplorer
 
     public partial class Main : Form, IStatusStripView, IMainForm
     {
-        private readonly Database DB;
-
-        private readonly Filter filter = new Filter();
-        public Filter Filter => filter;
-
         private readonly GMapOverlay gridOverlay = new GMapOverlay("grid");
         private readonly GMapOverlay tilesOverlay = new GMapOverlay("tiles");
         private readonly GMapOverlay tracksOverlay = new GMapOverlay("tracks");
@@ -69,26 +60,36 @@ namespace TileExplorer
             InitializeComponent();
 
             PortableSettingsProvider.SettingsFileName = Files.SettingsFileName();
-            PortableSettingsProviderBase.SettingsDirectory = Files.SettingsDirectory();
+
+            PortableSettingsProviderBase.SettingsDirectory =
+#if DEBUG
+                Files.ExecutableDirectory();
+#else
+                Files.AppDataDirectory();
+#endif
+
+            Debug.WriteLine("settings: " + Path.Combine(PortableSettingsProviderBase.SettingsDirectory,
+                PortableSettingsProvider.SettingsFileName));
+
             Directory.CreateDirectory(PortableSettingsProviderBase.SettingsDirectory);
             PortableSettingsProvider.ApplyProvider(Settings.Default);
             PortableSettingsProviderBase.AllRoaming = true;
 
-            DB = new Database(Files.DatabaseFileName(Settings.Default.DatabaseHome));
+            UpdateDatabaseFileName();
 
             statusStripPresenter = new StatusStripPresenter(this);
 
             frmTrackList = new FrmTrackList(this);
             frmMarkerList = new FrmMarkerList(this);
 
-            filter.Day = Settings.Default.FilterDay;
-            filter.DateFrom = Settings.Default.FilterDateFrom;
-            filter.DateTo = Settings.Default.FilterDateTo;
-            filter.Years = SettingsExt.Default.LoadIntArray("FilterYears");
+            Database.Filter.Default.Day = Settings.Default.FilterDay;
+            Database.Filter.Default.DateFrom = Settings.Default.FilterDateFrom;
+            Database.Filter.Default.DateTo = Settings.Default.FilterDateTo;
+            Database.Filter.Default.Years = SettingsExt.Default.LoadIntArray("FilterYears");
 
             frmFilter = new FrmFilter(this);
 
-            filter.OnChanged += Filter_OnChanged;
+            Database.Filter.Default.OnChanged += Filter_OnChanged;
         }
 
         private void Filter_OnChanged()
@@ -172,10 +173,10 @@ namespace TileExplorer
 
             Settings.Default.VisibleFilter = frmFilter.Visible;
 
-            Settings.Default.FilterDay = filter.Day;
-            Settings.Default.FilterDateFrom = filter.DateFrom;
-            Settings.Default.FilterDateTo = filter.DateTo;
-            SettingsExt.Default.SaveIntArray("FilterYears", filter.Years);
+            Settings.Default.FilterDay = Database.Filter.Default.Day;
+            Settings.Default.FilterDateFrom = Database.Filter.Default.DateFrom;
+            Settings.Default.FilterDateTo = Database.Filter.Default.DateTo;
+            SettingsExt.Default.SaveIntArray("FilterYears", Database.Filter.Default.Years);
 
             Settings.Default.Save();
         }
@@ -186,7 +187,7 @@ namespace TileExplorer
 
             GMap.NET.MapProviders.GMapProvider.UserAgent = Utils.AssemblyNameAndVersion();
 
-            Debug.WriteLine(GMap.NET.MapProviders.GMapProvider.UserAgent);
+            Debug.WriteLine("useragent: " + GMap.NET.MapProviders.GMapProvider.UserAgent);
 
             gMapControl.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
             gMapControl.MapProvider.RefererUrl = Settings.Default.MapRefererUrl;
@@ -319,11 +320,11 @@ namespace TileExplorer
         }
 #endif
 
-        private async Task CalcTilesAsync(List<TileModel> tiles)
+        private async Task CalcTilesAsync(List<Database.Models.Tile> tiles)
         {
             foreach (var tile in tiles)
             {
-                tile.Status = TileStatus.Visited;
+                tile.Status = Database.TileStatus.Visited;
             }
 
             var calcResult = await Task.Run(() =>
@@ -342,7 +343,7 @@ namespace TileExplorer
 
             tilesOverlay.Clear();
 
-            var tiles = await DB.LoadTilesAsync(filter);
+            var tiles = await Database.Default.LoadTilesAsync(Database.Filter.Default);
 
             await CalcTilesAsync(tiles);
 
@@ -373,7 +374,7 @@ namespace TileExplorer
 
             tracksOverlay.Clear();
 
-            var tracks = await DB.LoadTracksAsync(filter);
+            var tracks = await Database.Default.LoadTracksAsync(Database.Filter.Default);
 
             foreach (var track in tracks)
             {
@@ -420,7 +421,7 @@ namespace TileExplorer
 
             markersOverlay.Clear();
 
-            var markers = await DB.LoadMarkersAsync();
+            var markers = await Database.Default.LoadMarkersAsync();
 
             foreach (var marker in markers)
             {
@@ -436,7 +437,7 @@ namespace TileExplorer
         {
             Debug.WriteLine("LoadTracksInfoAsync: start");
 
-            var tracksInfo = await DB.LoadTracksInfoAsync(filter);
+            var tracksInfo = await Database.Default.LoadTracksInfoAsync(Database.Filter.Default);
 
             statusStripPresenter.TracksCount = tracksInfo.Count;
             statusStripPresenter.TracksDistance = tracksInfo.Distance / 1000.0;
@@ -568,7 +569,7 @@ namespace TileExplorer
 
         private void MiMainAbout_Click(object sender, EventArgs e)
         {
-            FrmAbout.Show(Assembly.GetExecutingAssembly(), new FrmAbout.Options() { Link = Resources.GitHubLink });
+            FrmAbout.Show(new FrmAbout.Options() { Link = Resources.GitHubLink });
         }
 
         private bool MarkerMoving;
@@ -599,10 +600,10 @@ namespace TileExplorer
                     switch (selected.Type)
                     {
                         case MapItemType.Marker:
-                            frmMarkerList.Selected = (MarkerModel)selected.Model;
+                            frmMarkerList.Selected = (Database.Models.Marker)selected.Model;
                             break;
                         case MapItemType.Track:
-                            frmTrackList.Selected = (TrackModel)selected.Model;
+                            frmTrackList.Selected = (Database.Models.Track)selected.Model;
                             break;
                     }
                 }
@@ -633,88 +634,118 @@ namespace TileExplorer
             }
         }
 
+        private IMapItem MouseOverMapItem()
+        {
+            if (gMapControl.IsMouseOverMarker)
+            {
+                foreach (var marker in markersOverlay.Markers)
+                {
+                    if (marker.IsMouseOver)
+                    {
+                        return (MapMarker)marker;
+                    }
+                }
+            }
+
+            if (gMapControl.IsMouseOverRoute)
+            {
+                foreach (var track in tracksOverlay.Routes)
+                {
+                    if (track.IsMouseOver)
+                    {
+                        return (MapTrack)track;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private async void GMapControl_MouseClick(object sender, MouseEventArgs e)
         {
+            if (MarkerMoving)
+            {
+                MarkerMoving = false;
+
+                if (SelectedMarker != null)
+                {
+                    await Database.Default.SaveMarkerAsync(SelectedMarker.Model);
+
+                    frmMarkerList.Update(SelectedMarker.Model);
+                }
+
+                return;
+            }
+
+            var mapItem = MouseOverMapItem();
+
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    if (MarkerMoving)
+                    if (mapItem != null)
                     {
-                        MarkerMoving = false;
-
-                        if (SelectedMarker != null)
-                        {
-                            await DB.SaveMarkerAsync(SelectedMarker.Model);
-
-                            frmMarkerList.Update(SelectedMarker.Model);
-                        }
+                        Selected = mapItem.Selected ? null : mapItem;
                     }
 
                     break;
                 case MouseButtons.Right:
-                    cmMap.Show(gMapControl, e.Location);
+                    if (mapItem != null)
+                    {
+                        Selected = mapItem.Selected ? null : mapItem;
+                    }
+                    else
+                    {
+                        Selected = null;
+                    }
+
+                    ContextMenuStrip contextMenu;
+
+                    if (gMapControl.IsMouseOverMarker)
+                    {
+                        contextMenu = cmMarker;
+                    }
+                    else
+                    {
+                        if (gMapControl.IsMouseOverRoute)
+                        {
+                            contextMenu = cmTrack;
+                        }
+                        else
+                        {
+                            contextMenu = cmMap;
+                        }
+                    }
+
+                    contextMenu.Show(gMapControl, e.Location);
 
                     break;
             }
-
-            Selected = null;
         }
 
         private void GMapControl_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            var mapItem = MouseOverMapItem();
+
+            Selected = mapItem ?? null;
+
             if (e.Button == MouseButtons.Left)
             {
-                if (SelectedMarker == null)
+                if (Selected == null)
                 {
-                    if (SelectedTrack == null)
-                    {
-                        MarkerAddAsync(gMapControl.FromLocalToLatLng(e.X, e.Y));
-                    }
-                    else
-                    {
-                        TrackChangeAsync(SelectedTrack);
-                    }
+                    MarkerAddAsync(gMapControl.FromLocalToLatLng(e.X, e.Y));
                 }
                 else
                 {
-                    MarkerChangeAsync(SelectedMarker);
+                    switch (Selected.Type)
+                    {
+                        case MapItemType.Marker:
+                            MarkerChangeAsync(SelectedMarker);
+                            break;
+                        case MapItemType.Track:
+                            TrackChangeAsync(SelectedTrack);
+                            break;
+                    }
                 }
-            }
-        }
-
-        private void GMapControl_OnMarkerClick(GMapMarker item, MouseEventArgs e)
-        {
-            MarkerMoving = false;
-
-            Selected = (MapMarker)item;
-
-            switch (e.Button)
-            {
-                case MouseButtons.Left:
-
-                    break;
-                case MouseButtons.Right:
-                    cmMarker.Show(gMapControl, e.Location);
-
-                    break;
-            }
-        }
-
-        private void GMapControl_OnRouteClick(GMapRoute item, MouseEventArgs e)
-        {
-            MarkerMoving = false;
-
-            Selected = (MapTrack)item;
-
-            switch (e.Button)
-            {
-                case MouseButtons.Left:
-
-                    break;
-                case MouseButtons.Right:
-                    cmTrack.Show(gMapControl, e.Location);
-
-                    break;
             }
         }
 
@@ -780,7 +811,7 @@ namespace TileExplorer
 
             markersOverlay.IsVisibile = true;
 
-            MarkerModel marker = new MarkerModel()
+            Database.Models.Marker marker = new Database.Models.Marker()
             {
                 Lat = point.Lat,
                 Lng = point.Lng,
@@ -799,7 +830,7 @@ namespace TileExplorer
 
             if (FrmMarker.ShowDlg(this, marker))
             {
-                await DB.SaveMarkerAsync(marker);
+                await Database.Default.SaveMarkerAsync(marker);
 
                 markersOverlay.Markers.Remove(markerTemp);
 
@@ -821,7 +852,7 @@ namespace TileExplorer
 
             if (FrmMarker.ShowDlg(this, marker.Model))
             {
-                await DB.SaveMarkerAsync(marker.Model);
+                await Database.Default.SaveMarkerAsync(marker.Model);
 
                 marker.NotifyModelChanged();
 
@@ -844,7 +875,7 @@ namespace TileExplorer
 
             if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, Name)))
             {
-                await DB.DeleteMarkerAsync(marker.Model);
+                await Database.Default.DeleteMarkerAsync(marker.Model);
 
                 markersOverlay.Markers.Remove(marker);
 
@@ -860,7 +891,7 @@ namespace TileExplorer
 
             if (FrmTrack.ShowDlg(this, track.Model))
             {
-                await DB.SaveTrackAsync(track.Model);
+                await Database.Default.SaveTrackAsync(track.Model);
 
                 track.NotifyModelChanged();
 
@@ -883,7 +914,7 @@ namespace TileExplorer
 
             if (Msg.Question(string.Format(Resources.QuestionTrackDelete, Name)))
             {
-                await DB.DeleteTrackAsync(track.Model);
+                await Database.Default.DeleteTrackAsync(track.Model);
 
                 tracksOverlay.Routes.Remove(track);
 
@@ -983,11 +1014,11 @@ namespace TileExplorer
             _ = DataUpdateAsync();
         }
 
-        private async void AddTileAsync(TileModel tile)
+        private async void AddTileAsync(Database.Models.Tile tile)
         {
             Status = ProgramStatus.SaveData;
 
-            await DB.SaveTileAsync(tile);
+            await Database.Default.SaveTileAsync(tile);
 
             await DataUpdateAsync(DataLoad.Tiles);
         }
@@ -998,7 +1029,7 @@ namespace TileExplorer
 
             try
             {
-                AddTileAsync(new TileModel()
+                AddTileAsync(new Database.Models.Tile()
                 {
                     X = Utils.LngToTileX(position),
                     Y = Utils.LatToTileY(position)
@@ -1010,11 +1041,11 @@ namespace TileExplorer
             }
         }
 
-        private async void DeleteTileAsync(TileModel tile)
+        private async void DeleteTileAsync(Database.Models.Tile tile)
         {
             Status = ProgramStatus.SaveData;
 
-            await DB.DeleteTileAsync(tile);
+            await Database.Default.DeleteTileAsync(tile);
 
             await DataUpdateAsync(DataLoad.Tiles);
         }
@@ -1023,7 +1054,7 @@ namespace TileExplorer
         {
             PointLatLng position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
 
-            DeleteTileAsync(new TileModel()
+            DeleteTileAsync(new Database.Models.Tile()
             {
                 X = Utils.LngToTileX(position),
                 Y = Utils.LatToTileY(position)
@@ -1080,12 +1111,12 @@ namespace TileExplorer
             var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
             var pointTo = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
 
-            var tiles = new List<TileModel>();
+            var tiles = new List<Database.Models.Tile>();
 
             for (var x = Utils.LngToTileX(pointFrom); x <= Utils.LngToTileX(pointTo); x++)
                 for (var y = Utils.LatToTileY(pointFrom); y <= Utils.LatToTileY(pointTo); y++)
                 {
-                    tiles.Add(new TileModel()
+                    tiles.Add(new Database.Models.Tile()
                     {
                         X = x,
                         Y = y,
@@ -1111,12 +1142,12 @@ namespace TileExplorer
             }
         }
 
-        private async Task<TrackModel> OpenTrackFromFileAsync(string path)
+        private async Task<Database.Models.Track> OpenTrackFromFileAsync(string path)
         {
             return await Task.Run(() => { return Utils.OpenTrackFromFile(path); });
         }
 
-        private async Task<List<TileModel>> GetTilesFromTrackAsync(TrackModel track)
+        private async Task<List<Database.Models.Tile>> GetTilesFromTrackAsync(Database.Models.Track track)
         {
             return await Task.Run(() => { return Utils.GetTilesFromTrack(track); });
         }
@@ -1125,15 +1156,15 @@ namespace TileExplorer
         {
             Status = ProgramStatus.LoadGpx;
 
-            TrackModel track;
+            Database.Models.Track track;
 
-            List<TileModel> trackTiles;
+            List<Database.Models.Tile> trackTiles;
 
             foreach (var file in files)
             {
                 track = await OpenTrackFromFileAsync(file);
 
-                await DB.SaveTrackAsync(track);
+                await Database.Default.SaveTrackAsync(track);
 
                 frmTrackList.Add(track);
 
@@ -1145,13 +1176,13 @@ namespace TileExplorer
 
                 trackTiles = await GetTilesFromTrackAsync(track);
 
-                var saveTiles = new List<TileModel>();
+                var saveTiles = new List<Database.Models.Tile>();
 
                 int id;
 
                 foreach (var trackTile in trackTiles)
                 {
-                    id = await DB.ExistsTileAsync(trackTile);
+                    id = await Database.Default.ExistsTileAsync(trackTile);
 
                     Debug.WriteLine(id);
 
@@ -1167,20 +1198,20 @@ namespace TileExplorer
 
                 Debug.WriteLine("saveTiles count: " + saveTiles.Count);
 
-                await DB.SaveTilesAsync(saveTiles);
+                await Database.Default.SaveTilesAsync(saveTiles);
 
-                var tracksTiles = new List<TracksTilesModel>();
+                var tracksTiles = new List<Database.Models.TracksTiles>();
 
                 foreach (var tile in trackTiles)
                 {
-                    tracksTiles.Add(new TracksTilesModel()
+                    tracksTiles.Add(new Database.Models.TracksTiles()
                     {
                         TrackId = track.Id,
                         TileId = tile.Id,
                     });
                 }
 
-                await DB.SaveTracksTilesAsync(tracksTiles);
+                await Database.Default.SaveTracksTilesAsync(tracksTiles);
             }
 
             frmTrackList.Sort();
@@ -1267,8 +1298,8 @@ namespace TileExplorer
             }
         }
 
-        private readonly TileModel TileLeftTop = new TileModel();
-        private readonly TileModel TileRightBottom = new TileModel();
+        private readonly Database.Models.Tile TileLeftTop = new Database.Models.Tile();
+        private readonly Database.Models.Tile TileRightBottom = new Database.Models.Tile();
 
         public void UpdateGrid()
         {
@@ -1309,7 +1340,7 @@ namespace TileExplorer
                     if (tilesOverlay.Polygons.Cast<MapTile>().ToList().
                         Exists(t => t.Model.X == x && t.Model.Y == y)) continue;
 
-                    gridOverlay.Polygons.Add(new MapTile(new TileModel()
+                    gridOverlay.Polygons.Add(new MapTile(new Database.Models.Tile()
                     {
                         X = x,
                         Y = y,
@@ -1333,20 +1364,40 @@ namespace TileExplorer
             UpdateGrid();
         }
 
+        private void UpdateDatabaseFileName()
+        {
+            var databaseHome = Settings.Default.DatabaseHome;
+
+            if (string.IsNullOrEmpty(databaseHome))
+            {
+                databaseHome =
+#if DEBUG
+                    Files.ExecutableDirectory();
+#else
+                    Files.AppDataDirectory();
+#endif
+            }
+
+            var databaseFileName = Path.Combine(databaseHome, Files.DatabaseFileName());
+
+            Debug.WriteLine("database: " + databaseFileName);
+
+            Database.Default.FileName = databaseFileName;
+        }
+
         private void MiMainSettings_Click(object sender, EventArgs e)
         {
             if (FrmSettings.ShowDlg(this))
             {
-                markersOverlay.IsVisibile = false;
+                UpdateDatabaseFileName();
 
-                foreach (var marker in markersOverlay.Markers)
-                {
-                    marker.ToolTip.Font = Settings.Default.FontMarker;
-                    marker.ToolTip.Foreground = new SolidBrush(Color.FromArgb(
-                        Settings.Default.ColorMarkerTextAlpha, Settings.Default.ColorMarkerText));
-                }
+                var load = DataLoad.Tiles | DataLoad.TracksInfo;
 
-                markersOverlay.IsVisibile = true;
+                if (frmTrackList.Visible || miMainShowTracks.Checked) load |= DataLoad.Tracks;
+
+                if (frmMarkerList.Visible || miMainShowMarkers.Checked) load |= DataLoad.Markers;
+
+                _ = DataUpdateAsync(load);
             }
         }
     }

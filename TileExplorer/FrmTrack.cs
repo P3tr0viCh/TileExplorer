@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -12,7 +11,7 @@ namespace TileExplorer
             InitializeComponent();
         }
 
-        public static bool ShowDlg(IWin32Window owner, TrackModel track)
+        public static bool ShowDlg(IWin32Window owner, Models.Track track)
         {
             bool Result;
 
@@ -43,7 +42,7 @@ namespace TileExplorer
 
         private void FrmTrack_Load(object sender, EventArgs e)
         {
-            dtpDateTime.CustomFormat = Settings.Default.FormatDateTime;
+            dtpDateTime.CustomFormat = Properties.Settings.Default.FormatDateTime;
 
             miDateTimeAddTimeZone.Text = string.Format(miDateTimeAddTimeZone.Text, UtcOffset.TotalHours);
         }

@@ -15,21 +15,21 @@ namespace TileExplorer
 {
     public static class Utils
     {
-        private static TileModel GetTileByXY(List<TileModel> tiles, int x, int y)
+        private static Models.Tile GetTileByXY(List<Models.Tile> tiles, int x, int y)
         {
             return tiles.Find(t => t.X == x && t.Y == y);
         }
 
-        private static TileStatus GetTileStatus(List<TileModel> tiles, int x, int y)
+        private static TileStatus GetTileStatus(List<Models.Tile> tiles, int x, int y)
         {
-            TileModel tile = GetTileByXY(tiles, x, y);
+            Models.Tile tile = GetTileByXY(tiles, x, y);
 
             return tile != null ? tile.Status : TileStatus.Unknown;
         }
 
-        private static bool SetTileClusterId(List<TileModel> tiles, int x, int y, int clusterId)
+        private static bool SetTileClusterId(List<Models.Tile> tiles, int x, int y, int clusterId)
         {
-            TileModel tile = GetTileByXY(tiles, x, y);
+            Models.Tile tile = GetTileByXY(tiles, x, y);
 
             if (tile == null) return false;
 
@@ -47,7 +47,7 @@ namespace TileExplorer
             return true;
         }
 
-        private static int CheckMaxSquare(List<TileModel> tiles, int x, int y, int square)
+        private static int CheckMaxSquare(List<Models.Tile> tiles, int x, int y, int square)
         {
             if (GetTileStatus(tiles, x, y) == TileStatus.Unknown) return 0;
 
@@ -78,7 +78,7 @@ namespace TileExplorer
             public int MaxSquare;
         }
 
-        public static CalcResult CalcTiles(List<TileModel> tiles)
+        public static CalcResult CalcTiles(List<Models.Tile> tiles)
         {
             CalcResult result = new CalcResult();
 
@@ -183,11 +183,11 @@ namespace TileExplorer
             return node != null ? node.InnerText : string.Empty;
         }
 
-        public static TrackModel OpenTrackFromFile(string path)
+        public static Models.Track OpenTrackFromFile(string path)
         {
             var trackXml = new XmlDocument();
 
-            var track = new TrackModel();
+            var track = new Models.Track();
 
             try
             {
@@ -197,7 +197,7 @@ namespace TileExplorer
 
                 Debug.WriteLine("xml loaded");
 
-                track.TrackPoints = new List<TrackPointModel>();
+                track.TrackPoints = new List<Models.TrackPoint>();
 
                 var trkptList = trackXml.GetElementsByTagName("trkpt");
 
@@ -207,7 +207,7 @@ namespace TileExplorer
                 {
                     if (trkpt.Attributes["lat"] != null && trkpt.Attributes["lon"] != null)
                     {
-                        track.TrackPoints.Add(new TrackPointModel()
+                        track.TrackPoints.Add(new Models.TrackPoint()
                         {
                             Lat = double.Parse(trkpt.Attributes["lat"].Value, CultureInfo.InvariantCulture),
                             Lng = double.Parse(trkpt.Attributes["lon"].Value, CultureInfo.InvariantCulture)
@@ -282,9 +282,9 @@ namespace TileExplorer
             return track;
         }
 
-        public static List<TileModel> GetTilesFromTrack(TrackModel track)
+        public static List<Models.Tile> GetTilesFromTrack(Models.Track track)
         {
-            var tiles = new List<TileModel>();
+            var tiles = new List<Models.Tile>();
 
             int x, y;
 
@@ -295,14 +295,14 @@ namespace TileExplorer
 
                 if (tiles.FindIndex(tile => tile.X == x && tile.Y == y) == -1)
                 {
-                    tiles.Add(new TileModel() { X = x, Y = y });
+                    tiles.Add(new Models.Tile() { X = x, Y = y });
                 }
             }
 
             return tiles;
         }
 
-        public static PointLatLng TrackPointToPointLatLng(TrackPointModel trackPointModel)
+        public static PointLatLng TrackPointToPointLatLng(Models.TrackPoint trackPointModel)
         {
             return new PointLatLng(trackPointModel.Lat, trackPointModel.Lng);
         }
@@ -346,7 +346,7 @@ namespace TileExplorer
             return result;
         }
 
-        public static List<PointLatLng> TilePoints(TileModel tile)
+        public static List<PointLatLng> TilePoints(Models.Tile tile)
         {
             double lat1 = TileYToLat(tile.Y);
             double lng1 = TileXToLng(tile.X);
@@ -375,7 +375,7 @@ namespace TileExplorer
             public int NodeId2;
         }
 
-        public static void SaveTilesToOsm(string fileName, List<TileModel> tiles)
+        public static void SaveTilesToOsm(string fileName, List<Models.Tile> tiles)
         {
             if (tiles.Count == 0) return;
 
@@ -506,11 +506,11 @@ namespace TileExplorer
                             xml.WriteAttributeString("ref", null, "-" + way.NodeId2);
                             xml.WriteEndElement();
 
-                            if (!string.IsNullOrEmpty(Settings.Default.OsmTileKey))
+                            if (!string.IsNullOrEmpty(Properties.Settings.Default.OsmTileKey))
                             {
                                 xml.WriteStartElement("tag");
-                                xml.WriteAttributeString("k", null, Settings.Default.OsmTileKey);
-                                xml.WriteAttributeString("v", null, Settings.Default.OsmTileValue);
+                                xml.WriteAttributeString("k", null, Properties.Settings.Default.OsmTileKey);
+                                xml.WriteAttributeString("v", null, Properties.Settings.Default.OsmTileValue);
                                 xml.WriteEndElement();
                             }
                         }

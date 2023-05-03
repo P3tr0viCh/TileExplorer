@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public class FrmMarkerList : FrmListBase<MarkerModel>
+    public class FrmMarkerList : FrmListBase<Models.Marker>
     {
         public override FrmListType Type => FrmListType.Markers;
 
@@ -18,7 +17,7 @@ namespace TileExplorer
             Name = "FrmMarkerList";
         }
 
-        public override void Set(int rowIndex, MarkerModel model)
+        public override void Set(int rowIndex, Models.Marker model)
         {
             DataGridView.Rows[rowIndex].Cells[ColumnId.Name].Value = model.Id;
 
@@ -40,7 +39,7 @@ namespace TileExplorer
             ColumnLat.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 Alignment = DataGridViewContentAlignment.TopRight,
-                Format = Settings.Default.FormatLatLng
+                Format = Properties.Settings.Default.FormatLatLng
             };
             ColumnLat.HeaderText = "Широта";
             ColumnLat.Name = "ColumnLat";
@@ -49,7 +48,7 @@ namespace TileExplorer
             ColumnLng.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 Alignment = DataGridViewContentAlignment.TopRight,
-                Format = Settings.Default.FormatLatLng
+                Format = Properties.Settings.Default.FormatLatLng
             };
             ColumnLng.HeaderText = "Долгота";
             ColumnLng.Name = "ColumnLng";

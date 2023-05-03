@@ -12,15 +12,15 @@ namespace TileExplorer
         static MapMarkerToolTip()
         {
             ((SolidBrush)DefaultFill).Color = Color.FromArgb(
-                    Settings.Default.ColorMarkerTextFillAlpha, Settings.Default.ColorMarkerTextFill);
+                    Properties.Settings.Default.ColorMarkerTextFillAlpha, Properties.Settings.Default.ColorMarkerTextFill);
 
             ((SolidBrush)DefaultForeground).Color = Color.FromArgb(
-                Settings.Default.ColorMarkerTextAlpha, Settings.Default.ColorMarkerText);
+                Properties.Settings.Default.ColorMarkerTextAlpha, Properties.Settings.Default.ColorMarkerText);
         }
 
         public MapMarkerToolTip(MapMarker marker) : base(marker)
         {
-            Font = Settings.Default.FontMarker;
+            Font = Properties.Settings.Default.FontMarker;
 
             TextPadding = new Size(4, 4);
         }

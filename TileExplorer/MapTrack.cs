@@ -16,7 +16,7 @@ namespace TileExplorer
         [NonSerialized]
         public Pen SelectedStroke = DefaultSelectedStroke;
 
-        private readonly MapItem<TrackModel> item;
+        private readonly MapItem<Models.Track> item;
 
         static MapTrack()
         {
@@ -27,9 +27,9 @@ namespace TileExplorer
                 Settings.Default.ColorTrackSelected), Settings.Default.WidthTrackSelected);
         }
 
-        public MapTrack(TrackModel track) : base(track.Text)
+        public MapTrack(Models.Track track) : base(track.Text)
         {
-            item = new MapItem<TrackModel>(this, track);
+            item = new MapItem<Models.Track>(this, track);
 
             IsHitTestVisible = true;
 
@@ -37,8 +37,8 @@ namespace TileExplorer
             UpdateColors();
         }
 
-        public TrackModel Model { get => item.Model; set => item.Model = value; }
-        BaseModelId IMapItem.Model { get => Model; set => Model = (TrackModel)value; }
+        public Models.Track Model { get => item.Model; set => item.Model = value; }
+        Models.BaseId IMapItem.Model { get => Model; set => Model = (Models.Track)value; }
 
         public bool Selected { get => item.Selected; set => item.Selected = value; }
 

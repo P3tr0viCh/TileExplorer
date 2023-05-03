@@ -13,7 +13,7 @@ namespace TileExplorer
     {
         MapItemType Type { get; }
 
-        BaseModelId Model { get; set; }
+        Models.BaseId Model { get; set; }
 
         bool Selected { get; set; }
 

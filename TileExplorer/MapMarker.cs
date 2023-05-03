@@ -34,32 +34,32 @@ namespace TileExplorer
         [NonSerialized]
         public SolidBrush SelectedFill = DefaultSelectedFill;
 
-        private readonly MapItem<MarkerModel> item;
+        private readonly MapItem<Models.Marker> item;
 
         static MapMarker()
         {
-            DefaultStroke = new Pen(Color.FromArgb(Settings.Default.ColorMarkerLineAlpha, Settings.Default.ColorMarkerLine))
+            DefaultStroke = new Pen(Color.FromArgb(Properties.Settings.Default.ColorMarkerLineAlpha, Properties.Settings.Default.ColorMarkerLine))
             {
-                Width = Settings.Default.WidthMarkerLine,
+                Width = Properties.Settings.Default.WidthMarkerLine,
                 LineJoin = LineJoin.Round,
                 StartCap = LineCap.RoundAnchor
             };
 
-            DefaultSelectedStroke = new Pen(Color.FromArgb(Settings.Default.ColorMarkerSelectedLineAlpha, Settings.Default.ColorMarkerSelectedLine))
+            DefaultSelectedStroke = new Pen(Color.FromArgb(Properties.Settings.Default.ColorMarkerSelectedLineAlpha, Properties.Settings.Default.ColorMarkerSelectedLine))
             {
-                Width = Settings.Default.WidthMarkerLineSelected,
+                Width = Properties.Settings.Default.WidthMarkerLineSelected,
                 LineJoin = LineJoin.Round,
                 StartCap = LineCap.RoundAnchor
             };
 
-            DefaultFill = new SolidBrush(Color.FromArgb(Settings.Default.ColorMarkerFillAlpha, Settings.Default.ColorMarkerFill));
+            DefaultFill = new SolidBrush(Color.FromArgb(Properties.Settings.Default.ColorMarkerFillAlpha, Properties.Settings.Default.ColorMarkerFill));
 
-            DefaultSelectedFill = new SolidBrush(Color.FromArgb(Settings.Default.ColorMarkerSelectedFillAlpha, Settings.Default.ColorMarkerSelectedFill));
+            DefaultSelectedFill = new SolidBrush(Color.FromArgb(Properties.Settings.Default.ColorMarkerSelectedFillAlpha, Properties.Settings.Default.ColorMarkerSelectedFill));
         }
 
-        public MapMarker(MarkerModel marker) : base(new PointLatLng())
+        public MapMarker(Models.Marker marker) : base(new PointLatLng())
         {
-            item = new MapItem<MarkerModel>(this, marker);
+            item = new MapItem<Models.Marker>(this, marker);
 
             Size = new Size(DEFAULT_SIZE, DEFAULT_SIZE);
             Offset = new Point(-DEFAULT_SIZE / 2, -DEFAULT_SIZE / 2);
@@ -70,8 +70,8 @@ namespace TileExplorer
             UpdateColors();
         }
 
-        public MarkerModel Model { get => item.Model; set => item.Model = value; }
-        BaseModelId IMapItem.Model { get => Model; set => Model = (MarkerModel)value; }
+        public Models.Marker Model { get => item.Model; set => item.Model = value; }
+        Models.BaseId IMapItem.Model { get => Model; set => Model = (Models.Marker)value; }
 
         public bool Selected { get => item.Selected; set => item.Selected = value; }
 
