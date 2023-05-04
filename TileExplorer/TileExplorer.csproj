@@ -118,6 +118,8 @@
       <Link>UtilsSettings.cs</Link>
     </Compile>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="Utils.Osm.cs" />
+    <Compile Include="Utils.Tracks.cs" />
     <Compile Include="Database.Filter.cs" />
     <Compile Include="Database.Models.cs" />
     <Compile Include="FrmList.cs">

@@ -689,14 +689,7 @@ namespace TileExplorer
 
                     break;
                 case MouseButtons.Right:
-                    if (mapItem != null)
-                    {
-                        Selected = mapItem.Selected ? null : mapItem;
-                    }
-                    else
-                    {
-                        Selected = null;
-                    }
+                    Selected = mapItem ?? null;
 
                     ContextMenuStrip contextMenu;
 
@@ -811,7 +804,7 @@ namespace TileExplorer
 
             markersOverlay.IsVisibile = true;
 
-            Database.Models.Marker marker = new Database.Models.Marker()
+            var marker = new Database.Models.Marker()
             {
                 Lat = point.Lat,
                 Lng = point.Lng,
@@ -821,7 +814,7 @@ namespace TileExplorer
 #endif
             };
 
-            GMapMarker markerTemp = new GMarkerCross(point)
+            var markerTemp = new GMarkerCross(point)
             {
                 Pen = new Pen(Brushes.Red, 2f)
             };
@@ -866,9 +859,9 @@ namespace TileExplorer
         {
             if (marker == null) return;
 
-            string Name = marker.Model.Text;
+            var Name = marker.Model.Text;
 
-            if (Name == "")
+            if (string.IsNullOrEmpty(Name))
             {
                 Name = marker.Position.Lat.ToString() + ":" + marker.Position.Lng.ToString();
             }
@@ -905,11 +898,11 @@ namespace TileExplorer
         {
             if (track == null) return;
 
-            string Name = track.Model.Text;
+            var Name = track.Model.Text;
 
-            if (Name == "")
+            if (string.IsNullOrEmpty(Name))
             {
-                Name = track.Model.DateTime.ToString();
+                Name = track.Model.DateTimeStart.ToString();
             }
 
             if (Msg.Question(string.Format(Resources.QuestionTrackDelete, Name)))
@@ -966,14 +959,14 @@ namespace TileExplorer
 
             MarkerMovingPrevPosition = SelectedMarker.Position;
 
-            GPoint point = gMapControl.FromLatLngToLocal(SelectedMarker.Position);
+            var point = gMapControl.FromLatLngToLocal(SelectedMarker.Position);
 
             Cursor.Position = gMapControl.PointToScreen(new Point((int)point.X, (int)point.Y));
         }
 
         private void GMapControl_MouseMove(object sender, MouseEventArgs e)
         {
-            PointLatLng position = gMapControl.FromLocalToLatLng(e.X, e.Y);
+            var position = gMapControl.FromLocalToLatLng(e.X, e.Y);
 
             statusStripPresenter.TileId = position;
             statusStripPresenter.MousePosition = position;
@@ -1031,8 +1024,8 @@ namespace TileExplorer
             {
                 AddTileAsync(new Database.Models.Tile()
                 {
-                    X = Utils.LngToTileX(position),
-                    Y = Utils.LatToTileY(position)
+                    X = Utils.Osm.LngToTileX(position),
+                    Y = Utils.Osm.LatToTileY(position)
                 });
             }
             catch (Exception)
@@ -1056,8 +1049,8 @@ namespace TileExplorer
 
             DeleteTileAsync(new Database.Models.Tile()
             {
-                X = Utils.LngToTileX(position),
-                Y = Utils.LatToTileY(position)
+                X = Utils.Osm.LngToTileX(position),
+                Y = Utils.Osm.LatToTileY(position)
             });
         }
 
@@ -1113,8 +1106,8 @@ namespace TileExplorer
 
             var tiles = new List<Database.Models.Tile>();
 
-            for (var x = Utils.LngToTileX(pointFrom); x <= Utils.LngToTileX(pointTo); x++)
-                for (var y = Utils.LatToTileY(pointFrom); y <= Utils.LatToTileY(pointTo); y++)
+            for (var x = Utils.Osm.LngToTileX(pointFrom); x <= Utils.Osm.LngToTileX(pointTo); x++)
+                for (var y = Utils.Osm.LatToTileY(pointFrom); y <= Utils.Osm.LatToTileY(pointTo); y++)
                 {
                     tiles.Add(new Database.Models.Tile()
                     {
@@ -1144,7 +1137,7 @@ namespace TileExplorer
 
         private async Task<Database.Models.Track> OpenTrackFromFileAsync(string path)
         {
-            return await Task.Run(() => { return Utils.OpenTrackFromFile(path); });
+            return await Task.Run(() => { return Utils.Tracks.OpenTrackFromFile(path); });
         }
 
         private async Task<List<Database.Models.Tile>> GetTilesFromTrackAsync(Database.Models.Track track)
@@ -1183,8 +1176,6 @@ namespace TileExplorer
                 foreach (var trackTile in trackTiles)
                 {
                     id = await Database.Default.ExistsTileAsync(trackTile);
-
-                    Debug.WriteLine(id);
 
                     if (id == 0)
                     {
@@ -1319,11 +1310,11 @@ namespace TileExplorer
             var pointLeftTop = gMapControl.FromLocalToLatLng(0, 0);
             var pointRightBottom = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
 
-            var leftTopX = Utils.LngToTileX(pointLeftTop);
-            var leftTopY = Utils.LatToTileY(pointLeftTop);
+            var leftTopX = Utils.Osm.LngToTileX(pointLeftTop);
+            var leftTopY = Utils.Osm.LatToTileY(pointLeftTop);
 
-            var rightBottomX = Utils.LngToTileX(pointRightBottom);
-            var rightBottomY = Utils.LatToTileY(pointRightBottom);
+            var rightBottomX = Utils.Osm.LngToTileX(pointRightBottom);
+            var rightBottomY = Utils.Osm.LatToTileY(pointRightBottom);
 
             foreach (var tile in gridOverlay.Polygons.Cast<MapTile>().
                 Where(t => t.Model.X < TileLeftTop.X || t.Model.Y < TileLeftTop.Y ||

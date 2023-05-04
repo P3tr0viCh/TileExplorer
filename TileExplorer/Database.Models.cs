@@ -57,9 +57,20 @@ namespace TileExplorer
             {
                 public string Text { get; set; }
 
-                public DateTime DateTime { get; set; }
+                public DateTime DateTimeStart { get; set; }
+                public DateTime DateTimeFinish { get; set; }
 
-                public int Distance { get; set; }
+                [Write(false)]
+                [Computed]
+                public TimeSpan Duration
+                {
+                    get
+                    {
+                        return DateTimeFinish - DateTimeStart;
+                    }
+                }
+
+                public double Distance { get; set; }
 
                 [Write(false)]
                 [Computed]
@@ -71,8 +82,12 @@ namespace TileExplorer
             {
                 public long TrackId { get; set; } = 0;
 
+                public DateTime DateTime { get; set; }
+
                 public double Lat { get; set; }
                 public double Lng { get; set; }
+
+                public double Ele { get; set; }
 
                 public double Distance { get; set; }
             }

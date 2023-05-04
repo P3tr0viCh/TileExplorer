@@ -1,19 +1,16 @@
 ﻿using GMap.NET;
-using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public static class Utils
+    public static partial class Utils
     {
         private static Models.Tile GetTileByXY(List<Models.Tile> tiles, int x, int y)
         {
@@ -29,7 +26,7 @@ namespace TileExplorer
 
         private static bool SetTileClusterId(List<Models.Tile> tiles, int x, int y, int clusterId)
         {
-            Models.Tile tile = GetTileByXY(tiles, x, y);
+            var tile = GetTileByXY(tiles, x, y);
 
             if (tile == null) return false;
 
@@ -80,7 +77,7 @@ namespace TileExplorer
 
         public static CalcResult CalcTiles(List<Models.Tile> tiles)
         {
-            CalcResult result = new CalcResult();
+            var result = new CalcResult();
 
             foreach (var tile in tiles)
             {
@@ -178,110 +175,6 @@ namespace TileExplorer
             return result;
         }
 
-        private static string XmlGetText(XmlNode node)
-        {
-            return node != null ? node.InnerText : string.Empty;
-        }
-
-        public static Models.Track OpenTrackFromFile(string path)
-        {
-            var trackXml = new XmlDocument();
-
-            var track = new Models.Track();
-
-            try
-            {
-                Debug.WriteLine(path);
-
-                trackXml.Load(path);
-
-                Debug.WriteLine("xml loaded");
-
-                track.TrackPoints = new List<Models.TrackPoint>();
-
-                var trkptList = trackXml.GetElementsByTagName("trkpt");
-
-                Debug.WriteLine("trkptList count: " + trkptList.Count);
-
-                foreach (XmlNode trkpt in trkptList)
-                {
-                    if (trkpt.Attributes["lat"] != null && trkpt.Attributes["lon"] != null)
-                    {
-                        track.TrackPoints.Add(new Models.TrackPoint()
-                        {
-                            Lat = double.Parse(trkpt.Attributes["lat"].Value, CultureInfo.InvariantCulture),
-                            Lng = double.Parse(trkpt.Attributes["lon"].Value, CultureInfo.InvariantCulture)
-                        });
-                    }
-                }
-
-                if (track.TrackPoints.Count == 0)
-                {
-                    throw new Exception("empty track");
-                }
-
-                double lat, lng, latPrev = 0, lngPrev = 0;
-
-                foreach (var point in track.TrackPoints)
-                {
-                    lat = point.Lat;
-                    lng = point.Lng;
-
-                    point.Distance = Geo.Haversine(latPrev, lngPrev, lat, lng);
-
-                    latPrev = lat;
-                    lngPrev = lng;
-                }
-
-                track.TrackPoints[0].Distance = 0;
-
-                track.Distance += (int)track.TrackPoints.Sum(p => p.Distance);
-
-                string trkname = XmlGetText(trackXml.DocumentElement["trk"]?["name"]);
-
-                if (trkname == string.Empty)
-                {
-                    trkname = XmlGetText(trackXml.DocumentElement["metadata"]?["name"]);
-                }
-                if (trkname == string.Empty)
-                {
-                    trkname = Path.GetFileNameWithoutExtension(path);
-                }
-
-                track.Text = trkname;
-
-                string trktime = XmlGetText(trackXml.DocumentElement["metadata"]?["time"]);
-
-                Debug.WriteLine("trktime: " + trktime);
-
-                if (trktime != string.Empty)
-                {
-                    try
-                    {
-                        track.DateTime = DateTimeOffset.ParseExact(trktime, Const.DATETIME_FORMAT_GPX, null).DateTime;
-                    }
-                    catch (Exception)
-                    {
-                        track.DateTime = DateTime.Now;
-                    }
-                }
-                else
-                {
-                    track.DateTime = DateTime.Now;
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("error: " + e.Message);
-
-                Msg.Error(e.Message);
-            }
-
-            Debug.WriteLine("end open xml");
-
-            return track;
-        }
-
         public static List<Models.Tile> GetTilesFromTrack(Models.Track track)
         {
             var tiles = new List<Models.Tile>();
@@ -290,8 +183,8 @@ namespace TileExplorer
 
             foreach (var point in track.TrackPoints)
             {
-                x = LngToTileX(point.Lng);
-                y = LatToTileY(point.Lat);
+                x = Osm.LngToTileX(point.Lng);
+                y = Osm.LatToTileY(point.Lat);
 
                 if (tiles.FindIndex(tile => tile.X == x && tile.Y == y) == -1)
                 {
@@ -307,32 +200,16 @@ namespace TileExplorer
             return new PointLatLng(trackPointModel.Lat, trackPointModel.Lng);
         }
 
-        public static int LngToTileX(double lng)
+        public static DateTime DateTimeParse(string str, DateTime def = default)
         {
-            return Osm.LngToTileX(lng, Const.TILE_ZOOM);
-        }
-        public static int LngToTileX(PointLatLng point)
-        {
-            return LngToTileX(point.Lng);
+            return DateTimeOffset.TryParseExact(str, Const.DATETIME_FORMAT_GPX, null, DateTimeStyles.None, out DateTimeOffset result) ?
+                result.DateTime : def;
         }
 
-        public static int LatToTileY(double lat)
+        public static double DoubleParse(string str, double def = 0.0)
         {
-            return Osm.LatToTileY(lat, Const.TILE_ZOOM);
-        }
-
-        public static int LatToTileY(PointLatLng point)
-        {
-            return LatToTileY(point.Lat);
-        }
-        public static double TileYToLat(int y)
-        {
-            return Osm.TileYToLat(y, Const.TILE_ZOOM);
-        }
-
-        public static double TileXToLng(int x)
-        {
-            return Osm.TileXToLng(x, Const.TILE_ZOOM);
+            return double.TryParse(str, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out double result) ?
+                result : def;
         }
 
         public static string AssemblyNameAndVersion()
@@ -348,11 +225,11 @@ namespace TileExplorer
 
         public static List<PointLatLng> TilePoints(Models.Tile tile)
         {
-            double lat1 = TileYToLat(tile.Y);
-            double lng1 = TileXToLng(tile.X);
+            var lat1 = Osm.TileYToLat(tile.Y);
+            var lng1 = Osm.TileXToLng(tile.X);
 
-            double lat2 = TileYToLat(tile.Y + 1);
-            double lng2 = TileXToLng(tile.X + 1);
+            var lat2 = Osm.TileYToLat(tile.Y + 1);
+            var lng2 = Osm.TileXToLng(tile.X + 1);
 
             return new List<PointLatLng>
             {

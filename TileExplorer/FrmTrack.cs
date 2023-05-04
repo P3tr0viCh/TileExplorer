@@ -18,14 +18,14 @@ namespace TileExplorer
             using (var frm = new FrmTrack())
             {
                 frm.tbText.Text = track.Text;
-                frm.dtpDateTime.Value = track.DateTime;
+                frm.dtpDateTime.Value = track.DateTimeStart;
 
                 Result = frm.ShowDialog(owner) == DialogResult.OK;
 
                 if (Result)
                 {
                     track.Text = frm.tbText.Text;
-                    track.DateTime = frm.dtpDateTime.Value;
+                    track.DateTimeStart = frm.dtpDateTime.Value;
                 }
             }
 

@@ -9,7 +9,9 @@ namespace TileExplorer
         public override FrmListType Type => FrmListType.Tracks;
 
         private readonly DataGridViewTextBoxColumn ColumnText = new DataGridViewTextBoxColumn();
-        private readonly DataGridViewTextBoxColumn ColumnDateTime = new DataGridViewTextBoxColumn();
+        private readonly DataGridViewTextBoxColumn ColumnDateTimeStart = new DataGridViewTextBoxColumn();
+        private readonly DataGridViewTextBoxColumn ColumnDateTimeFinish = new DataGridViewTextBoxColumn();
+        private readonly DataGridViewTextBoxColumn ColumnDuration = new DataGridViewTextBoxColumn();
         private readonly DataGridViewTextBoxColumn ColumnDistance = new DataGridViewTextBoxColumn();
 
         public FrmTrackList(Form owner) : base(owner)
@@ -23,7 +25,10 @@ namespace TileExplorer
 
             DataGridView.Rows[rowIndex].Cells[ColumnText.Name].Value = model.Text;
 
-            DataGridView.Rows[rowIndex].Cells[ColumnDateTime.Name].Value = model.DateTime;
+            DataGridView.Rows[rowIndex].Cells[ColumnDateTimeStart.Name].Value = model.DateTimeStart;
+            DataGridView.Rows[rowIndex].Cells[ColumnDateTimeFinish.Name].Value = model.DateTimeFinish;
+
+            DataGridView.Rows[rowIndex].Cells[ColumnDuration.Name].Value = model.Duration;
 
             DataGridView.Rows[rowIndex].Cells[ColumnDistance.Name].Value = model.Distance / 1000.0;
         }
@@ -37,16 +42,35 @@ namespace TileExplorer
             ColumnText.ReadOnly = true;
             ColumnText.Width = 144;
 
-            ColumnDateTime.DefaultCellStyle = new DataGridViewCellStyle()
+            ColumnDateTimeStart.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 NullValue = null,
                 Format = Properties.Settings.Default.FormatDateTime
             };
-            ColumnDateTime.HeaderText = "Дата и время";
-            ColumnDateTime.Name = "ColumnDateTime";
-            ColumnDateTime.ReadOnly = true;
-            ColumnDateTime.Width = 144;
+            ColumnDateTimeStart.HeaderText = "Начало";
+            ColumnDateTimeStart.Name = "ColumnDateTimeStart";
+            ColumnDateTimeStart.ReadOnly = true;
+            ColumnDateTimeStart.Width = 144;
 
+            ColumnDateTimeFinish.DefaultCellStyle = new DataGridViewCellStyle()
+            {
+                NullValue = null,
+                Format = Properties.Settings.Default.FormatDateTime
+            };
+            ColumnDateTimeFinish.HeaderText = "Окончание";
+            ColumnDateTimeFinish.Name = "ColumnDateTimeFinish";
+            ColumnDateTimeFinish.ReadOnly = true;
+            ColumnDateTimeFinish.Width = 144;
+
+            ColumnDuration.DefaultCellStyle = new DataGridViewCellStyle()
+            {
+                NullValue = null,
+                //Format = Properties.Settings.Default.FormatDateTime
+            };
+            ColumnDuration.HeaderText = "Время";
+            ColumnDuration.Name = "ColumnDuration";
+            ColumnDuration.ReadOnly = true;
+            
             ColumnDistance.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 Alignment = DataGridViewContentAlignment.TopRight,
@@ -57,9 +81,10 @@ namespace TileExplorer
             ColumnDistance.Name = "ColumnDistance";
             ColumnDistance.ReadOnly = true;
 
-            DataGridView.Columns.AddRange(new DataGridViewColumn[] { ColumnText, ColumnDateTime, ColumnDistance });
+            DataGridView.Columns.AddRange(
+                new DataGridViewColumn[] { ColumnText, ColumnDateTimeStart, ColumnDateTimeFinish, ColumnDuration, ColumnDistance });
 
-            DataGridView.Sort(ColumnDateTime, ListSortDirection.Ascending);
+            DataGridView.Sort(ColumnDateTimeStart, ListSortDirection.Ascending);
         }
     }
 }
