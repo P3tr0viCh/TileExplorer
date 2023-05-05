@@ -86,7 +86,7 @@ namespace TileExplorer
 
                 connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "trackid INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, datetime TEXT, ele REAL, distance REAL, " +
+                    "trackid INTEGER, num INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, datetime TEXT, ele REAL, distance REAL, " +
                     "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
 
                 connection.Execute("CREATE TABLE IF NOT EXISTS tracks_tiles (" +
@@ -159,7 +159,8 @@ namespace TileExplorer
                     foreach (var track in tracks)
                     {
                         track.TrackPoints = connection.Query<Models.TrackPoint>(
-                            "SELECT * FROM tracks_points WHERE trackid = :trackid;", new { trackid = track.Id }).ToList();
+                            "SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;",
+                                new { trackid = track.Id }).ToList();
                     }
 
                     return tracks;

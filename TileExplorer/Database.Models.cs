@@ -81,6 +81,8 @@ namespace TileExplorer
             public class TrackPoint : BaseId
             {
                 public long TrackId { get; set; } = 0;
+                
+                public int Num { get; set; }
 
                 public DateTime DateTime { get; set; }
 

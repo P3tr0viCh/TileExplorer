@@ -65,7 +65,6 @@ namespace TileExplorer
             ColumnDuration.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 NullValue = null,
-                //Format = Properties.Settings.Default.FormatDateTime
             };
             ColumnDuration.HeaderText = "Время";
             ColumnDuration.Name = "ColumnDuration";

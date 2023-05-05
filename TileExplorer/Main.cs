@@ -25,7 +25,7 @@ namespace TileExplorer
 {
     public interface IMainForm
     {
-        void SelectById(object sender, long id);
+        void SelectMapItemById(object sender, long id);
 
         void ChangeById(object sender, long id);
     }
@@ -1119,11 +1119,11 @@ namespace TileExplorer
             try
             {
 #if DEBUG
-                Utils.SaveTilesToOsm(Files.TempFileName("xxx.osm"), tiles);
+                Utils.Osm.SaveTilesToFile(Files.TempFileName("xxx.osm"), tiles);
 #else
                 if (ShowSaveFileDialog(SaveFileDialogType.Osm))
                 {
-                    Utils.SaveTilesToOsm(saveFileDialog.FileName, tiles);
+                    Utils.Osm.SaveTilesToFile(saveFileDialog.FileName, tiles);
                 }
 #endif
             }
@@ -1246,7 +1246,7 @@ namespace TileExplorer
             gMapControl.GrayScaleMode = miMainGrayScale.Checked;
         }
 
-        public void SelectById(object sender, long id)
+        public void SelectMapItemById(object sender, long id)
         {
             IEnumerable items = null;
 
@@ -1276,7 +1276,7 @@ namespace TileExplorer
 
         public void ChangeById(object sender, long id)
         {
-            SelectById(sender, id);
+            SelectMapItemById(sender, id);
 
             switch (((IFrmChild)sender).Type)
             {

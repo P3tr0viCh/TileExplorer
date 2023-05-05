@@ -136,7 +136,7 @@ namespace TileExplorer
 
             if (id == -1) return;
 
-            (Owner as IMainForm).SelectById(this, id);
+            (Owner as IMainForm).SelectMapItemById(this, id);
         }
 
         private void DataGridView_MouseDoubleClick(object sender, MouseEventArgs e)

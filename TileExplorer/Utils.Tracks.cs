@@ -38,12 +38,16 @@ namespace TileExplorer
 
                     Debug.WriteLine("trkptList count: " + trkptList.Count);
 
+                    var num = 0;
+
                     foreach (XmlNode trkpt in trkptList)
                     {
                         if (trkpt.Attributes["lat"] != null && trkpt.Attributes["lon"] != null)
                         {
                             track.TrackPoints.Add(new Models.TrackPoint()
                             {
+                                Num = num++,
+
                                 Lat = DoubleParse(trkpt.Attributes["lat"].Value),
                                 Lng = DoubleParse(trkpt.Attributes["lon"].Value),
 
