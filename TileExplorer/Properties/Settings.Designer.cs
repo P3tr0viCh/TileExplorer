@@ -694,5 +694,50 @@ namespace TileExplorer.Properties {
                 this["DatabaseHome"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public byte MouseWheelZoomType {
+            get {
+                return ((byte)(this["MouseWheelZoomType"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkSlateBlue")]
+        public global::System.Drawing.Color ColorTileTrackSelected {
+            get {
+                return ((global::System.Drawing.Color)(this["ColorTileTrackSelected"]));
+            }
+            set {
+                this["ColorTileTrackSelected"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("144")]
+        public byte ColorTileTrackSelectedAlpha {
+            get {
+                return ((byte)(this["ColorTileTrackSelectedAlpha"]));
+            }
+            set {
+                this["ColorTileTrackSelectedAlpha"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("88")]
+        public byte ColorTileTrackSelectedLineAlpha {
+            get {
+                return ((byte)(this["ColorTileTrackSelectedLineAlpha"]));
+            }
+            set {
+                this["ColorTileTrackSelectedLineAlpha"] = value;
+            }
+        }
     }
 }

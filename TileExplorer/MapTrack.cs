@@ -48,6 +48,8 @@ namespace TileExplorer
 
             Points.Clear();
 
+            if (Model.TrackPoints == null) return;
+
             double distance = 0;
 
             if (Model.TrackPoints.Count < 2) return;

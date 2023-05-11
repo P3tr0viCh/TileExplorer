@@ -27,13 +27,14 @@ namespace TileExplorer
     {
         void SelectMapItemById(object sender, long id);
 
-        void ChangeById(object sender, long id);
+        void ChangeMapItemById(object sender, long id);
     }
 
     public partial class Main : Form, IStatusStripView, IMainForm
     {
         private readonly GMapOverlay gridOverlay = new GMapOverlay("grid");
         private readonly GMapOverlay tilesOverlay = new GMapOverlay("tiles");
+        private readonly GMapOverlay trackTilesOverlay = new GMapOverlay("tracktiles");
         private readonly GMapOverlay tracksOverlay = new GMapOverlay("tracks");
         private readonly GMapOverlay markersOverlay = new GMapOverlay("markers");
 
@@ -96,7 +97,9 @@ namespace TileExplorer
         {
             var load = DataLoad.Tiles | DataLoad.TracksInfo;
 
-            if (frmTrackList.Visible || miMainShowTracks.Checked) load |= DataLoad.Tracks;
+            if (frmTrackList.Visible) load |= DataLoad.TrackList;
+
+            if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
 
             _ = DataUpdateAsync(load);
         }
@@ -139,13 +142,7 @@ namespace TileExplorer
 
             StartUpdateGrid();
 
-            var load = DataLoad.Tiles | DataLoad.TracksInfo;
-
-            if (frmTrackList.Visible || miMainShowTracks.Checked) load |= DataLoad.Tracks;
-
-            if (frmMarkerList.Visible || miMainShowMarkers.Checked) load |= DataLoad.Markers;
-
-            _ = DataUpdateAsync(load);
+            _ = DataUpdateAsync();
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -199,13 +196,26 @@ namespace TileExplorer
 
             HomeGoto();
 
-            gMapControl.MouseWheelZoomType = MouseWheelZoomType.ViewCenter;
+            switch (Settings.Default.MouseWheelZoomType)
+            {
+                case 0:
+                    gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
+                    break;
+                case 1:
+                default:
+                    gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
+                    break;
+                case 2:
+                    gMapControl.MouseWheelZoomType = MouseWheelZoomType.ViewCenter;
+                    break;
+            }
 
             gMapControl.CanDragMap = true;
             gMapControl.DragButton = MouseButtons.Left;
 
             gMapControl.Overlays.Add(gridOverlay);
             gMapControl.Overlays.Add(tilesOverlay);
+            gMapControl.Overlays.Add(trackTilesOverlay);
             gMapControl.Overlays.Add(tracksOverlay);
             gMapControl.Overlays.Add(markersOverlay);
 
@@ -378,6 +388,8 @@ namespace TileExplorer
 
             foreach (var track in tracks)
             {
+                await Database.Default.LoadTrackPointsAsync(track);
+
                 tracksOverlay.Routes.Add(new MapTrack(track));
 
 #if DEBUG && SHOW_TRACK_KM
@@ -413,6 +425,15 @@ namespace TileExplorer
             frmTrackList.List = tracks;
 
             Debug.WriteLine("LoadTracksAsync: end");
+        }
+
+        private async Task LoadTrackListAsync()
+        {
+            Debug.WriteLine("LoadTrackListAsync: start");
+
+            frmTrackList.List = await Database.Default.LoadTracksAsync(Database.Filter.Default);
+
+            Debug.WriteLine("LoadTrackListAsync: end");
         }
 
         private async Task LoadMarkersAsync()
@@ -486,7 +507,8 @@ namespace TileExplorer
             Tiles = 1,
             Tracks = 2,
             Markers = 4,
-            TracksInfo = 8
+            TrackList = 8,
+            TracksInfo = 16,
         }
 
         private async Task DataUpdateAsync(DataLoad load = default)
@@ -495,19 +517,31 @@ namespace TileExplorer
 
             if (load == default)
             {
-                load = DataLoad.Tiles | DataLoad.Tracks | DataLoad.Markers | DataLoad.TracksInfo;
+                load = DataLoad.Tiles | DataLoad.TracksInfo;
+
+                if (frmTrackList.Visible) load |= DataLoad.TrackList;
+
+                if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
+
+                if (frmMarkerList.Visible || miMainShowMarkers.Checked) load |= DataLoad.Markers;
             }
 
             if (load.HasFlag(DataLoad.Tracks))
             {
                 load |= DataLoad.TracksInfo;
+
+                load ^= DataLoad.TrackList;
             }
 
             Debug.WriteLine($"Loading data {load}");
 
+            Selected = null;
+
             if (load.HasFlag(DataLoad.Tiles)) await LoadTilesAsync();
 
             if (load.HasFlag(DataLoad.TracksInfo)) await LoadTracksInfoAsync();
+
+            if (load.HasFlag(DataLoad.TrackList)) await LoadTrackListAsync();
 
             if (load.HasFlag(DataLoad.Tracks)) await LoadTracksAsync();
 
@@ -572,6 +606,25 @@ namespace TileExplorer
             FrmAbout.Show(new FrmAbout.Options() { Link = Resources.GitHubLink });
         }
 
+        private async void UpdateSelectedTrackTiles(Database.Models.Track track)
+        {
+            trackTilesOverlay.Clear();
+
+            if (track == null) return;
+
+            var tiles = await Database.Default.LoadTrackTilesAsync(track);
+
+            foreach (var tile in tiles)
+            {
+                tile.Status = Database.TileStatus.Selected;
+            }
+
+            foreach (var tile in tiles)
+            {
+                trackTilesOverlay.Polygons.Add(new MapTile(tile));
+            }
+        }
+
         private bool MarkerMoving;
 
         private IMapItem selected = null;
@@ -584,6 +637,11 @@ namespace TileExplorer
             }
             set
             {
+                if (selected == null)
+                {
+                    UpdateSelectedTrackTiles(null);
+                }
+
                 if (selected == value) return;
 
                 if (selected != null)
@@ -601,9 +659,13 @@ namespace TileExplorer
                     {
                         case MapItemType.Marker:
                             frmMarkerList.Selected = (Database.Models.Marker)selected.Model;
+
                             break;
                         case MapItemType.Track:
                             frmTrackList.Selected = (Database.Models.Track)selected.Model;
+
+                            UpdateSelectedTrackTiles((Database.Models.Track)selected.Model);
+
                             break;
                     }
                 }
@@ -998,6 +1060,8 @@ namespace TileExplorer
                 else
                 {
                     FullScreen = false;
+
+                    Selected = null;
                 }
             }
         }
@@ -1256,7 +1320,20 @@ namespace TileExplorer
                     items = markersOverlay.Markers;
                     break;
                 case FrmListType.Tracks:
-                    items = tracksOverlay.Routes;
+                    if (tracksOverlay.IsVisibile)
+                    {
+                        items = tracksOverlay.Routes;
+                    }
+                    else
+                    {
+                        UpdateSelectedTrackTiles(new Database.Models.Track()
+                        {
+                            Id = id
+                        });
+
+                        return;
+                    }
+
                     break;
                 default:
                     return;
@@ -1274,7 +1351,7 @@ namespace TileExplorer
             }
         }
 
-        public void ChangeById(object sender, long id)
+        public void ChangeMapItemById(object sender, long id)
         {
             SelectMapItemById(sender, id);
 
@@ -1294,55 +1371,7 @@ namespace TileExplorer
 
         public void UpdateGrid()
         {
-            timerMapMove.Stop();
 
-            if (gMapControl.Zoom < Settings.Default.OsmTileMinZoom || !miMainShowGrid.Checked)
-            {
-                gridOverlay.IsVisibile = false;
-
-                return;
-            }
-            else
-            {
-                gridOverlay.IsVisibile = true;
-            }
-
-            var pointLeftTop = gMapControl.FromLocalToLatLng(0, 0);
-            var pointRightBottom = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
-
-            var leftTopX = Utils.Osm.LngToTileX(pointLeftTop);
-            var leftTopY = Utils.Osm.LatToTileY(pointLeftTop);
-
-            var rightBottomX = Utils.Osm.LngToTileX(pointRightBottom);
-            var rightBottomY = Utils.Osm.LatToTileY(pointRightBottom);
-
-            foreach (var tile in gridOverlay.Polygons.Cast<MapTile>().
-                Where(t => t.Model.X < TileLeftTop.X || t.Model.Y < TileLeftTop.Y ||
-                           t.Model.X > TileRightBottom.X || t.Model.Y > TileRightBottom.Y).ToList())
-            {
-                gridOverlay.Polygons.Remove(tile);
-            }
-
-            for (var x = leftTopX; x <= rightBottomX; x++)
-                for (var y = leftTopY; y <= rightBottomY; y++)
-                {
-                    if (x >= TileLeftTop.X && x <= TileRightBottom.X && y >= TileLeftTop.Y && y <= TileRightBottom.Y) continue;
-
-                    if (tilesOverlay.Polygons.Cast<MapTile>().ToList().
-                        Exists(t => t.Model.X == x && t.Model.Y == y)) continue;
-
-                    gridOverlay.Polygons.Add(new MapTile(new Database.Models.Tile()
-                    {
-                        X = x,
-                        Y = y,
-                    }));
-                }
-
-            TileLeftTop.X = leftTopX;
-            TileLeftTop.Y = leftTopY;
-
-            TileRightBottom.X = rightBottomX;
-            TileRightBottom.Y = rightBottomY;
         }
 
         private void TimerMapMove_Tick(object sender, EventArgs e)
@@ -1380,15 +1409,11 @@ namespace TileExplorer
         {
             if (FrmSettings.ShowDlg(this))
             {
+                Selected = null;
+
                 UpdateDatabaseFileName();
 
-                var load = DataLoad.Tiles | DataLoad.TracksInfo;
-
-                if (frmTrackList.Visible || miMainShowTracks.Checked) load |= DataLoad.Tracks;
-
-                if (frmMarkerList.Visible || miMainShowMarkers.Checked) load |= DataLoad.Markers;
-
-                _ = DataUpdateAsync(load);
+                _ = DataUpdateAsync();
             }
         }
     }

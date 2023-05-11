@@ -26,29 +26,46 @@ namespace TileExplorer
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
         public string DatabaseHome { get; set; }
 
-        [LocalizedCategory("SettingsCategoryDesign")]
-        [DisplayName("Маркер: фон")]
+        // ------------------------------------------------------------------------------------------------------------
+        [LocalizedCategory("SettingsCategoryDesignMarkers")]
+        [DisplayName("Фон")]
         [Description("Цвет фона маркера")]
         public Color ColorMarkerFill { get; set; }
 
-        [LocalizedCategory("SettingsCategoryDesign")]
-        [DisplayName("Маркер: прозрачность")]
+        [LocalizedCategory("SettingsCategoryDesignMarkers")]
+        [DisplayName("Прозрачность")]
         [Description("Прозрачность фона маркера")]
         public byte ColorMarkerFillAlpha { get; set; }
 
-        [LocalizedCategory("SettingsCategoryDesign")]
-        [DisplayName("Маркер: цвет текста")]
+        [LocalizedCategory("SettingsCategoryDesignMarkers")]
+        [DisplayName("Цвет текста")]
         [Description("Цвет текста маркера")]
         public Color ColorMarkerText { get; set; }
 
-        [LocalizedCategory("SettingsCategoryDesign")]
-        [DisplayName("Маркер: прозрачность текста")]
+        [LocalizedCategory("SettingsCategoryDesignMarkers")]
+        [DisplayName("Прозрачность текста")]
         [Description("Прозрачность текста маркера")]
         public byte ColorMarkerTextAlpha { get; set; }
 
-        [LocalizedCategory("SettingsCategoryDesign")]
-        [DisplayName("Маркер: шрифт")]
+        [LocalizedCategory("SettingsCategoryDesignMarkers")]
+        [DisplayName("Шрифт")]
         [Description("Шрифт маркера")]
         public Font FontMarker { get; set; }
+
+        // ------------------------------------------------------------------------------------------------------------
+        [LocalizedCategory("SettingsCategoryDesignTiles")]
+        [DisplayName("Выбранный трек: цвет")]
+        [Description("Цвет плитки выбранного трека")]
+        public Color ColorTileTrackSelected { get; set; }
+
+        [LocalizedCategory("SettingsCategoryDesignTiles")]
+        [DisplayName("Выбранный трек: прозрачность")]
+        [Description("Прозрачность плитки выбранного трека")]
+        public byte ColorTileTrackSelectedAlpha { get; set; }
+
+        [LocalizedCategory("SettingsCategoryDesignTiles")]
+        [DisplayName("Выбранный трек: прозрачность границы")]
+        [Description("Прозрачность границы плитки выбранного трека")]
+        public byte ColorTileTrackSelectedLineAlpha { get; set; }
     }
 }

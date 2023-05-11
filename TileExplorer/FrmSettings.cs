@@ -35,6 +35,10 @@ namespace TileExplorer
 
                     Settings.Default.FontMarker = frm.AppSettings.FontMarker;
 
+                    Settings.Default.ColorTileTrackSelected = frm.AppSettings.ColorTileTrackSelected;
+                    Settings.Default.ColorTileTrackSelectedAlpha = frm.AppSettings.ColorTileTrackSelectedAlpha;
+                    Settings.Default.ColorTileTrackSelectedLineAlpha = frm.AppSettings.ColorTileTrackSelectedLineAlpha;
+
                     Settings.Default.Save();
                 }
             }
@@ -54,6 +58,10 @@ namespace TileExplorer
             AppSettings.ColorMarkerTextAlpha = Settings.Default.ColorMarkerTextAlpha;
 
             AppSettings.FontMarker = Settings.Default.FontMarker;
+
+            AppSettings.ColorTileTrackSelected = Settings.Default.ColorTileTrackSelected;
+            AppSettings.ColorTileTrackSelectedAlpha = Settings.Default.ColorTileTrackSelectedAlpha;
+            AppSettings.ColorTileTrackSelectedLineAlpha = Settings.Default.ColorTileTrackSelectedLineAlpha;
 
             propertyGrid.SelectedObject = AppSettings;
         }

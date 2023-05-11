@@ -178,11 +178,20 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Оформление.
+        ///   Looks up a localized string similar to Маркеры.
         /// </summary>
-        internal static string SettingsCategoryDesign {
+        internal static string SettingsCategoryDesignMarkers {
             get {
-                return ResourceManager.GetString("SettingsCategoryDesign", resourceCulture);
+                return ResourceManager.GetString("SettingsCategoryDesignMarkers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Плитки.
+        /// </summary>
+        internal static string SettingsCategoryDesignTiles {
+            get {
+                return ResourceManager.GetString("SettingsCategoryDesignTiles", resourceCulture);
             }
         }
         

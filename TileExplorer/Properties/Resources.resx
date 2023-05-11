@@ -156,8 +156,11 @@
   <data name="SettingsCategoryCommon" xml:space="preserve">
     <value>Общее</value>
   </data>
-  <data name="SettingsCategoryDesign" xml:space="preserve">
-    <value>Оформление</value>
+  <data name="SettingsCategoryDesignMarkers" xml:space="preserve">
+    <value>Маркеры</value>
+  </data>
+  <data name="SettingsCategoryDesignTiles" xml:space="preserve">
+    <value>Плитки</value>
   </data>
   <data name="StatusMousePosition" xml:space="preserve">
     <value>Курсор: {0:F6}, {1:F6}</value>

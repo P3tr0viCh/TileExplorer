@@ -145,7 +145,7 @@ namespace TileExplorer
 
             if (id == -1) return;
 
-            (Owner as IMainForm).ChangeById(this, id);
+            (Owner as IMainForm).ChangeMapItemById(this, id);
         }
     }
 }
