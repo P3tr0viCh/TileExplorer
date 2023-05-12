@@ -196,6 +196,33 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Треки.
+        /// </summary>
+        internal static string SettingsCategoryDesignTracks {
+            get {
+                return ResourceManager.GetString("SettingsCategoryDesignTracks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Формат.
+        /// </summary>
+        internal static string SettingsCategoryFormat {
+            get {
+                return ResourceManager.GetString("SettingsCategoryFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenStreetMap.
+        /// </summary>
+        internal static string SettingsCategoryOsm {
+            get {
+                return ResourceManager.GetString("SettingsCategoryOsm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Курсор: {0:F6}, {1:F6}.
         /// </summary>
         internal static string StatusMousePosition {

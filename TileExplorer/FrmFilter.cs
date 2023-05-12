@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -31,10 +32,10 @@ namespace TileExplorer
 
         private void FrmFilter_Load(object sender, EventArgs e)
         {
-            dtpDay.CustomFormat = Properties.Settings.Default.FormatDate;
+            dtpDay.CustomFormat = AppSettings.Default.FormatDate;
 
-            dtpDateFrom.CustomFormat = Properties.Settings.Default.FormatDate;
-            dtpDateTo.CustomFormat = Properties.Settings.Default.FormatDate;
+            dtpDateFrom.CustomFormat = AppSettings.Default.FormatDate;
+            dtpDateTo.CustomFormat = AppSettings.Default.FormatDate;
 
             selfChange = true;
 

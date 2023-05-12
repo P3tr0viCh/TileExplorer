@@ -98,7 +98,7 @@ namespace TileExplorer
                 }
             }
 
-            public int[] years = default;
+            private int[] years = default;
             public int[] Years
             {
                 get

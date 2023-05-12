@@ -9,18 +9,15 @@ namespace TileExplorer
         private const int MARKER_OFFSET_X = 20;
         private const int MARKER_OFFSET_Y = -10;
 
-        static MapMarkerToolTip()
-        {
-            ((SolidBrush)DefaultFill).Color = Color.FromArgb(
-                    Properties.Settings.Default.ColorMarkerTextFillAlpha, Properties.Settings.Default.ColorMarkerTextFill);
-
-            ((SolidBrush)DefaultForeground).Color = Color.FromArgb(
-                Properties.Settings.Default.ColorMarkerTextAlpha, Properties.Settings.Default.ColorMarkerText);
-        }
-
         public MapMarkerToolTip(MapMarker marker) : base(marker)
         {
-            Font = Properties.Settings.Default.FontMarker;
+            ((SolidBrush)DefaultFill).Color = Color.FromArgb(
+                   AppSettings.Default.ColorMarkerTextFillAlpha, AppSettings.Default.ColorMarkerTextFill);
+
+            ((SolidBrush)DefaultForeground).Color = Color.FromArgb(
+                AppSettings.Default.ColorMarkerTextAlpha, AppSettings.Default.ColorMarkerText);
+
+            Font = AppSettings.Default.FontMarker;
 
             TextPadding = new Size(4, 4);
         }

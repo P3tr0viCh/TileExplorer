@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
+using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -45,7 +46,7 @@ namespace TileExplorer
             ColumnDateTimeStart.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 NullValue = null,
-                Format = Properties.Settings.Default.FormatDateTime
+                Format = AppSettings.Default.FormatDateTime
             };
             ColumnDateTimeStart.HeaderText = "Начало";
             ColumnDateTimeStart.Name = "ColumnDateTimeStart";
@@ -55,7 +56,7 @@ namespace TileExplorer
             ColumnDateTimeFinish.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 NullValue = null,
-                Format = Properties.Settings.Default.FormatDateTime
+                Format = AppSettings.Default.FormatDateTime
             };
             ColumnDateTimeFinish.HeaderText = "Окончание";
             ColumnDateTimeFinish.Name = "ColumnDateTimeFinish";
@@ -69,12 +70,12 @@ namespace TileExplorer
             ColumnDuration.HeaderText = "Время";
             ColumnDuration.Name = "ColumnDuration";
             ColumnDuration.ReadOnly = true;
-            
+
             ColumnDistance.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 Alignment = DataGridViewContentAlignment.TopRight,
                 NullValue = null,
-                Format = Properties.Settings.Default.FormatDistance
+                Format = AppSettings.Default.FormatDistance
             };
             ColumnDistance.HeaderText = "Расстояние";
             ColumnDistance.Name = "ColumnDistance";

@@ -36,24 +36,24 @@ namespace TileExplorer
             switch (Model.Status)
             {
                 case TileStatus.Visited:
-                    colorFill = Color.FromArgb(Settings.Default.ColorTileVisitedAlpha, Settings.Default.ColorTileVisited);
-                    colorStroke = Color.FromArgb(Settings.Default.ColorTileVisitedLineAlpha, Settings.Default.ColorTileVisited);
+                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileVisitedAlpha, AppSettings.Default.ColorTileVisited);
+                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileVisitedLineAlpha, AppSettings.Default.ColorTileVisited);
                     break;
                 case TileStatus.Cluster:
-                    colorFill = Color.FromArgb(Settings.Default.ColorTileClusterAlpha, Settings.Default.ColorTileCluster);
-                    colorStroke = Color.FromArgb(Settings.Default.ColorTileClusterLineAlpha, Settings.Default.ColorTileCluster);
+                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileClusterAlpha, AppSettings.Default.ColorTileCluster);
+                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileClusterLineAlpha, AppSettings.Default.ColorTileCluster);
                     break;
                 case TileStatus.MaxCluster:
-                    colorFill = Color.FromArgb(Settings.Default.ColorTileMaxClusterAlpha, Settings.Default.ColorTileMaxCluster);
-                    colorStroke = Color.FromArgb(Settings.Default.ColorTileMaxClusterLineAlpha, Settings.Default.ColorTileMaxCluster);
+                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileMaxClusterAlpha, AppSettings.Default.ColorTileMaxCluster);
+                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileMaxClusterLineAlpha, AppSettings.Default.ColorTileMaxCluster);
                     break;
                 case TileStatus.MaxSquare:
-                    colorFill = Color.FromArgb(Settings.Default.ColorTileMaxSquareAlpha, Settings.Default.ColorTileMaxSquare);
-                    colorStroke = Color.FromArgb(Settings.Default.ColorTileMaxSquareLineAlpha, Settings.Default.ColorTileMaxSquare);
+                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileMaxSquareAlpha, AppSettings.Default.ColorTileMaxSquare);
+                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileMaxSquareLineAlpha, AppSettings.Default.ColorTileMaxSquare);
                     break;
                 case TileStatus.Selected:
-                    colorFill = Color.FromArgb(Settings.Default.ColorTileTrackSelectedAlpha, Settings.Default.ColorTileTrackSelected);
-                    colorStroke = Color.FromArgb(Settings.Default.ColorTileTrackSelectedLineAlpha, Settings.Default.ColorTileTrackSelected);
+                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileTrackSelectedAlpha, AppSettings.Default.ColorTileTrackSelected);
+                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileTrackSelectedLineAlpha, AppSettings.Default.ColorTileTrackSelected);
                     break;
                 default:
                     colorFill = Color.Empty;

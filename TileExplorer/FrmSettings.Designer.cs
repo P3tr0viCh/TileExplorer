@@ -98,7 +98,7 @@
             this.ShowInTaskbar = false;
             this.Text = "Настройки";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmSettings_FormClosed);
-            this.Load += new System.EventHandler(this.FrmMapDesign_Load);
+            this.Load += new System.EventHandler(this.FrmSettings_Load);
             this.panelBottom.ResumeLayout(false);
             this.ResumeLayout(false);
 

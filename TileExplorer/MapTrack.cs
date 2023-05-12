@@ -11,25 +11,22 @@ namespace TileExplorer
     {
         public MapItemType Type => MapItemType.Track;
 
-        public static readonly Pen DefaultSelectedStroke;
+        public static Pen DefaultSelectedStroke;
 
         [NonSerialized]
         public Pen SelectedStroke = DefaultSelectedStroke;
 
         private readonly MapItem<Models.Track> item;
 
-        static MapTrack()
-        {
-            DefaultStroke.Color = Color.FromArgb(Settings.Default.ColorTrackAlpha, Settings.Default.ColorTrack);
-            DefaultStroke.Width = Settings.Default.WidthTrack;
-
-            DefaultSelectedStroke = new Pen(Color.FromArgb(Settings.Default.ColorTrackSelectedAlpha,
-                Settings.Default.ColorTrackSelected), Settings.Default.WidthTrackSelected);
-        }
-
         public MapTrack(Models.Track track) : base(track.Text)
         {
             item = new MapItem<Models.Track>(this, track);
+
+            DefaultStroke.Color = Color.FromArgb(AppSettings.Default.ColorTrackAlpha, AppSettings.Default.ColorTrack);
+            DefaultStroke.Width = AppSettings.Default.WidthTrack;
+
+            DefaultSelectedStroke = new Pen(Color.FromArgb(AppSettings.Default.ColorTrackSelectedAlpha,
+                AppSettings.Default.ColorTrackSelected), AppSettings.Default.WidthTrackSelected);
 
             IsHitTestVisible = true;
 
@@ -58,7 +55,7 @@ namespace TileExplorer
 
             for (var i = 1; i < Model.TrackPoints.Count - 1; i++)
             {
-                if (distance >= Settings.Default.TrackMinDistancePoint)
+                if (distance >= AppSettings.Default.TrackMinDistancePoint)
                 {
                     distance = 0;
 

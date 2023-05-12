@@ -162,6 +162,15 @@
   <data name="SettingsCategoryDesignTiles" xml:space="preserve">
     <value>Плитки</value>
   </data>
+  <data name="SettingsCategoryDesignTracks" xml:space="preserve">
+    <value>Треки</value>
+  </data>
+  <data name="SettingsCategoryFormat" xml:space="preserve">
+    <value>Формат</value>
+  </data>
+  <data name="SettingsCategoryOsm" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
   <data name="StatusMousePosition" xml:space="preserve">
     <value>Курсор: {0:F6}, {1:F6}</value>
   </data>

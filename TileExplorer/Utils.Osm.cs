@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
+using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -184,11 +185,11 @@ namespace TileExplorer
                                 xml.WriteAttributeString("ref", null, "-" + way.NodeId2);
                                 xml.WriteEndElement();
 
-                                if (!string.IsNullOrEmpty(Properties.Settings.Default.OsmTileKey))
+                                if (!string.IsNullOrEmpty(AppSettings.Default.OsmTileKey))
                                 {
                                     xml.WriteStartElement("tag");
-                                    xml.WriteAttributeString("k", null, Properties.Settings.Default.OsmTileKey);
-                                    xml.WriteAttributeString("v", null, Properties.Settings.Default.OsmTileValue);
+                                    xml.WriteAttributeString("k", null, AppSettings.Default.OsmTileKey);
+                                    xml.WriteAttributeString("v", null, AppSettings.Default.OsmTileValue);
                                     xml.WriteEndElement();
                                 }
                             }

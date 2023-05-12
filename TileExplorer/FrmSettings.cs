@@ -1,5 +1,4 @@
-﻿using P3tr0viCh;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -9,8 +8,6 @@ namespace TileExplorer
 {
     public partial class FrmSettings : Form
     {
-        private readonly AppSettings AppSettings = new AppSettings();
-
         public FrmSettings()
         {
             InitializeComponent();
@@ -26,44 +23,23 @@ namespace TileExplorer
 
                 if (Result)
                 {
-                    Settings.Default.DatabaseHome = frm.AppSettings.DatabaseHome;
-
-                    Settings.Default.ColorMarkerFill = frm.AppSettings.ColorMarkerFill;
-                    Settings.Default.ColorMarkerFillAlpha = frm.AppSettings.ColorMarkerFillAlpha;
-                    Settings.Default.ColorMarkerText = frm.AppSettings.ColorMarkerText;
-                    Settings.Default.ColorMarkerTextAlpha = frm.AppSettings.ColorMarkerTextAlpha;
-
-                    Settings.Default.FontMarker = frm.AppSettings.FontMarker;
-
-                    Settings.Default.ColorTileTrackSelected = frm.AppSettings.ColorTileTrackSelected;
-                    Settings.Default.ColorTileTrackSelectedAlpha = frm.AppSettings.ColorTileTrackSelectedAlpha;
-                    Settings.Default.ColorTileTrackSelectedLineAlpha = frm.AppSettings.ColorTileTrackSelectedLineAlpha;
-
-                    Settings.Default.Save();
+                    AppSettings.Default.Save();
                 }
             }
 
             return Result;
         }
 
-        private void FrmMapDesign_Load(object sender, EventArgs e)
+        private void FrmSettings_Load(object sender, EventArgs e)
         {
-            SettingsExt.Default.LoadFormBounds(this);
+            AppSettings.LoadFormState(this, AppSettings.Default.FormStateSettings);
 
-            AppSettings.DatabaseHome = Settings.Default.DatabaseHome;
+            propertyGrid.SelectedObject = AppSettings.Default;
+        }
 
-            AppSettings.ColorMarkerFill = Settings.Default.ColorMarkerFill;
-            AppSettings.ColorMarkerFillAlpha = Settings.Default.ColorMarkerFillAlpha;
-            AppSettings.ColorMarkerText = Settings.Default.ColorMarkerText;
-            AppSettings.ColorMarkerTextAlpha = Settings.Default.ColorMarkerTextAlpha;
-
-            AppSettings.FontMarker = Settings.Default.FontMarker;
-
-            AppSettings.ColorTileTrackSelected = Settings.Default.ColorTileTrackSelected;
-            AppSettings.ColorTileTrackSelectedAlpha = Settings.Default.ColorTileTrackSelectedAlpha;
-            AppSettings.ColorTileTrackSelectedLineAlpha = Settings.Default.ColorTileTrackSelectedLineAlpha;
-
-            propertyGrid.SelectedObject = AppSettings;
+        private void FrmSettings_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            AppSettings.SaveFormState(this, AppSettings.Default.FormStateSettings);
         }
 
         private bool CheckDirectory(string path)
@@ -79,7 +55,7 @@ namespace TileExplorer
 
         private void PropertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            if (e.ChangedItem.PropertyDescriptor.PropertyType == AppSettings.DatabaseHome.GetType())
+            if (e.ChangedItem.PropertyDescriptor.PropertyType == AppSettings.Default.DatabaseHome.GetType())
             {
                 CheckDirectory((string)e.ChangedItem.Value);
                 return;
@@ -88,16 +64,10 @@ namespace TileExplorer
 
         private void BtnOk_Click(object sender, EventArgs e)
         {
-            if (CheckDirectory(AppSettings.DatabaseHome))
+            if (CheckDirectory(AppSettings.Default.DatabaseHome))
             {
                 DialogResult = DialogResult.OK;
             }
-        }
-
-        private void FrmSettings_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            SettingsExt.Default.SaveFormBounds(this);
-            Settings.Default.Save();
         }
     }
 }

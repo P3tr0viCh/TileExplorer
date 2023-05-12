@@ -80,9 +80,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Projects.exe\P3tr0viCh.Utils\Release\P3tr0viCh.Utils.dll</HintPath>
     </Reference>
-    <Reference Include="PortableSettingsProvider, Version=0.2.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PortableSettingsProvider.0.2.4\lib\net45\PortableSettingsProvider.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -114,10 +111,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\!UtilsAndComps\UtilsSettings.cs">
-      <Link>UtilsSettings.cs</Link>
-    </Compile>
-    <Compile Include="AppSettings.cs" />
+    <Compile Include="Properties\AppSettings.cs" />
     <Compile Include="Utils.Osm.cs" />
     <Compile Include="Utils.Tracks.cs" />
     <Compile Include="Database.Filter.cs" />
@@ -128,27 +122,21 @@
     <Compile Include="FrmList.Designer.cs">
       <DependentUpon>FrmList.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmListBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FrmListBase.cs" />
     <Compile Include="FrmTrack.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmTrack.Designer.cs">
       <DependentUpon>FrmTrack.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMarkerList.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FrmMarkerList.cs" />
     <Compile Include="FrmFilter.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmFilter.Designer.cs">
       <DependentUpon>FrmFilter.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmTrackList.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FrmTrackList.cs" />
     <Compile Include="MapItem.cs" />
     <Compile Include="MapTrack.cs" />
     <Compile Include="MapTile.cs" />
@@ -178,7 +166,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="FrmList.resx">
       <DependentUpon>FrmList.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
+using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -39,7 +40,7 @@ namespace TileExplorer
             ColumnLat.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 Alignment = DataGridViewContentAlignment.TopRight,
-                Format = Properties.Settings.Default.FormatLatLng
+                Format = AppSettings.Default.FormatLatLng
             };
             ColumnLat.HeaderText = "Широта";
             ColumnLat.Name = "ColumnLat";
@@ -48,7 +49,7 @@ namespace TileExplorer
             ColumnLng.DefaultCellStyle = new DataGridViewCellStyle()
             {
                 Alignment = DataGridViewContentAlignment.TopRight,
-                Format = Properties.Settings.Default.FormatLatLng
+                Format = AppSettings.Default.FormatLatLng
             };
             ColumnLng.HeaderText = "Долгота";
             ColumnLng.Name = "ColumnLng";

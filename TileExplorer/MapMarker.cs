@@ -16,11 +16,11 @@ namespace TileExplorer
 
         private const int DEFAULT_IMAGE_SIZE = 6;
 
-        public static readonly Pen DefaultStroke;
-        public static readonly Pen DefaultSelectedStroke;
+        public static Pen DefaultStroke;
+        public static Pen DefaultSelectedStroke;
 
-        public static readonly SolidBrush DefaultFill;
-        public static readonly SolidBrush DefaultSelectedFill;
+        public static SolidBrush DefaultFill;
+        public static SolidBrush DefaultSelectedFill;
 
         [NonSerialized]
         public Pen Stroke = DefaultStroke;
@@ -36,33 +36,30 @@ namespace TileExplorer
 
         private readonly MapItem<Models.Marker> item;
 
-        static MapMarker()
-        {
-            DefaultStroke = new Pen(Color.FromArgb(Properties.Settings.Default.ColorMarkerLineAlpha, Properties.Settings.Default.ColorMarkerLine))
-            {
-                Width = Properties.Settings.Default.WidthMarkerLine,
-                LineJoin = LineJoin.Round,
-                StartCap = LineCap.RoundAnchor
-            };
-
-            DefaultSelectedStroke = new Pen(Color.FromArgb(Properties.Settings.Default.ColorMarkerSelectedLineAlpha, Properties.Settings.Default.ColorMarkerSelectedLine))
-            {
-                Width = Properties.Settings.Default.WidthMarkerLineSelected,
-                LineJoin = LineJoin.Round,
-                StartCap = LineCap.RoundAnchor
-            };
-
-            DefaultFill = new SolidBrush(Color.FromArgb(Properties.Settings.Default.ColorMarkerFillAlpha, Properties.Settings.Default.ColorMarkerFill));
-
-            DefaultSelectedFill = new SolidBrush(Color.FromArgb(Properties.Settings.Default.ColorMarkerSelectedFillAlpha, Properties.Settings.Default.ColorMarkerSelectedFill));
-        }
-
         public MapMarker(Models.Marker marker) : base(new PointLatLng())
         {
             item = new MapItem<Models.Marker>(this, marker);
 
             Size = new Size(DEFAULT_SIZE, DEFAULT_SIZE);
             Offset = new Point(-DEFAULT_SIZE / 2, -DEFAULT_SIZE / 2);
+
+            DefaultStroke = new Pen(Color.FromArgb(AppSettings.Default.ColorMarkerLineAlpha, AppSettings.Default.ColorMarkerLine))
+            {
+                Width = AppSettings.Default.WidthMarkerLine,
+                LineJoin = LineJoin.Round,
+                StartCap = LineCap.RoundAnchor
+            };
+
+            DefaultSelectedStroke = new Pen(Color.FromArgb(AppSettings.Default.ColorMarkerSelectedLineAlpha, AppSettings.Default.ColorMarkerSelectedLine))
+            {
+                Width = AppSettings.Default.WidthMarkerLineSelected,
+                LineJoin = LineJoin.Round,
+                StartCap = LineCap.RoundAnchor
+            };
+
+            DefaultFill = new SolidBrush(Color.FromArgb(AppSettings.Default.ColorMarkerFillAlpha, AppSettings.Default.ColorMarkerFill));
+
+            DefaultSelectedFill = new SolidBrush(Color.FromArgb(AppSettings.Default.ColorMarkerSelectedFillAlpha, AppSettings.Default.ColorMarkerSelectedFill));
 
             ToolTip = new MapMarkerToolTip(this);
 
