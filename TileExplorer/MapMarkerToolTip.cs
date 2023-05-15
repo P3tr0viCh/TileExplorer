@@ -6,9 +6,6 @@ namespace TileExplorer
 {
     internal class MapMarkerToolTip : GMapToolTip
     {
-        private const int MARKER_OFFSET_X = 20;
-        private const int MARKER_OFFSET_Y = -10;
-
         public MapMarkerToolTip(MapMarker marker) : base(marker)
         {
             ((SolidBrush)DefaultFill).Color = Color.FromArgb(
@@ -20,6 +17,8 @@ namespace TileExplorer
             Font = AppSettings.Default.FontMarker;
 
             TextPadding = new Size(4, 4);
+
+            Offset = new Point(marker.Offset.X, marker.Offset.Y);
         }
 
         public override void OnRender(Graphics g)
@@ -31,57 +30,57 @@ namespace TileExplorer
                 var rectangle = new Rectangle(Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y - size.Height,
                     size.Width + TextPadding.Width, size.Height + TextPadding.Height);
 
-                rectangle.Offset(MARKER_OFFSET_X + Offset.X, MARKER_OFFSET_Y - Offset.Y);
+                rectangle.Offset(Offset.X, Offset.Y);
 
-                int x2;
-                int y2;
+                int x;
+                int y;
 
                 if (rectangle.X < Marker.ToolTipPosition.X)
                 {
                     if (rectangle.X + rectangle.Width > Marker.ToolTipPosition.X)
                     {
-                        x2 = rectangle.X + unchecked(rectangle.Width / 2);
+                        x = rectangle.X + unchecked(rectangle.Width / 2);
 
                         if (rectangle.Y < Marker.ToolTipPosition.Y)
                         {
-                            y2 = rectangle.Y + rectangle.Height;
+                            y = rectangle.Y + rectangle.Height;
                         }
                         else
                         {
-                            y2 = rectangle.Y;
+                            y = rectangle.Y;
                         }
                     }
                     else
                     {
-                        x2 = rectangle.X + rectangle.Width;
+                        x = rectangle.X + rectangle.Width;
 
-                        y2 = rectangle.Y + unchecked(rectangle.Height / 2);
+                        y = rectangle.Y + unchecked(rectangle.Height / 2);
                     }
                 }
                 else
                 {
                     if (rectangle.X == Marker.ToolTipPosition.X)
                     {
-                        x2 = rectangle.X + unchecked(rectangle.Width / 2);
+                        x = rectangle.X + unchecked(rectangle.Width / 2);
 
                         if (rectangle.Y < Marker.ToolTipPosition.Y)
                         {
-                            y2 = rectangle.Y + rectangle.Height;
+                            y = rectangle.Y + rectangle.Height;
                         }
                         else
                         {
-                            y2 = rectangle.Y;
+                            y = rectangle.Y;
                         }
                     }
                     else
                     {
-                        x2 = rectangle.X;
+                        x = rectangle.X;
 
-                        y2 = rectangle.Y + unchecked(rectangle.Height / 2);
+                        y = rectangle.Y + unchecked(rectangle.Height / 2);
                     }
                 }
 
-                g.DrawLine(Stroke, Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y, x2, y2);
+                g.DrawLine(Stroke, Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y, x, y);
 
                 g.FillRectangle(Fill, rectangle);
 

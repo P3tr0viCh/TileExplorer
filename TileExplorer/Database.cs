@@ -11,6 +11,9 @@ namespace TileExplorer
 {
     public partial class Database
     {
+        private const int DEFAULT_OFFSET_X = 20;
+        private const int DEFAULT_OFFSET_Y = -10;
+
         public enum MarkerImageType
         {
             Default = 0,
@@ -25,7 +28,6 @@ namespace TileExplorer
             Cluster = 2,
             MaxCluster = 3,
             MaxSquare = 4,
-            Selected = 5,
         }
 
         private static readonly Database defaultInstance = new Database();

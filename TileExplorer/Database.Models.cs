@@ -24,8 +24,8 @@ namespace TileExplorer
 
                 public bool IsTextVisible { get; set; } = true;
 
-                public int OffsetX { get; set; }
-                public int OffsetY { get; set; }
+                public int OffsetX { get; set; } = DEFAULT_OFFSET_X;
+                public int OffsetY { get; set; } = DEFAULT_OFFSET_Y;
 
                 public byte[] Image { get; set; }
 

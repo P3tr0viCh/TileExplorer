@@ -1,6 +1,7 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
@@ -30,46 +31,49 @@ namespace TileExplorer
         {
             Name = string.Format("{0}x{1}", Model.X, Model.Y);
 
-            Color colorFill;
-            Color colorStroke;
-
-            switch (Model.Status)
-            {
-                case TileStatus.Visited:
-                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileVisitedAlpha, AppSettings.Default.ColorTileVisited);
-                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileVisitedLineAlpha, AppSettings.Default.ColorTileVisited);
-                    break;
-                case TileStatus.Cluster:
-                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileClusterAlpha, AppSettings.Default.ColorTileCluster);
-                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileClusterLineAlpha, AppSettings.Default.ColorTileCluster);
-                    break;
-                case TileStatus.MaxCluster:
-                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileMaxClusterAlpha, AppSettings.Default.ColorTileMaxCluster);
-                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileMaxClusterLineAlpha, AppSettings.Default.ColorTileMaxCluster);
-                    break;
-                case TileStatus.MaxSquare:
-                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileMaxSquareAlpha, AppSettings.Default.ColorTileMaxSquare);
-                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileMaxSquareLineAlpha, AppSettings.Default.ColorTileMaxSquare);
-                    break;
-                case TileStatus.Selected:
-                    colorFill = Color.FromArgb(AppSettings.Default.ColorTileTrackSelectedAlpha, AppSettings.Default.ColorTileTrackSelected);
-                    colorStroke = Color.FromArgb(AppSettings.Default.ColorTileTrackSelectedLineAlpha, AppSettings.Default.ColorTileTrackSelected);
-                    break;
-                default:
-                    colorFill = Color.Empty;
-                    colorStroke = Color.FromArgb(100, Color.Gray);
-                    break;
-            }
-
             Points.Clear();
             Points.AddRange(Utils.TilePoints(Model));
-
-            Fill = new SolidBrush(colorFill);
-            Stroke = new Pen(colorStroke, 1f);
         }
 
         public void UpdateColors()
         {
+            Color colorFill;
+            Color colorStroke;
+            
+            if (Selected)
+            {
+                colorFill = Color.FromArgb(AppSettings.Default.ColorTileTrackSelectedAlpha, AppSettings.Default.ColorTileTrackSelected);
+                colorStroke = Color.FromArgb(AppSettings.Default.ColorTileTrackSelectedLineAlpha, AppSettings.Default.ColorTileTrackSelected);
+            }
+            else
+            {
+                switch (Model.Status)
+                {
+                    case TileStatus.Visited:
+                        colorFill = Color.FromArgb(AppSettings.Default.ColorTileVisitedAlpha, AppSettings.Default.ColorTileVisited);
+                        colorStroke = Color.FromArgb(AppSettings.Default.ColorTileVisitedLineAlpha, AppSettings.Default.ColorTileVisited);
+                        break;
+                    case TileStatus.Cluster:
+                        colorFill = Color.FromArgb(AppSettings.Default.ColorTileClusterAlpha, AppSettings.Default.ColorTileCluster);
+                        colorStroke = Color.FromArgb(AppSettings.Default.ColorTileClusterLineAlpha, AppSettings.Default.ColorTileCluster);
+                        break;
+                    case TileStatus.MaxCluster:
+                        colorFill = Color.FromArgb(AppSettings.Default.ColorTileMaxClusterAlpha, AppSettings.Default.ColorTileMaxCluster);
+                        colorStroke = Color.FromArgb(AppSettings.Default.ColorTileMaxClusterLineAlpha, AppSettings.Default.ColorTileMaxCluster);
+                        break;
+                    case TileStatus.MaxSquare:
+                        colorFill = Color.FromArgb(AppSettings.Default.ColorTileMaxSquareAlpha, AppSettings.Default.ColorTileMaxSquare);
+                        colorStroke = Color.FromArgb(AppSettings.Default.ColorTileMaxSquareLineAlpha, AppSettings.Default.ColorTileMaxSquare);
+                        break;
+                    default:
+                        colorFill = Color.Empty;
+                        colorStroke = Color.FromArgb(100, Color.Gray);
+                        break;
+                }
+            }
+
+            Fill = new SolidBrush(colorFill);
+            Stroke = new Pen(colorStroke, 1f);
         }
     }
 }
