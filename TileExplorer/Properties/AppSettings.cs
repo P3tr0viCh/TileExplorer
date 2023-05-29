@@ -231,6 +231,10 @@ namespace TileExplorer.Properties
         [DisplayName("Расстояние")]
         [Description("Формат расстояний")]
         public string FormatDistance { get; set; } = "0.00";
+        [LocalizedCategory("SettingsCategoryFormat")]
+        [DisplayName("Расстояние (км)")]
+        [Description("Формат расстояний (округлённое значение)")]
+        public string FormatDistance2 { get; set; } = "0";
 
         [LocalizedCategory("SettingsCategoryFormat")]
         [DisplayName("Координаты")]
@@ -286,6 +290,8 @@ namespace TileExplorer.Properties
         public bool VisibleMarkerList { get; set; } = true;
         [Browsable(false)]
         public bool VisibleTrackList { get; set; } = true;
+        [Browsable(false)]
+        public bool VisibleResults { get; set; } = true;
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
@@ -298,11 +304,15 @@ namespace TileExplorer.Properties
         public FormState FormStateFilter { get; set; } = new FormState();
         [Browsable(false)]
         public FormState FormStateSettings { get; set; } = new FormState();
+        [Browsable(false)]
+        public FormState FormStateResults { get; set; } = new FormState();
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
-        public int[] TrackListColumns { get; set; } = null;
+        public ColumnsState TrackListColumns { get; set; } = new ColumnsState();
         [Browsable(false)]
-        public int[] MarkerListColumns { get; set; } = null;
+        public ColumnsState MarkerListColumns { get; set; } = new ColumnsState();
+        [Browsable(false)]
+        public ColumnsState ResultsColumns { get; set; } = new ColumnsState();
     }
 }

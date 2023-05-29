@@ -111,6 +111,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmResults.cs" />
     <Compile Include="Properties\AppSettings.cs" />
     <Compile Include="Utils.Osm.cs" />
     <Compile Include="Utils.Tracks.cs" />

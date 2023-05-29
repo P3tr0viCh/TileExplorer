@@ -88,6 +88,8 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
+            this.miMainDataResults = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -393,6 +395,8 @@
             this.miMainData.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miMainDataOpenTrack,
             this.toolStripSeparator6,
+            this.miMainDataResults,
+            this.toolStripSeparator9,
             this.miMainDataTrackList,
             this.miMainDataMarkerList,
             this.toolStripSeparator7,
@@ -591,6 +595,20 @@
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
             // 
+            // miMainDataResults
+            // 
+            this.miMainDataResults.Name = "miMainDataResults";
+            this.miMainDataResults.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.R)));
+            this.miMainDataResults.Size = new System.Drawing.Size(205, 22);
+            this.miMainDataResults.Text = "Итоги";
+            this.miMainDataResults.Click += new System.EventHandler(this.MiMainDataResults_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(202, 6);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -684,6 +702,8 @@
         private System.Windows.Forms.ToolStripMenuItem miMainShowGrid;
         private System.Windows.Forms.ToolStripMenuItem miMainSettings;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem miMainDataResults;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
     }
 }
 

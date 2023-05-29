@@ -16,7 +16,8 @@ namespace TileExplorer
     {
         Markers,
         Tracks,
-        Filter
+        Filter,
+        Results
     }
 
     [DesignerCategory("")]

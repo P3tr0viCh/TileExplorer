@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
+using static TileExplorer.Database.Models;
 using static TileExplorer.StatusStripPresenter;
 using static TileExplorer.Utils;
 
@@ -51,6 +52,7 @@ namespace TileExplorer
 
         private readonly FrmFilter frmFilter;
 
+        private readonly FrmResults frmResults;
         private readonly FrmTrackList frmTrackList;
         private readonly FrmMarkerList frmMarkerList;
 
@@ -73,6 +75,7 @@ namespace TileExplorer
 
             statusStripPresenter = new StatusStripPresenter(this);
 
+            frmResults = new FrmResults(this);
             frmTrackList = new FrmTrackList(this);
             frmMarkerList = new FrmMarkerList(this);
 
@@ -101,11 +104,14 @@ namespace TileExplorer
         {
             AppSettings.LoadFormState(this, AppSettings.Default.FormStateMain);
 
+            AppSettings.LoadFormState(frmResults, AppSettings.Default.FormStateResults);
+
             AppSettings.LoadFormState(frmTrackList, AppSettings.Default.FormStateTrackList);
             AppSettings.LoadFormState(frmMarkerList, AppSettings.Default.FormStateMarkerList);
 
             AppSettings.LoadFormState(frmFilter, AppSettings.Default.FormStateFilter);
 
+            AppSettings.LoadDataGridColumns(frmResults.DataGridView, AppSettings.Default.ResultsColumns);
             AppSettings.LoadDataGridColumns(frmTrackList.DataGridView, AppSettings.Default.TrackListColumns);
             AppSettings.LoadDataGridColumns(frmMarkerList.DataGridView, AppSettings.Default.MarkerListColumns);
 
@@ -128,6 +134,8 @@ namespace TileExplorer
             tracksOverlay.IsVisibile = miMainShowTracks.Checked;
             markersOverlay.IsVisibile = miMainShowMarkers.Checked;
 
+            frmResults.Visible = AppSettings.Default.VisibleResults;
+
             frmTrackList.Visible = AppSettings.Default.VisibleTrackList;
             frmMarkerList.Visible = AppSettings.Default.VisibleMarkerList;
 
@@ -144,11 +152,14 @@ namespace TileExplorer
 
             AppSettings.SaveFormState(this, AppSettings.Default.FormStateMain);
 
+            AppSettings.SaveFormState(frmResults, AppSettings.Default.FormStateResults);
+
             AppSettings.SaveFormState(frmTrackList, AppSettings.Default.FormStateTrackList);
             AppSettings.SaveFormState(frmMarkerList, AppSettings.Default.FormStateMarkerList);
 
             AppSettings.SaveFormState(frmFilter, AppSettings.Default.FormStateFilter);
 
+            AppSettings.SaveDataGridColumns(frmResults.DataGridView, AppSettings.Default.ResultsColumns);
             AppSettings.SaveDataGridColumns(frmTrackList.DataGridView, AppSettings.Default.TrackListColumns);
             AppSettings.SaveDataGridColumns(frmMarkerList.DataGridView, AppSettings.Default.MarkerListColumns);
 
@@ -159,6 +170,8 @@ namespace TileExplorer
             AppSettings.Default.VisibleMarkers = miMainShowMarkers.Checked;
 
             AppSettings.Default.VisibleFilter = frmFilter.Visible;
+
+            AppSettings.Default.VisibleResults = frmResults.Visible;
 
             AppSettings.Default.VisibleTrackList = frmTrackList.Visible;
             AppSettings.Default.VisibleMarkerList = frmMarkerList.Visible;
@@ -452,6 +465,27 @@ namespace TileExplorer
             Debug.WriteLine("LoadTracksInfoAsync: end");
         }
 
+        private async Task LoadResultsAsync()
+        {
+            Debug.WriteLine("LoadResultsAsync: start");
+
+            var results = await Database.Default.LoadResultsAsync();
+
+            var resultSum = new Results { Count = 0, DistanceSum = 0.0 };
+
+            foreach (var result in results)
+            {
+                resultSum.Count += result.Count;
+                resultSum.DistanceSum += result.DistanceSum;
+            }
+
+            results.Add(resultSum);
+
+            frmResults.List = results;
+
+            Debug.WriteLine("LoadResultsAsync: end");
+        }
+
         public enum ProgramStatus
         {
             Idle,
@@ -480,6 +514,8 @@ namespace TileExplorer
                         break;
                 }
 
+                frmResults.Updating = value != ProgramStatus.Idle;
+
                 frmTrackList.Updating = value != ProgramStatus.Idle;
                 frmMarkerList.Updating = value != ProgramStatus.Idle;
 
@@ -495,6 +531,7 @@ namespace TileExplorer
             Markers = 4,
             TrackList = 8,
             TracksInfo = 16,
+            Results = 32,
         }
 
         private async Task DataUpdateAsync(DataLoad load = default)
@@ -510,6 +547,8 @@ namespace TileExplorer
                 if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
 
                 if (frmMarkerList.Visible || miMainShowMarkers.Checked) load |= DataLoad.Markers;
+
+                if (frmResults.Visible) load |= DataLoad.Results;
             }
 
             if (load.HasFlag(DataLoad.Tracks))
@@ -532,6 +571,8 @@ namespace TileExplorer
             if (load.HasFlag(DataLoad.Tracks)) await LoadTracksAsync(true);
 
             if (load.HasFlag(DataLoad.Markers)) await LoadMarkersAsync();
+
+            if (load.HasFlag(DataLoad.Results)) await LoadResultsAsync();
 
             Status = ProgramStatus.Idle;
         }
@@ -808,6 +849,12 @@ namespace TileExplorer
                     if (markersOverlay.Markers.Count == 0)
                     {
                         _ = DataUpdateAsync(DataLoad.Markers);
+                    }
+                    break;
+                case DataLoad.Results:
+                    if (frmResults.DataGridView.Rows.Count == 0)
+                    {
+                        _ = DataUpdateAsync(DataLoad.Results);
                     }
                     break;
             }
@@ -1276,7 +1323,7 @@ namespace TileExplorer
             {
                 await OpenTracksAsync(openFileDialog.FileNames);
 
-                await DataUpdateAsync(DataLoad.Tiles | DataLoad.TracksInfo);
+                await DataUpdateAsync(DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.Results);
             }
         }
 
@@ -1297,6 +1344,13 @@ namespace TileExplorer
         private void MiMainDataFilter_Click(object sender, EventArgs e)
         {
             frmFilter.Visible = !frmFilter.Visible;
+        }
+
+        private void MiMainDataResults_Click(object sender, EventArgs e)
+        {
+            frmResults.Visible = !frmResults.Visible;
+
+            CheckAndLoadData(DataLoad.Results);
         }
 
         private void MiMainGrayScale_Click(object sender, EventArgs e)

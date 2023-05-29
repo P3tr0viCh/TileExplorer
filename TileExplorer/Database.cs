@@ -69,46 +69,46 @@ namespace TileExplorer
 #if DEBUG
             }
 #endif
-                using (var connection = GetConnection())
-                {
-                    /* tables */
-                    connection.Execute("CREATE TABLE IF NOT EXISTS markers (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "lat REAL NOT NULL, lng REAL NOT NULL, " +
-                        "text TEXT, istextvisible INTEGER, " +
-                        "offsetx INTEGER, offsety INTEGER, image BLOB, imagetype INTEGER DEFAULT 0);");
+            using (var connection = GetConnection())
+            {
+                /* tables */
+                connection.Execute("CREATE TABLE IF NOT EXISTS markers (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "lat REAL NOT NULL, lng REAL NOT NULL, " +
+                    "text TEXT, istextvisible INTEGER, " +
+                    "offsetx INTEGER, offsety INTEGER, image BLOB, imagetype INTEGER DEFAULT 0);");
 
-                    connection.Execute("CREATE TABLE IF NOT EXISTS tiles (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "x INTEGER NOT NULL, y INTEGER NOT NULL, " +
-                        "UNIQUE(x, y));");
+                connection.Execute("CREATE TABLE IF NOT EXISTS tiles (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "x INTEGER NOT NULL, y INTEGER NOT NULL, " +
+                    "UNIQUE(x, y));");
 
-                    connection.Execute("CREATE TABLE IF NOT EXISTS tracks (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "text TEXT, datetimestart TEXT, datetimefinish TEXT, distance REAL);");
+                connection.Execute("CREATE TABLE IF NOT EXISTS tracks (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "text TEXT, datetimestart TEXT, datetimefinish TEXT, distance REAL);");
 
-                    connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "trackid INTEGER, num INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, datetime TEXT, ele REAL, distance REAL, " +
-                        "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
+                connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "trackid INTEGER, num INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, datetime TEXT, ele REAL, distance REAL, " +
+                    "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
 
-                    connection.Execute("CREATE TABLE IF NOT EXISTS tracks_tiles (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "trackid INTEGER, tileid INTEGER, " +
-                        "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
+                connection.Execute("CREATE TABLE IF NOT EXISTS tracks_tiles (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "trackid INTEGER, tileid INTEGER, " +
+                    "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
 
-                    /* indexes */
-                    connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
-                        "tracks_points (trackid);");
+                /* indexes */
+                connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
+                    "tracks_points (trackid);");
 
-                    /* triggers */
-                    connection.Execute("CREATE TRIGGER IF NOT EXISTS tracks_tiles_ad AFTER DELETE ON tracks_tiles " +
-                        "WHEN " +
-                            "(SELECT COUNT(*) FROM tracks_tiles WHERE tileid=OLD.tileid) = 0 " +
-                        "BEGIN " +
-                            "DELETE FROM tiles WHERE id=OLD.tileid; " +
-                        "END;");
-                }
+                /* triggers */
+                connection.Execute("CREATE TRIGGER IF NOT EXISTS tracks_tiles_ad AFTER DELETE ON tracks_tiles " +
+                    "WHEN " +
+                        "(SELECT COUNT(*) FROM tracks_tiles WHERE tileid=OLD.tileid) = 0 " +
+                    "BEGIN " +
+                        "DELETE FROM tiles WHERE id=OLD.tileid; " +
+                    "END;");
+            }
 #if !DEBUG
             }
 #endif
@@ -201,6 +201,19 @@ namespace TileExplorer
 
                 return await connection.QueryFirstAsync<Models.TracksInfo>(sql);
             }
+        }
+
+        public async Task<List<Models.Results>> LoadResultsAsync()
+        {
+            return await Task.Run(() =>
+            {
+                using (var connection = GetConnection())
+                {
+                    var sql = "SELECT CAST(strftime('%Y', datetimestart) AS INTEGER) AS year, count(*) as count, sum(distance) as distancesum FROM tracks GROUP BY year ORDER BY year;";
+
+                    return connection.Query<Models.Results>(sql).ToList();
+                }
+            });
         }
 
         public async Task SaveMarkerAsync(Models.Marker marker)

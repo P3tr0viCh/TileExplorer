@@ -81,7 +81,7 @@ namespace TileExplorer
             public class TrackPoint : BaseId
             {
                 public long TrackId { get; set; } = 0;
-                
+
                 public int Num { get; set; }
 
                 public DateTime DateTime { get; set; }
@@ -107,6 +107,25 @@ namespace TileExplorer
                 public int Count { get; set; }
 
                 public double Distance { get; set; }
+            }
+
+            public class Results : BaseId
+            {
+                public int Year
+                {
+                    get
+                    {
+                        return (int)Id;
+                    }
+                    set
+                    {
+                        Id = value;
+                    }
+                }
+
+                public int Count { get; set; }
+
+                public double DistanceSum { get; set; }
             }
         }
     }
