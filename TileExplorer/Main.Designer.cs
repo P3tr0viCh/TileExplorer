@@ -65,6 +65,8 @@
             this.miMainData = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainDataOpenTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.miMainDataResults = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataTrackList = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainDataMarkerList = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
@@ -88,8 +90,6 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
-            this.miMainDataResults = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -134,6 +134,7 @@
             this.gMapControl.OnPositionChanged += new GMap.NET.PositionChanged(this.GMapControl_OnPositionChanged);
             this.gMapControl.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.GMapControl_OnMapZoomChanged);
             this.gMapControl.Load += new System.EventHandler(this.GMapControl_Load);
+            this.gMapControl.SizeChanged += new System.EventHandler(this.GMapControl_SizeChanged);
             this.gMapControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseClick);
             this.gMapControl.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseDoubleClick);
             this.gMapControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseMove);
@@ -420,6 +421,20 @@
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(202, 6);
             // 
+            // miMainDataResults
+            // 
+            this.miMainDataResults.Name = "miMainDataResults";
+            this.miMainDataResults.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.R)));
+            this.miMainDataResults.Size = new System.Drawing.Size(205, 22);
+            this.miMainDataResults.Text = "Итоги";
+            this.miMainDataResults.Click += new System.EventHandler(this.MiMainDataResults_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(202, 6);
+            // 
             // miMainDataTrackList
             // 
             this.miMainDataTrackList.Name = "miMainDataTrackList";
@@ -594,20 +609,6 @@
             // 
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
-            // 
-            // miMainDataResults
-            // 
-            this.miMainDataResults.Name = "miMainDataResults";
-            this.miMainDataResults.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.R)));
-            this.miMainDataResults.Size = new System.Drawing.Size(205, 22);
-            this.miMainDataResults.Text = "Итоги";
-            this.miMainDataResults.Click += new System.EventHandler(this.MiMainDataResults_Click);
-            // 
-            // toolStripSeparator9
-            // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(202, 6);
             // 
             // Main
             // 

@@ -295,24 +295,24 @@ namespace TileExplorer.Properties
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
-        public FormState FormStateMain { get; set; } = new FormState();
+        public FormState FormStateMain { get; set; }
         [Browsable(false)]
-        public FormState FormStateTrackList { get; set; } = new FormState();
+        public FormState FormStateTrackList { get; set; }
         [Browsable(false)]
-        public FormState FormStateMarkerList { get; set; } = new FormState();
+        public FormState FormStateMarkerList { get; set; }
         [Browsable(false)]
-        public FormState FormStateFilter { get; set; } = new FormState();
+        public FormState FormStateFilter { get; set; }
         [Browsable(false)]
-        public FormState FormStateSettings { get; set; } = new FormState();
+        public FormState FormStateSettings { get; set; }
         [Browsable(false)]
-        public FormState FormStateResults { get; set; } = new FormState();
+        public FormState FormStateResults { get; set; }
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
-        public ColumnsState TrackListColumns { get; set; } = new ColumnsState();
+        public ColumnsState TrackListColumns { get; set; }
         [Browsable(false)]
-        public ColumnsState MarkerListColumns { get; set; } = new ColumnsState();
+        public ColumnsState MarkerListColumns { get; set; }
         [Browsable(false)]
-        public ColumnsState ResultsColumns { get; set; } = new ColumnsState();
+        public ColumnsState ResultsColumns { get; set; }
     }
 }

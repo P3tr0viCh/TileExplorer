@@ -17,9 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
-using static TileExplorer.Database.Models;
 using static TileExplorer.StatusStripPresenter;
-using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -150,18 +148,18 @@ namespace TileExplorer
         {
             FullScreen = false;
 
-            AppSettings.SaveFormState(this, AppSettings.Default.FormStateMain);
+            AppSettings.Default.FormStateMain = AppSettings.SaveFormState(this);
 
-            AppSettings.SaveFormState(frmResults, AppSettings.Default.FormStateResults);
+            AppSettings.Default.FormStateResults = AppSettings.SaveFormState(frmResults);
 
-            AppSettings.SaveFormState(frmTrackList, AppSettings.Default.FormStateTrackList);
-            AppSettings.SaveFormState(frmMarkerList, AppSettings.Default.FormStateMarkerList);
+            AppSettings.Default.FormStateTrackList = AppSettings.SaveFormState(frmTrackList);
+            AppSettings.Default.FormStateMarkerList = AppSettings.SaveFormState(frmMarkerList);
 
-            AppSettings.SaveFormState(frmFilter, AppSettings.Default.FormStateFilter);
+            AppSettings.Default.FormStateFilter = AppSettings.SaveFormState(frmFilter);
 
-            AppSettings.SaveDataGridColumns(frmResults.DataGridView, AppSettings.Default.ResultsColumns);
-            AppSettings.SaveDataGridColumns(frmTrackList.DataGridView, AppSettings.Default.TrackListColumns);
-            AppSettings.SaveDataGridColumns(frmMarkerList.DataGridView, AppSettings.Default.MarkerListColumns);
+            AppSettings.Default.ResultsColumns = AppSettings.SaveDataGridColumns(frmResults.DataGridView);
+            AppSettings.Default.TrackListColumns = AppSettings.SaveDataGridColumns(frmTrackList.DataGridView);
+            AppSettings.Default.MarkerListColumns = AppSettings.SaveDataGridColumns(frmMarkerList.DataGridView);
 
             AppSettings.Default.MapGrayScale = miMainGrayScale.Checked;
 
@@ -251,6 +249,11 @@ namespace TileExplorer
         {
             statusStripPresenter.Position = point;
 
+            StartUpdateGrid();
+        }
+
+        private void GMapControl_SizeChanged(object sender, EventArgs e)
+        {
             StartUpdateGrid();
         }
 
@@ -471,7 +474,7 @@ namespace TileExplorer
 
             var results = await Database.Default.LoadResultsAsync();
 
-            var resultSum = new Results { Count = 0, DistanceSum = 0.0 };
+            var resultSum = new Database.Models.Results { Count = 0, DistanceSum = 0.0 };
 
             foreach (var result in results)
             {

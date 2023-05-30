@@ -39,7 +39,7 @@ namespace TileExplorer
 
         private void FrmSettings_FormClosed(object sender, FormClosedEventArgs e)
         {
-            AppSettings.SaveFormState(this, AppSettings.Default.FormStateSettings);
+            AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(this);
         }
 
         private bool CheckDirectory(string path)
