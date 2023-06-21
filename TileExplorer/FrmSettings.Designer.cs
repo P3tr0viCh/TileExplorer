@@ -85,7 +85,7 @@
             // 
             // FrmSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 361);
             this.Controls.Add(this.propertyGrid);
@@ -97,8 +97,6 @@
             this.Name = "FrmSettings";
             this.ShowInTaskbar = false;
             this.Text = "Настройки";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmSettings_FormClosed);
-            this.Load += new System.EventHandler(this.FrmSettings_Load);
             this.panelBottom.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using TileExplorer.Properties;
+using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
@@ -15,31 +16,32 @@ namespace TileExplorer
 
         public static bool ShowDlg(IWin32Window owner)
         {
-            bool Result;
-
             using (var frm = new FrmSettings())
             {
-                Result = frm.ShowDialog(owner) == DialogResult.OK;
+                AppSettings.Default.Save();
 
-                if (Result)
+                AppSettings.LoadFormState(frm, AppSettings.Default.FormStateSettings);
+
+                frm.propertyGrid.SelectedObject = AppSettings.Default;
+
+                var result = frm.ShowDialog(owner) == DialogResult.OK;
+
+                if (result)
                 {
+                    AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(frm);
+
                     AppSettings.Default.Save();
                 }
+                else
+                {
+                    AppSettings.Default.Load();
+
+                    AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(frm);
+                }
+
+
+                return result;
             }
-
-            return Result;
-        }
-
-        private void FrmSettings_Load(object sender, EventArgs e)
-        {
-            AppSettings.LoadFormState(this, AppSettings.Default.FormStateSettings);
-
-            propertyGrid.SelectedObject = AppSettings.Default;
-        }
-
-        private void FrmSettings_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(this);
         }
 
         private bool CheckDirectory(string path)
