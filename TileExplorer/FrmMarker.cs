@@ -1,48 +1,106 @@
-﻿using System.Windows.Forms;
-using static TileExplorer.Database;
+﻿using P3tr0viCh.Utils;
+using System;
+using System.Diagnostics;
+using System.Windows.Forms;
+using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
     public partial class FrmMarker : Form
     {
+        private readonly Database.Models.MapMarker marker = new Database.Models.MapMarker();
+
+        private Database.Models.MapMarker Marker
+        {
+            get
+            {
+                return marker;
+            }
+            set
+            {
+                marker.Assign(value);
+
+                tbText.Text = marker.Text;
+
+                udPointLat.Value = (decimal)marker.Lat;
+                udPointLng.Value = (decimal)marker.Lng;
+
+                udOffsetX.Value = marker.OffsetX;
+                udOffsetY.Value = marker.OffsetY;
+
+                cboxTextVisible.Checked = marker.IsTextVisible;
+            }
+        }
+
         public FrmMarker()
         {
             InitializeComponent();
         }
 
-        public static bool ShowDlg(IWin32Window owner, Models.Marker marker)
+        public static bool ShowDlg(Form owner, Database.Models.MapMarker marker)
         {
-            bool Result;
-
-            using (var frm = new FrmMarker())
+            using (var frm = new FrmMarker()
             {
-                frm.tbText.Text = marker.Text;
+                Owner = owner,
 
-                frm.udPointLat.Value = (decimal)marker.Lat;
-                frm.udPointLng.Value = (decimal)marker.Lng;
-
-                frm.udOffsetX.Value = marker.OffsetX;
-                frm.udOffsetY.Value = marker.OffsetY;
-
-                frm.cboxTextVisible.Checked = marker.IsTextVisible;
-
-                Result = frm.ShowDialog(owner) == DialogResult.OK;
-
-                if (Result)
-                {
-                    marker.Text = frm.tbText.Text;
-
-                    marker.Lat = (double)frm.udPointLat.Value;
-                    marker.Lng = (double)frm.udPointLng.Value;
-
-                    marker.OffsetX = (int)frm.udOffsetX.Value;
-                    marker.OffsetY = (int)frm.udOffsetY.Value;
-
-                    marker.IsTextVisible = frm.cboxTextVisible.Checked;
-                }
+                Marker = marker
+            })
+            {
+                return frm.ShowDialog(owner) == DialogResult.OK;
             }
+        }
 
-            return Result;
+        private bool UpdateData()
+        {
+            try
+            {
+                marker.Text = tbText.Text;
+
+                marker.Lat = (double)udPointLat.Value;
+                marker.Lng = (double)udPointLng.Value;
+
+                marker.OffsetX = (int)udOffsetX.Value;
+                marker.OffsetY = (int)udOffsetY.Value;
+
+                marker.IsTextVisible = cboxTextVisible.Checked;
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+
+                Msg.Error(e.Message);
+
+                return false;
+            }
+        }
+
+        private bool SaveData()
+        {
+            _ = Database.Default.SaveMarkerAsync(Marker);
+
+            ((IMainForm)Owner).MarkerChanged(Marker);
+
+            return true;
+        }
+
+        private bool ApplyData()
+        {
+            return UpdateData() && SaveData();
+        }
+
+        private void BtnOk_Click(object sender, System.EventArgs e)
+        {
+            if (ApplyData())
+            {
+                DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void BtnApply_Click(object sender, EventArgs e)
+        {
+            ApplyData();
         }
     }
 }

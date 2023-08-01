@@ -12,10 +12,15 @@ namespace TileExplorer
             {
                 [Key]
                 public long Id { get; set; } = 0;
+
+                public void Assign(BaseId source)
+                {
+                    Id = source.Id;
+                }
             }
 
             [Table("markers")]
-            public class Marker : BaseId
+            public class MapMarker : BaseId
             {
                 public double Lat { get; set; }
                 public double Lng { get; set; }
@@ -30,6 +35,19 @@ namespace TileExplorer
                 public byte[] Image { get; set; }
 
                 public MarkerImageType ImageType { get; set; } = MarkerImageType.Default;
+
+                public void Assign(MapMarker source)
+                {
+                    base.Assign(source);
+
+                    Lat = source.Lat; 
+                    Lng = source.Lng;
+                    Text = source.Text;
+                    IsTextVisible = source.IsTextVisible;
+                    OffsetX = source.OffsetX;
+                    OffsetY = source.OffsetY;
+                    ImageType = source.ImageType;
+                }
             }
 
             [Table("tiles")]

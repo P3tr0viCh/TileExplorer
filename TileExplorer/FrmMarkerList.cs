@@ -5,7 +5,7 @@ using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public class FrmMarkerList : FrmListBase<Models.Marker>
+    public class FrmMarkerList : FrmListBase<Models.MapMarker>
     {
         public override FrmListType Type => FrmListType.Markers;
 
@@ -18,7 +18,7 @@ namespace TileExplorer
             Name = "FrmMarkerList";
         }
 
-        public override void Set(int rowIndex, Models.Marker model)
+        public override void Set(int rowIndex, Models.MapMarker model)
         {
             DataGridView.Rows[rowIndex].Cells[ColumnId.Name].Value = model.Id;
 

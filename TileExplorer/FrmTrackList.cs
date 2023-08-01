@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
@@ -29,7 +30,7 @@ namespace TileExplorer
             DataGridView.Rows[rowIndex].Cells[ColumnDateTimeStart.Name].Value = model.DateTimeStart;
             DataGridView.Rows[rowIndex].Cells[ColumnDateTimeFinish.Name].Value = model.DateTimeFinish;
 
-            DataGridView.Rows[rowIndex].Cells[ColumnDuration.Name].Value = model.Duration;
+            DataGridView.Rows[rowIndex].Cells[ColumnDuration.Name].Value = new DateTime(model.Duration.Ticks);
 
             DataGridView.Rows[rowIndex].Cells[ColumnDistance.Name].Value = model.Distance / 1000.0;
         }
@@ -65,7 +66,9 @@ namespace TileExplorer
 
             ColumnDuration.DefaultCellStyle = new DataGridViewCellStyle()
             {
+                Alignment = DataGridViewContentAlignment.TopRight,
                 NullValue = null,
+                Format = AppSettings.Default.FormatTime
             };
             ColumnDuration.HeaderText = "Время";
             ColumnDuration.Name = "ColumnDuration";

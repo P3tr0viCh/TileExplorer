@@ -223,6 +223,11 @@ namespace TileExplorer.Properties
         public string FormatDate { get; set; } = "yyyy.MM.dd";
 
         [LocalizedCategory("SettingsCategoryFormat")]
+        [DisplayName("Время")]
+        [Description("Формат времени")]
+        public string FormatTime { get; set; } = "HH:mm";
+
+        [LocalizedCategory("SettingsCategoryFormat")]
         [DisplayName("Дата и время")]
         [Description("Формат даты и времени")]
         public string FormatDateTime { get; set; } = "yyyy.MM.dd HH:mm";
@@ -292,6 +297,10 @@ namespace TileExplorer.Properties
         public bool VisibleTrackList { get; set; } = true;
         [Browsable(false)]
         public bool VisibleResults { get; set; } = true;
+
+        // ------------------------------------------------------------------------------------------------------------
+        [Browsable(false)]
+        public bool VisibleLeftPanel { get; set; } = true;
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]

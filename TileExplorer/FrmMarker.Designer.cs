@@ -41,6 +41,7 @@
             this.lblOffsetY = new System.Windows.Forms.Label();
             this.lblOffsetX = new System.Windows.Forms.Label();
             this.cboxTextVisible = new System.Windows.Forms.CheckBox();
+            this.btnApply = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udPointLat)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udPointLng)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udOffsetY)).BeginInit();
@@ -49,13 +50,13 @@
             // 
             // btnOk
             // 
-            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOk.Location = new System.Drawing.Point(136, 224);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
-            this.btnOk.TabIndex = 11;
+            this.btnOk.TabIndex = 12;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
             // 
             // btnCancel
             // 
@@ -63,7 +64,7 @@
             this.btnCancel.Location = new System.Drawing.Point(224, 224);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
-            this.btnCancel.TabIndex = 12;
+            this.btnCancel.TabIndex = 13;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -201,6 +202,16 @@
             this.cboxTextVisible.Text = "Показывать текст";
             this.cboxTextVisible.UseVisualStyleBackColor = true;
             // 
+            // btnApply
+            // 
+            this.btnApply.Location = new System.Drawing.Point(8, 224);
+            this.btnApply.Name = "btnApply";
+            this.btnApply.Size = new System.Drawing.Size(96, 32);
+            this.btnApply.TabIndex = 11;
+            this.btnApply.Text = "Применить";
+            this.btnApply.UseVisualStyleBackColor = true;
+            this.btnApply.Click += new System.EventHandler(this.BtnApply_Click);
+            // 
             // FrmMarker
             // 
             this.AcceptButton = this.btnOk;
@@ -208,6 +219,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(312, 265);
+            this.Controls.Add(this.btnApply);
             this.Controls.Add(this.cboxTextVisible);
             this.Controls.Add(this.udOffsetY);
             this.Controls.Add(this.udOffsetX);
@@ -252,5 +264,6 @@
         private System.Windows.Forms.Label lblOffsetY;
         private System.Windows.Forms.Label lblOffsetX;
         private System.Windows.Forms.CheckBox cboxTextVisible;
+        private System.Windows.Forms.Button btnApply;
     }
 }

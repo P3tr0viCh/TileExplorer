@@ -8,7 +8,7 @@ using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public class MapMarker : GMapMarker, IMapItem
+    public class MapItemMarker : GMapMarker, IMapItem
     {
         public MapItemType Type => MapItemType.Marker;
 
@@ -34,11 +34,11 @@ namespace TileExplorer
         [NonSerialized]
         public SolidBrush SelectedFill = DefaultSelectedFill;
 
-        private readonly MapItem<Models.Marker> item;
+        private readonly MapItem<Models.MapMarker> item;
 
-        public MapMarker(Models.Marker marker) : base(new PointLatLng())
+        public MapItemMarker(Models.MapMarker marker) : base(new PointLatLng())
         {
-            item = new MapItem<Models.Marker>(this, marker);
+            item = new MapItem<Models.MapMarker>(this, marker);
 
             Size = new Size(DEFAULT_SIZE, DEFAULT_SIZE);
             Offset = new Point(-DEFAULT_SIZE / 2, -DEFAULT_SIZE / 2);
@@ -61,14 +61,14 @@ namespace TileExplorer
 
             DefaultSelectedFill = new SolidBrush(Color.FromArgb(AppSettings.Default.ColorMarkerSelectedFillAlpha, AppSettings.Default.ColorMarkerSelectedFill));
 
-            ToolTip = new MapMarkerToolTip(this);
+            ToolTip = new MapItemMarkerToolTip(this);
 
             NotifyModelChanged();
             UpdateColors();
         }
 
-        public Models.Marker Model { get => item.Model; set => item.Model = value; }
-        Models.BaseId IMapItem.Model { get => Model; set => Model = (Models.Marker)value; }
+        public Models.MapMarker Model { get => item.Model; set => item.Model = value; }
+        Models.BaseId IMapItem.Model { get => Model; set => Model = (Models.MapMarker)value; }
 
         public bool Selected { get => item.Selected; set => item.Selected = value; }
 

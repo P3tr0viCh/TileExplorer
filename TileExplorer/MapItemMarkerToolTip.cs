@@ -4,9 +4,9 @@ using TileExplorer.Properties;
 
 namespace TileExplorer
 {
-    internal class MapMarkerToolTip : GMapToolTip
+    internal class MapItemMarkerToolTip : GMapToolTip
     {
-        public MapMarkerToolTip(MapMarker marker) : base(marker)
+        public MapItemMarkerToolTip(MapItemMarker marker) : base(marker)
         {
             ((SolidBrush)DefaultFill).Color = Color.FromArgb(
                    AppSettings.Default.ColorMarkerTextFillAlpha, AppSettings.Default.ColorMarkerTextFill);

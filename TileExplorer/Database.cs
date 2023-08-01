@@ -114,13 +114,13 @@ namespace TileExplorer
 #endif
         }
 
-        public async Task<List<Models.Marker>> LoadMarkersAsync()
+        public async Task<List<Models.MapMarker>> LoadMarkersAsync()
         {
             return await Task.Run(() =>
             {
                 using (var connection = GetConnection())
                 {
-                    return connection.GetAll<Models.Marker>().OrderBy(m => m.Text).ToList();
+                    return connection.GetAll<Models.MapMarker>().OrderBy(m => m.Text).ToList();
                 }
             });
         }
@@ -216,7 +216,7 @@ namespace TileExplorer
             });
         }
 
-        public async Task SaveMarkerAsync(Models.Marker marker)
+        public async Task SaveMarkerAsync(Models.MapMarker marker)
         {
             using (var connection = GetConnection())
             {
@@ -231,7 +231,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task DeleteMarkerAsync(Models.Marker marker)
+        public async Task DeleteMarkerAsync(Models.MapMarker marker)
         {
             using (var connection = GetConnection())
             {

@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrmResults.cs" />
+    <Compile Include="MapItemMarkerCross.cs" />
     <Compile Include="Properties\AppSettings.cs" />
     <Compile Include="Utils.Osm.cs" />
     <Compile Include="Utils.Tracks.cs" />
@@ -139,8 +140,8 @@
     </Compile>
     <Compile Include="FrmTrackList.cs" />
     <Compile Include="MapItem.cs" />
-    <Compile Include="MapTrack.cs" />
-    <Compile Include="MapTile.cs" />
+    <Compile Include="MapItemTrack.cs" />
+    <Compile Include="MapItemTile.cs" />
     <Compile Include="FrmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,8 +158,8 @@
     <Compile Include="FrmMarker.Designer.cs">
       <DependentUpon>FrmMarker.cs</DependentUpon>
     </Compile>
-    <Compile Include="MapMarker.cs" />
-    <Compile Include="MapMarkerToolTip.cs" />
+    <Compile Include="MapItemMarker.cs" />
+    <Compile Include="MapItemMarkerToolTip.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -7,7 +7,7 @@ using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public class MapTrack : GMapRoute, IMapItem
+    public class MapItemTrack : GMapRoute, IMapItem
     {
         public MapItemType Type => MapItemType.Track;
 
@@ -18,7 +18,7 @@ namespace TileExplorer
 
         private readonly MapItem<Models.Track> item;
 
-        public MapTrack(Models.Track track) : base(track.Text)
+        public MapItemTrack(Models.Track track) : base(track.Text)
         {
             item = new MapItem<Models.Track>(this, track);
 

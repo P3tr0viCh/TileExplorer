@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
+using static TileExplorer.Database.Models;
 using static TileExplorer.StatusStripPresenter;
 
 namespace TileExplorer
@@ -26,6 +27,8 @@ namespace TileExplorer
         void SelectMapItemById(object sender, long id);
 
         void ChangeMapItemById(object sender, long id);
+
+        void MarkerChanged(MapMarker marker);
     }
 
     public partial class Main : Form, IStatusStripView, IMainForm
@@ -139,6 +142,9 @@ namespace TileExplorer
 
             frmFilter.Visible = AppSettings.Default.VisibleFilter;
 
+            miMainLeftPanel.Checked = AppSettings.Default.VisibleLeftPanel;
+            toolStripContainer.LeftToolStripPanelVisible = miMainLeftPanel.Checked;
+
             StartUpdateGrid();
 
             _ = DataUpdateAsync();
@@ -173,6 +179,8 @@ namespace TileExplorer
 
             AppSettings.Default.VisibleTrackList = frmTrackList.Visible;
             AppSettings.Default.VisibleMarkerList = frmMarkerList.Visible;
+
+            AppSettings.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
 
             AppSettings.Default.Filter.Day = Database.Filter.Default.Day;
             AppSettings.Default.Filter.DateFrom = Database.Filter.Default.DateFrom;
@@ -338,7 +346,7 @@ namespace TileExplorer
         }
 #endif
 
-        private async Task CalcTilesAsync(List<Database.Models.Tile> tiles)
+        private async Task CalcTilesAsync(List<Tile> tiles)
         {
             foreach (var tile in tiles)
             {
@@ -367,7 +375,7 @@ namespace TileExplorer
 
             foreach (var tile in tiles)
             {
-                tilesOverlay.Polygons.Add(new MapTile(tile));
+                tilesOverlay.Polygons.Add(new MapItemTile(tile));
 
 #if DEBUG && CHECK_TILES
                 if (tile.Status > TileStatus.Visited)
@@ -401,7 +409,7 @@ namespace TileExplorer
                     await Database.Default.LoadTrackPointsAsync(track);
                 }
 
-                tracksOverlay.Routes.Add(new MapTrack(track));
+                tracksOverlay.Routes.Add(new MapItemTrack(track));
 
 #if DEBUG && SHOW_TRACK_KM
                 double lat1 = 0, lng1 = 0, lat2 = 0, lng2 = 0;
@@ -448,7 +456,7 @@ namespace TileExplorer
 
             foreach (var marker in markers)
             {
-                markersOverlay.Markers.Add(new MapMarker(marker));
+                markersOverlay.Markers.Add(new MapItemMarker(marker));
             }
 
             frmMarkerList.List = markers;
@@ -474,7 +482,7 @@ namespace TileExplorer
 
             var results = await Database.Default.LoadResultsAsync();
 
-            var resultSum = new Database.Models.Results { Count = 0, DistanceSum = 0.0 };
+            var resultSum = new Results { Count = 0, DistanceSum = 0.0 };
 
             foreach (var result in results)
             {
@@ -601,8 +609,9 @@ namespace TileExplorer
 
                 if (value)
                 {
-                    toolStripContainer.TopToolStripPanel.Visible = false;
-                    toolStripContainer.BottomToolStripPanel.Visible = false;
+                    toolStripContainer.TopToolStripPanelVisible = false;
+                    toolStripContainer.BottomToolStripPanelVisible = false;
+                    toolStripContainer.LeftToolStripPanelVisible = false;
 
                     savedWindowState = WindowState;
 
@@ -618,8 +627,9 @@ namespace TileExplorer
 
                     WindowState = savedWindowState;
 
-                    toolStripContainer.TopToolStripPanel.Visible = true;
-                    toolStripContainer.BottomToolStripPanel.Visible = true;
+                    toolStripContainer.TopToolStripPanelVisible = true;
+                    toolStripContainer.BottomToolStripPanelVisible = true;
+                    toolStripContainer.LeftToolStripPanelVisible = miMainLeftPanel.Checked;
                 }
 
                 gMapControl.Visible = true;
@@ -636,9 +646,9 @@ namespace TileExplorer
             FrmAbout.Show(new FrmAbout.Options() { Link = Resources.GitHubLink });
         }
 
-        private async void UpdateSelectedTrackTiles(Database.Models.Track track)
+        private async void UpdateSelectedTrackTiles(Track track)
         {
-            foreach (var tile in tilesOverlay.Polygons.Cast<MapTile>())
+            foreach (var tile in tilesOverlay.Polygons.Cast<MapItemTile>())
             {
                 tile.Selected = false;
             }
@@ -647,7 +657,7 @@ namespace TileExplorer
 
             var tiles = await Database.Default.LoadTrackTilesAsync(track);
 
-            foreach (var tile in from item in tilesOverlay.Polygons.Cast<MapTile>()
+            foreach (var tile in from item in tilesOverlay.Polygons.Cast<MapItemTile>()
                                  from tile in tiles
                                  where item.Model.X == tile.X && item.Model.Y == tile.Y
                                  select item)
@@ -686,15 +696,15 @@ namespace TileExplorer
                     switch (selected.Type)
                     {
                         case MapItemType.Marker:
-                            frmMarkerList.Selected = (Database.Models.Marker)selected.Model;
+                            frmMarkerList.Selected = (MapMarker)selected.Model;
 
                             UpdateSelectedTrackTiles(null);
 
                             break;
                         case MapItemType.Track:
-                            frmTrackList.Selected = (Database.Models.Track)selected.Model;
+                            frmTrackList.Selected = (Track)selected.Model;
 
-                            UpdateSelectedTrackTiles((Database.Models.Track)selected.Model);
+                            UpdateSelectedTrackTiles((Track)selected.Model);
 
                             break;
                     }
@@ -706,7 +716,7 @@ namespace TileExplorer
             }
         }
 
-        public MapMarker SelectedMarker
+        public MapItemMarker SelectedMarker
         {
             get
             {
@@ -714,11 +724,11 @@ namespace TileExplorer
 
                 if (Selected.Type != MapItemType.Marker) return null;
 
-                return (MapMarker)selected;
+                return (MapItemMarker)selected;
             }
         }
 
-        public MapTrack SelectedTrack
+        public MapItemTrack SelectedTrack
         {
             get
             {
@@ -726,7 +736,7 @@ namespace TileExplorer
 
                 if (Selected.Type != MapItemType.Track) return null;
 
-                return (MapTrack)selected;
+                return (MapItemTrack)selected;
             }
         }
 
@@ -738,7 +748,7 @@ namespace TileExplorer
                 {
                     if (marker.IsMouseOver)
                     {
-                        return (MapMarker)marker;
+                        return (MapItemMarker)marker;
                     }
                 }
             }
@@ -749,7 +759,7 @@ namespace TileExplorer
                 {
                     if (track.IsMouseOver)
                     {
-                        return (MapTrack)track;
+                        return (MapItemTrack)track;
                     }
                 }
             }
@@ -821,14 +831,14 @@ namespace TileExplorer
             {
                 if (Selected == null)
                 {
-                    MarkerAddAsync(gMapControl.FromLocalToLatLng(e.X, e.Y));
+                    MarkerAdd(gMapControl.FromLocalToLatLng(e.X, e.Y));
                 }
                 else
                 {
                     switch (Selected.Type)
                     {
                         case MapItemType.Marker:
-                            MarkerChangeAsync(SelectedMarker);
+                            MarkerChange(SelectedMarker);
                             break;
                         case MapItemType.Track:
                             TrackChangeAsync(SelectedTrack);
@@ -846,6 +856,12 @@ namespace TileExplorer
                     if (tracksOverlay.Routes.Count == 0)
                     {
                         _ = DataUpdateAsync(DataLoad.Tracks);
+                    }
+                    break;
+                case DataLoad.TrackList:
+                    if (frmTrackList.DataGridView.Rows.Count == 0)
+                    {
+                        _ = DataUpdateAsync(DataLoad.TrackList);
                     }
                     break;
                 case DataLoad.Markers:
@@ -900,13 +916,15 @@ namespace TileExplorer
             HomeSave();
         }
 
-        private async void MarkerAddAsync(PointLatLng point)
+        private GMapMarker markerTemp;
+
+        private void MarkerAdd(PointLatLng point)
         {
             bool prevMarkersVisible = markersOverlay.IsVisibile;
 
             markersOverlay.IsVisibile = true;
 
-            var marker = new Database.Models.Marker()
+            var marker = new MapMarker()
             {
                 Lat = point.Lat,
                 Lng = point.Lng,
@@ -916,48 +934,61 @@ namespace TileExplorer
 #endif
             };
 
-            var markerTemp = new GMarkerCross(point)
-            {
-                Pen = new Pen(Brushes.Red, 2f)
-            };
+            markerTemp = new MapItemMarkerCross(point);
 
             markersOverlay.Markers.Add(markerTemp);
 
-            if (FrmMarker.ShowDlg(this, marker))
-            {
-                await Database.Default.SaveMarkerAsync(marker);
+            FrmMarker.ShowDlg(this, marker);
 
+            markersOverlay.Markers.Remove(markerTemp);
+
+            markersOverlay.IsVisibile = prevMarkersVisible;
+        }
+
+        private void MarkerChange(MapItemMarker marker)
+        {
+            if (marker == null) return;
+
+            FrmMarker.ShowDlg(this, marker.Model);
+        }
+
+        private IMapItem FindMapMarker(long id)
+        {
+            foreach (var item in from IMapItem item in markersOverlay.Markers
+                                 where item.Model.Id == id
+                                 select item)
+            {
+                return item;
+            }
+
+            return null;
+        }
+
+        public void MarkerChanged(MapMarker marker)
+        {
+            var mapMarker = FindMapMarker(marker.Id);
+
+            if (mapMarker == null)
+            {
                 markersOverlay.Markers.Remove(markerTemp);
 
-                markersOverlay.Markers.Add(new MapMarker(marker));
+                markersOverlay.Markers.Add(new MapItemMarker(marker));
 
                 frmMarkerList.Add(marker);
             }
             else
             {
-                markersOverlay.Markers.Remove(markerTemp);
-            }
+                mapMarker.Model = marker;
 
-            markersOverlay.IsVisibile = prevMarkersVisible;
-        }
+                mapMarker.NotifyModelChanged();
 
-        private async void MarkerChangeAsync(MapMarker marker)
-        {
-            if (marker == null) return;
-
-            if (FrmMarker.ShowDlg(this, marker.Model))
-            {
-                await Database.Default.SaveMarkerAsync(marker.Model);
-
-                marker.NotifyModelChanged();
-
-                frmMarkerList.Update(marker.Model);
+                frmMarkerList.Update(marker);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
         }
 
-        private async void MarkerDeleteAsync(MapMarker marker)
+        private async void MarkerDeleteAsync(MapItemMarker marker)
         {
             if (marker == null) return;
 
@@ -980,7 +1011,7 @@ namespace TileExplorer
             }
         }
 
-        private async void TrackChangeAsync(MapTrack track)
+        private async void TrackChangeAsync(MapItemTrack track)
         {
             if (track == null) return;
 
@@ -996,7 +1027,7 @@ namespace TileExplorer
             }
         }
 
-        private async void TrackDeleteAsync(MapTrack track)
+        private async void TrackDeleteAsync(MapItemTrack track)
         {
             if (track == null) return;
 
@@ -1028,12 +1059,12 @@ namespace TileExplorer
 
         private void MiMapMarkerAdd_Click(object sender, EventArgs e)
         {
-            MarkerAddAsync(gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y));
+            MarkerAdd(gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y));
         }
 
         private void MiMarkerChange_Click(object sender, EventArgs e)
         {
-            MarkerChangeAsync(SelectedMarker);
+            MarkerChange(SelectedMarker);
         }
 
         private void MiMarkerDelete_Click(object sender, EventArgs e)
@@ -1115,7 +1146,7 @@ namespace TileExplorer
             _ = DataUpdateAsync();
         }
 
-        private async void AddTileAsync(Database.Models.Tile tile)
+        private async void AddTileAsync(Tile tile)
         {
             Status = ProgramStatus.SaveData;
 
@@ -1130,7 +1161,7 @@ namespace TileExplorer
 
             try
             {
-                AddTileAsync(new Database.Models.Tile()
+                AddTileAsync(new Tile()
                 {
                     X = Utils.Osm.LngToTileX(position),
                     Y = Utils.Osm.LatToTileY(position)
@@ -1142,7 +1173,7 @@ namespace TileExplorer
             }
         }
 
-        private async void DeleteTileAsync(Database.Models.Tile tile)
+        private async void DeleteTileAsync(Tile tile)
         {
             Status = ProgramStatus.SaveData;
 
@@ -1155,7 +1186,7 @@ namespace TileExplorer
         {
             var position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
 
-            DeleteTileAsync(new Database.Models.Tile()
+            DeleteTileAsync(new Tile()
             {
                 X = Utils.Osm.LngToTileX(position),
                 Y = Utils.Osm.LatToTileY(position)
@@ -1212,12 +1243,12 @@ namespace TileExplorer
             var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
             var pointTo = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
 
-            var tiles = new List<Database.Models.Tile>();
+            var tiles = new List<Tile>();
 
             for (var x = Utils.Osm.LngToTileX(pointFrom); x <= Utils.Osm.LngToTileX(pointTo); x++)
                 for (var y = Utils.Osm.LatToTileY(pointFrom); y <= Utils.Osm.LatToTileY(pointTo); y++)
                 {
-                    tiles.Add(new Database.Models.Tile()
+                    tiles.Add(new Tile()
                     {
                         X = x,
                         Y = y,
@@ -1243,12 +1274,12 @@ namespace TileExplorer
             }
         }
 
-        private async Task<Database.Models.Track> OpenTrackFromFileAsync(string path)
+        private async Task<Track> OpenTrackFromFileAsync(string path)
         {
             return await Task.Run(() => { return Utils.Tracks.OpenTrackFromFile(path); });
         }
 
-        private async Task<List<Database.Models.Tile>> GetTilesFromTrackAsync(Database.Models.Track track)
+        private async Task<List<Tile>> GetTilesFromTrackAsync(Track track)
         {
             return await Task.Run(() => { return Utils.GetTilesFromTrack(track); });
         }
@@ -1257,9 +1288,9 @@ namespace TileExplorer
         {
             Status = ProgramStatus.LoadGpx;
 
-            Database.Models.Track track;
+            Track track;
 
-            List<Database.Models.Tile> trackTiles;
+            List<Tile> trackTiles;
 
             foreach (var file in files)
             {
@@ -1269,7 +1300,7 @@ namespace TileExplorer
 
                 frmTrackList.Add(track);
 
-                var mapTrack = new MapTrack(track);
+                var mapTrack = new MapItemTrack(track);
 
                 tracksOverlay.Routes.Add(mapTrack);
 
@@ -1277,7 +1308,7 @@ namespace TileExplorer
 
                 trackTiles = await GetTilesFromTrackAsync(track);
 
-                var saveTiles = new List<Database.Models.Tile>();
+                var saveTiles = new List<Tile>();
 
                 int id;
 
@@ -1299,11 +1330,11 @@ namespace TileExplorer
 
                 await Database.Default.SaveTilesAsync(saveTiles);
 
-                var tracksTiles = new List<Database.Models.TracksTiles>();
+                var tracksTiles = new List<TracksTiles>();
 
                 foreach (var tile in trackTiles)
                 {
-                    tracksTiles.Add(new Database.Models.TracksTiles()
+                    tracksTiles.Add(new TracksTiles()
                     {
                         TrackId = track.Id,
                         TileId = tile.Id,
@@ -1330,30 +1361,45 @@ namespace TileExplorer
             }
         }
 
-        private void MiMainDataMarkerList_Click(object sender, EventArgs e)
+        private void ShowMarkers()
         {
             frmMarkerList.Visible = !frmMarkerList.Visible;
 
             CheckAndLoadData(DataLoad.Markers);
         }
 
-        private void MiMainDataTrackList_Click(object sender, EventArgs e)
+        private void ShowTracks()
         {
             frmTrackList.Visible = !frmTrackList.Visible;
 
-            CheckAndLoadData(DataLoad.Tracks);
+            CheckAndLoadData(DataLoad.TrackList);
+        }
+
+        private void ShowResults()
+        {
+            frmResults.Visible = !frmResults.Visible;
+
+            CheckAndLoadData(DataLoad.Results);
+        }
+
+        private void MiMainDataMarkerList_Click(object sender, EventArgs e)
+        {
+            ShowMarkers();
+        }
+
+        private void MiMainDataTrackList_Click(object sender, EventArgs e)
+        {
+            ShowTracks();
+        }
+
+        private void MiMainDataResults_Click(object sender, EventArgs e)
+        {
+            ShowResults();
         }
 
         private void MiMainDataFilter_Click(object sender, EventArgs e)
         {
             frmFilter.Visible = !frmFilter.Visible;
-        }
-
-        private void MiMainDataResults_Click(object sender, EventArgs e)
-        {
-            frmResults.Visible = !frmResults.Visible;
-
-            CheckAndLoadData(DataLoad.Results);
         }
 
         private void MiMainGrayScale_Click(object sender, EventArgs e)
@@ -1396,7 +1442,7 @@ namespace TileExplorer
             switch (((IFrmChild)sender).Type)
             {
                 case FrmListType.Markers:
-                    MarkerChangeAsync(SelectedMarker);
+                    MarkerChange(SelectedMarker);
                     break;
                 case FrmListType.Tracks:
                     TrackChangeAsync(SelectedTrack);
@@ -1404,8 +1450,8 @@ namespace TileExplorer
             }
         }
 
-        private readonly Database.Models.Tile TileLeftTop = new Database.Models.Tile();
-        private readonly Database.Models.Tile TileRightBottom = new Database.Models.Tile();
+        private readonly Tile TileLeftTop = new Tile();
+        private readonly Tile TileRightBottom = new Tile();
 
         public void UpdateGrid()
         {
@@ -1431,7 +1477,7 @@ namespace TileExplorer
             var rightBottomX = Utils.Osm.LngToTileX(pointRightBottom);
             var rightBottomY = Utils.Osm.LatToTileY(pointRightBottom);
 
-            foreach (var tile in gridOverlay.Polygons.Cast<MapTile>().
+            foreach (var tile in gridOverlay.Polygons.Cast<MapItemTile>().
                 Where(t => t.Model.X < TileLeftTop.X || t.Model.Y < TileLeftTop.Y ||
                            t.Model.X > TileRightBottom.X || t.Model.Y > TileRightBottom.Y).ToList())
             {
@@ -1443,10 +1489,10 @@ namespace TileExplorer
                 {
                     if (x >= TileLeftTop.X && x <= TileRightBottom.X && y >= TileLeftTop.Y && y <= TileRightBottom.Y) continue;
 
-                    if (tilesOverlay.Polygons.Cast<MapTile>().ToList().
+                    if (tilesOverlay.Polygons.Cast<MapItemTile>().ToList().
                         Exists(t => t.Model.X == x && t.Model.Y == y)) continue;
 
-                    gridOverlay.Polygons.Add(new MapTile(new Database.Models.Tile()
+                    gridOverlay.Polygons.Add(new MapItemTile(new Tile()
                     {
                         X = x,
                         Y = y,
@@ -1499,6 +1545,26 @@ namespace TileExplorer
 
                 _ = DataUpdateAsync();
             }
+        }
+
+        private void TsbtnResults_Click(object sender, EventArgs e)
+        {
+            ShowResults();
+        }
+
+        private void TsbtnTrackList_Click(object sender, EventArgs e)
+        {
+            ShowTracks();
+        }
+
+        private void TsbtnMarkerList_Click(object sender, EventArgs e)
+        {
+            ShowMarkers();
+        }
+
+        private void MiMainLeftPanel_Click(object sender, EventArgs e)
+        {
+            toolStripContainer.LeftToolStripPanelVisible = miMainLeftPanel.Checked;
         }
     }
 }

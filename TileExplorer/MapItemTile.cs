@@ -1,20 +1,19 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
 
 namespace TileExplorer
 {
-    public class MapTile : GMapPolygon, IMapItem
+    public class MapItemTile : GMapPolygon, IMapItem
     {
         public MapItemType Type => MapItemType.Tile;
 
         private readonly MapItem<Models.Tile> item;
 
-        public MapTile(Models.Tile tile) : base(new List<PointLatLng>(), "")
+        public MapItemTile(Models.Tile tile) : base(new List<PointLatLng>(), "")
         {
             item = new MapItem<Models.Tile>(this, tile);
 
