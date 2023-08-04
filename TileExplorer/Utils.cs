@@ -1,9 +1,13 @@
 ﻿using GMap.NET;
+using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 using static TileExplorer.Database;
 
 namespace TileExplorer
@@ -212,13 +216,9 @@ namespace TileExplorer
 
         public static string AssemblyNameAndVersion()
         {
-            var assemblyName = Assembly.GetExecutingAssembly().GetName();
+            var assemblyDecorator = new Misc.AssemblyDecorator();
 
-            var result = string.Format("{0}/{1}.{2}", assemblyName.Name, assemblyName.Version.Major, assemblyName.Version.Minor);
-#if DEBUG
-            result += ".debug";
-#endif
-            return result;
+            return string.Format("{0}/{1}", assemblyDecorator.Assembly.GetName().Name, assemblyDecorator.VersionString());
         }
 
         public static List<PointLatLng> TilePoints(Models.Tile tile)
@@ -236,6 +236,32 @@ namespace TileExplorer
                 new PointLatLng(lat2, lng2),
                 new PointLatLng(lat2, lng1)
             };
+        }
+
+        public static void WriteDebug(string s, [CallerMemberName] string memberName = "")
+        {
+            Debug.WriteLine(memberName + ": " + s);
+        }
+
+        public static void WriteError(Exception e, [CallerMemberName] string memberName = "")
+        {
+            if (e == null) return;
+
+            WriteError(e.Message, memberName);
+
+            WriteError(e.InnerException, memberName);
+        }
+
+        public static void WriteError(string err, [CallerMemberName] string memberName = "")
+        {
+            var error = string.Format("{0} fail: {1}", memberName, err);
+
+            Debug.WriteLine(error);
+        }
+
+        public static bool IsChildFormExists(Form form)
+        {
+            return form != null;
         }
     }
 }

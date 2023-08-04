@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
+using static TileExplorer.Enums;
+using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {

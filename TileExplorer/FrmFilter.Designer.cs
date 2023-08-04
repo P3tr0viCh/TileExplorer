@@ -162,6 +162,7 @@
             this.ShowInTaskbar = false;
             this.Text = "Фильтр";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmFilter_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmFilter_FormClosed);
             this.Load += new System.EventHandler(this.FrmFilter_Load);
             this.panelFilter.ResumeLayout(false);
             this.panelFilter.PerformLayout();

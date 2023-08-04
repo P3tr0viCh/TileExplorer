@@ -2,6 +2,8 @@
 using GMap.NET.WindowsForms.Markers;
 using System.Drawing;
 using static TileExplorer.Database;
+using static TileExplorer.Enums;
+using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {

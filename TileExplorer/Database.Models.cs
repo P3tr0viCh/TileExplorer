@@ -1,6 +1,7 @@
 ﻿using Dapper.Contrib.Extensions;
 using System.Collections.Generic;
 using System;
+using System.ComponentModel;
 
 namespace TileExplorer
 {
@@ -13,8 +14,20 @@ namespace TileExplorer
                 [Key]
                 public long Id { get; set; } = 0;
 
+                public void Clear()
+                {
+                    Id = 0;
+                }
+
                 public void Assign(BaseId source)
                 {
+                    if (source == null)
+                    {
+                        Clear();
+
+                        return;
+                    }
+
                     Id = source.Id;
                 }
             }
@@ -22,9 +35,12 @@ namespace TileExplorer
             [Table("markers")]
             public class MapMarker : BaseId
             {
+                [DisplayName("Широта")]
                 public double Lat { get; set; }
+                [DisplayName("Долгота")]
                 public double Lng { get; set; }
 
+                [DisplayName("Текст")]
                 public string Text { get; set; }
 
                 public bool IsTextVisible { get; set; } = true;
@@ -40,7 +56,7 @@ namespace TileExplorer
                 {
                     base.Assign(source);
 
-                    Lat = source.Lat; 
+                    Lat = source.Lat;
                     Lng = source.Lng;
                     Text = source.Text;
                     IsTextVisible = source.IsTextVisible;
@@ -73,11 +89,15 @@ namespace TileExplorer
             [Table("tracks")]
             public class Track : BaseId
             {
+                [DisplayName("Название")]
                 public string Text { get; set; }
 
+                [DisplayName("Начало")]
                 public DateTime DateTimeStart { get; set; }
+                [DisplayName("Окончание")]
                 public DateTime DateTimeFinish { get; set; }
 
+                [DisplayName("Время")]
                 [Write(false)]
                 [Computed]
                 public TimeSpan Duration
@@ -88,6 +108,7 @@ namespace TileExplorer
                     }
                 }
 
+                [DisplayName("Расстояние")]
                 public double Distance { get; set; }
 
                 [Write(false)]
@@ -129,21 +150,37 @@ namespace TileExplorer
 
             public class Results : BaseId
             {
-                public int Year
+                [DisplayName("Год")]
+                public int Year { get => (int)Id; set => Id = value; }
+
+                [DisplayName("Треки")]
+                public int Count { get; set; } = 0;
+
+                [DisplayName("Расстояние")]
+                public double DistanceSum { get; set; } = 0;
+
+                public new void Clear()
                 {
-                    get
-                    {
-                        return (int)Id;
-                    }
-                    set
-                    {
-                        Id = value;
-                    }
+                    base.Clear();
+
+                    Count = 0;
+                    DistanceSum = 0;
                 }
 
-                public int Count { get; set; }
+                public void Assign(Results source)
+                {
+                    if (source == null)
+                    {
+                        Clear();
 
-                public double DistanceSum { get; set; }
+                        return;
+                    }
+
+                    base.Assign(source);
+
+                    Count = source.Count;
+                    DistanceSum = source.DistanceSum;
+                }
             }
         }
     }

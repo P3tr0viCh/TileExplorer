@@ -3,35 +3,40 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
+using static TileExplorer.Enums;
+using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public partial class FrmFilter : Form, IFrmChild
+    public partial class FrmFilter : Form, IChildForm
     {
-        public FrmListType Type => FrmListType.Filter;
+        public IMainForm MainForm => Owner as IMainForm;
 
-        public FrmFilter(Form owner)
+        public ChildFormType ListType => ChildFormType.Filter;
+
+        public FrmFilter()
         {
-            Owner = owner;
-
             InitializeComponent();
         }
 
-        private void FrmFilter_FormClosing(object sender, FormClosingEventArgs e)
+        public static FrmFilter ShowFrm(Form owner)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
+            var frm = new FrmFilter()
             {
-                e.Cancel = true;
-                Hide();
-            }
-        }
+                Owner = owner
+            };
 
-        public bool Updating { set { UseWaitCursor = value; } }
+            frm.Show(owner);
+
+            return frm;
+        }
 
         private bool selfChange = false;
 
         private void FrmFilter_Load(object sender, EventArgs e)
         {
+            AppSettings.LoadFormState(this, AppSettings.Default.FormStateFilter);
+ 
             dtpDay.CustomFormat = AppSettings.Default.FormatDate;
 
             dtpDateFrom.CustomFormat = AppSettings.Default.FormatDate;
@@ -49,6 +54,20 @@ namespace TileExplorer
             tbYears.Text = Filter.Default.Years != default ? string.Join(", ", Filter.Default.Years) : string.Empty;
 
             selfChange = false;
+
+            MainForm.ChildFormOpened(this);
+        }
+
+        private void FrmFilter_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AppSettings.Default.FormStateFilter = AppSettings.SaveFormState(this);
+
+            AppSettings.Default.Save();
+        }
+
+        private void FrmFilter_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MainForm.ChildFormClosed(this);
         }
 
         private int[] SplitInts(string text)

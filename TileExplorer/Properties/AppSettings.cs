@@ -306,6 +306,8 @@ namespace TileExplorer.Properties
         [Browsable(false)]
         public FormState FormStateMain { get; set; }
         [Browsable(false)]
+        public FormState FormStateResults { get; set; }
+        [Browsable(false)]
         public FormState FormStateTrackList { get; set; }
         [Browsable(false)]
         public FormState FormStateMarkerList { get; set; }
@@ -313,15 +315,13 @@ namespace TileExplorer.Properties
         public FormState FormStateFilter { get; set; }
         [Browsable(false)]
         public FormState FormStateSettings { get; set; }
-        [Browsable(false)]
-        public FormState FormStateResults { get; set; }
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
-        public ColumnsState TrackListColumns { get; set; }
+        public ColumnsState ColumnsResults { get; set; }
         [Browsable(false)]
-        public ColumnsState MarkerListColumns { get; set; }
+        public ColumnsState ColumnsTrackList { get; set; }
         [Browsable(false)]
-        public ColumnsState ResultsColumns { get; set; }
+        public ColumnsState ColumnsMarkerList { get; set; }
     }
 }

@@ -3,27 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using static TileExplorer.Database;
+using static TileExplorer.Enums;
+using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public interface IFrmChild
-    {
-        FrmListType Type { get; }
-        bool Updating { set; }
-    }
-
-    public enum FrmListType
-    {
-        Markers,
-        Tracks,
-        Filter,
-        Results
-    }
-
     [DesignerCategory("")]
-    public abstract class FrmListBase<T> : FrmList, IFrmChild where T : Models.BaseId
+    public abstract class FrmListBase<T> : FrmList, IChildForm where T : Models.BaseId
     {
-        public abstract FrmListType Type { get; }
+        public abstract ChildFormType ListType { get; }
 
         protected FrmListBase(Form owner)
         {
@@ -76,6 +64,8 @@ namespace TileExplorer
                 }
             }
         }
+
+        public IMainForm MainForm => throw new NotImplementedException();
 
         public int Find(T value)
         {

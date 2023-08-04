@@ -1,26 +1,7 @@
-﻿using static TileExplorer.Database;
+﻿using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public enum MapItemType
-    {
-        Marker,
-        Track,
-        Tile
-    }
-
-    public interface IMapItem
-    {
-        MapItemType Type { get; }
-
-        Models.BaseId Model { get; set; }
-
-        bool Selected { get; set; }
-
-        void UpdateColors();
-        void NotifyModelChanged();
-    }
-
     public class MapItem<T>
     {
         private readonly IMapItem parent;

@@ -115,29 +115,35 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Загрузка....
+        ///   Looks up a localized string similar to Не удалось загрузить список маркеров.
+        ///Ошибка:
+        ///{0}..
         /// </summary>
-        internal static string ProgramStatusLoadData {
+        internal static string MsgDatabaseLoadListMarkersFail {
             get {
-                return ResourceManager.GetString("ProgramStatusLoadData", resourceCulture);
+                return ResourceManager.GetString("MsgDatabaseLoadListMarkersFail", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Чтение....
+        ///   Looks up a localized string similar to Не удалось загрузить результаты.
+        ///Ошибка:
+        ///{0}..
         /// </summary>
-        internal static string ProgramStatusLoadGpx {
+        internal static string MsgDatabaseLoadListResultsFail {
             get {
-                return ResourceManager.GetString("ProgramStatusLoadGpx", resourceCulture);
+                return ResourceManager.GetString("MsgDatabaseLoadListResultsFail", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Сохранение....
+        ///   Looks up a localized string similar to Не удалось загрузить список треков.
+        ///Ошибка:
+        ///{0}..
         /// </summary>
-        internal static string ProgramStatusSaveData {
+        internal static string MsgDatabaseLoadListTrackFail {
             get {
-                return ResourceManager.GetString("ProgramStatusSaveData", resourceCulture);
+                return ResourceManager.GetString("MsgDatabaseLoadListTrackFail", resourceCulture);
             }
         }
         
@@ -300,6 +306,33 @@ namespace TileExplorer.Properties {
         internal static string StatusZoom {
             get {
                 return ResourceManager.GetString("StatusZoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Маркеры.
+        /// </summary>
+        internal static string TitleListMarkers {
+            get {
+                return ResourceManager.GetString("TitleListMarkers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Итоги.
+        /// </summary>
+        internal static string TitleListResults {
+            get {
+                return ResourceManager.GetString("TitleListResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Треки.
+        /// </summary>
+        internal static string TitleListTracks {
+            get {
+                return ResourceManager.GetString("TitleListTracks", resourceCulture);
             }
         }
     }

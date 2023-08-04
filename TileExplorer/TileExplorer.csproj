@@ -111,7 +111,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrmResults.cs" />
+    <Compile Include="Converters.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="FrmListNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmListNew.Designer.cs">
+      <DependentUpon>FrmListNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces.cs" />
     <Compile Include="MapItemMarkerCross.cs" />
     <Compile Include="Properties\AppSettings.cs" />
     <Compile Include="Utils.Osm.cs" />
@@ -131,14 +139,12 @@
     <Compile Include="FrmTrack.Designer.cs">
       <DependentUpon>FrmTrack.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMarkerList.cs" />
     <Compile Include="FrmFilter.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmFilter.Designer.cs">
       <DependentUpon>FrmFilter.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmTrackList.cs" />
     <Compile Include="MapItem.cs" />
     <Compile Include="MapItemTrack.cs" />
     <Compile Include="MapItemTile.cs" />
@@ -170,6 +176,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmList.resx">
       <DependentUpon>FrmList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmListNew.resx">
+      <DependentUpon>FrmListNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmTrack.resx">
       <DependentUpon>FrmTrack.cs</DependentUpon>

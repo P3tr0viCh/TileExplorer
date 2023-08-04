@@ -24,23 +24,22 @@ namespace TileExplorer
 
                 frm.propertyGrid.SelectedObject = AppSettings.Default;
 
-                var result = frm.ShowDialog(owner) == DialogResult.OK;
-
-                if (result)
+                if (frm.ShowDialog(owner) == DialogResult.OK)
                 {
                     AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(frm);
 
                     AppSettings.Default.Save();
+
+                    return true;
                 }
                 else
                 {
                     AppSettings.Default.Load();
 
                     AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(frm);
+
+                    return false;
                 }
-
-
-                return result;
             }
         }
 
@@ -53,15 +52,6 @@ namespace TileExplorer
             Msg.Error(string.Format(Resources.ErrorDirectoryNotExists, path));
 
             return false;
-        }
-
-        private void PropertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-        {
-            if (e.ChangedItem.PropertyDescriptor.PropertyType == AppSettings.Default.DatabaseHome.GetType())
-            {
-                CheckDirectory((string)e.ChangedItem.Value);
-                return;
-            }
         }
 
         private void BtnOk_Click(object sender, EventArgs e)
