@@ -27,7 +27,7 @@ namespace TileExplorer
             Idle,
             [Description("Загрузка...")]
             LoadData,
-            [Description("Чтение...")]
+            [Description("Чтение файла gpx...")]
             LoadGpx,
             [Description("Сохранение...")]
             SaveData

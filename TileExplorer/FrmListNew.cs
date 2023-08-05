@@ -50,7 +50,7 @@ namespace TileExplorer
                     bindingSource.DataSource = typeof(Track);
                     break;
                 case ChildFormType.Markers:
-                    bindingSource.DataSource = typeof(MapMarker);
+                    bindingSource.DataSource = typeof(Marker);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -83,13 +83,13 @@ namespace TileExplorer
                 case ChildFormType.Markers:
                     Text = Resources.TitleListMarkers;
 
-                    dataGridView.Columns[nameof(MapMarker.Text)].DisplayIndex = 0;
+                    dataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
 
-                    dataGridView.Columns[nameof(MapMarker.IsTextVisible)].Visible = false;
-                    dataGridView.Columns[nameof(MapMarker.Image)].Visible = false;
-                    dataGridView.Columns[nameof(MapMarker.ImageType)].Visible = false;
-                    dataGridView.Columns[nameof(MapMarker.OffsetX)].Visible = false;
-                    dataGridView.Columns[nameof(MapMarker.OffsetY)].Visible = false;
+                    dataGridView.Columns[nameof(Marker.IsTextVisible)].Visible = false;
+                    dataGridView.Columns[nameof(Marker.Image)].Visible = false;
+                    dataGridView.Columns[nameof(Marker.ImageType)].Visible = false;
+                    dataGridView.Columns[nameof(Marker.OffsetX)].Visible = false;
+                    dataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;
 
                     AppSettings.LoadFormState(this, AppSettings.Default.FormStateMarkerList);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsMarkerList);
@@ -176,12 +176,12 @@ namespace TileExplorer
 
                     break;
                 case ChildFormType.Markers:
-                    dataGridView.Columns[nameof(MapMarker.Lat)].DefaultCellStyle = new DataGridViewCellStyle()
+                    dataGridView.Columns[nameof(Marker.Lat)].DefaultCellStyle = new DataGridViewCellStyle()
                     {
                         Alignment = DataGridViewContentAlignment.TopRight,
                         Format = AppSettings.Default.FormatLatLng
                     };
-                    dataGridView.Columns[nameof(MapMarker.Lng)].DefaultCellStyle = new DataGridViewCellStyle()
+                    dataGridView.Columns[nameof(Marker.Lng)].DefaultCellStyle = new DataGridViewCellStyle()
                     {
                         Alignment = DataGridViewContentAlignment.TopRight,
                         Format = AppSettings.Default.FormatLatLng
@@ -218,7 +218,7 @@ namespace TileExplorer
                     case ChildFormType.Markers:
                         errorMsg = Resources.MsgDatabaseLoadListMarkersFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<MapMarker>();
+                        bindingSource.DataSource = await ListLoadAsync<Marker>();
 
                         break;
                     default:

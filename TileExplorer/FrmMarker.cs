@@ -9,9 +9,9 @@ namespace TileExplorer
 {
     public partial class FrmMarker : Form
     {
-        private readonly Database.Models.MapMarker marker = new Database.Models.MapMarker();
+        private readonly Database.Models.Marker marker = new Database.Models.Marker();
 
-        private Database.Models.MapMarker Marker
+        private Database.Models.Marker Marker
         {
             get
             {
@@ -38,7 +38,7 @@ namespace TileExplorer
             InitializeComponent();
         }
 
-        public static bool ShowDlg(Form owner, Database.Models.MapMarker marker)
+        public static bool ShowDlg(Form owner, Database.Models.Marker marker)
         {
             using (var frm = new FrmMarker()
             {

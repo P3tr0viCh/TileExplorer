@@ -1,10 +1,9 @@
 ﻿using GMap.NET;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using TileExplorer.Properties;
-using static TileExplorer.Database;
+using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
@@ -54,7 +53,7 @@ namespace TileExplorer
                 public int NodeId2;
             }
 
-            public static void SaveTilesToFile(string fileName, List<Models.Tile> tiles)
+            public static void SaveTilesToFile(string fileName, List<Tile> tiles)
             {
                 if (tiles.Count == 0) return;
 
@@ -69,8 +68,8 @@ namespace TileExplorer
 
                     xml.WriteStartElement("osm");
                     {
-                        xml.WriteAttributeString("version", null, "0.6");
-                        xml.WriteAttributeString("generator", null, AssemblyNameAndVersion());
+                        xml.WriteAttributeString("version", "0.6");
+                        xml.WriteAttributeString("generator", AssemblyNameAndVersion());
                     }
 
                     var osmNodes = new List<OsmNode>();
@@ -158,11 +157,11 @@ namespace TileExplorer
                     {
                         xml.WriteStartElement("node");
                         {
-                            xml.WriteAttributeString("id", null, "-" + node.Id);
-                            xml.WriteAttributeString("action", null, "modify");
-                            xml.WriteAttributeString("visible", null, "true");
-                            xml.WriteAttributeString("lat", null, node.Point.Lat.ToString(CultureInfo.InvariantCulture));
-                            xml.WriteAttributeString("lon", null, node.Point.Lng.ToString(CultureInfo.InvariantCulture));
+                            xml.WriteAttributeString("id", "-" + node.Id);
+                            xml.WriteAttributeString("action", "modify");
+                            xml.WriteAttributeString("visible", "true");
+                            xml.WriteAttributeString("lat", node.Point.Lat.ToString(CultureInfo.InvariantCulture));
+                            xml.WriteAttributeString("lon", node.Point.Lng.ToString(CultureInfo.InvariantCulture));
                         }
                         xml.WriteEndElement();
                     }
@@ -173,23 +172,23 @@ namespace TileExplorer
                     {
                         xml.WriteStartElement("way");
                         {
-                            xml.WriteAttributeString("id", null, "-" + way.Id);
-                            xml.WriteAttributeString("action", null, "modify");
-                            xml.WriteAttributeString("visible", null, "true");
+                            xml.WriteAttributeString("id", "-" + way.Id);
+                            xml.WriteAttributeString("action", "modify");
+                            xml.WriteAttributeString("visible", "true");
                             {
                                 xml.WriteStartElement("nd");
-                                xml.WriteAttributeString("ref", null, "-" + way.NodeId1);
+                                xml.WriteAttributeString("ref", "-" + way.NodeId1);
                                 xml.WriteEndElement();
 
                                 xml.WriteStartElement("nd");
-                                xml.WriteAttributeString("ref", null, "-" + way.NodeId2);
+                                xml.WriteAttributeString("ref", "-" + way.NodeId2);
                                 xml.WriteEndElement();
 
                                 if (!string.IsNullOrEmpty(AppSettings.Default.OsmTileKey))
                                 {
                                     xml.WriteStartElement("tag");
-                                    xml.WriteAttributeString("k", null, AppSettings.Default.OsmTileKey);
-                                    xml.WriteAttributeString("v", null, AppSettings.Default.OsmTileValue);
+                                    xml.WriteAttributeString("k", AppSettings.Default.OsmTileKey);
+                                    xml.WriteAttributeString("v", AppSettings.Default.OsmTileValue);
                                     xml.WriteEndElement();
                                 }
                             }
@@ -204,7 +203,7 @@ namespace TileExplorer
                     xml.Close();
                 }
 
-                Debug.WriteLine("end write osm");
+                WriteDebug("end write osm");
             }
         }
     }

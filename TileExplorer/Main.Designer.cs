@@ -45,7 +45,7 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.miMainFile = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainSaveToImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMainSaveTileBoundaryToOsm = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainSaveTileBoundaryToFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -73,8 +73,8 @@
             this.miMainDataUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainView = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainLeftPanel = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMainFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.miMainFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
@@ -96,6 +96,7 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
+            this.miMainSaveTileStatusToFile = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -246,7 +247,8 @@
             // 
             this.miMainFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miMainSaveToImage,
-            this.miMainSaveTileBoundaryToOsm,
+            this.miMainSaveTileBoundaryToFile,
+            this.miMainSaveTileStatusToFile,
             this.toolStripSeparator1,
             this.miMainSettings,
             this.toolStripSeparator8,
@@ -259,40 +261,38 @@
             // 
             this.miMainSaveToImage.Name = "miMainSaveToImage";
             this.miMainSaveToImage.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.miMainSaveToImage.Size = new System.Drawing.Size(316, 22);
-            this.miMainSaveToImage.Text = "Сохранить изображение...";
+            this.miMainSaveToImage.Size = new System.Drawing.Size(278, 22);
+            this.miMainSaveToImage.Text = "Сохранить изображение";
             this.miMainSaveToImage.Click += new System.EventHandler(this.MiMainSaveToImage_Click);
             // 
-            // miMainSaveTileBoundaryToOsm
+            // miMainSaveTileBoundaryToFile
             // 
-            this.miMainSaveTileBoundaryToOsm.Name = "miMainSaveTileBoundaryToOsm";
-            this.miMainSaveTileBoundaryToOsm.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.S)));
-            this.miMainSaveTileBoundaryToOsm.Size = new System.Drawing.Size(316, 22);
-            this.miMainSaveTileBoundaryToOsm.Text = "Сохранить сетку в файл OSM...";
-            this.miMainSaveTileBoundaryToOsm.Click += new System.EventHandler(this.MiMainSaveTileBoundaryToOsm_Click);
+            this.miMainSaveTileBoundaryToFile.Name = "miMainSaveTileBoundaryToFile";
+            this.miMainSaveTileBoundaryToFile.Size = new System.Drawing.Size(278, 22);
+            this.miMainSaveTileBoundaryToFile.Text = "Сохранить сетку в файл OSM";
+            this.miMainSaveTileBoundaryToFile.Click += new System.EventHandler(this.MiMainSaveTileBoundaryToFile_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(313, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(275, 6);
             // 
             // miMainSettings
             // 
             this.miMainSettings.Name = "miMainSettings";
-            this.miMainSettings.Size = new System.Drawing.Size(316, 22);
-            this.miMainSettings.Text = "Настройки...";
+            this.miMainSettings.Size = new System.Drawing.Size(278, 22);
+            this.miMainSettings.Text = "Настройки";
             this.miMainSettings.Click += new System.EventHandler(this.MiMainSettings_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(313, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(275, 6);
             // 
             // miMainClose
             // 
             this.miMainClose.Name = "miMainClose";
-            this.miMainClose.Size = new System.Drawing.Size(316, 22);
+            this.miMainClose.Size = new System.Drawing.Size(278, 22);
             this.miMainClose.Text = "Закрыть";
             this.miMainClose.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
@@ -317,7 +317,7 @@
             this.miMainShowGrid.CheckState = System.Windows.Forms.CheckState.Checked;
             this.miMainShowGrid.Name = "miMainShowGrid";
             this.miMainShowGrid.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.miMainShowGrid.Size = new System.Drawing.Size(171, 22);
+            this.miMainShowGrid.Size = new System.Drawing.Size(180, 22);
             this.miMainShowGrid.Text = "Сетка";
             this.miMainShowGrid.Click += new System.EventHandler(this.MiMainShowGrid_Click);
             // 
@@ -328,7 +328,7 @@
             this.miMainShowTracks.CheckState = System.Windows.Forms.CheckState.Checked;
             this.miMainShowTracks.Name = "miMainShowTracks";
             this.miMainShowTracks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.miMainShowTracks.Size = new System.Drawing.Size(171, 22);
+            this.miMainShowTracks.Size = new System.Drawing.Size(180, 22);
             this.miMainShowTracks.Text = "Треки";
             this.miMainShowTracks.Click += new System.EventHandler(this.MiMainShowTracks_Click);
             // 
@@ -339,14 +339,14 @@
             this.miMainShowMarkers.CheckState = System.Windows.Forms.CheckState.Checked;
             this.miMainShowMarkers.Name = "miMainShowMarkers";
             this.miMainShowMarkers.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.miMainShowMarkers.Size = new System.Drawing.Size(171, 22);
+            this.miMainShowMarkers.Size = new System.Drawing.Size(180, 22);
             this.miMainShowMarkers.Text = "Маркеры";
             this.miMainShowMarkers.Click += new System.EventHandler(this.MiMainShowMarkers_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(168, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // miMainHome
             // 
@@ -354,7 +354,7 @@
             this.miMainHomeGoto,
             this.miMainHomeSave});
             this.miMainHome.Name = "miMainHome";
-            this.miMainHome.Size = new System.Drawing.Size(171, 22);
+            this.miMainHome.Size = new System.Drawing.Size(180, 22);
             this.miMainHome.Text = "Дом";
             // 
             // miMainHomeGoto
@@ -375,13 +375,13 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(168, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // miMainGrayScale
             // 
             this.miMainGrayScale.CheckOnClick = true;
             this.miMainGrayScale.Name = "miMainGrayScale";
-            this.miMainGrayScale.Size = new System.Drawing.Size(171, 22);
+            this.miMainGrayScale.Size = new System.Drawing.Size(180, 22);
             this.miMainGrayScale.Text = "Оттенки серого";
             this.miMainGrayScale.Click += new System.EventHandler(this.MiMainGrayScale_Click);
             // 
@@ -491,6 +491,11 @@
             this.miMainLeftPanel.Text = "Панель кнопок";
             this.miMainLeftPanel.Click += new System.EventHandler(this.MiMainLeftPanel_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(229, 6);
+            // 
             // miMainFullScreen
             // 
             this.miMainFullScreen.Name = "miMainFullScreen";
@@ -498,11 +503,6 @@
             this.miMainFullScreen.Size = new System.Drawing.Size(232, 22);
             this.miMainFullScreen.Text = "Полноэкранный режим";
             this.miMainFullScreen.Click += new System.EventHandler(this.MiMainFullScreen_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(229, 6);
             // 
             // miMainHelp
             // 
@@ -515,8 +515,8 @@
             // miMainAbout
             // 
             this.miMainAbout.Name = "miMainAbout";
-            this.miMainAbout.Size = new System.Drawing.Size(158, 22);
-            this.miMainAbout.Text = "О программе...";
+            this.miMainAbout.Size = new System.Drawing.Size(180, 22);
+            this.miMainAbout.Text = "О программе";
             this.miMainAbout.Click += new System.EventHandler(this.MiMainAbout_Click);
             // 
             // toolStripContainer
@@ -686,6 +686,13 @@
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
             // 
+            // miMainSaveTileStatusToFile
+            // 
+            this.miMainSaveTileStatusToFile.Name = "miMainSaveTileStatusToFile";
+            this.miMainSaveTileStatusToFile.Size = new System.Drawing.Size(278, 22);
+            this.miMainSaveTileStatusToFile.Text = "Сохранить статус плиток в файл GPX";
+            this.miMainSaveTileStatusToFile.Click += new System.EventHandler(this.MiMainSaveTileStatusToFile_Click);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -776,7 +783,7 @@
         private System.Windows.Forms.ToolStripStatusLabel slTracksDistance;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem miMainDataFilter;
-        private System.Windows.Forms.ToolStripMenuItem miMainSaveTileBoundaryToOsm;
+        private System.Windows.Forms.ToolStripMenuItem miMainSaveTileBoundaryToFile;
         private System.Windows.Forms.Timer timerMapMove;
         private System.Windows.Forms.ToolStripMenuItem miMainShowGrid;
         private System.Windows.Forms.ToolStripMenuItem miMainSettings;
@@ -791,6 +798,7 @@
         private System.Windows.Forms.ToolStripMenuItem miMainFullScreen;
         private System.Windows.Forms.ToolStripMenuItem miMainLeftPanel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem miMainSaveTileStatusToFile;
     }
 }
 

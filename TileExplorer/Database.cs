@@ -72,46 +72,46 @@ namespace TileExplorer
 #if DEBUG
             }
 #endif
-                using (var connection = GetConnection())
-                {
-                    /* tables */
-                    connection.Execute("CREATE TABLE IF NOT EXISTS markers (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "lat REAL NOT NULL, lng REAL NOT NULL, " +
-                        "text TEXT, istextvisible INTEGER, " +
-                        "offsetx INTEGER, offsety INTEGER, image BLOB, imagetype INTEGER DEFAULT 0);");
+            using (var connection = GetConnection())
+            {
+                /* tables */
+                connection.Execute("CREATE TABLE IF NOT EXISTS markers (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "lat REAL NOT NULL, lng REAL NOT NULL, " +
+                    "text TEXT, istextvisible INTEGER, " +
+                    "offsetx INTEGER, offsety INTEGER, image BLOB, imagetype INTEGER DEFAULT 0);");
 
-                    connection.Execute("CREATE TABLE IF NOT EXISTS tiles (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "x INTEGER NOT NULL, y INTEGER NOT NULL, " +
-                        "UNIQUE(x, y));");
+                connection.Execute("CREATE TABLE IF NOT EXISTS tiles (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "x INTEGER NOT NULL, y INTEGER NOT NULL, " +
+                    "UNIQUE(x, y));");
 
-                    connection.Execute("CREATE TABLE IF NOT EXISTS tracks (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "text TEXT, datetimestart TEXT, datetimefinish TEXT, distance REAL);");
+                connection.Execute("CREATE TABLE IF NOT EXISTS tracks (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "text TEXT, datetimestart TEXT, datetimefinish TEXT, distance REAL);");
 
-                    connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "trackid INTEGER, num INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, datetime TEXT, ele REAL, distance REAL, " +
-                        "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
+                connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "trackid INTEGER, num INTEGER, lat REAL NOT NULL, lng REAL NOT NULL, datetime TEXT, ele REAL, distance REAL, " +
+                    "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
 
-                    connection.Execute("CREATE TABLE IF NOT EXISTS tracks_tiles (" +
-                        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                        "trackid INTEGER, tileid INTEGER, " +
-                        "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
+                connection.Execute("CREATE TABLE IF NOT EXISTS tracks_tiles (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "trackid INTEGER, tileid INTEGER, " +
+                    "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
 
-                    /* indexes */
-                    connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
-                        "tracks_points (trackid);");
+                /* indexes */
+                connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
+                    "tracks_points (trackid);");
 
-                    /* triggers */
-                    connection.Execute("CREATE TRIGGER IF NOT EXISTS tracks_tiles_ad AFTER DELETE ON tracks_tiles " +
-                        "WHEN " +
-                            "(SELECT COUNT(*) FROM tracks_tiles WHERE tileid=OLD.tileid) = 0 " +
-                        "BEGIN " +
-                            "DELETE FROM tiles WHERE id=OLD.tileid; " +
-                        "END;");
-                }
+                /* triggers */
+                connection.Execute("CREATE TRIGGER IF NOT EXISTS tracks_tiles_ad AFTER DELETE ON tracks_tiles " +
+                    "WHEN " +
+                        "(SELECT COUNT(*) FROM tracks_tiles WHERE tileid=OLD.tileid) = 0 " +
+                    "BEGIN " +
+                        "DELETE FROM tiles WHERE id=OLD.tileid; " +
+                    "END;");
+            }
 #if !DEBUG
             }
 #endif
@@ -156,17 +156,12 @@ namespace TileExplorer
 
         public async Task LoadTrackPointsAsync(Track track)
         {
-            await Task.Run(() =>
+            using (var connection = GetConnection())
             {
-                using (var connection = GetConnection())
-                {
-                    var sql = "SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;";
+                var sql = "SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;";
 
-                    Debug.WriteLine(sql);
-
-                    track.TrackPoints = connection.Query<TrackPoint>(sql, new { trackid = track.Id }).ToList();
-                }
-            });
+                track.TrackPoints = (List<TrackPoint>)await connection.QueryAsync<TrackPoint>(sql, new { trackid = track.Id });
+            }
         }
 
         public async Task<List<Tile>> LoadTrackTilesAsync(Track track)
@@ -195,7 +190,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task SaveMarkerAsync(MapMarker marker)
+        public async Task SaveMarkerAsync(Marker marker)
         {
             using (var connection = GetConnection())
             {
@@ -210,7 +205,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task DeleteMarkerAsync(MapMarker marker)
+        public async Task DeleteMarkerAsync(Marker marker)
         {
             using (var connection = GetConnection())
             {
@@ -308,10 +303,23 @@ namespace TileExplorer
 
         public async Task SaveTracksTilesAsync(List<TracksTiles> tracksTiles)
         {
-            using (var connection = GetConnection())
+            await Task.Run(() =>
             {
-                await connection.InsertAsync(tracksTiles);
-            }
+                using (var connection = GetConnection())
+                {
+                    connection.Open();
+
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        foreach (var tracksTile in tracksTiles)
+                        {
+                            connection.Insert(tracksTile, transaction);
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+            });
         }
 
         public async Task<List<T>> ListLoadAsync<T>()
@@ -339,9 +347,9 @@ namespace TileExplorer
                                 "datetimestart, datetimefinish, " +
                                 "distance / 1000.0 AS distance " +
                                 "FROM tracks" + Filter.Default.ToSql() + " ORDER BY datetimestart;";
-                        
+
                         break;
-                    case nameof(MapMarker):
+                    case nameof(Marker):
                         sql = "SELECT * FROM markers ORDER BY text;";
 
                         break;

@@ -5,28 +5,28 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using static TileExplorer.Database;
+using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
     public static partial class Utils
     {
-        private static Models.Tile GetTileByXY(List<Models.Tile> tiles, int x, int y)
+        private static Tile GetTileByXY(List<Tile> tiles, int x, int y)
         {
             return tiles.Find(t => t.X == x && t.Y == y);
         }
 
-        private static TileStatus GetTileStatus(List<Models.Tile> tiles, int x, int y)
+        private static TileStatus GetTileStatus(List<Tile> tiles, int x, int y)
         {
-            Models.Tile tile = GetTileByXY(tiles, x, y);
+            Tile tile = GetTileByXY(tiles, x, y);
 
             return tile != null ? tile.Status : TileStatus.Unknown;
         }
 
-        private static bool SetTileClusterId(List<Models.Tile> tiles, int x, int y, int clusterId)
+        private static bool SetTileClusterId(List<Tile> tiles, int x, int y, int clusterId)
         {
             var tile = GetTileByXY(tiles, x, y);
 
@@ -46,7 +46,7 @@ namespace TileExplorer
             return true;
         }
 
-        private static int CheckMaxSquare(List<Models.Tile> tiles, int x, int y, int square)
+        private static int CheckMaxSquare(List<Tile> tiles, int x, int y, int square)
         {
             if (GetTileStatus(tiles, x, y) == TileStatus.Unknown) return 0;
 
@@ -77,7 +77,7 @@ namespace TileExplorer
             public int MaxSquare;
         }
 
-        public static CalcResult CalcTiles(List<Models.Tile> tiles)
+        public static CalcResult CalcTiles(List<Tile> tiles)
         {
             var result = new CalcResult();
 
@@ -177,9 +177,9 @@ namespace TileExplorer
             return result;
         }
 
-        public static List<Models.Tile> GetTilesFromTrack(Models.Track track)
+        public static List<Tile> GetTilesFromTrack(Track track)
         {
-            var tiles = new List<Models.Tile>();
+            var tiles = new List<Tile>();
 
             int x, y;
 
@@ -190,14 +190,14 @@ namespace TileExplorer
 
                 if (tiles.FindIndex(tile => tile.X == x && tile.Y == y) == -1)
                 {
-                    tiles.Add(new Models.Tile() { X = x, Y = y });
+                    tiles.Add(new Tile() { X = x, Y = y });
                 }
             }
 
             return tiles;
         }
 
-        public static PointLatLng TrackPointToPointLatLng(Models.TrackPoint trackPointModel)
+        public static PointLatLng TrackPointToPointLatLng(TrackPoint trackPointModel)
         {
             return new PointLatLng(trackPointModel.Lat, trackPointModel.Lng);
         }
@@ -221,7 +221,7 @@ namespace TileExplorer
             return string.Format("{0}/{1}", assemblyDecorator.Assembly.GetName().Name, assemblyDecorator.VersionString());
         }
 
-        public static List<PointLatLng> TilePoints(Models.Tile tile)
+        public static List<PointLatLng> TilePoints(Tile tile)
         {
             var lat1 = Osm.TileYToLat(tile.Y);
             var lng1 = Osm.TileXToLng(tile.X);

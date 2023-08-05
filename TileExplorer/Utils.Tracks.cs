@@ -1,11 +1,10 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using static TileExplorer.Database;
+using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
@@ -18,25 +17,25 @@ namespace TileExplorer
                 return node != null ? node.InnerText : string.Empty;
             }
 
-            public static Models.Track OpenTrackFromFile(string path)
+            public static Track OpenTrackFromFile(string path)
             {
                 var trackXml = new XmlDocument();
 
-                var track = new Models.Track();
+                var track = new Track();
 
                 try
                 {
-                    Debug.WriteLine(path);
+                    WriteDebug(path);
 
                     trackXml.Load(path);
 
-                    Debug.WriteLine("xml loaded");
+                    WriteDebug("xml loaded");
 
-                    track.TrackPoints = new List<Models.TrackPoint>();
+                    track.TrackPoints = new List<TrackPoint>();
 
                     var trkptList = trackXml.GetElementsByTagName("trkpt");
 
-                    Debug.WriteLine("trkptList count: " + trkptList.Count);
+                    WriteDebug("trkptList count: " + trkptList.Count);
 
                     var num = 0;
 
@@ -44,7 +43,7 @@ namespace TileExplorer
                     {
                         if (trkpt.Attributes["lat"] != null && trkpt.Attributes["lon"] != null)
                         {
-                            track.TrackPoints.Add(new Models.TrackPoint()
+                            track.TrackPoints.Add(new TrackPoint()
                             {
                                 Num = num++,
 
@@ -105,12 +104,12 @@ namespace TileExplorer
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("error: " + e.Message);
+                    WriteDebug("error: " + e.Message);
 
                     Msg.Error(e.Message);
                 }
 
-                Debug.WriteLine("end open xml");
+                WriteDebug("end open xml");
 
                 return track;
             }

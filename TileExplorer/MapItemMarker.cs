@@ -36,11 +36,11 @@ namespace TileExplorer
         [NonSerialized]
         public SolidBrush SelectedFill = DefaultSelectedFill;
 
-        private readonly MapItem<Models.MapMarker> item;
+        private readonly MapItem<Models.Marker> item;
 
-        public MapItemMarker(Models.MapMarker marker) : base(new PointLatLng())
+        public MapItemMarker(Models.Marker marker) : base(new PointLatLng())
         {
-            item = new MapItem<Models.MapMarker>(this, marker);
+            item = new MapItem<Models.Marker>(this, marker);
 
             Size = new Size(DEFAULT_SIZE, DEFAULT_SIZE);
             Offset = new Point(-DEFAULT_SIZE / 2, -DEFAULT_SIZE / 2);
@@ -69,8 +69,8 @@ namespace TileExplorer
             UpdateColors();
         }
 
-        public Models.MapMarker Model { get => item.Model; set => item.Model = value; }
-        Models.BaseId IMapItem.Model { get => Model; set => Model = (Models.MapMarker)value; }
+        public Models.Marker Model { get => item.Model; set => item.Model = value; }
+        Models.BaseId IMapItem.Model { get => Model; set => Model = (Models.Marker)value; }
 
         public bool Selected { get => item.Selected; set => item.Selected = value; }
 

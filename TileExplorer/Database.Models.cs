@@ -33,7 +33,7 @@ namespace TileExplorer
             }
 
             [Table("markers")]
-            public class MapMarker : BaseId
+            public class Marker : BaseId
             {
                 [DisplayName("Широта")]
                 public double Lat { get; set; }
@@ -52,7 +52,7 @@ namespace TileExplorer
 
                 public MarkerImageType ImageType { get; set; } = MarkerImageType.Default;
 
-                public void Assign(MapMarker source)
+                public void Assign(Marker source)
                 {
                     base.Assign(source);
 

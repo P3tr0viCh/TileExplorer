@@ -15,7 +15,7 @@ namespace TileExplorer
 
             void ChangeMapItemById(object sender, long id);
 
-            void MarkerChanged(MapMarker marker);
+            void MarkerChanged(Marker marker);
 
             ProgramStatus Status { set; }
         }
