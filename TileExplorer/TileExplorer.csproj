@@ -125,6 +125,7 @@
     </Compile>
     <Compile Include="MapItemMarkerCross.cs" />
     <Compile Include="Properties\AppSettings.cs" />
+    <Compile Include="Utils.Tiles.cs" />
     <Compile Include="Utils.Gpx.cs" />
     <Compile Include="Utils.Osm.cs" />
     <Compile Include="Utils.Tracks.cs" />

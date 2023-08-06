@@ -33,7 +33,7 @@ namespace TileExplorer
             Name = string.Format("{0}x{1}", Model.X, Model.Y);
 
             Points.Clear();
-            Points.AddRange(Utils.TilePoints(Model));
+            Points.AddRange(Utils.Tiles.TilePoints(Model));
         }
 
         public void UpdateColors()

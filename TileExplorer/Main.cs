@@ -10,7 +10,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -295,7 +294,7 @@ namespace TileExplorer
 
             var calcResult = await Task.Run(() =>
             {
-                return Utils.CalcTiles(tiles);
+                return Utils.Tiles.CalcTiles(tiles);
             });
 
             statusStripPresenter.TilesVisited = calcResult.Visited;
@@ -760,7 +759,10 @@ namespace TileExplorer
 
         private void MiMainHomeSave_Click(object sender, EventArgs e)
         {
-            HomeSave();
+            if (Msg.Question(Resources.QuestionHomeSave))
+            {
+                HomeSave();
+            }
         }
 
         private GMapMarker markerTemp;
@@ -845,14 +847,14 @@ namespace TileExplorer
         {
             if (marker == null) return;
 
-            var Name = marker.Model.Text;
+            var name = marker.Model.Text;
 
-            if (string.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(name))
             {
-                Name = marker.Position.Lat.ToString() + ":" + marker.Position.Lng.ToString();
+                name = marker.Position.Lat.ToString() + ":" + marker.Position.Lng.ToString();
             }
 
-            if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, Name)))
+            if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, name)))
             {
                 await Database.Default.DeleteMarkerAsync(marker.Model);
 
@@ -1080,7 +1082,10 @@ namespace TileExplorer
 
         private async Task<List<Tile>> GetTilesFromTrackAsync(Track track)
         {
-            return await Task.Run(() => { return Utils.GetTilesFromTrack(track); });
+            return await Task.Run(() =>
+            {
+                return Utils.Tiles.GetTilesFromTrack(track);
+            });
         }
 
         private async Task OpenTracksAsync(string[] files)
@@ -1419,6 +1424,11 @@ namespace TileExplorer
         private void TsbtnMarkerList_Click(object sender, EventArgs e)
         {
             miMainDataMarkerList.PerformClick();
+        }
+
+        private void TsbtnFilter_Click(object sender, EventArgs e)
+        {
+            miMainDataFilter.PerformClick();
         }
 
         private void MiMainLeftPanel_Click(object sender, EventArgs e)

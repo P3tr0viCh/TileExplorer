@@ -1,4 +1,6 @@
-﻿using P3tr0viCh.Utils;
+﻿//#define SHOW_BOUNDARY_TILES
+
+using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,17 +9,12 @@ using System.Linq;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
     public partial class Main
     {
-#if !DEBUG
-        private enum SaveFileDialogType
-        {
-            Png, Osm
-        }
-
         private bool ShowSaveFileDialog(SaveFileDialogType type)
         {
             switch (type)
@@ -30,11 +27,19 @@ namespace TileExplorer
                     saveFileDialog.DefaultExt = Resources.FileSaveDefaultExtOsm;
                     saveFileDialog.Filter = Resources.FileSaveFilterOsm;
                     break;
+                case SaveFileDialogType.Gpx:
+                    saveFileDialog.DefaultExt = Resources.FileSaveDefaultExtGpx;
+                    saveFileDialog.Filter = Resources.FileSaveFilterGpx;
+                    break;
             }
-
+#if DEBUG
+            saveFileDialog.FileName = Files.TempFileName("xxx") + "." + saveFileDialog.DefaultExt;
+            
+            return true;
+#else
             return saveFileDialog.ShowDialog(this) == DialogResult.OK;
-        }
 #endif
+        }
 
         private void SaveToImage(string fileName)
         {
@@ -74,14 +79,9 @@ namespace TileExplorer
         {
             try
             {
-#if DEBUG
-                SaveToImage(Files.TempFileName("xxx.png"));
-#else
-                if (ShowSaveFileDialog(SaveFileDialogType.Png))
-                {
-                    SaveToImage(saveFileDialog.FileName);
-                }
-#endif
+                if (!ShowSaveFileDialog(SaveFileDialogType.Png)) return;
+
+                SaveToImage(saveFileDialog.FileName);
             }
             catch (Exception e)
             {
@@ -90,6 +90,7 @@ namespace TileExplorer
                 Msg.Error(e.Message);
             }
         }
+
         private void SaveTileBoundaryToFile()
         {
             var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
@@ -109,14 +110,9 @@ namespace TileExplorer
 
             try
             {
-#if DEBUG
-                Utils.Osm.SaveTilesToFile(Files.TempFileName("xxx.osm"), tiles);
-#else
-                if (ShowSaveFileDialog(SaveFileDialogType.Osm))
-                {
-                    Utils.Osm.SaveTilesToFile(saveFileDialog.FileName, tiles);
-                }
-#endif
+                if (!ShowSaveFileDialog(SaveFileDialogType.Osm)) return;
+
+                Utils.Osm.SaveTilesToFile(saveFileDialog.FileName, tiles);
             }
             catch (Exception e)
             {
@@ -128,35 +124,27 @@ namespace TileExplorer
 
         private void SaveTileStatusToFile()
         {
-            var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
-            var pointTo = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
+            var boudaryTiles = Utils.Tiles.FindTilesBoundary(
+                tilesOverlay.Polygons.Cast<MapItemTile>()
+                    .Select(t => t.Model).ToList());
 
-            var tiles = new List<Tile>();
-
-            for (var x = Utils.Osm.LngToTileX(pointFrom); x <= Utils.Osm.LngToTileX(pointTo); x++)
-                for (var y = Utils.Osm.LatToTileY(pointFrom); y <= Utils.Osm.LatToTileY(pointTo); y++)
-                {
-                    tiles.Add(new Tile()
-                    {
-                        X = x,
-                        Y = y,
-                    });
-                }
-            foreach (var tile in tilesOverlay.Polygons.Cast<MapItemTile>())
+#if SHOW_BOUNDARY_TILES
+            foreach (var tile in boudaryTiles)
             {
-                //                tile.Selected = false;
+                tilesOverlay.Polygons.Add(new MapItemTile(tile)
+                {
+                    Selected = true
+                });
             }
+#endif
 
             try
             {
-#if DEBUG
-                Utils.Gpx.SaveTileStatusToFile(Files.TempFileName("xxx.gpx"), tiles);
-#else
-                if (ShowSaveFileDialog(SaveFileDialogType.Osm))
-                {
-                    Utils.Osm.SaveTilesToFile(saveFileDialog.FileName, tiles);
-                }
-#endif
+                saveFileDialog.FileName = AppSettings.Default.TileStatusFileWptType;
+
+                if (!ShowSaveFileDialog(SaveFileDialogType.Gpx)) return;
+
+                Utils.Gpx.SaveTileStatusToFile(saveFileDialog.FileName, boudaryTiles);
             }
             catch (Exception e)
             {

@@ -120,11 +120,17 @@
   <data name="ErrorDirectoryNotExists" xml:space="preserve">
     <value>Каталог «{0}» не существует.</value>
   </data>
+  <data name="FileSaveDefaultExtGpx" xml:space="preserve">
+    <value>gpx</value>
+  </data>
   <data name="FileSaveDefaultExtOsm" xml:space="preserve">
     <value>osm</value>
   </data>
   <data name="FileSaveDefaultExtPng" xml:space="preserve">
     <value>png</value>
+  </data>
+  <data name="FileSaveFilterGpx" xml:space="preserve">
+    <value>GPX|*.gpx|Все файлы|*.*</value>
   </data>
   <data name="FileSaveFilterOsm" xml:space="preserve">
     <value>OSM|*.osm|Все файлы|*.*</value>
@@ -153,6 +159,9 @@
   <data name="ProgramStatusUpdating" xml:space="preserve">
     <value>Обновление...</value>
   </data>
+  <data name="QuestionHomeSave" xml:space="preserve">
+    <value>Сохранить домашнее расположение?</value>
+  </data>
   <data name="QuestionMarkerDelete" xml:space="preserve">
     <value>Удалить маркер «{0}»?</value>
   </data>
@@ -176,6 +185,12 @@
   </data>
   <data name="SettingsCategoryOsm" xml:space="preserve">
     <value>OpenStreetMap</value>
+  </data>
+  <data name="SettingsCategoryTileStatus" xml:space="preserve">
+    <value>Файл статуса плиток</value>
+  </data>
+  <data name="SettingsCategoryTileStatusOsmand" xml:space="preserve">
+    <value>Файл статуса плиток: Османд</value>
   </data>
   <data name="StatusMousePosition" xml:space="preserve">
     <value>Курсор: {0:F6}, {1:F6}</value>

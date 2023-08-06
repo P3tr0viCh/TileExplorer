@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms.Design;
+using static TileExplorer.Enums;
 
 namespace TileExplorer.Properties
 {
@@ -261,6 +262,32 @@ namespace TileExplorer.Properties
         [DisplayName("Минимальный масштаб")]
         [Description("Минимальный масштаб сетки")]
         public int SaveOsmTileMinZoom { get; set; } = 10;
+
+        // ------------------------------------------------------------------------------------------------------------
+        [LocalizedCategory("SettingsCategoryTileStatus")]
+        [DisplayName("Тип точки")]
+        [Description("Тип точки")]
+        public string TileStatusFileWptType { get; set; } = string.Empty;
+
+        [LocalizedCategory("SettingsCategoryTileStatusOsmand")]
+        [DisplayName("Информация для Османда")]
+        [Description("Добавить информацию для Османда")]
+        public bool TileStatusFileUseOsmand { get; set; } = true;
+
+        [LocalizedCategory("SettingsCategoryTileStatusOsmand")]
+        [DisplayName("Значок")]
+        [Description("Значок точки")]
+        public string TileStatusFileOsmandIcon { get; set; } = "special_star";
+
+        [LocalizedCategory("SettingsCategoryTileStatusOsmand")]
+        [DisplayName("Тип значка")]
+        [Description("Тип значка точки")]
+        public OsmandIconBackgroud TileStatusFileOsmandIconBackground { get; set; } = OsmandIconBackgroud.Circle;
+
+        [LocalizedCategory("SettingsCategoryTileStatusOsmand")]
+        [DisplayName("Цвет значка")]
+        [Description("Цвет значка точки")]
+        public Color TileStatusFileOsmandIconColor { get; set; } = Color.Red;
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]

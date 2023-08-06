@@ -56,5 +56,21 @@ namespace TileExplorer
             Track,
             Tile
         }
+        
+        public enum SaveFileDialogType
+        {
+            Png, Osm, Gpx
+        }
+
+        [TypeConverter(typeof(EnumDescriptionConverter))]
+        public enum OsmandIconBackgroud
+        {
+            [Description("Круг")]
+            Circle,
+            [Description("Восьмиугольник")]
+            Octagon,
+            [Description("Квадрат")]
+            Square
+        }
     }
 }

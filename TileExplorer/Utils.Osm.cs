@@ -84,7 +84,7 @@ namespace TileExplorer
                     {
                         tileOsmNodesId.Clear();
 
-                        foreach (var point in TilePoints(tile))
+                        foreach (var point in Tiles.TilePoints(tile))
                         {
                             osmNode = osmNodes.Find(n => n.Point.Equals(point));
 

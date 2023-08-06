@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 
 namespace TileExplorer
 {
-    public class Converters
+    public static class Converters
     {
         public class EnumDescriptionConverter : EnumConverter
         {
@@ -47,5 +48,12 @@ namespace TileExplorer
                 return Enum.Parse(type, (string)value);
             }
         }
+    }
+
+    public static class ColorConverterExtensions
+    {
+        public static string ToHexString(this Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
+
+        public static string ToRgbString(this Color c) => $"RGB({c.R}, {c.G}, {c.B})";
     }
 }

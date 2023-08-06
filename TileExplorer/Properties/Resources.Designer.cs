@@ -70,6 +70,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to gpx.
+        /// </summary>
+        internal static string FileSaveDefaultExtGpx {
+            get {
+                return ResourceManager.GetString("FileSaveDefaultExtGpx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to osm.
         /// </summary>
         internal static string FileSaveDefaultExtOsm {
@@ -84,6 +93,15 @@ namespace TileExplorer.Properties {
         internal static string FileSaveDefaultExtPng {
             get {
                 return ResourceManager.GetString("FileSaveDefaultExtPng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GPX|*.gpx|Все файлы|*.*.
+        /// </summary>
+        internal static string FileSaveFilterGpx {
+            get {
+                return ResourceManager.GetString("FileSaveFilterGpx", resourceCulture);
             }
         }
         
@@ -157,6 +175,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Сохранить домашнее расположение?.
+        /// </summary>
+        internal static string QuestionHomeSave {
+            get {
+                return ResourceManager.GetString("QuestionHomeSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Удалить маркер «{0}»?.
         /// </summary>
         internal static string QuestionMarkerDelete {
@@ -225,6 +252,24 @@ namespace TileExplorer.Properties {
         internal static string SettingsCategoryOsm {
             get {
                 return ResourceManager.GetString("SettingsCategoryOsm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Файл статуса плиток.
+        /// </summary>
+        internal static string SettingsCategoryTileStatus {
+            get {
+                return ResourceManager.GetString("SettingsCategoryTileStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Файл статуса плиток: Османд.
+        /// </summary>
+        internal static string SettingsCategoryTileStatusOsmand {
+            get {
+                return ResourceManager.GetString("SettingsCategoryTileStatusOsmand", resourceCulture);
             }
         }
         
