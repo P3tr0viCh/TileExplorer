@@ -3,11 +3,9 @@ using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static TileExplorer.Database;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -115,69 +113,6 @@ namespace TileExplorer
 #if !DEBUG
             }
 #endif
-        }
-
-        public async Task<List<Tile>> LoadTilesAsync(Filter filter)
-        {
-            return await Task.Run(() =>
-            {
-                using (var connection = GetConnection())
-                {
-                    var sql = filter.ToSql();
-
-                    if (string.IsNullOrEmpty(sql))
-                        sql = "SELECT * FROM tiles;";
-                    else
-                        sql = "SELECT * FROM tiles WHERE id IN (" +
-                                "SELECT tileid FROM tracks_tiles WHERE trackid IN (" +
-                                    "SELECT id FROM tracks " + filter.ToSql() + "));";
-
-                    Debug.WriteLine(sql);
-
-                    return connection.Query<Tile>(sql).ToList();
-                }
-            });
-        }
-
-        public async Task<List<Track>> LoadTracksAsync(Filter filter)
-        {
-            return await Task.Run(() =>
-            {
-                using (var connection = GetConnection())
-                {
-                    var sql = "SELECT * FROM tracks" + filter.ToSql() + " ORDER BY datetimestart;";
-
-                    Debug.WriteLine(sql);
-
-                    return connection.Query<Track>(sql).ToList();
-                }
-            });
-        }
-
-        public async Task LoadTrackPointsAsync(Track track)
-        {
-            using (var connection = GetConnection())
-            {
-                var sql = "SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;";
-
-                track.TrackPoints = (List<TrackPoint>)await connection.QueryAsync<TrackPoint>(sql, new { trackid = track.Id });
-            }
-        }
-
-        public async Task<List<Tile>> LoadTrackTilesAsync(Track track)
-        {
-            return await Task.Run(() =>
-            {
-                using (var connection = GetConnection())
-                {
-                    var sql = "SELECT * FROM tiles WHERE id IN (" +
-                            "SELECT tileid FROM tracks_tiles WHERE trackid = :trackid);";
-
-                    Debug.WriteLine(sql);
-
-                    return connection.Query<Tile>(sql, new { trackid = track.Id }).ToList();
-                }
-            });
         }
 
         public async Task<TracksInfo> LoadTracksInfoAsync(Filter filter)
@@ -322,65 +257,95 @@ namespace TileExplorer
             });
         }
 
-        public async Task<List<T>> ListLoadAsync<T>()
+        public async Task<List<T>> ListLoadAsync<T>(object filter = null)
         {
             Utils.WriteDebug(typeof(T).Name);
 
-            using (var connection = GetConnection())
+            return await Task.Run(() =>
             {
-                var sql = string.Empty;
-
-                switch (typeof(T).Name)
+                using (var connection = GetConnection())
                 {
-                    case nameof(Results):
-                        sql = "SELECT " +
-                                "CAST(strftime('%Y', datetimestart) AS INTEGER) AS year, " +
-                                "COUNT(*) AS count, SUM(distance) / 1000.0 AS distancesum " +
-                            "FROM tracks " +
-                            "GROUP BY year " +
-                            "ORDER BY year;";
+                    var sql = string.Empty;
 
-                        break;
-                    case nameof(Track):
-                        sql = "SELECT " +
-                                "id, text, " +
-                                "datetimestart, datetimefinish, " +
-                                "distance / 1000.0 AS distance " +
-                                "FROM tracks" + Filter.Default.ToSql() + " ORDER BY datetimestart;";
+                    object param = null;
 
-                        break;
-                    case nameof(Marker):
-                        sql = "SELECT * FROM markers ORDER BY text;";
+                    switch (typeof(T).Name)
+                    {
+                        case nameof(Results):
+                            sql = "SELECT " +
+                                    "CAST(strftime('%Y', datetimestart) AS INTEGER) AS year, " +
+                                    "COUNT(*) AS count, SUM(distance) / 1000.0 AS distancesum " +
+                                "FROM tracks " +
+                                "GROUP BY year " +
+                                "ORDER BY year;";
 
-                        break;
-                    default:
-                        throw new NotImplementedException();
+                            break;
+                        case nameof(Marker):
+                            sql = "SELECT * FROM markers ORDER BY text;";
+
+                            break;
+                        case nameof(Tile):
+                            if (filter != null)
+                            {
+                                sql = "SELECT * FROM tiles WHERE id IN (" +
+                                        "SELECT tileid FROM tracks_tiles WHERE trackid = :trackid);";
+
+                                param = new { trackid = ((Track)filter).Id };
+                            }
+                            else
+                            {
+                                sql = Filter.Default.ToSql();
+
+                                if (string.IsNullOrEmpty(sql))
+                                    sql = "SELECT * FROM tiles;";
+                                else
+                                    sql = "SELECT * FROM tiles WHERE id IN (" +
+                                            "SELECT tileid FROM tracks_tiles WHERE trackid IN (" +
+                                                "SELECT id FROM tracks" + sql + "));";
+                            }
+
+                            break;
+                        case nameof(Track):
+                            sql = "SELECT " +
+                                    "id, text, " +
+                                    "datetimestart, datetimefinish, " +
+                                    "distance / 1000.0 AS distance " +
+                                    "FROM tracks" + Filter.Default.ToSql() + " ORDER BY datetimestart;";
+
+                            break;
+                        case nameof(TrackPoint):
+                            sql = "SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;";
+
+                            param = new { trackid = ((Track)filter).Id };
+
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+
+                    var list = connection.Query<T>(sql, param);
+
+                    switch (typeof(T).Name)
+                    {
+                        case nameof(Results):
+                            var results = list.Cast<Results>();
+
+                            var resultSum = new Results { Count = 0, DistanceSum = 0.0 };
+
+                            foreach (var item in results)
+                            {
+                                resultSum.Count += item.Count;
+                                resultSum.DistanceSum += item.DistanceSum;
+                            }
+
+                            results.AsList().Add(resultSum);
+
+                            break;
+                    }
+
+                    return (List<T>)list;
                 }
-
-                Utils.WriteDebug(sql);
-
-                var list = await connection.QueryAsync<T>(sql);
-
-                switch (typeof(T).Name)
-                {
-                    case nameof(Results):
-                        var results = list.Cast<Results>();
-
-                        var resultSum = new Results { Count = 0, DistanceSum = 0.0 };
-
-                        foreach (var item in results)
-                        {
-                            resultSum.Count += item.Count;
-                            resultSum.DistanceSum += item.DistanceSum;
-                        }
-
-                        results.AsList().Add(resultSum);
-
-                        break;
-                }
-
-                return (List<T>)list;
-            }
+            });
         }
     }
 }
