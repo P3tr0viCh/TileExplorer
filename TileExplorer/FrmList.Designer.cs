@@ -50,12 +50,12 @@
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
-            this.dataGridView.RowHeadersWidth = 62;
+            this.dataGridView.RowHeadersWidth = 32;
             this.dataGridView.Size = new System.Drawing.Size(384, 265);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DataGridView_MouseDoubleClick);
             // 
-            // FrmListNew
+            // FrmList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 28F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -65,7 +65,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(200, 100);
-            this.Name = "FrmListNew";
+            this.Name = "FrmList";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "FrmListNew";
