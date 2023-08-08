@@ -11,9 +11,9 @@ namespace TileExplorer
             void ChildFormOpened(object sender);
             void ChildFormClosed(object sender);
 
-            void SelectMapItemById(object sender, long id);
+            void SelectMapItem(object sender, BaseId value);
 
-            void ChangeMapItemById(object sender, long id);
+            void ChangeMapItem(object sender, BaseId value);
 
             void MarkerChanged(Marker marker);
 

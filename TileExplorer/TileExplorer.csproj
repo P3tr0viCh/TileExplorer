@@ -113,11 +113,11 @@
   <ItemGroup>
     <Compile Include="Converters.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="FrmListNew.cs">
+    <Compile Include="FrmList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmListNew.Designer.cs">
-      <DependentUpon>FrmListNew.cs</DependentUpon>
+    <Compile Include="FrmList.Designer.cs">
+      <DependentUpon>FrmList.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces.cs" />
     <Compile Include="Main.ActionsSave.cs">
@@ -131,13 +131,6 @@
     <Compile Include="Utils.Tracks.cs" />
     <Compile Include="Database.Filter.cs" />
     <Compile Include="Database.Models.cs" />
-    <Compile Include="FrmList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmList.Designer.cs">
-      <DependentUpon>FrmList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmListBase.cs" />
     <Compile Include="FrmTrack.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -181,9 +174,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmList.resx">
       <DependentUpon>FrmList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmListNew.resx">
-      <DependentUpon>FrmListNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmTrack.resx">
       <DependentUpon>FrmTrack.cs</DependentUpon>

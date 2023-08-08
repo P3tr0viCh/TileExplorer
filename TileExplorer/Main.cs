@@ -44,10 +44,10 @@ namespace TileExplorer
 
         private FrmFilter frmFilter;
 
-        private FrmListNew frmResults;
+        private FrmList frmResults;
 
-        private FrmListNew frmTrackList;
-        private FrmListNew frmMarkerList;
+        private FrmList frmTrackList;
+        private FrmList frmMarkerList;
 
         public Main()
         {
@@ -114,7 +114,7 @@ namespace TileExplorer
             StartUpdateGrid();
 
             _ = UpdateDataAsync();
-            
+
             if (AppSettings.Default.VisibleResults)
             {
                 ShowChildForm(ChildFormType.Results, true);
@@ -519,13 +519,13 @@ namespace TileExplorer
                     switch (selected.Type)
                     {
                         case MapItemType.Marker:
-                            //frmMarkerList.Selected = (MapMarker)selected.Model;
+                            frmMarkerList?.SetSelected(selected.Model);
 
                             UpdateSelectedTrackTiles(null);
 
                             break;
                         case MapItemType.Track:
-                            //frmTrackList.Selected = (Track)selected.Model;
+                            frmTrackList?.SetSelected(selected.Model);
 
                             UpdateSelectedTrackTiles((Track)selected.Model);
 
@@ -772,21 +772,9 @@ namespace TileExplorer
             }
         }
 
-        private IMapItem FindMapMarker(long id)
-        {
-            foreach (var item in from IMapItem item in markersOverlay.Markers
-                                 where item.Model.Id == id
-                                 select item)
-            {
-                return item;
-            }
-
-            return null;
-        }
-
         public void MarkerChanged(Marker marker)
         {
-            var mapMarker = FindMapMarker(marker.Id);
+            var mapMarker = FindMapItem(marker);
 
             if (mapMarker == null)
             {
@@ -964,7 +952,7 @@ namespace TileExplorer
             }
         }
 
-        private async Task UpdateChildFormAsync(FrmListNew frm)
+        private async Task UpdateChildFormAsync(FrmList frm)
         {
             if (Utils.IsChildFormExists(frm)) await frm.UpdateDataAsync();
         }
@@ -997,9 +985,9 @@ namespace TileExplorer
             Status = ProgramStatus.Idle;
 
             await UpdateChildFormAsync(frmResults);
-            
+
             if (load.HasFlag(DataLoad.Tracks)) await UpdateChildFormAsync(frmTrackList);
-            
+
             if (load.HasFlag(DataLoad.Markers)) await UpdateChildFormAsync(frmMarkerList);
         }
 
@@ -1215,7 +1203,7 @@ namespace TileExplorer
                         case ChildFormType.Tracks:
                         case ChildFormType.Markers:
                         case ChildFormType.Results:
-                            FrmListNew.ShowFrm(this, listType);
+                            FrmList.ShowFrm(this, listType);
 
                             break;
                         default:
@@ -1257,46 +1245,55 @@ namespace TileExplorer
             gMapControl.GrayScaleMode = miMainGrayScale.Checked;
         }
 
-        public void SelectMapItemById(object sender, long id)
+        private IMapItem FindMapItem(BaseId value)
         {
-            IEnumerable items = null;
+            if (value == null) return null;
 
-            switch (((IChildForm)sender).ListType)
+            IEnumerable items;
+
+            if (value is Marker)
             {
-                case ChildFormType.Markers:
-                    items = markersOverlay.Markers;
-                    break;
-                case ChildFormType.Tracks:
+                items = markersOverlay.Markers;
+            }
+            else
+            {
+                if (value is Track)
+                {
                     items = tracksOverlay.Routes;
-                    break;
-                default:
-                    return;
+                }
+                else
+                {
+                    return null;
+                }
             }
 
-            foreach (var item in from IMapItem item in items
-                                 where item.Model.Id == id
-                                 select item)
+            return items.Cast<IMapItem>().Where(i => i.Model.Id == value.Id).FirstOrDefault();
+        }
+
+        public void SelectMapItem(object sender, BaseId value)
+        {
+            var item = FindMapItem(value);
+
+            if (item != null)
             {
                 Selected = item;
 
                 if (ActiveForm != this) gMapControl.Invalidate();
-
-                break;
             }
         }
 
-        public void ChangeMapItemById(object sender, long id)
+        public void ChangeMapItem(object sender, BaseId value)
         {
-            SelectMapItemById(sender, id);
+            SelectMapItem(sender, value);
 
-            switch (((IChildForm)sender).ListType)
+            if (value is Marker)
             {
-                case ChildFormType.Markers:
-                    MarkerChange(SelectedMarker);
-                    break;
-                case ChildFormType.Tracks:
+                MarkerChange(SelectedMarker);
+            } else {
+                if (value is Track)
+                {
                     TrackChangeAsync(SelectedTrack);
-                    break;
+                }
             }
         }
 
@@ -1393,18 +1390,9 @@ namespace TileExplorer
             {
                 UpdateDatabaseFileName();
 
-                if (Utils.IsChildFormExists(frmResults))
-                {
-                    frmResults.UpdateSettings();
-                }
-                if (Utils.IsChildFormExists(frmTrackList))
-                {
-                    frmTrackList.UpdateSettings();
-                }
-                if (Utils.IsChildFormExists(frmMarkerList))
-                {
-                    frmMarkerList.UpdateSettings();
-                }
+                frmResults?.UpdateSettings();
+                frmTrackList?.UpdateSettings();
+                frmMarkerList?.UpdateSettings();
 
                 _ = UpdateDataAsync();
             }
@@ -1444,15 +1432,15 @@ namespace TileExplorer
                     miMainDataFilter.Checked = true;
                     break;
                 case ChildFormType.Tracks:
-                    frmTrackList = (FrmListNew)sender;
+                    frmTrackList = (FrmList)sender;
                     miMainDataTrackList.Checked = true;
                     break;
                 case ChildFormType.Markers:
-                    frmMarkerList = (FrmListNew)sender;
+                    frmMarkerList = (FrmList)sender;
                     miMainDataMarkerList.Checked = true;
                     break;
                 case ChildFormType.Results:
-                    frmResults = (FrmListNew)sender;
+                    frmResults = (FrmList)sender;
                     miMainDataResults.Checked = true;
                     break;
                 default:

@@ -28,86 +28,59 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.bindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pnlUpdating = new System.Windows.Forms.Panel();
-            this.lblUpdating = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            this.pnlUpdating.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // bindingSource
+            // 
+            this.bindingSource.PositionChanged += new System.EventHandler(this.BindingSource_PositionChanged);
             // 
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.AllowUserToResizeRows = false;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colId});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView.Margin = new System.Windows.Forms.Padding(5);
+            this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
-            this.dataGridView.RowHeadersWidth = 32;
+            this.dataGridView.RowHeadersWidth = 62;
             this.dataGridView.Size = new System.Drawing.Size(384, 265);
-            this.dataGridView.TabIndex = 2;
+            this.dataGridView.TabIndex = 1;
+            this.dataGridView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DataGridView_MouseDoubleClick);
             // 
-            // colId
+            // FrmListNew
             // 
-            this.colId.HeaderText = "Id";
-            this.colId.Name = "colId";
-            this.colId.ReadOnly = true;
-            this.colId.Width = 64;
-            // 
-            // pnlUpdating
-            // 
-            this.pnlUpdating.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlUpdating.Controls.Add(this.lblUpdating);
-            this.pnlUpdating.Location = new System.Drawing.Point(146, 99);
-            this.pnlUpdating.Name = "pnlUpdating";
-            this.pnlUpdating.Size = new System.Drawing.Size(116, 57);
-            this.pnlUpdating.TabIndex = 3;
-            // 
-            // lblUpdating
-            // 
-            this.lblUpdating.AutoSize = true;
-            this.lblUpdating.Location = new System.Drawing.Point(16, 16);
-            this.lblUpdating.Name = "lblUpdating";
-            this.lblUpdating.Size = new System.Drawing.Size(75, 19);
-            this.lblUpdating.TabIndex = 0;
-            this.lblUpdating.Text = "Updating...";
-            // 
-            // FrmList
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 28F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 265);
-            this.Controls.Add(this.pnlUpdating);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(200, 100);
-            this.Name = "FrmList";
+            this.Name = "FrmListNew";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "FrmList";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmList_FormClosing);
-            this.SizeChanged += new System.EventHandler(this.FrmList_SizeChanged);
+            this.Text = "FrmListNew";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmListNew_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmListNew_FormClosed);
+            this.Load += new System.EventHandler(this.FrmListNew_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            this.pnlUpdating.ResumeLayout(false);
-            this.pnlUpdating.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
+        private System.Windows.Forms.BindingSource bindingSource;
         private System.Windows.Forms.DataGridView dataGridView;
-        private System.Windows.Forms.Panel pnlUpdating;
-        private System.Windows.Forms.Label lblUpdating;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colId;
     }
 }
