@@ -9,7 +9,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,7 +80,7 @@ namespace TileExplorer
 
         private void Filter_OnChanged()
         {
-            var load = DataLoad.Tiles | DataLoad.TracksInfo;
+            var load = DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TracksList;
 
             if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
 
@@ -600,7 +602,7 @@ namespace TileExplorer
                 {
                     await Database.Default.SaveMarkerAsync(SelectedMarker.Model);
 
-                    _ = UpdateChildFormAsync(frmMarkerList);
+                    await UpdateDataAsync(DataLoad.MarkersList);
                 }
 
                 return;
@@ -754,7 +756,7 @@ namespace TileExplorer
 
             if (FrmMarker.ShowDlg(this, marker))
             {
-                _ = UpdateChildFormAsync(frmMarkerList);
+                _ = UpdateDataAsync(DataLoad.MarkersList);
             }
 
             markersOverlay.Markers.Remove(markerTemp);
@@ -768,7 +770,7 @@ namespace TileExplorer
 
             if (FrmMarker.ShowDlg(this, marker.Model))
             {
-                _ = UpdateChildFormAsync(frmMarkerList);
+                _ = UpdateDataAsync(DataLoad.MarkersList);
             }
         }
 
@@ -782,7 +784,7 @@ namespace TileExplorer
 
                 markersOverlay.Markers.Add(new MapItemMarker(marker));
 
-                _ = UpdateChildFormAsync(frmMarkerList);
+                _ = UpdateDataAsync(DataLoad.MarkersList);
             }
             else
             {
@@ -790,7 +792,7 @@ namespace TileExplorer
 
                 mapMarker.NotifyModelChanged();
 
-                _ = UpdateChildFormAsync(frmMarkerList);
+                _ = UpdateDataAsync(DataLoad.MarkersList);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
@@ -813,7 +815,7 @@ namespace TileExplorer
 
                 markersOverlay.Markers.Remove(marker);
 
-                _ = UpdateChildFormAsync(frmMarkerList);
+                await UpdateDataAsync(DataLoad.MarkersList);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
@@ -829,7 +831,7 @@ namespace TileExplorer
 
                 track.NotifyModelChanged();
 
-                _ = UpdateChildFormAsync(frmTrackList);
+                await UpdateDataAsync(DataLoad.TracksList);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
@@ -852,7 +854,7 @@ namespace TileExplorer
 
                 tracksOverlay.Routes.Remove(track);
 
-                await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo);
+                await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TracksList);
             }
         }
 
@@ -965,7 +967,7 @@ namespace TileExplorer
 
             if (load == default)
             {
-                load = DataLoad.Tiles | DataLoad.TracksInfo;
+                load = DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TracksList | DataLoad.MarkersList;
 
                 if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
 
@@ -984,11 +986,13 @@ namespace TileExplorer
 
             Status = ProgramStatus.Idle;
 
-            await UpdateChildFormAsync(frmResults);
+            if (load.HasFlag(DataLoad.Tracks) ||
+                load.HasFlag(DataLoad.TracksList) ||
+                load.HasFlag(DataLoad.TracksInfo)) await UpdateChildFormAsync(frmResults);
 
-            if (load.HasFlag(DataLoad.Tracks)) await UpdateChildFormAsync(frmTrackList);
+            if (load.HasFlag(DataLoad.TracksList)) await UpdateChildFormAsync(frmTrackList);
 
-            if (load.HasFlag(DataLoad.Markers)) await UpdateChildFormAsync(frmMarkerList);
+            if (load.HasFlag(DataLoad.MarkersList)) await UpdateChildFormAsync(frmMarkerList);
         }
 
         private void MiMainDataUpdate_Click(object sender, EventArgs e)
@@ -1289,7 +1293,9 @@ namespace TileExplorer
             if (value is Marker)
             {
                 MarkerChange(SelectedMarker);
-            } else {
+            }
+            else
+            {
                 if (value is Track)
                 {
                     TrackChangeAsync(SelectedTrack);
@@ -1471,6 +1477,36 @@ namespace TileExplorer
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        private void OsmAction(bool open)
+        {
+            var zoom = gMapControl.Zoom;
+
+            if (!open && zoom < Const.OSM_EDIT_MIN_ZOOM)
+            {
+                if (Msg.Question(Resources.QuestionOsmSetEditZoom))
+                {
+                    zoom = Const.OSM_EDIT_MIN_ZOOM;
+                }
+            }
+
+            var url = string.Format(open ? Resources.OsmUrlOpen : Resources.OsmUrlEdit,
+                zoom,
+                gMapControl.Position.Lat.ToString(CultureInfo.InvariantCulture),
+                gMapControl.Position.Lng.ToString(CultureInfo.InvariantCulture));
+
+            Process.Start(url);
+        }
+
+        private void MiMainOsmOpen_Click(object sender, EventArgs e)
+        {
+            OsmAction(true);
+        }
+
+        private void MiMainOsmEdit_Click(object sender, EventArgs e)
+        {
+            OsmAction(false);
         }
     }
 }

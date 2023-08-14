@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
-using static TileExplorer.Converters;
+using static P3tr0viCh.Utils.Converters;
 
 namespace TileExplorer
 {
@@ -47,9 +47,11 @@ namespace TileExplorer
             Tiles = 1,
             Tracks = 2,
             Markers = 4,
-            TracksInfo = 16
+            TracksInfo = 8,
+            TracksList = 16,
+            MarkersList = 32,
         }
-        
+
         public enum MapItemType
         {
             Marker,

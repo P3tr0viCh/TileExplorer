@@ -166,6 +166,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://www.openstreetmap.org/edit#map={0}/{1}/{2}.
+        /// </summary>
+        internal static string OsmUrlEdit {
+            get {
+                return ResourceManager.GetString("OsmUrlEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.openstreetmap.org/#map={0}/{1}/{2}.
+        /// </summary>
+        internal static string OsmUrlOpen {
+            get {
+                return ResourceManager.GetString("OsmUrlOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Обновление....
         /// </summary>
         internal static string ProgramStatusUpdating {
@@ -189,6 +207,15 @@ namespace TileExplorer.Properties {
         internal static string QuestionMarkerDelete {
             get {
                 return ResourceManager.GetString("QuestionMarkerDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Приблизить для редактирования?.
+        /// </summary>
+        internal static string QuestionOsmSetEditZoom {
+            get {
+                return ResourceManager.GetString("QuestionOsmSetEditZoom", resourceCulture);
             }
         }
         
