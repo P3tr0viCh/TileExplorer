@@ -83,8 +83,6 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
 
                     dataGridView.Columns[nameof(Marker.IsTextVisible)].Visible = false;
-                    dataGridView.Columns[nameof(Marker.Image)].Visible = false;
-                    dataGridView.Columns[nameof(Marker.ImageType)].Visible = false;
                     dataGridView.Columns[nameof(Marker.OffsetX)].Visible = false;
                     dataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;
 
@@ -169,6 +167,10 @@ namespace TileExplorer
                     {
                         Alignment = DataGridViewContentAlignment.TopRight,
                         Format = AppSettings.Default.FormatDistance
+                    };
+                    dataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle = new DataGridViewCellStyle()
+                    {
+                        Alignment = DataGridViewContentAlignment.TopRight
                     };
 
                     break;

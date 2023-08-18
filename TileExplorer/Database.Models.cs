@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.ComponentModel;
+using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
@@ -48,10 +49,6 @@ namespace TileExplorer
                 public int OffsetX { get; set; } = DEFAULT_OFFSET_X;
                 public int OffsetY { get; set; } = DEFAULT_OFFSET_Y;
 
-                public byte[] Image { get; set; }
-
-                public MarkerImageType ImageType { get; set; } = MarkerImageType.Default;
-
                 public void Assign(Marker source)
                 {
                     base.Assign(source);
@@ -62,7 +59,6 @@ namespace TileExplorer
                     IsTextVisible = source.IsTextVisible;
                     OffsetX = source.OffsetX;
                     OffsetY = source.OffsetY;
-                    ImageType = source.ImageType;
                 }
             }
 
@@ -114,6 +110,10 @@ namespace TileExplorer
                 [Write(false)]
                 [Computed]
                 public List<TrackPoint> TrackPoints { get; set; }
+
+                [DisplayName("Плитки +")]
+                [Write(false)]
+                public int NewTilesCount { get; set; }
             }
 
             [Table("tracks_points")]

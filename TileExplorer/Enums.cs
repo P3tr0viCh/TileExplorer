@@ -52,6 +52,15 @@ namespace TileExplorer
             MarkersList = 32,
         }
 
+        public enum TileStatus
+        {
+            Unknown = 0,
+            Visited = 1,
+            Cluster = 2,
+            MaxCluster = 3,
+            MaxSquare = 4,
+        }
+
         public enum MapItemType
         {
             Marker,

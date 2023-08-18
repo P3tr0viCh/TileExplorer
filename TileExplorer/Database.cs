@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -14,22 +17,6 @@ namespace TileExplorer
     {
         private const int DEFAULT_OFFSET_X = 20;
         private const int DEFAULT_OFFSET_Y = -10;
-
-        public enum MarkerImageType
-        {
-            Default = 0,
-            Image = 1,
-            None
-        }
-
-        public enum TileStatus
-        {
-            Unknown = 0,
-            Visited = 1,
-            Cluster = 2,
-            MaxCluster = 3,
-            MaxSquare = 4,
-        }
 
         private static readonly Database defaultInstance = new Database();
 
@@ -77,7 +64,7 @@ namespace TileExplorer
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                     "lat REAL NOT NULL, lng REAL NOT NULL, " +
                     "text TEXT, istextvisible INTEGER, " +
-                    "offsetx INTEGER, offsety INTEGER, image BLOB, imagetype INTEGER DEFAULT 0);");
+                    "offsetx INTEGER, offsety INTEGER);");
 
                 connection.Execute("CREATE TABLE IF NOT EXISTS tiles (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
@@ -99,8 +86,17 @@ namespace TileExplorer
                     "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
 
                 /* indexes */
-                connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_index ON " +
+                connection.Execute("CREATE INDEX IF NOT EXISTS tracks_datetimestart_idx ON " +
+                    "tracks(datetimestart ASC)");
+
+                connection.Execute("CREATE INDEX IF NOT EXISTS tracks_points_trackid_idx ON " +
                     "tracks_points (trackid);");
+
+                connection.Execute("CREATE INDEX IF NOT EXISTS tracks_tiles_tileid_idx ON " +
+                    "tracks_tiles(tileid);");
+
+                connection.Execute("CREATE INDEX IF NOT EXISTS tracks_tiles_trackid_idx ON " +
+                    "tracks_tiles(trackid);");
 
                 /* triggers */
                 connection.Execute("CREATE TRIGGER IF NOT EXISTS tracks_tiles_ad AFTER DELETE ON tracks_tiles " +
@@ -306,11 +302,26 @@ namespace TileExplorer
 
                             break;
                         case nameof(Track):
-                            sql = "SELECT " +
-                                    "id, text, " +
-                                    "datetimestart, datetimefinish, " +
-                                    "distance / 1000.0 AS distance " +
-                                    "FROM tracks" + Filter.Default.ToSql() + " ORDER BY datetimestart;";
+                            sql = "SELECT id, text, " +
+                                "dt AS datetimestart, datetimefinish, " +
+                                "distance / 1000.0 AS distance, " +
+                                "SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount " +
+                                "FROM (" +
+                                    "SELECT *, EXISTS(" +
+                                        "SELECT tileid, datetimestart " +
+                                        "FROM tracks LEFT JOIN tracks_tiles ON tracks.id = tracks_tiles.trackid " +
+                                        "WHERE tileid = tid AND datetimestart < dt) AS e " +
+                                    "FROM (" +
+                                        "SELECT tracks.id AS id, text, " +
+                                            "datetimestart AS dt, datetimefinish, " +
+                                            "distance, tileid AS tid " +
+                                        "FROM tracks " +
+                                        "LEFT JOIN tracks_tiles ON tracks.id = tracks_tiles.trackid" +
+                                         Filter.Default.ToSql() + " " +
+                                    ")" +
+                                ") " +
+                                "GROUP BY dt " +
+                                "ORDER BY dt;";
 
                             break;
                         case nameof(TrackPoint):
@@ -322,6 +333,8 @@ namespace TileExplorer
                         default:
                             throw new NotImplementedException();
                     }
+
+                    WriteDebug(sql);
 
                     var list = connection.Query<T>(sql, param);
 

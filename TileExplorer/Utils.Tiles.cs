@@ -1,8 +1,8 @@
 ﻿using GMap.NET;
 using System.Collections.Generic;
 using System.Linq;
-using static TileExplorer.Database;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
@@ -16,6 +16,7 @@ namespace TileExplorer
                 public int MaxCluster;
                 public int MaxSquare;
             }
+
             private static Tile FindTileByXY(List<Tile> tiles, int x, int y)
             {
                 return tiles.Find(t => t.X == x && t.Y == y);

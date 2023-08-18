@@ -291,7 +291,7 @@ namespace TileExplorer
         {
             foreach (var tile in tiles)
             {
-                tile.Status = Database.TileStatus.Visited;
+                tile.Status = TileStatus.Visited;
             }
 
             var calcResult = await Task.Run(() =>
@@ -1097,8 +1097,6 @@ namespace TileExplorer
 
                 Utils.WriteDebug("SaveTrackAsync done");
 
-                //frmTrackList.Add(track);
-
                 var mapTrack = new MapItemTrack(track);
 
                 tracksOverlay.Routes.Add(mapTrack);
@@ -1151,8 +1149,6 @@ namespace TileExplorer
                 Utils.WriteDebug("SaveTracksTilesAsync done");
             }
 
-            //frmTrackList.Sort();
-
             Status = ProgramStatus.Idle;
         }
 
@@ -1164,7 +1160,7 @@ namespace TileExplorer
 
             await OpenTracksAsync(openFileDialog.FileNames);
 
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks | DataLoad.TracksList);
         }
 
         private void MiMainDataOpenTrack_Click(object sender, EventArgs e)
