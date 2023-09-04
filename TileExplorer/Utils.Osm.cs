@@ -40,6 +40,7 @@ namespace TileExplorer
             {
                 return P3tr0viCh.Utils.Osm.TileYToLat(y, Const.TILE_ZOOM);
             }
+            
             private class OsmNode
             {
                 public int Id;
@@ -48,7 +49,6 @@ namespace TileExplorer
 
             private class OsmWay
             {
-                public int Id;
                 public int NodeId1;
                 public int NodeId2;
             }
@@ -95,9 +95,9 @@ namespace TileExplorer
                                     Id = ++id,
                                     Point = point
                                 };
-                            }
 
-                            osmNodes.Add(osmNode);
+                                osmNodes.Add(osmNode);
+                            }
 
                             tileOsmNodesId.Add(osmNode.Id);
                         }
@@ -110,7 +110,6 @@ namespace TileExplorer
 
                         if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
                         {
-                            osmWay.Id = ++id;
                             osmWays.Add(osmWay);
                         }
 
@@ -122,7 +121,6 @@ namespace TileExplorer
 
                         if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
                         {
-                            osmWay.Id = ++id;
                             osmWays.Add(osmWay);
                         }
 
@@ -134,7 +132,6 @@ namespace TileExplorer
 
                         if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
                         {
-                            osmWay.Id = ++id;
                             osmWays.Add(osmWay);
                         }
 
@@ -146,7 +143,6 @@ namespace TileExplorer
 
                         if (!osmWays.Exists(n => n.NodeId1 == osmWay.NodeId1 && n.NodeId2 == osmWay.NodeId2))
                         {
-                            osmWay.Id = ++id;
                             osmWays.Add(osmWay);
                         }
                     }
@@ -172,7 +168,7 @@ namespace TileExplorer
                     {
                         xml.WriteStartElement("way");
                         {
-                            xml.WriteAttributeString("id", "-" + way.Id);
+                            xml.WriteAttributeString("id", "-" + ++id);
                             xml.WriteAttributeString("action", "modify");
                             xml.WriteAttributeString("visible", "true");
                             {

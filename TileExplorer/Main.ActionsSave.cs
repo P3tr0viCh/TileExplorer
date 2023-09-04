@@ -93,6 +93,8 @@ namespace TileExplorer
 
         private void SaveTileBoundaryToFile()
         {
+            Status = ProgramStatus.SaveData;
+
             var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
             var pointTo = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
 
@@ -120,6 +122,8 @@ namespace TileExplorer
 
                 Msg.Error(e.Message);
             }
+
+            Status = ProgramStatus.Idle;
         }
 
         private void SaveTileStatusToFile()

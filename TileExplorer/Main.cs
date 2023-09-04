@@ -1160,7 +1160,7 @@ namespace TileExplorer
 
             await OpenTracksAsync(openFileDialog.FileNames);
 
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks | DataLoad.TracksList);
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks | DataLoad.TracksInfo | DataLoad.TracksList);
         }
 
         private void MiMainDataOpenTrack_Click(object sender, EventArgs e)
