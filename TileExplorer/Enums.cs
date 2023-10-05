@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Forms;
 using static P3tr0viCh.Utils.Converters;
 
 namespace TileExplorer
@@ -67,7 +68,7 @@ namespace TileExplorer
             Track,
             Tile
         }
-        
+
         public enum SaveFileDialogType
         {
             Png, Osm, Gpx
@@ -82,6 +83,23 @@ namespace TileExplorer
             Octagon,
             [Description("Квадрат")]
             Square
+        }
+
+        public enum StatusLabel
+        {
+            Zoom,
+            TileId,
+            Position,
+            MousePosition,
+
+            Status,
+
+            TracksCount,
+            TracksDistance,
+
+            TilesVisited,
+            TilesMaxCluster,
+            TilesMaxSquare,
         }
     }
 }

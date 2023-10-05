@@ -277,8 +277,10 @@ namespace TileExplorer
             MainForm.SelectMapItem(this, Selected);
         }
 
-        private void DataGridView_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void DataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (e.RowIndex < 0) return;
+
             MainForm.ChangeMapItem(this, Selected);
         }
     }

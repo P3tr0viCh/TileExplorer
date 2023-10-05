@@ -1,28 +1,12 @@
 ﻿using GMap.NET;
-using System.Windows.Forms;
 using TileExplorer.Properties;
+using static TileExplorer.Enums;
+using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
     internal class StatusStripPresenter
     {
-        public interface IStatusStripView
-        {
-            ToolStripStatusLabel LabelZoom { get; }
-            ToolStripStatusLabel LabelTileId { get; }
-            ToolStripStatusLabel LabelPosition { get; }
-            ToolStripStatusLabel LabelMousePosition { get; }
-
-            ToolStripStatusLabel LabelStatus { get; }
-
-            ToolStripStatusLabel LabelTracksCount { get; }
-            ToolStripStatusLabel LabelTracksDistance { get; }
-
-            ToolStripStatusLabel LabelTilesVisited { get; }
-            ToolStripStatusLabel LabelTilesMaxCluster { get; }
-            ToolStripStatusLabel LabelTilesMaxSquare { get; }
-        }
-
         private readonly IStatusStripView view;
 
         public StatusStripPresenter(IStatusStripView view)
@@ -48,7 +32,7 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelZoom.Text = string.Format(Resources.StatusZoom, value);
+                view.GetLabel(StatusLabel.Zoom).Text = string.Format(Resources.StatusZoom, value);
             }
         }
 
@@ -56,7 +40,7 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelTileId.Text = string.Format(Resources.StatusTileId, 
+                view.GetLabel(StatusLabel.TileId).Text = string.Format(Resources.StatusTileId,
                     Utils.Osm.LngToTileX(value), Utils.Osm.LatToTileY(value));
             }
         }
@@ -65,7 +49,8 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelPosition.Text = string.Format(Resources.StatusPosition, value.Lat, value.Lng);
+                view.GetLabel(StatusLabel.Position).Text = 
+                    string.Format(Resources.StatusPosition, value.Lat, value.Lng);
             }
         }
 
@@ -73,7 +58,8 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelMousePosition.Text = string.Format(Resources.StatusMousePosition, value.Lat, value.Lng);
+                view.GetLabel(StatusLabel.MousePosition).Text = 
+                    string.Format(Resources.StatusMousePosition, value.Lat, value.Lng);
             }
         }
 
@@ -81,7 +67,7 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelStatus.Text = value;
+                view.GetLabel(StatusLabel.Status).Text = value;
             }
         }
 
@@ -89,7 +75,7 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelTracksCount.Text = string.Format(Resources.StatusTracksCount, value);
+                view.GetLabel(StatusLabel.TracksCount).Text = string.Format(Resources.StatusTracksCount, value);
             }
         }
 
@@ -97,7 +83,7 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelTracksDistance.Text = string.Format(Resources.StatusTracksDistance, value);
+                view.GetLabel(StatusLabel.TracksDistance).Text = string.Format(Resources.StatusTracksDistance, value);
             }
         }
 
@@ -105,7 +91,7 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelTilesVisited.Text = string.Format(Resources.StatusTilesVisited, value);
+                view.GetLabel(StatusLabel.TilesVisited).Text = string.Format(Resources.StatusTilesVisited, value);
             }
         }
 
@@ -113,7 +99,7 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelTilesMaxCluster.Text = string.Format(Resources.StatusTilesMaxCluster, value);
+                view.GetLabel(StatusLabel.TilesMaxCluster).Text = string.Format(Resources.StatusTilesMaxCluster, value);
             }
         }
 
@@ -121,7 +107,7 @@ namespace TileExplorer
         {
             set
             {
-                view.LabelTilesMaxSquare.Text = string.Format(Resources.StatusTilesMaxSquare, value);
+                view.GetLabel(StatusLabel.TilesMaxSquare).Text = string.Format(Resources.StatusTilesMaxSquare, value);
             }
         }
     }

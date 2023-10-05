@@ -1,4 +1,5 @@
-﻿using static TileExplorer.Database;
+﻿using System.Windows.Forms;
+using static TileExplorer.Database;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 
@@ -37,6 +38,11 @@ namespace TileExplorer
 
             void UpdateColors();
             void NotifyModelChanged();
+        }
+        
+        public interface IStatusStripView
+        {
+            ToolStripStatusLabel GetLabel(StatusLabel label);
         }
     }
 }

@@ -53,11 +53,11 @@
             this.dataGridView.RowHeadersWidth = 32;
             this.dataGridView.Size = new System.Drawing.Size(384, 265);
             this.dataGridView.TabIndex = 1;
-            this.dataGridView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DataGridView_MouseDoubleClick);
+            this.dataGridView.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseDoubleClick);
             // 
             // FrmList
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 28F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 265);
             this.Controls.Add(this.dataGridView);

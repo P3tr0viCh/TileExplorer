@@ -2,7 +2,6 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using static TileExplorer.Database.Models;
 using static TileExplorer.Interfaces;
 
 namespace TileExplorer
@@ -91,7 +90,7 @@ namespace TileExplorer
             return UpdateData() && SaveData();
         }
 
-        private void BtnOk_Click(object sender, System.EventArgs e)
+        private void BtnOk_Click(object sender, EventArgs e)
         {
             if (ApplyData())
             {

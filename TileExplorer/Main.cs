@@ -20,7 +20,6 @@ using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
-using static TileExplorer.StatusStripPresenter;
 
 namespace TileExplorer
 {
@@ -32,17 +31,6 @@ namespace TileExplorer
         private readonly GMapOverlay markersOverlay = new GMapOverlay("markers");
 
         private readonly StatusStripPresenter statusStripPresenter;
-
-        public ToolStripStatusLabel LabelZoom => slZoom;
-        public ToolStripStatusLabel LabelTileId => slTileId;
-        public ToolStripStatusLabel LabelPosition => slPosition;
-        public ToolStripStatusLabel LabelMousePosition => slMousePosition;
-        public ToolStripStatusLabel LabelStatus => slStatus;
-        public ToolStripStatusLabel LabelTracksCount => slTracksCount;
-        public ToolStripStatusLabel LabelTracksDistance => slTracksDistance;
-        public ToolStripStatusLabel LabelTilesVisited => slTilesVisited;
-        public ToolStripStatusLabel LabelTilesMaxCluster => slTilesMaxCluster;
-        public ToolStripStatusLabel LabelTilesMaxSquare => slTilesMaxSquare;
 
         private FrmFilter frmFilter;
 
@@ -243,6 +231,24 @@ namespace TileExplorer
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        public ToolStripStatusLabel GetLabel(StatusLabel label)
+        {
+            switch (label)
+            {
+                case StatusLabel.Zoom: return slZoom;
+                case StatusLabel.TileId: return slTileId;
+                case StatusLabel.Position: return slPosition;
+                case StatusLabel.MousePosition: return slMousePosition;
+                case StatusLabel.Status: return slStatus;
+                case StatusLabel.TracksCount: return slTracksCount;
+                case StatusLabel.TracksDistance: return slTracksDistance;
+                case StatusLabel.TilesVisited: return slTilesVisited;
+                case StatusLabel.TilesMaxCluster: return slTilesMaxCluster;
+                case StatusLabel.TilesMaxSquare: return slTilesMaxSquare;
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
 
 #if DEBUG && DUMMY_TILES
