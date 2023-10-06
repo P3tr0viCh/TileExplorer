@@ -1510,5 +1510,21 @@ namespace TileExplorer
         {
             OsmAction(false);
         }
+
+        private void ShowTileInfo(Tile tile)
+        {
+            FrmTileInfo.ShowFrm(this, tile);
+        }
+
+        private void MiMapShowTileInfo_Click(object sender, EventArgs e)
+        {
+            var position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
+
+            ShowTileInfo(new Tile()
+            {
+                X = Utils.Osm.LngToTileX(position),
+                Y = Utils.Osm.LatToTileY(position)
+            });
+        }
     }
 }

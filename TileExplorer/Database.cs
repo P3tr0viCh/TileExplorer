@@ -5,11 +5,8 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -302,7 +299,9 @@ namespace TileExplorer
 
                             break;
                         case nameof(Track):
-                            sql = "SELECT id, text, " +
+                            if (filter == null)
+                            {
+                                sql = "SELECT id, text, " +
                                 "dt AS datetimestart, datetimefinish, " +
                                 "distance / 1000.0 AS distance, " +
                                 "SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount " +
@@ -322,6 +321,17 @@ namespace TileExplorer
                                 ") " +
                                 "GROUP BY dt " +
                                 "ORDER BY dt;";
+                            }
+                            else
+                            {
+                                sql = "SELECT * FROM tracks " +
+                                "WHERE id IN (" +
+                                    "SELECT trackid FROM tracks_tiles WHERE tileid IN (" +
+                                        "SELECT id FROM tiles WHERE x = :x AND y = :y)) " +
+                                "ORDER BY datetimestart;";
+
+                                param = new { x = ((Tile)filter).X, y = ((Tile)filter).Y };
+                            }
 
                             break;
                         case nameof(TrackPoint):
@@ -334,7 +344,7 @@ namespace TileExplorer
                             throw new NotImplementedException();
                     }
 
-                    WriteDebug(sql);
+                    Utils.WriteDebug(sql);
 
                     var list = connection.Query<T>(sql, param);
 
@@ -359,6 +369,14 @@ namespace TileExplorer
                     return (List<T>)list;
                 }
             });
+        }
+
+        public async Task LoadTileInfoAsync(Tile tile)
+        {
+            using (var connection = GetConnection())
+            {
+                tile.Tracks = await ListLoadAsync<Track>(tile);
+            }
         }
     }
 }

@@ -96,6 +96,9 @@
             this.miMarkerDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.cmMap = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miMapMarkerAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.miMapOsmOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapOsmEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapTileAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapTileDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -103,9 +106,8 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-            this.miMapOsmOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMapOsmEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapShowTileInfo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -695,32 +697,53 @@
             this.cmMap.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miMapMarkerAdd,
             this.toolStripSeparator12,
+            this.miMapShowTileInfo,
+            this.toolStripSeparator13,
             this.miMapOsmOpen,
             this.miMapOsmEdit,
             this.miMapTileAdd,
             this.miMapTileDelete});
             this.cmMap.Name = "cmMap";
-            this.cmMap.Size = new System.Drawing.Size(195, 142);
+            this.cmMap.Size = new System.Drawing.Size(200, 170);
             this.cmMap.Opening += new System.ComponentModel.CancelEventHandler(this.CmMap_Opening);
             // 
             // miMapMarkerAdd
             // 
             this.miMapMarkerAdd.Name = "miMapMarkerAdd";
-            this.miMapMarkerAdd.Size = new System.Drawing.Size(194, 22);
+            this.miMapMarkerAdd.Size = new System.Drawing.Size(199, 22);
             this.miMapMarkerAdd.Text = "Добавить маркер...";
             this.miMapMarkerAdd.Click += new System.EventHandler(this.MiMapMarkerAdd_Click);
+            // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(196, 6);
+            // 
+            // miMapOsmOpen
+            // 
+            this.miMapOsmOpen.Name = "miMapOsmOpen";
+            this.miMapOsmOpen.Size = new System.Drawing.Size(199, 22);
+            this.miMapOsmOpen.Text = "Открыть в ОСМ";
+            this.miMapOsmOpen.Click += new System.EventHandler(this.MiMainOsmOpen_Click);
+            // 
+            // miMapOsmEdit
+            // 
+            this.miMapOsmEdit.Name = "miMapOsmEdit";
+            this.miMapOsmEdit.Size = new System.Drawing.Size(199, 22);
+            this.miMapOsmEdit.Text = "Редактировать в ОСМ";
+            this.miMapOsmEdit.Click += new System.EventHandler(this.MiMainOsmEdit_Click);
             // 
             // miMapTileAdd
             // 
             this.miMapTileAdd.Name = "miMapTileAdd";
-            this.miMapTileAdd.Size = new System.Drawing.Size(194, 22);
+            this.miMapTileAdd.Size = new System.Drawing.Size(199, 22);
             this.miMapTileAdd.Text = "add tile";
             this.miMapTileAdd.Click += new System.EventHandler(this.MiMapTileAdd_Click);
             // 
             // miMapTileDelete
             // 
             this.miMapTileDelete.Name = "miMapTileDelete";
-            this.miMapTileDelete.Size = new System.Drawing.Size(194, 22);
+            this.miMapTileDelete.Size = new System.Drawing.Size(199, 22);
             this.miMapTileDelete.Text = "delete tile";
             this.miMapTileDelete.Click += new System.EventHandler(this.MiMapTileDelete_Click);
             // 
@@ -758,24 +781,17 @@
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
             // 
-            // toolStripSeparator12
+            // miMapShowTileInfo
             // 
-            this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(191, 6);
+            this.miMapShowTileInfo.Name = "miMapShowTileInfo";
+            this.miMapShowTileInfo.Size = new System.Drawing.Size(199, 22);
+            this.miMapShowTileInfo.Text = "Информация о плитке";
+            this.miMapShowTileInfo.Click += new System.EventHandler(this.MiMapShowTileInfo_Click);
             // 
-            // miMapOsmOpen
+            // toolStripSeparator13
             // 
-            this.miMapOsmOpen.Name = "miMapOsmOpen";
-            this.miMapOsmOpen.Size = new System.Drawing.Size(194, 22);
-            this.miMapOsmOpen.Text = "Открыть в ОСМ";
-            this.miMapOsmOpen.Click += new System.EventHandler(this.MiMainOsmOpen_Click);
-            // 
-            // miMapOsmEdit
-            // 
-            this.miMapOsmEdit.Name = "miMapOsmEdit";
-            this.miMapOsmEdit.Size = new System.Drawing.Size(194, 22);
-            this.miMapOsmEdit.Text = "Редактировать в ОСМ";
-            this.miMapOsmEdit.Click += new System.EventHandler(this.MiMainOsmEdit_Click);
+            this.toolStripSeparator13.Name = "toolStripSeparator13";
+            this.toolStripSeparator13.Size = new System.Drawing.Size(196, 6);
             // 
             // Main
             // 
@@ -892,6 +908,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
         private System.Windows.Forms.ToolStripMenuItem miMapOsmOpen;
         private System.Windows.Forms.ToolStripMenuItem miMapOsmEdit;
+        private System.Windows.Forms.ToolStripMenuItem miMapShowTileInfo;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
     }
 }
 

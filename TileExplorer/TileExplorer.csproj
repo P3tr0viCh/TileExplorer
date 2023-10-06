@@ -119,6 +119,12 @@
     <Compile Include="FrmList.Designer.cs">
       <DependentUpon>FrmList.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmTileInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmTileInfo.Designer.cs">
+      <DependentUpon>FrmTileInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces.cs" />
     <Compile Include="Main.ActionsSave.cs">
       <SubType>Form</SubType>
@@ -174,6 +180,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmList.resx">
       <DependentUpon>FrmList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmTileInfo.resx">
+      <DependentUpon>FrmTileInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmTrack.resx">
       <DependentUpon>FrmTrack.cs</DependentUpon>

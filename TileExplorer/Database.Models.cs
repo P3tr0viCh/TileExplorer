@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.ComponentModel;
 using static TileExplorer.Enums;
+using Newtonsoft.Json;
 
 namespace TileExplorer
 {
@@ -76,9 +77,13 @@ namespace TileExplorer
                 [Computed]
                 public int ClusterId { get; set; } = -1;
 
+                [Write(false)]
+                [Computed]
+                public List<Track> Tracks { get; set; } = null;
+
                 public override string ToString()
                 {
-                    return $"{GetType().Name}{{Id={Id}, X={X}, Y={Y}, Status:{Status}}}";
+                    return JsonConvert.SerializeObject(this);
                 }
             }
 
