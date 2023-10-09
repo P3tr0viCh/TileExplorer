@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using static TileExplorer.Database;
+﻿using System.Threading.Tasks;
+using System.Windows.Forms;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 
@@ -25,21 +25,33 @@ namespace TileExplorer
         {
             IMainForm MainForm { get; }
 
-            ChildFormType ListType { get; }
+            ChildFormType ChildFormType { get; }
+
+            void UpdateSettings();
+        }
+
+        public interface IUpdateDataForm
+        {
+            Task UpdateDataAsync();
+        }
+
+        public interface IListForm
+        {
+            void SetSelected(BaseId value);
         }
 
         public interface IMapItem
         {
             MapItemType Type { get; }
 
-            Models.BaseId Model { get; set; }
+            BaseId Model { get; set; }
 
             bool Selected { get; set; }
 
             void UpdateColors();
             void NotifyModelChanged();
         }
-        
+
         public interface IStatusStripView
         {
             ToolStripStatusLabel GetLabel(StatusLabel label);

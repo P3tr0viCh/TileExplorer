@@ -56,10 +56,5 @@ namespace TileExplorer
 
             Debug.WriteLine(error);
         }
-
-        public static bool IsChildFormExists(Form form)
-        {
-            return form != null;
-        }
     }
 }

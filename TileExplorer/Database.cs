@@ -118,7 +118,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task SaveMarkerAsync(Marker marker)
+        public async Task MarkerSaveAsync(Marker marker)
         {
             using (var connection = GetConnection())
             {
@@ -133,7 +133,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task DeleteMarkerAsync(Marker marker)
+        public async Task MarkerDeleteAsync(Marker marker)
         {
             using (var connection = GetConnection())
             {
@@ -162,7 +162,7 @@ namespace TileExplorer
             });
         }
 
-        public async Task<int> SaveTileAsync(Tile tile)
+        public async Task<int> TileSaveAsync(Tile tile)
         {
             using (var connection = GetConnection())
             {
@@ -170,7 +170,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task<int> DeleteTileAsync(Tile tile)
+        public async Task<int> TileDeleteAsync(Tile tile)
         {
             using (var connection = GetConnection())
             {
@@ -178,7 +178,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task<int> ExistsTileAsync(Tile tile)
+        public async Task<int> TileExistsAsync(Tile tile)
         {
             return await Task.Run(() =>
             {

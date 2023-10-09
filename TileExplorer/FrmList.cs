@@ -12,26 +12,26 @@ using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public partial class FrmList : Form, IChildForm
+    public partial class FrmList : Form, IChildForm, IUpdateDataForm, IListForm
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        public ChildFormType ListType { get; set; }
+        public ChildFormType ChildFormType { get; set; }
 
         public FrmList()
         {
             InitializeComponent();
         }
 
-        public static FrmList ShowFrm(Form owner, ChildFormType listType)
+        public static FrmList ShowFrm(Form owner, ChildFormType childFormType)
         {
             var frm = new FrmList()
             {
                 Owner = owner,
-                ListType = listType,
+                ChildFormType = childFormType,
             };
 
-            Debug.WriteLine("ListType = " + listType);
+            Debug.WriteLine("ListType = " + childFormType);
 
             frm.Show(owner);
 
@@ -40,7 +40,7 @@ namespace TileExplorer
 
         private void FrmListNew_Load(object sender, EventArgs e)
         {
-            switch (ListType)
+            switch (ChildFormType)
             {
                 case ChildFormType.Results:
                     bindingSource.DataSource = typeof(Results);
@@ -59,7 +59,7 @@ namespace TileExplorer
 
             dataGridView.Columns[nameof(BaseId.Id)].Visible = false;
 
-            switch (ListType)
+            switch (ChildFormType)
             {
                 case ChildFormType.Results:
                     Text = Resources.TitleListResults;
@@ -103,7 +103,7 @@ namespace TileExplorer
 
         private void FrmListNew_FormClosing(object sender, FormClosingEventArgs e)
         {
-            switch (ListType)
+            switch (ChildFormType)
             {
                 case ChildFormType.Results:
                     AppSettings.Default.FormStateResults = AppSettings.SaveFormState(this);
@@ -131,60 +131,35 @@ namespace TileExplorer
 
         public void UpdateSettings()
         {
-            switch (ListType)
+            switch (ChildFormType)
             {
                 case ChildFormType.Results:
-                    dataGridView.Columns[nameof(Results.Year)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Format = "####"
-                    };
-                    dataGridView.Columns[nameof(Results.Count)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Alignment = DataGridViewContentAlignment.TopRight
-                    };
-                    dataGridView.Columns[nameof(Results.DistanceSum)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Alignment = DataGridViewContentAlignment.TopRight,
-                        Format = AppSettings.Default.FormatDistance2
-                    };
+                    dataGridView.Columns[nameof(Results.Year)].DefaultCellStyle = 
+                        DataGridViewCellStyles.Year;
+                    dataGridView.Columns[nameof(Results.Count)].DefaultCellStyle = 
+                        DataGridViewCellStyles.Count;
+                    dataGridView.Columns[nameof(Results.DistanceSum)].DefaultCellStyle = 
+                        DataGridViewCellStyles.DistanceSum;
 
                     break;
                 case ChildFormType.Tracks:
-                    dataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Format = AppSettings.Default.FormatDateTime
-                    };
-                    dataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Format = AppSettings.Default.FormatDateTime
-                    };
-                    dataGridView.Columns[nameof(Track.Duration)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Alignment = DataGridViewContentAlignment.TopRight,
-                        Format = "hh\\:mm"
-                    };
-                    dataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Alignment = DataGridViewContentAlignment.TopRight,
-                        Format = AppSettings.Default.FormatDistance
-                    };
-                    dataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Alignment = DataGridViewContentAlignment.TopRight
-                    };
+                    dataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle =
+                        DataGridViewCellStyles.DateTime;
+                    dataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle = 
+                        DataGridViewCellStyles.DateTime;
+                    dataGridView.Columns[nameof(Track.Duration)].DefaultCellStyle = 
+                        DataGridViewCellStyles.Duration;
+                    dataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle = 
+                        DataGridViewCellStyles.Distance;
+                    dataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle = 
+                        DataGridViewCellStyles.Count;
 
                     break;
                 case ChildFormType.Markers:
-                    dataGridView.Columns[nameof(Marker.Lat)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Alignment = DataGridViewContentAlignment.TopRight,
-                        Format = AppSettings.Default.FormatLatLng
-                    };
-                    dataGridView.Columns[nameof(Marker.Lng)].DefaultCellStyle = new DataGridViewCellStyle()
-                    {
-                        Alignment = DataGridViewContentAlignment.TopRight,
-                        Format = AppSettings.Default.FormatLatLng
-                    };
+                    dataGridView.Columns[nameof(Marker.Lat)].DefaultCellStyle = 
+                        DataGridViewCellStyles.LatLng;
+                    dataGridView.Columns[nameof(Marker.Lng)].DefaultCellStyle = 
+                        DataGridViewCellStyles.LatLng;
 
                     break;
                 default:
@@ -200,7 +175,7 @@ namespace TileExplorer
 
             try
             {
-                switch (ListType)
+                switch (ChildFormType)
                 {
                     case ChildFormType.Results:
                         errorMsg = Resources.MsgDatabaseLoadListResultsFail;

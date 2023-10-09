@@ -40,6 +40,7 @@ namespace TileExplorer
             Tracks,
             Markers,
             Results,
+            TileInfo,
         }
 
         [Flags]

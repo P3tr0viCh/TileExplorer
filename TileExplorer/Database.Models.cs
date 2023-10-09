@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using static TileExplorer.Enums;
 using Newtonsoft.Json;
+using GMap.NET;
 
 namespace TileExplorer
 {
@@ -66,6 +67,20 @@ namespace TileExplorer
             [Table("tiles")]
             public class Tile : BaseId
             {
+                public Tile()
+                {
+                }
+
+                public Tile(int x, int y)
+                {
+                    X = x;
+                    Y = y;
+                }
+
+                public Tile(PointLatLng point) : this(Utils.Osm.LngToTileX(point), Utils.Osm.LatToTileY(point))
+                {
+                }
+
                 public int X { get; set; }
                 public int Y { get; set; }
 

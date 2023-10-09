@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database;
@@ -12,7 +13,7 @@ namespace TileExplorer
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        public ChildFormType ListType => ChildFormType.Filter;
+        public ChildFormType ChildFormType => ChildFormType.Filter;
 
         public FrmFilter()
         {
@@ -37,10 +38,7 @@ namespace TileExplorer
         {
             AppSettings.LoadFormState(this, AppSettings.Default.FormStateFilter);
  
-            dtpDay.CustomFormat = AppSettings.Default.FormatDate;
-
-            dtpDateFrom.CustomFormat = AppSettings.Default.FormatDate;
-            dtpDateTo.CustomFormat = AppSettings.Default.FormatDate;
+            UpdateSettings();
 
             selfChange = true;
 
@@ -143,6 +141,19 @@ namespace TileExplorer
 
             timer.Stop();
             timer.Start();
+        }
+
+        public void UpdateSettings()
+        {
+            dtpDay.CustomFormat = AppSettings.Default.FormatDate;
+
+            dtpDateFrom.CustomFormat = AppSettings.Default.FormatDate;
+            dtpDateTo.CustomFormat = AppSettings.Default.FormatDate;
+        }
+
+        public Task UpdateDataAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }

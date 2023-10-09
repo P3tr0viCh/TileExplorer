@@ -156,6 +156,9 @@
 Ошибка:
 {0}.</value>
   </data>
+  <data name="MsgTileNotVisited" xml:space="preserve">
+    <value>Плитка не открыта.</value>
+  </data>
   <data name="OsmUrlEdit" xml:space="preserve">
     <value>https://www.openstreetmap.org/edit#map={0}/{1}/{2}</value>
   </data>

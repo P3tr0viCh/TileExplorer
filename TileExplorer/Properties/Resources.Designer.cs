@@ -166,6 +166,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Плитка не открыта..
+        /// </summary>
+        internal static string MsgTileNotVisited {
+            get {
+                return ResourceManager.GetString("MsgTileNotVisited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://www.openstreetmap.org/edit#map={0}/{1}/{2}.
         /// </summary>
         internal static string OsmUrlEdit {

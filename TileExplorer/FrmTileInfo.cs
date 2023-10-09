@@ -1,12 +1,23 @@
-﻿using System.Drawing;
+﻿using P3tr0viCh.Utils;
+using System;
+using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
+using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public partial class FrmTileInfo : Form
+    public partial class FrmTileInfo : Form, IChildForm, IUpdateDataForm
     {
+        public IMainForm MainForm => Owner as IMainForm;
+
+        public ChildFormType ChildFormType => ChildFormType.TileInfo;
+
+        private Tile Tile { get; set; } = null;
+
         public FrmTileInfo()
         {
             InitializeComponent();
@@ -18,23 +29,61 @@ namespace TileExplorer
             {
                 Owner = owner,
                 Text = string.Format(Resources.StatusTileId, tile.X, tile.Y),
+                Tile = tile
             };
 
             frm.Location = new Point(owner.Location.X + owner.Width / 2 - frm.Width / 2,
                                      owner.Location.Y + owner.Height / 2 - frm.Height / 2);
-
-            frm.LoadTileInfo(tile);
 
             frm.Show(owner);
 
             return frm;
         }
 
-        private async void LoadTileInfo(Tile tile)
+        private void FrmTileInfo_Load(object sender, EventArgs e)
         {
-            await Database.Default.LoadTileInfoAsync(tile);
+            UpdateSettings();
 
-            label1.Text = tile.Tracks.Count.ToString();
+            _ = UpdateDataAsync();
+        }
+
+        private void FrmTileInfo_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
+        }
+
+        public void UpdateSettings()
+        {
+            ColumnDateTimeStart.DefaultCellStyle = DataGridViewCellStyles.Date;
+
+            dataGridView.Refresh();
+        }
+
+        public async Task UpdateDataAsync()
+        {
+            MainForm.Status = ProgramStatus.LoadData;
+
+            try
+            {
+                await Database.Default.LoadTileInfoAsync(Tile);
+            }
+            catch (Exception e)
+            {
+                Utils.WriteError(e);
+
+                Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
+            }
+            finally
+            {
+                MainForm.Status = ProgramStatus.Idle;
+            }
+
+            slCount.Text = string.Format(Resources.StatusTracksCount, Tile.Tracks.Count);
+
+            trackBindingSource.DataSource = Tile.Tracks;
         }
     }
 }

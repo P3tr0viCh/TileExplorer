@@ -103,11 +103,7 @@ namespace TileExplorer
             for (var x = Utils.Osm.LngToTileX(pointFrom); x <= Utils.Osm.LngToTileX(pointTo); x++)
                 for (var y = Utils.Osm.LatToTileY(pointFrom); y <= Utils.Osm.LatToTileY(pointTo); y++)
                 {
-                    tiles.Add(new Tile()
-                    {
-                        X = x,
-                        Y = y,
-                    });
+                    tiles.Add(new Tile(x, y));
                 }
 
             try

@@ -78,7 +78,7 @@ namespace TileExplorer
 
         private bool SaveData()
         {
-            _ = Database.Default.SaveMarkerAsync(Marker);
+            _ = Database.Default.MarkerSaveAsync(Marker);
 
             ((IMainForm)Owner).MarkerChanged(Marker);
 

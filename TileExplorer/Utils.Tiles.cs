@@ -142,7 +142,7 @@ namespace TileExplorer
 
                     if (tiles.FindIndex(tile => tile.X == x && tile.Y == y) == -1)
                     {
-                        tiles.Add(new Tile() { X = x, Y = y });
+                        tiles.Add(new Tile(x, y));
                     }
                 }
 
@@ -215,11 +215,7 @@ namespace TileExplorer
                 {
                     if (!boudaryTiles.Exists(t => t.X == x && t.Y == y))
                     {
-                        boudaryTiles.Add(new Tile()
-                        {
-                            X = x,
-                            Y = y,
-                        });
+                        boudaryTiles.Add(new Tile(x, y));
                     }
                 }
             }
