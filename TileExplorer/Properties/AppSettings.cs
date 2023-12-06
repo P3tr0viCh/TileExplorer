@@ -345,10 +345,10 @@ namespace TileExplorer.Properties
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
-        public ColumnsState ColumnsResults { get; set; }
+        public ColumnState[] ColumnsResults { get; set; }
         [Browsable(false)]
-        public ColumnsState ColumnsTrackList { get; set; }
+        public ColumnState[] ColumnsTrackList { get; set; }
         [Browsable(false)]
-        public ColumnsState ColumnsMarkerList { get; set; }
+        public ColumnState[] ColumnsMarkerList { get; set; }
     }
 }

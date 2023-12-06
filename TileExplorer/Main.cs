@@ -36,6 +36,8 @@ namespace TileExplorer
         {
             InitializeComponent();
 
+            statusStripPresenter = new StatusStripPresenter(this);
+
             AppSettings.Directory =
 #if DEBUG
                  Files.ExecutableDirectory();
@@ -43,21 +45,8 @@ namespace TileExplorer
                 Files.AppDataDirectory();
 #endif
 
-            Utils.WriteDebug("settings: " + AppSettings.FilePath);
-
-            AppSettings.Default.Load();
-
-            UpdateDatabaseFileName();
-
-            statusStripPresenter = new StatusStripPresenter(this);
-
-            Database.Filter.Default.Day = AppSettings.Default.Filter.Day;
-            Database.Filter.Default.DateFrom = AppSettings.Default.Filter.DateFrom;
-            Database.Filter.Default.DateTo = AppSettings.Default.Filter.DateTo;
-            Database.Filter.Default.Years = AppSettings.Default.Filter.Years;
-
-            Database.Filter.Default.OnChanged += Filter_OnChanged;
-        }
+            Utils.WriteDebug("Settings: " + AppSettings.FilePath);
+       }
 
         private void Filter_OnChanged()
         {
@@ -70,6 +59,20 @@ namespace TileExplorer
 
         private void Main_Load(object sender, EventArgs e)
         {
+
+            AppSettingsLoad();
+            
+            GMapLoad();
+
+            UpdateDatabaseFileName();
+
+            Database.Filter.Default.Day = AppSettings.Default.Filter.Day;
+            Database.Filter.Default.DateFrom = AppSettings.Default.Filter.DateFrom;
+            Database.Filter.Default.DateTo = AppSettings.Default.Filter.DateTo;
+            Database.Filter.Default.Years = AppSettings.Default.Filter.Years;
+
+            Database.Filter.Default.OnChanged += Filter_OnChanged;
+ 
             AppSettings.LoadFormState(this, AppSettings.Default.FormStateMain);
 
 #if DEBUG && DUMMY_TILES
@@ -141,10 +144,24 @@ namespace TileExplorer
             AppSettings.Default.Filter.DateTo = Database.Filter.Default.DateTo;
             AppSettings.Default.Filter.Years = Database.Filter.Default.Years;
 
-            AppSettings.Default.Save();
+            AppSettingsSave();
         }
 
-        private void GMapControl_Load(object sender, EventArgs e)
+        public void AppSettingsLoad()
+        {
+            if (AppSettings.Default.Load()) return;
+
+            Utils.WriteError(AppSettings.LastError);
+        }
+
+        public void AppSettingsSave()
+        {
+            if (AppSettings.Default.Save()) return;
+
+            Utils.WriteError(AppSettings.LastError);
+        }
+
+        private void GMapLoad()
         {
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
 

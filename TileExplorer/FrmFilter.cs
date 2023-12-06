@@ -44,10 +44,10 @@ namespace TileExplorer
 
             rbtnFilterNone.Checked = true;
 
-            dtpDay.Value = Filter.Default.Day != default ? Filter.Default.Day : DateTime.Now;
+            dtpDay.Value = Filter.Default.Day != default ? Filter.Default.Day : DateTime.Now.Date;
 
-            dtpDateFrom.Value = Filter.Default.DateFrom != default ? Filter.Default.DateFrom : DateTime.Now;
-            dtpDateTo.Value = Filter.Default.DateTo != default ? Filter.Default.DateTo : DateTime.Now;
+            dtpDateFrom.Value = Filter.Default.DateFrom != default ? Filter.Default.DateFrom : DateTime.Now.Date;
+            dtpDateTo.Value = Filter.Default.DateTo != default ? Filter.Default.DateTo : DateTime.Now.Date;
 
             tbYears.Text = Filter.Default.Years != default ? string.Join(", ", Filter.Default.Years) : string.Empty;
 
@@ -98,10 +98,10 @@ namespace TileExplorer
         {
             timer.Stop();
 
-            Filter.Default.Day = dtpDay.Value;
+            Filter.Default.Day = dtpDay.Value.Date;
 
-            Filter.Default.DateFrom = dtpDateFrom.Value;
-            Filter.Default.DateTo = dtpDateTo.Value;
+            Filter.Default.DateFrom = dtpDateFrom.Value.Date;
+            Filter.Default.DateTo = dtpDateTo.Value.Date;
 
             Filter.Default.Years = SplitInts(tbYears.Text);
 

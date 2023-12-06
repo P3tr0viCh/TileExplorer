@@ -97,6 +97,8 @@
             this.cmMap = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miMapMarkerAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.miMapShowTileInfo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.miMapOsmOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapOsmEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapTileAdd = new System.Windows.Forms.ToolStripMenuItem();
@@ -106,8 +108,6 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
-            this.miMapShowTileInfo = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -153,7 +153,6 @@
             this.gMapControl.Zoom = 0D;
             this.gMapControl.OnPositionChanged += new GMap.NET.PositionChanged(this.GMapControl_OnPositionChanged);
             this.gMapControl.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.GMapControl_OnMapZoomChanged);
-            this.gMapControl.Load += new System.EventHandler(this.GMapControl_Load);
             this.gMapControl.SizeChanged += new System.EventHandler(this.GMapControl_SizeChanged);
             this.gMapControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseClick);
             this.gMapControl.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseDoubleClick);
@@ -704,7 +703,7 @@
             this.miMapTileAdd,
             this.miMapTileDelete});
             this.cmMap.Name = "cmMap";
-            this.cmMap.Size = new System.Drawing.Size(200, 170);
+            this.cmMap.Size = new System.Drawing.Size(200, 148);
             this.cmMap.Opening += new System.ComponentModel.CancelEventHandler(this.CmMap_Opening);
             // 
             // miMapMarkerAdd
@@ -718,6 +717,18 @@
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
             this.toolStripSeparator12.Size = new System.Drawing.Size(196, 6);
+            // 
+            // miMapShowTileInfo
+            // 
+            this.miMapShowTileInfo.Name = "miMapShowTileInfo";
+            this.miMapShowTileInfo.Size = new System.Drawing.Size(199, 22);
+            this.miMapShowTileInfo.Text = "Информация о плитке";
+            this.miMapShowTileInfo.Click += new System.EventHandler(this.MiMapShowTileInfo_Click);
+            // 
+            // toolStripSeparator13
+            // 
+            this.toolStripSeparator13.Name = "toolStripSeparator13";
+            this.toolStripSeparator13.Size = new System.Drawing.Size(196, 6);
             // 
             // miMapOsmOpen
             // 
@@ -780,18 +791,6 @@
             // 
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
-            // 
-            // miMapShowTileInfo
-            // 
-            this.miMapShowTileInfo.Name = "miMapShowTileInfo";
-            this.miMapShowTileInfo.Size = new System.Drawing.Size(199, 22);
-            this.miMapShowTileInfo.Text = "Информация о плитке";
-            this.miMapShowTileInfo.Click += new System.EventHandler(this.MiMapShowTileInfo_Click);
-            // 
-            // toolStripSeparator13
-            // 
-            this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(196, 6);
             // 
             // Main
             // 
