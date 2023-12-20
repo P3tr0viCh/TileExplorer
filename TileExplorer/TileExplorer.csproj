@@ -114,6 +114,12 @@
     <Compile Include="Converters.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="FrmEquipment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmEquipment.Designer.cs">
+      <DependentUpon>FrmEquipment.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,6 +185,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmEquipment.resx">
+      <DependentUpon>FrmEquipment.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmList.resx">
       <DependentUpon>FrmList.cs</DependentUpon>
     </EmbeddedResource>

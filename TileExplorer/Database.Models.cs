@@ -134,6 +134,37 @@ namespace TileExplorer
                 [DisplayName("Плитки +")]
                 [Write(false)]
                 public int NewTilesCount { get; set; }
+
+                public new void Clear()
+                {
+                    base.Clear();
+
+                    Text = string.Empty;
+                }
+
+                public void Assign(Track source)
+                {
+                    if (source == null)
+                    {
+                        Clear();
+
+                        return;
+                    }
+
+                    base.Assign(source);
+
+                    Text = source.Text;
+
+                    DateTimeStart = source.DateTimeStart;
+                    DateTimeFinish = source.DateTimeFinish;
+
+                    Distance = source.Distance;
+
+                    TrackPoints.Clear();
+                    TrackPoints.AddRange(source.TrackPoints);
+
+                    NewTilesCount = source.NewTilesCount;
+                }
             }
 
             [Table("tracks_points")]
@@ -200,6 +231,70 @@ namespace TileExplorer
 
                     Count = source.Count;
                     DistanceSum = source.DistanceSum;
+                }
+            }
+
+            [Table("equipments")]
+            public class Equipment : BaseId
+            {
+                [DisplayName("Название")]
+                public string Text { get; set; }
+
+                [DisplayName("Марка")]
+                public string Brand { get; set; }
+
+                [DisplayName("Модель")]
+                public string Model { get; set; }
+
+                [DisplayName("Название")]
+                [Write(false)]
+                [Computed]
+                public string Name
+                {
+                    get
+                    {
+                        if (string.IsNullOrEmpty(Text))
+                        {
+                            if (string.IsNullOrEmpty(Brand))
+                            {
+                                return Model;
+                            }
+
+                            if (string.IsNullOrEmpty(Model))
+                            {
+                                return Brand;
+                            }
+
+                            return Brand + " " + Model;
+                        }
+
+                        return Text;
+                    }
+                }
+
+                public new void Clear()
+                {
+                    base.Clear();
+
+                    Text = string.Empty;
+                    Brand = string.Empty;
+                    Model = string.Empty;
+                }
+
+                public void Assign(Equipment source)
+                {
+                    if (source == null)
+                    {
+                        Clear();
+
+                        return;
+                    }
+
+                    base.Assign(source);
+
+                    Text = source.Text;
+                    Brand = source.Brand;
+                    Model = source.Model;
                 }
             }
         }

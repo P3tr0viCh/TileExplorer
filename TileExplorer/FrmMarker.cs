@@ -2,15 +2,18 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using static TileExplorer.Database.Models;
 using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
     public partial class FrmMarker : Form
     {
-        private readonly Database.Models.Marker marker = new Database.Models.Marker();
+        public IMainForm MainForm => Owner as IMainForm;
 
-        private Database.Models.Marker Marker
+        private readonly Marker marker = new Marker();
+
+        private Marker Marker
         {
             get
             {
@@ -37,7 +40,7 @@ namespace TileExplorer
             InitializeComponent();
         }
 
-        public static bool ShowDlg(Form owner, Database.Models.Marker marker)
+        public static bool ShowDlg(Form owner, Marker marker)
         {
             using (var frm = new FrmMarker()
             {
@@ -80,7 +83,7 @@ namespace TileExplorer
         {
             _ = Database.Default.MarkerSaveAsync(Marker);
 
-            ((IMainForm)Owner).MarkerChanged(Marker);
+            MainForm.MarkerChanged(Marker);
 
             return true;
         }

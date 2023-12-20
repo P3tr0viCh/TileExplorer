@@ -46,11 +46,11 @@ namespace TileExplorer
 #endif
 
             Utils.WriteDebug("Settings: " + AppSettings.FilePath);
-       }
+        }
 
         private void Filter_OnChanged()
         {
-            var load = DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TracksList;
+            var load = DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TrackList;
 
             if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
 
@@ -61,7 +61,7 @@ namespace TileExplorer
         {
 
             AppSettingsLoad();
-            
+
             GMapLoad();
 
             UpdateDatabaseFileName();
@@ -72,7 +72,7 @@ namespace TileExplorer
             Database.Filter.Default.Years = AppSettings.Default.Filter.Years;
 
             Database.Filter.Default.OnChanged += Filter_OnChanged;
- 
+
             AppSettings.LoadFormState(this, AppSettings.Default.FormStateMain);
 
 #if DEBUG && DUMMY_TILES
@@ -107,11 +107,15 @@ namespace TileExplorer
             }
             if (AppSettings.Default.VisibleTrackList)
             {
-                ShowChildForm(ChildFormType.Tracks, true);
+                ShowChildForm(ChildFormType.TrackList, true);
             }
             if (AppSettings.Default.VisibleMarkerList)
             {
-                ShowChildForm(ChildFormType.Markers, true);
+                ShowChildForm(ChildFormType.MarkerList, true);
+            }
+            if (AppSettings.Default.VisibleEquipmentList)
+            {
+                ShowChildForm(ChildFormType.EquipmentList, true);
             }
             if (AppSettings.Default.VisibleFilter)
             {
@@ -134,8 +138,9 @@ namespace TileExplorer
             AppSettings.Default.VisibleFilter = ChildFormMenuItemState(ChildFormType.Filter).Checked;
 
             AppSettings.Default.VisibleResults = ChildFormMenuItemState(ChildFormType.Results).Checked;
-            AppSettings.Default.VisibleTrackList = ChildFormMenuItemState(ChildFormType.Tracks).Checked;
-            AppSettings.Default.VisibleMarkerList = ChildFormMenuItemState(ChildFormType.Markers).Checked;
+            AppSettings.Default.VisibleTrackList = ChildFormMenuItemState(ChildFormType.TrackList).Checked;
+            AppSettings.Default.VisibleMarkerList = ChildFormMenuItemState(ChildFormType.MarkerList).Checked;
+            AppSettings.Default.VisibleEquipmentList = ChildFormMenuItemState(ChildFormType.EquipmentList).Checked;
 
             AppSettings.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
 
@@ -539,7 +544,7 @@ namespace TileExplorer
                         case MapItemType.Marker:
                             foreach (var frm in Application.OpenForms)
                             {
-                                if (frm is IChildForm form && form.ChildFormType == ChildFormType.Markers)
+                                if (frm is IChildForm form && form.ChildFormType == ChildFormType.MarkerList)
                                 {
                                     ((IListForm)form).SetSelected(selected.Model);
                                 }
@@ -551,7 +556,7 @@ namespace TileExplorer
                         case MapItemType.Track:
                             foreach (var frm in Application.OpenForms)
                             {
-                                if (frm is IChildForm form && form.ChildFormType == ChildFormType.Tracks)
+                                if (frm is IChildForm form && form.ChildFormType == ChildFormType.TrackList)
                                 {
                                     ((IListForm)form).SetSelected(selected.Model);
                                 }
@@ -630,7 +635,7 @@ namespace TileExplorer
                 {
                     await Database.Default.MarkerSaveAsync(SelectedMarker.Model);
 
-                    await UpdateDataAsync(DataLoad.MarkersList);
+                    await UpdateDataAsync(DataLoad.MarkerList);
                 }
 
                 return;
@@ -691,10 +696,10 @@ namespace TileExplorer
                     switch (Selected.Type)
                     {
                         case MapItemType.Marker:
-                            MarkerChange(SelectedMarker);
+                            MarkerChangeAsync(SelectedMarker.Model);
                             break;
                         case MapItemType.Track:
-                            TrackChangeAsync(SelectedTrack);
+                            TrackChangeAsync(SelectedTrack.Model);
                             break;
                     }
                 }
@@ -784,7 +789,7 @@ namespace TileExplorer
 
             if (FrmMarker.ShowDlg(this, marker))
             {
-                _ = UpdateDataAsync(DataLoad.MarkersList);
+                _ = UpdateDataAsync(DataLoad.MarkerList);
             }
 
             markersOverlay.Markers.Remove(markerTemp);
@@ -792,13 +797,13 @@ namespace TileExplorer
             markersOverlay.IsVisibile = prevMarkersVisible;
         }
 
-        private void MarkerChange(MapItemMarker marker)
+        private async void MarkerChangeAsync(Marker marker)
         {
             if (marker == null) return;
 
-            if (FrmMarker.ShowDlg(this, marker.Model))
+            if (FrmMarker.ShowDlg(this, marker))
             {
-                _ = UpdateDataAsync(DataLoad.MarkersList);
+                await UpdateDataAsync(DataLoad.MarkerList);
             }
         }
 
@@ -812,7 +817,7 @@ namespace TileExplorer
 
                 markersOverlay.Markers.Add(new MapItemMarker(marker));
 
-                _ = UpdateDataAsync(DataLoad.MarkersList);
+                _ = UpdateDataAsync(DataLoad.MarkerList);
             }
             else
             {
@@ -820,69 +825,76 @@ namespace TileExplorer
 
                 mapMarker.NotifyModelChanged();
 
-                _ = UpdateDataAsync(DataLoad.MarkersList);
+                _ = UpdateDataAsync(DataLoad.MarkerList);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
+
+            SelectMapItem(this, marker);
         }
 
-        private async void MarkerDeleteAsync(MapItemMarker marker)
+        private async void MarkerDeleteAsync(Marker marker)
         {
             if (marker == null) return;
 
-            var name = marker.Model.Text;
+            var name = marker.Text;
 
             if (string.IsNullOrEmpty(name))
             {
-                name = marker.Position.Lat.ToString() + ":" + marker.Position.Lng.ToString();
+                name = marker.Lat.ToString() + ":" + marker.Lng.ToString();
             }
 
             if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, name)))
             {
-                await Database.Default.MarkerDeleteAsync(marker.Model);
+                await Database.Default.MarkerDeleteAsync(marker);
 
-                markersOverlay.Markers.Remove(marker);
+                markersOverlay.Markers.Remove(markersOverlay.Markers
+                        .Cast<MapItemMarker>()
+                        .Where(t => t.Model.Id == marker.Id).Single()
+                        );
 
-                await UpdateDataAsync(DataLoad.MarkersList);
+                await UpdateDataAsync(DataLoad.MarkerList);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
         }
 
-        private async void TrackChangeAsync(MapItemTrack track)
+        private async void TrackChangeAsync(Track track)
         {
             if (track == null) return;
 
-            if (FrmTrack.ShowDlg(this, track.Model))
+            if (FrmTrack.ShowDlg(this, track))
             {
-                await Database.Default.SaveTrackAsync(track.Model);
+                await Database.Default.SaveTrackAsync(track);
 
-                track.NotifyModelChanged();
-
-                await UpdateDataAsync(DataLoad.TracksList);
+                await UpdateDataAsync(DataLoad.TrackList);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
         }
 
-        private async void TrackDeleteAsync(MapItemTrack track)
+        private async void TrackDeleteAsync(Track track)
         {
             if (track == null) return;
 
-            var name = track.Model.Text;
+            var name = track.Text;
 
             if (string.IsNullOrEmpty(name))
             {
-                name = track.Model.DateTimeStart.ToString();
+                name = track.DateTimeStart.ToString();
             }
 
             if (Msg.Question(string.Format(Resources.QuestionTrackDelete, name)))
             {
-                await Database.Default.DeleteTrackAsync(track.Model);
+                await Database.Default.DeleteTrackAsync(track);
 
-                tracksOverlay.Routes.Remove(track);
+                tracksOverlay.Routes.Remove(
+                    tracksOverlay.Routes
+                        .Cast<MapItemTrack>()
+                        .Where(t => t.Model.Id == track.Id).Single()
+                        );
 
-                await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TracksList);
+                await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TrackList);
             }
         }
 
@@ -900,22 +912,22 @@ namespace TileExplorer
 
         private void MiMarkerChange_Click(object sender, EventArgs e)
         {
-            MarkerChange(SelectedMarker);
+            MarkerChangeAsync(SelectedMarker.Model);
         }
 
         private void MiMarkerDelete_Click(object sender, EventArgs e)
         {
-            MarkerDeleteAsync(SelectedMarker);
+            MarkerDeleteAsync(SelectedMarker.Model);
         }
 
         private void MiTrackChange_Click(object sender, EventArgs e)
         {
-            TrackChangeAsync(SelectedTrack);
+            TrackChangeAsync(SelectedTrack.Model);
         }
 
         private void MiTrackDelete_Click(object sender, EventArgs e)
         {
-            TrackDeleteAsync(SelectedTrack);
+            TrackDeleteAsync(SelectedTrack.Model);
         }
 
         private PointLatLng MarkerMovingPrevPosition;
@@ -982,11 +994,6 @@ namespace TileExplorer
             }
         }
 
-        private async Task UpdateChildFormAsync(FrmList frm)
-        {
-            if (ChildFormMenuItemState(frm.ChildFormType).Checked) await frm.UpdateDataAsync();
-        }
-
         private async Task UpdateDataAsync(DataLoad load = default)
         {
             Status = ProgramStatus.LoadData;
@@ -995,7 +1002,7 @@ namespace TileExplorer
 
             if (load == default)
             {
-                load = DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TracksList | DataLoad.MarkersList;
+                load = DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TrackList | DataLoad.MarkerList;
 
                 if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
 
@@ -1025,16 +1032,20 @@ namespace TileExplorer
                         case ChildFormType.Results:
                         case ChildFormType.TileInfo:
                             updateData = load.HasFlag(DataLoad.Tracks) ||
-                                load.HasFlag(DataLoad.TracksList) ||
+                                load.HasFlag(DataLoad.TrackList) ||
                                 load.HasFlag(DataLoad.TracksInfo);
 
                             break;
-                        case ChildFormType.Tracks:
-                            updateData = load.HasFlag(DataLoad.TracksList);
+                        case ChildFormType.TrackList:
+                            updateData = load.HasFlag(DataLoad.TrackList);
 
                             break;
-                        case ChildFormType.Markers:
-                            updateData = load.HasFlag(DataLoad.MarkersList);
+                        case ChildFormType.MarkerList:
+                            updateData = load.HasFlag(DataLoad.MarkerList);
+
+                            break;
+                        case ChildFormType.EquipmentList:
+                            updateData = load.HasFlag(DataLoad.EquipmentList);
 
                             break;
                         default:
@@ -1216,7 +1227,7 @@ namespace TileExplorer
             Status = ProgramStatus.Idle;
         }
 
-        private async Task OpenTracks()
+        private async Task OpenTracksAsync()
         {
             openFileDialog.FileName = string.Empty;
 
@@ -1224,12 +1235,12 @@ namespace TileExplorer
 
             await OpenTracksAsync(openFileDialog.FileNames);
 
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks | DataLoad.TracksInfo | DataLoad.TracksList);
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks | DataLoad.TracksInfo | DataLoad.TrackList);
         }
 
         private void MiMainDataOpenTrack_Click(object sender, EventArgs e)
         {
-            _ = OpenTracks();
+            _ = OpenTracksAsync();
         }
 
         private void ShowChildForm(ChildFormType childFormType, bool show)
@@ -1244,9 +1255,10 @@ namespace TileExplorer
                             FrmFilter.ShowFrm(this);
 
                             break;
-                        case ChildFormType.Tracks:
-                        case ChildFormType.Markers:
+                        case ChildFormType.TrackList:
+                        case ChildFormType.MarkerList:
                         case ChildFormType.Results:
+                        case ChildFormType.EquipmentList:
                             FrmList.ShowFrm(this, childFormType);
 
                             break;
@@ -1272,12 +1284,17 @@ namespace TileExplorer
 
         private void MiMainDataTrackList_Click(object sender, EventArgs e)
         {
-            ShowChildForm(ChildFormType.Tracks, !miMainDataTrackList.Checked);
+            ShowChildForm(ChildFormType.TrackList, !miMainDataTrackList.Checked);
         }
 
         private void MiMainDataMarkerList_Click(object sender, EventArgs e)
         {
-            ShowChildForm(ChildFormType.Markers, !miMainDataMarkerList.Checked);
+            ShowChildForm(ChildFormType.MarkerList, !miMainDataMarkerList.Checked);
+        }
+
+        private void MiMainDataEquipmentList_Click(object sender, EventArgs e)
+        {
+            ShowChildForm(ChildFormType.EquipmentList, !miMainDataEquipmentList.Checked);
         }
 
         private void MiMainDataResults_Click(object sender, EventArgs e)
@@ -1332,20 +1349,91 @@ namespace TileExplorer
             }
         }
 
-        public void ChangeMapItem(object sender, BaseId value)
+        private async void EquipmentChangeAsync(Equipment equipment)
         {
-            SelectMapItem(sender, value);
+            if (FrmEquipment.ShowDlg(this, equipment))
+            {
+                await UpdateDataAsync(DataLoad.EquipmentList);
+            }
+        }
+
+        private async void EquipmentDeleteAsync(Equipment equipment)
+        {
+            if (equipment == null) return;
+
+            var name = equipment.Name;
+
+            if (Msg.Question(string.Format(Resources.QuestionEquipmentDelete, name)))
+            {
+                await Database.Default.EquipmentDeleteAsync(equipment);
+
+                await UpdateDataAsync(DataLoad.EquipmentList);
+            }
+
+        }
+
+        public void ListItemAdd(object sender, BaseId value)
+        {
+            if (value is Marker)
+            {
+                MarkerAdd(gMapControl.Position);
+                return;
+            }
+
+            if (value is Track)
+            {
+                _ = OpenTracksAsync();
+                return;
+            }
+
+            if (value is Equipment)
+            {
+                EquipmentChangeAsync(value as Equipment);
+                return;
+            }
+        }
+
+        public void ListItemChange(object sender, BaseId value)
+        {
+            if (value is Marker)
+            {
+                MarkerChangeAsync(value as Marker);
+                SelectMapItem(sender, value);
+                return;
+            }
+
+            if (value is Track)
+            {
+                TrackChangeAsync(value as Track);
+                SelectMapItem(sender, value);
+                return;
+            }
+
+            if (value is Equipment)
+            {
+                EquipmentChangeAsync(value as Equipment);
+                return;
+            }
+        }
+
+        public void ListItemDelete(object sender, BaseId value)
+        {
+            if (value is Track)
+            {
+                TrackDeleteAsync(value as Track);
+                return;
+            }
 
             if (value is Marker)
             {
-                MarkerChange(SelectedMarker);
+                MarkerDeleteAsync(value as Marker);
+                return;
             }
-            else
+
+            if (value is Equipment)
             {
-                if (value is Track)
-                {
-                    TrackChangeAsync(SelectedTrack);
-                }
+                EquipmentDeleteAsync(value as Equipment);
+                return;
             }
         }
 
@@ -1488,12 +1576,14 @@ namespace TileExplorer
             {
                 case ChildFormType.Filter:
                     return miMainDataFilter;
-                case ChildFormType.Tracks:
+                case ChildFormType.TrackList:
                     return miMainDataTrackList;
-                case ChildFormType.Markers:
+                case ChildFormType.MarkerList:
                     return miMainDataMarkerList;
                 case ChildFormType.Results:
                     return miMainDataResults;
+                case ChildFormType.EquipmentList:
+                    return miMainDataEquipmentList;
                 default:
                     throw new NotImplementedException();
             }
@@ -1501,44 +1591,12 @@ namespace TileExplorer
 
         public void ChildFormOpened(object sender)
         {
-            switch (((IChildForm)sender).ChildFormType)
-            {
-                case ChildFormType.Filter:
-                    miMainDataFilter.Checked = true;
-                    break;
-                case ChildFormType.Tracks:
-                    miMainDataTrackList.Checked = true;
-                    break;
-                case ChildFormType.Markers:
-                    miMainDataMarkerList.Checked = true;
-                    break;
-                case ChildFormType.Results:
-                    miMainDataResults.Checked = true;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
+            ChildFormMenuItemState(((IChildForm)sender).ChildFormType).Checked = true;
         }
 
         public void ChildFormClosed(object sender)
         {
-            switch (((IChildForm)sender).ChildFormType)
-            {
-                case ChildFormType.Filter:
-                    miMainDataFilter.Checked = false;
-                    break;
-                case ChildFormType.Tracks:
-                    miMainDataTrackList.Checked = false;
-                    break;
-                case ChildFormType.Markers:
-                    miMainDataMarkerList.Checked = false;
-                    break;
-                case ChildFormType.Results:
-                    miMainDataResults.Checked = false;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
+            ChildFormMenuItemState(((IChildForm)sender).ChildFormType).Checked = false;
         }
 
         private void OsmAction(bool open)

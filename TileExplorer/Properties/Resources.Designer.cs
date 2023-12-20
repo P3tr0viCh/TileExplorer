@@ -70,6 +70,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Необходимо указать значение..
+        /// </summary>
+        internal static string ErrorNeedText {
+            get {
+                return ResourceManager.GetString("ErrorNeedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to gpx.
         /// </summary>
         internal static string FileSaveDefaultExtGpx {
@@ -129,6 +138,17 @@ namespace TileExplorer.Properties {
         internal static string GitHubLink {
             get {
                 return ResourceManager.GetString("GitHubLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить список снаряжения.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgDatabaseLoadListEquipmentsFail {
+            get {
+                return ResourceManager.GetString("MsgDatabaseLoadListEquipmentsFail", resourceCulture);
             }
         }
         
@@ -198,6 +218,15 @@ namespace TileExplorer.Properties {
         internal static string ProgramStatusUpdating {
             get {
                 return ResourceManager.GetString("ProgramStatusUpdating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить снаряжение «{0}»?.
+        /// </summary>
+        internal static string QuestionEquipmentDelete {
+            get {
+                return ResourceManager.GetString("QuestionEquipmentDelete", resourceCulture);
             }
         }
         
@@ -387,6 +416,15 @@ namespace TileExplorer.Properties {
         internal static string StatusZoom {
             get {
                 return ResourceManager.GetString("StatusZoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Снаряжение.
+        /// </summary>
+        internal static string TitleListEquipments {
+            get {
+                return ResourceManager.GetString("TitleListEquipments", resourceCulture);
             }
         }
         

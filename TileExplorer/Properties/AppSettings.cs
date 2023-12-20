@@ -323,6 +323,8 @@ namespace TileExplorer.Properties
         [Browsable(false)]
         public bool VisibleTrackList { get; set; } = true;
         [Browsable(false)]
+        public bool VisibleEquipmentList { get; set; } = true;
+        [Browsable(false)]
         public bool VisibleResults { get; set; } = true;
 
         // ------------------------------------------------------------------------------------------------------------
@@ -339,6 +341,8 @@ namespace TileExplorer.Properties
         [Browsable(false)]
         public FormState FormStateMarkerList { get; set; }
         [Browsable(false)]
+        public FormState FormStateEquipmentList { get; set; }
+        [Browsable(false)]
         public FormState FormStateFilter { get; set; }
         [Browsable(false)]
         public FormState FormStateSettings { get; set; }
@@ -350,5 +354,7 @@ namespace TileExplorer.Properties
         public ColumnState[] ColumnsTrackList { get; set; }
         [Browsable(false)]
         public ColumnState[] ColumnsMarkerList { get; set; }
+        [Browsable(false)]
+        public ColumnState[] ColumnsEquipmentList { get; set; }
     }
 }

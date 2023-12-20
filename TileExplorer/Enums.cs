@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Forms;
 using static P3tr0viCh.Utils.Converters;
 
 namespace TileExplorer
@@ -37,10 +36,11 @@ namespace TileExplorer
         public enum ChildFormType
         {
             Filter,
-            Tracks,
-            Markers,
+            TrackList,
+            MarkerList,
             Results,
             TileInfo,
+            EquipmentList,
         }
 
         [Flags]
@@ -50,8 +50,9 @@ namespace TileExplorer
             Tracks = 2,
             Markers = 4,
             TracksInfo = 8,
-            TracksList = 16,
-            MarkersList = 32,
+            TrackList = 16,
+            MarkerList = 32,
+            EquipmentList = 64,
         }
 
         public enum TileStatus

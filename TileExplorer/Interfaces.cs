@@ -14,8 +14,10 @@ namespace TileExplorer
 
             void SelectMapItem(object sender, BaseId value);
 
-            void ChangeMapItem(object sender, BaseId value);
-
+            void ListItemAdd(object sender, BaseId value);
+            void ListItemChange(object sender, BaseId value);
+            void ListItemDelete(object sender, BaseId value);
+            
             void MarkerChanged(Marker marker);
 
             ProgramStatus Status { set; }

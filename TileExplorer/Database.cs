@@ -82,6 +82,10 @@ namespace TileExplorer
                     "trackid INTEGER, tileid INTEGER, " +
                     "FOREIGN KEY (trackid) REFERENCES tracks (id) ON DELETE CASCADE ON UPDATE CASCADE);");
 
+                connection.Execute("CREATE TABLE IF NOT EXISTS equipments (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "text TEXT, brand TEXT, model TEXT);");
+
                 /* indexes */
                 connection.Execute("CREATE INDEX IF NOT EXISTS tracks_datetimestart_idx ON " +
                     "tracks(datetimestart ASC)");
@@ -138,6 +142,29 @@ namespace TileExplorer
             using (var connection = GetConnection())
             {
                 await connection.DeleteAsync(marker);
+            }
+        }
+
+        public async Task EquipmentSaveAsync(Equipment equipment)
+        {
+            using (var connection = GetConnection())
+            {
+                if (equipment.Id == 0)
+                {
+                    await connection.InsertAsync(equipment);
+                }
+                else
+                {
+                    await connection.UpdateAsync(equipment);
+                }
+            }
+        }
+
+        public async Task EquipmentDeleteAsync(Equipment equipment)
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.DeleteAsync(equipment);
             }
         }
 
@@ -303,7 +330,7 @@ namespace TileExplorer
                             {
                                 sql = "SELECT id, text, " +
                                 "dt AS datetimestart, datetimefinish, " +
-                                "distance / 1000.0 AS distance, " +
+                                "distance, " +
                                 "SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount " +
                                 "FROM (" +
                                     "SELECT *, EXISTS(" +
@@ -338,6 +365,10 @@ namespace TileExplorer
                             sql = "SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;";
 
                             param = new { trackid = ((Track)filter).Id };
+
+                            break;
+                        case nameof(Equipment):
+                            sql = "SELECT * FROM equipments ORDER BY text;";
 
                             break;
                         default:

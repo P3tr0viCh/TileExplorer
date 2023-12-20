@@ -18,6 +18,8 @@ namespace TileExplorer
 
         public ChildFormType ChildFormType { get; set; }
 
+        private int columnDistanceIndex = -1;
+
         public FrmList()
         {
             InitializeComponent();
@@ -42,14 +44,17 @@ namespace TileExplorer
         {
             switch (ChildFormType)
             {
+                case ChildFormType.TrackList:
+                    bindingSource.DataSource = typeof(Track);
+                    break;
+                case ChildFormType.MarkerList:
+                    bindingSource.DataSource = typeof(Marker);
+                    break;
                 case ChildFormType.Results:
                     bindingSource.DataSource = typeof(Results);
                     break;
-                case ChildFormType.Tracks:
-                    bindingSource.DataSource = typeof(Track);
-                    break;
-                case ChildFormType.Markers:
-                    bindingSource.DataSource = typeof(Marker);
+                case ChildFormType.EquipmentList:
+                    bindingSource.DataSource = typeof(Equipment);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -57,28 +62,30 @@ namespace TileExplorer
 
             dataGridView.DataSource = bindingSource;
 
-            dataGridView.Columns[nameof(BaseId.Id)].Visible = false;
-
             switch (ChildFormType)
             {
-                case ChildFormType.Results:
-                    Text = Resources.TitleListResults;
-
-                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateResults);
-                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsResults);
-
-                    break;
-                case ChildFormType.Tracks:
+                case ChildFormType.TrackList:
                     Text = Resources.TitleListTracks;
 
-                    dataGridView.Columns[nameof(Track.Text)].DisplayIndex = 0;
+                    toolStripLeft.Visible = true;
 
                     AppSettings.LoadFormState(this, AppSettings.Default.FormStateTrackList);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsTrackList);
 
+                    columnDistanceIndex = dataGridView.Columns[nameof(Track.Distance)].Index;
+                    dataGridView.CellFormatting +=
+                        new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingTrackList);
+
+                    dataGridView.Columns[nameof(Track.Text)].DisplayIndex = 0;
+
                     break;
-                case ChildFormType.Markers:
+                case ChildFormType.MarkerList:
                     Text = Resources.TitleListMarkers;
+
+                    toolStripLeft.Visible = true;
+
+                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateMarkerList);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsMarkerList);
 
                     dataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
 
@@ -86,13 +93,32 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Marker.OffsetX)].Visible = false;
                     dataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;
 
-                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateMarkerList);
-                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsMarkerList);
+                    break;
+                case ChildFormType.Results:
+                    Text = Resources.TitleListResults;
+
+                    toolStripLeft.Visible = false;
+
+                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateResults);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsResults);
+
+                    break;
+                case ChildFormType.EquipmentList:
+                    Text = Resources.TitleListEquipments;
+
+                    toolStripLeft.Visible = true;
+
+                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateEquipmentList);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsEquipmentList);
+
+                    dataGridView.Columns[nameof(Equipment.Name)].Visible = false;
 
                     break;
                 default:
                     throw new NotImplementedException();
             }
+
+            dataGridView.Columns[nameof(BaseId.Id)].Visible = false;
 
             UpdateSettings();
 
@@ -105,17 +131,25 @@ namespace TileExplorer
         {
             switch (ChildFormType)
             {
+                case ChildFormType.TrackList:
+                    AppSettings.Default.FormStateTrackList = AppSettings.SaveFormState(this);
+                    AppSettings.Default.ColumnsTrackList = AppSettings.SaveDataGridColumns(dataGridView);
+
+                    break;
+                case ChildFormType.MarkerList:
+                    AppSettings.Default.FormStateMarkerList = AppSettings.SaveFormState(this);
+                    AppSettings.Default.ColumnsMarkerList = AppSettings.SaveDataGridColumns(dataGridView);
+
+                    break;
                 case ChildFormType.Results:
                     AppSettings.Default.FormStateResults = AppSettings.SaveFormState(this);
                     AppSettings.Default.ColumnsResults = AppSettings.SaveDataGridColumns(dataGridView);
+
                     break;
-                case ChildFormType.Tracks:
-                    AppSettings.Default.FormStateTrackList = AppSettings.SaveFormState(this);
-                    AppSettings.Default.ColumnsTrackList = AppSettings.SaveDataGridColumns(dataGridView);
-                    break;
-                case ChildFormType.Markers:
-                    AppSettings.Default.FormStateMarkerList = AppSettings.SaveFormState(this);
-                    AppSettings.Default.ColumnsMarkerList = AppSettings.SaveDataGridColumns(dataGridView);
+                case ChildFormType.EquipmentList:
+                    AppSettings.Default.FormStateEquipmentList = AppSettings.SaveFormState(this);
+                    AppSettings.Default.ColumnsEquipmentList = AppSettings.SaveDataGridColumns(dataGridView);
+
                     break;
                 default:
                     throw new NotImplementedException();
@@ -133,34 +167,36 @@ namespace TileExplorer
         {
             switch (ChildFormType)
             {
-                case ChildFormType.Results:
-                    dataGridView.Columns[nameof(Results.Year)].DefaultCellStyle = 
-                        DataGridViewCellStyles.Year;
-                    dataGridView.Columns[nameof(Results.Count)].DefaultCellStyle = 
+                case ChildFormType.TrackList:
+                    dataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle =
+                        DataGridViewCellStyles.DateTime;
+                    dataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle =
+                        DataGridViewCellStyles.DateTime;
+                    dataGridView.Columns[nameof(Track.Duration)].DefaultCellStyle =
+                        DataGridViewCellStyles.Duration;
+                    dataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle =
+                        DataGridViewCellStyles.Distance;
+                    dataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle =
                         DataGridViewCellStyles.Count;
-                    dataGridView.Columns[nameof(Results.DistanceSum)].DefaultCellStyle = 
+
+                    break;
+                case ChildFormType.MarkerList:
+                    dataGridView.Columns[nameof(Marker.Lat)].DefaultCellStyle =
+                        DataGridViewCellStyles.LatLng;
+                    dataGridView.Columns[nameof(Marker.Lng)].DefaultCellStyle =
+                        DataGridViewCellStyles.LatLng;
+
+                    break;
+                case ChildFormType.Results:
+                    dataGridView.Columns[nameof(Results.Year)].DefaultCellStyle =
+                        DataGridViewCellStyles.Year;
+                    dataGridView.Columns[nameof(Results.Count)].DefaultCellStyle =
+                        DataGridViewCellStyles.Count;
+                    dataGridView.Columns[nameof(Results.DistanceSum)].DefaultCellStyle =
                         DataGridViewCellStyles.DistanceSum;
 
                     break;
-                case ChildFormType.Tracks:
-                    dataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle =
-                        DataGridViewCellStyles.DateTime;
-                    dataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle = 
-                        DataGridViewCellStyles.DateTime;
-                    dataGridView.Columns[nameof(Track.Duration)].DefaultCellStyle = 
-                        DataGridViewCellStyles.Duration;
-                    dataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle = 
-                        DataGridViewCellStyles.Distance;
-                    dataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle = 
-                        DataGridViewCellStyles.Count;
-
-                    break;
-                case ChildFormType.Markers:
-                    dataGridView.Columns[nameof(Marker.Lat)].DefaultCellStyle = 
-                        DataGridViewCellStyles.LatLng;
-                    dataGridView.Columns[nameof(Marker.Lng)].DefaultCellStyle = 
-                        DataGridViewCellStyles.LatLng;
-
+                case ChildFormType.EquipmentList:
                     break;
                 default:
                     throw new NotImplementedException();
@@ -177,22 +213,28 @@ namespace TileExplorer
             {
                 switch (ChildFormType)
                 {
+                    case ChildFormType.TrackList:
+                        errorMsg = Resources.MsgDatabaseLoadListTrackFail;
+
+                        bindingSource.DataSource = await ListLoadAsync<Track>();
+
+                        break;
+                    case ChildFormType.MarkerList:
+                        errorMsg = Resources.MsgDatabaseLoadListMarkersFail;
+
+                        bindingSource.DataSource = await ListLoadAsync<Marker>();
+
+                        break;
                     case ChildFormType.Results:
                         errorMsg = Resources.MsgDatabaseLoadListResultsFail;
 
                         bindingSource.DataSource = await ListLoadAsync<Results>();
 
                         break;
-                    case ChildFormType.Tracks:
-                        errorMsg = Resources.MsgDatabaseLoadListTrackFail;
+                    case ChildFormType.EquipmentList:
+                        errorMsg = Resources.MsgDatabaseLoadListEquipmentsFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<Track>();
-
-                        break;
-                    case ChildFormType.Markers:
-                        errorMsg = Resources.MsgDatabaseLoadListMarkersFail;
-
-                        bindingSource.DataSource = await ListLoadAsync<Marker>();
+                        bindingSource.DataSource = await ListLoadAsync<Equipment>();
 
                         break;
                     default:
@@ -256,7 +298,47 @@ namespace TileExplorer
         {
             if (e.RowIndex < 0) return;
 
-            MainForm.ChangeMapItem(this, Selected);
+            MainForm.ListItemChange(this, Selected);
+        }
+
+        private void TsbtnAdd_Click(object sender, EventArgs e)
+        {
+            BaseId value = null;
+
+            switch (ChildFormType)
+            {
+                case ChildFormType.TrackList:
+                    value = new Track();
+                    break;
+                case ChildFormType.MarkerList:
+                    value = new Marker();
+                    break;
+                case ChildFormType.EquipmentList:
+                    value = new Equipment();
+                    break;
+            }
+
+            MainForm.ListItemAdd(this, value);
+        }
+
+        private void TsbtnChange_Click(object sender, EventArgs e)
+        {
+            MainForm.ListItemChange(this, Selected);
+        }
+
+        private void TsbtnDelete_Click(object sender, EventArgs e)
+        {
+            MainForm.ListItemDelete(this, Selected);
+        }
+
+        private void DataGridView_CellFormattingTrackList(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == columnDistanceIndex)
+            {
+                var value = (double)e.Value;
+
+                e.Value = value / 1000;
+            }
         }
     }
 }
