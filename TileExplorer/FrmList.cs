@@ -78,6 +78,12 @@ namespace TileExplorer
 
                     dataGridView.Columns[nameof(Track.Text)].DisplayIndex = 0;
 
+                    dataGridView.Columns[nameof(Track.Equipment)].Visible = false;
+                    dataGridView.Columns[nameof(Track.EquipmentId)].Visible = true;
+                    dataGridView.Columns[nameof(Track.EquipmentText)].Visible = false;
+                    dataGridView.Columns[nameof(Track.EquipmentBrand)].Visible = false;
+                    dataGridView.Columns[nameof(Track.EquipmentModel)].Visible = false;
+
                     break;
                 case ChildFormType.MarkerList:
                     Text = Resources.TitleListMarkers;
@@ -339,6 +345,11 @@ namespace TileExplorer
 
                 e.Value = value / 1000;
             }
+        }
+
+        private void ToolStripLeft_MouseEnter(object sender, EventArgs e)
+        {
+            Activate();
         }
     }
 }

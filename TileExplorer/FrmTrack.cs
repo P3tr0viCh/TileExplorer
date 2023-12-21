@@ -1,6 +1,10 @@
-﻿using System.Windows.Forms;
-using static TileExplorer.Database;
+﻿using P3tr0viCh.Utils;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
 namespace TileExplorer
@@ -16,24 +20,64 @@ namespace TileExplorer
 
         public static bool ShowDlg(Form owner, Track track)
         {
-            bool Result;
-
             using (var frm = new FrmTrack()
             {
                 Owner = owner,
             })
             {
+                if (!frm.LoadData()) return false;
+
                 frm.tbText.Text = track.Text;
 
-                Result = frm.ShowDialog(owner) == DialogResult.OK;
+                frm.cboxEquipment.SelectedValue = track.EquipmentId;
 
-                if (Result)
-                {
-                    track.Text = frm.tbText.Text;
-                }
+                if (frm.ShowDialog(owner) != DialogResult.OK) return false;
+
+                track.Text = frm.tbText.Text;
+
+                track.Equipment = frm.cboxEquipment.SelectedItem as Equipment;
+
+                return true;
             }
+        }
 
-            return Result;
+        private bool LoadData()
+        {
+            MainForm.Status = ProgramStatus.LoadData;
+
+            Utils.WriteDebug("start");
+
+            try
+            {
+                return Task.Run(() => LoadDataAsync()).Result;
+            }
+            finally
+            {
+                Utils.WriteDebug("end");
+
+                MainForm.Status = ProgramStatus.Idle;
+            }
+        }
+
+        private async Task<bool> LoadDataAsync()
+        {
+            try
+            {
+                equipmentBindingSource.DataSource =
+                    await Database.Default.ListLoadAsync<Equipment>();
+                
+                Utils.ComboBoxInsertItem(equipmentBindingSource, 0, new Equipment());
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Utils.WriteError(e);
+
+                Msg.Error(Resources.MsgDatabaseLoadListEquipmentsFail, e.Message);
+
+                return false;
+            }
         }
     }
 }

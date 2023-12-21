@@ -4,6 +4,7 @@
 
 using GMap.NET;
 using GMap.NET.WindowsForms;
+using Newtonsoft.Json.Linq;
 using P3tr0viCh.Utils;
 using System;
 using System.Collections;
@@ -602,24 +603,14 @@ namespace TileExplorer
         {
             if (gMapControl.IsMouseOverMarker)
             {
-                foreach (var marker in markersOverlay.Markers)
-                {
-                    if (marker.IsMouseOver)
-                    {
-                        return (MapItemMarker)marker;
-                    }
-                }
+                return markersOverlay.Markers.Cast<MapItemMarker>()
+                    .Where(m => m.IsMouseOver).FirstOrDefault();
             }
 
             if (gMapControl.IsMouseOverRoute)
             {
-                foreach (var track in tracksOverlay.Routes)
-                {
-                    if (track.IsMouseOver)
-                    {
-                        return (MapItemTrack)track;
-                    }
-                }
+                return tracksOverlay.Routes.Cast<MapItemTrack>()
+                    .Where(m => m.IsMouseOver).FirstOrDefault();
             }
 
             return null;
@@ -805,6 +796,8 @@ namespace TileExplorer
             {
                 await UpdateDataAsync(DataLoad.MarkerList);
             }
+
+            SelectMapItem(this, marker);
         }
 
         public void MarkerChanged(Marker marker)
@@ -871,6 +864,8 @@ namespace TileExplorer
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
+
+            SelectMapItem(this, track);
         }
 
         private async void TrackDeleteAsync(Track track)
@@ -1369,7 +1364,6 @@ namespace TileExplorer
 
                 await UpdateDataAsync(DataLoad.EquipmentList);
             }
-
         }
 
         public void ListItemAdd(object sender, BaseId value)
@@ -1398,14 +1392,12 @@ namespace TileExplorer
             if (value is Marker)
             {
                 MarkerChangeAsync(value as Marker);
-                SelectMapItem(sender, value);
                 return;
             }
 
             if (value is Track)
             {
                 TrackChangeAsync(value as Track);
-                SelectMapItem(sender, value);
                 return;
             }
 

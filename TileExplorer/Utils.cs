@@ -2,7 +2,6 @@
 using P3tr0viCh.Utils;
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
@@ -55,6 +54,16 @@ namespace TileExplorer
             var error = string.Format("{0} fail: {1}", memberName, err);
 
             Debug.WriteLine(error);
+        }
+
+        public static void ComboBoxInsertItem(BindingSource bindingSource, int index, BaseId value)
+        {
+            bindingSource.Insert(index, value);
+        }
+
+        public static void ComboBoxInsertItem(ComboBox comboBox, int index, BaseId value)
+        {
+            ComboBoxInsertItem((BindingSource)comboBox.DataSource, index, value);
         }
     }
 }

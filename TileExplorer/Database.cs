@@ -1,11 +1,13 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
+using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static TileExplorer.Database;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -70,7 +72,8 @@ namespace TileExplorer
 
                 connection.Execute("CREATE TABLE IF NOT EXISTS tracks (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "text TEXT, datetimestart TEXT, datetimefinish TEXT, distance REAL);");
+                    "text TEXT, datetimestart TEXT, datetimefinish TEXT, " +
+                    "distance REAL, equipmentid INTEGER);");
 
                 connection.Execute("CREATE TABLE IF NOT EXISTS tracks_points (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
@@ -277,6 +280,106 @@ namespace TileExplorer
             });
         }
 
+        public async Task<T> ListItemLoadAsync<T>(long itemId)
+        {
+            if (itemId <= Sql.NewId) return default;
+
+            using (var connection = GetConnection())
+            {
+                var sql = new Sql.Query()
+                {
+                    table = Sql.TableName<T>(),
+                    where = "id = :id"
+                }.Select();
+
+                Utils.WriteDebug(sql);
+
+                return await connection.QueryFirstOrDefaultAsync<T>(sql, new { id = itemId });
+            }
+        }
+
+        private Sql.Query GetQueryMarker()
+        {
+            return new Sql.Query()
+            {
+                table = Sql.TableName<Marker>(),
+                order = "text"
+            };
+        }
+
+        private Sql.Query GetQueryResults()
+        {
+            return new Sql.Query()
+            {
+                fields = "CAST(strftime('%Y', datetimestart) AS INTEGER) AS year, " +
+                                    "COUNT(*) AS count, SUM(distance) / 1000.0 AS distancesum",
+                table = Sql.TableName<Track>(),
+                group = "year",
+                order = "year"
+            };
+        }
+
+        private Sql.Query GetQueryTrackPoint()
+        {
+            return new Sql.Query()
+            {
+                table = Sql.TableName<TrackPoint>(),
+                where = "trackid = :trackid",
+                order = "num"
+            };
+        }
+
+        private Sql.Query GetQueryEquipment()
+        {
+            return new Sql.Query()
+            {
+                table = Sql.TableName<Equipment>(),
+                order = "text"
+            };
+        }
+
+        private Sql.Query GetQuery<T>()
+        {
+            switch (typeof(T).Name)
+            {
+                case nameof(Results):
+                    return GetQueryResults();
+
+                case nameof(Marker):
+                    return GetQueryMarker();
+
+                case nameof(TrackPoint):
+                    return GetQueryTrackPoint();
+
+                case nameof(Equipment):
+                    return GetQueryEquipment();
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        
+        private object GetParam<T>(object filter)
+        {
+            switch (typeof(T).Name)
+            {
+                case nameof(TrackPoint):
+                    return new { trackid = ((Track)filter).Id };
+
+                default:
+                    return null;
+            }
+        }
+
+        private void GetSql<T>(out string sql, out object param, in object filter)
+        {
+            sql = GetQuery<T>().Select();
+
+            param = GetParam<T>(filter);
+
+            Utils.WriteDebug(sql);
+        }
+
         public async Task<List<T>> ListLoadAsync<T>(object filter = null)
         {
             Utils.WriteDebug(typeof(T).Name);
@@ -292,23 +395,26 @@ namespace TileExplorer
                     switch (typeof(T).Name)
                     {
                         case nameof(Results):
-                            sql = "SELECT " +
-                                    "CAST(strftime('%Y', datetimestart) AS INTEGER) AS year, " +
-                                    "COUNT(*) AS count, SUM(distance) / 1000.0 AS distancesum " +
-                                "FROM tracks " +
-                                "GROUP BY year " +
-                                "ORDER BY year;";
-
+                            GetSql<Results>(out sql, out param, filter);
                             break;
                         case nameof(Marker):
-                            sql = "SELECT * FROM markers ORDER BY text;";
-
+                            GetSql<Marker>(out sql, out param, filter);
                             break;
                         case nameof(Tile):
                             if (filter != null)
                             {
-                                sql = "SELECT * FROM tiles WHERE id IN (" +
-                                        "SELECT tileid FROM tracks_tiles WHERE trackid = :trackid);";
+                                sql = new Sql.Query()
+                                {
+                                    table = Sql.TableName<Tile>(),
+                                    where = "id IN (" +
+                                        new Sql.Query()
+                                        {
+                                            fields = "tileid",
+                                            table = Sql.TableName<TracksTiles>(),
+                                            where = "trackid = :trackid"
+                                        }.Select() +
+                                            ")"
+                                }.Select();
 
                                 param = new { trackid = ((Track)filter).Id };
                             }
@@ -329,25 +435,33 @@ namespace TileExplorer
                             if (filter == null)
                             {
                                 sql = "SELECT id, text, " +
-                                "dt AS datetimestart, datetimefinish, " +
-                                "distance, " +
-                                "SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount " +
-                                "FROM (" +
-                                    "SELECT *, EXISTS(" +
-                                        "SELECT tileid, datetimestart " +
-                                        "FROM tracks LEFT JOIN tracks_tiles ON tracks.id = tracks_tiles.trackid " +
-                                        "WHERE tileid = tid AND datetimestart < dt) AS e " +
-                                    "FROM (" +
-                                        "SELECT tracks.id AS id, text, " +
-                                            "datetimestart AS dt, datetimefinish, " +
-                                            "distance, tileid AS tid " +
-                                        "FROM tracks " +
-                                        "LEFT JOIN tracks_tiles ON tracks.id = tracks_tiles.trackid" +
-                                         Filter.Default.ToSql() + " " +
-                                    ")" +
-                                ") " +
-                                "GROUP BY dt " +
-                                "ORDER BY dt;";
+                                    "datetimestart, datetimefinish, " +
+                                    "distance, equipmentid " +
+                                    "FROM tracks " +
+                                    Filter.Default.ToSql() + " " +
+                                "ORDER BY datetimestart;";
+
+                                /*                            sql = "SELECT id, text, " +
+                                                            "dt AS datetimestart, datetimefinish, " +
+                                                            "distance, " +
+                                                            "equipmentid, " +
+                                                            "SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount " +
+                                                            "FROM (" +
+                                                                "SELECT *, EXISTS(" +
+                                                                    "SELECT tileid, datetimestart " +
+                                                                    "FROM tracks LEFT JOIN tracks_tiles ON tracks.id = tracks_tiles.trackid " +
+                                                                    "WHERE tileid = tid AND datetimestart < dt) AS e " +
+                                                                "FROM (" +
+                                                                    "SELECT tracks.id AS id, text, " +
+                                                                        "datetimestart AS dt, datetimefinish, " +
+                                                                        "distance, equipmentid, tileid AS tid " +
+                                                                    "FROM tracks " +
+                                                                    "LEFT JOIN tracks_tiles ON tracks.id = tracks_tiles.trackid" +
+                                                                     Filter.Default.ToSql() + " " +
+                                                                ")" +
+                                                            ") " +
+                                                            "GROUP BY dt " +
+                                                            "ORDER BY dt;";*/
                             }
                             else
                             {
@@ -362,13 +476,11 @@ namespace TileExplorer
 
                             break;
                         case nameof(TrackPoint):
-                            sql = "SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;";
-
-                            param = new { trackid = ((Track)filter).Id };
+                            GetSql<TrackPoint>(out sql,out param, filter);
 
                             break;
                         case nameof(Equipment):
-                            sql = "SELECT * FROM equipments ORDER BY text;";
+                            GetSql<Equipment>(out sql, out param, filter);
 
                             break;
                         default:
@@ -381,6 +493,14 @@ namespace TileExplorer
 
                     switch (typeof(T).Name)
                     {
+                        case nameof(Track):
+                            foreach (var item in list.Cast<Track>())
+                            {
+                                item.Equipment =
+                                    ListItemLoadAsync<Equipment>(item.EquipmentId).Result;
+                            }
+
+                            break;
                         case nameof(Results):
                             var results = list.Cast<Results>();
 

@@ -106,12 +106,12 @@ namespace TileExplorer
             public class Track : BaseId
             {
                 [DisplayName("Название")]
-                public string Text { get; set; }
+                public string Text { get; set; } = string.Empty;
 
                 [DisplayName("Начало")]
-                public DateTime DateTimeStart { get; set; }
+                public DateTime DateTimeStart { get; set; } = default;
                 [DisplayName("Окончание")]
-                public DateTime DateTimeFinish { get; set; }
+                public DateTime DateTimeFinish { get; set; } = default;
 
                 [DisplayName("Время")]
                 [Write(false)]
@@ -125,21 +125,61 @@ namespace TileExplorer
                 }
 
                 [DisplayName("Расстояние")]
-                public double Distance { get; set; }
+                public double Distance { get; set; } = 0;
 
                 [Write(false)]
                 [Computed]
-                public List<TrackPoint> TrackPoints { get; set; }
+                public List<TrackPoint> TrackPoints { get; set; } = null;
 
                 [DisplayName("Плитки +")]
                 [Write(false)]
-                public int NewTilesCount { get; set; }
+                public int NewTilesCount { get; set; } = 0;
+
+                private readonly Equipment equipment = new Equipment();
+                [DisplayName("Снаряжение")]
+                [Write(false)]
+                [Computed]
+                public Equipment Equipment
+                {
+                    get
+                    {
+                        return equipment;
+                    }
+                    set
+                    {
+                        equipment.Assign(value);
+                    }
+                }
+                [DisplayName("Снаряжение")]
+                [Write(false)]
+                [Computed]
+                public string EquipmentName => Equipment.Name;
+                [DisplayName("Снаряжение: ID")]
+                public long EquipmentId { get => Equipment.Id; set => Equipment.Id = value; }
+                [DisplayName("Снаряжение: название")]
+                [Write(false)]
+                [Computed]
+                public string EquipmentText => Equipment.Text;
+                [DisplayName("Снаряжение: марка")]
+                [Write(false)]
+                [Computed]
+                public string EquipmentBrand => Equipment.Brand;
+
+                [DisplayName("Снаряжение: модель")]
+                [Write(false)]
+                [Computed]
+                public string EquipmentModel => Equipment.Model;
 
                 public new void Clear()
                 {
                     base.Clear();
 
                     Text = string.Empty;
+                    DateTimeStart = default;
+                    DateTimeFinish = default;
+                    Distance = 0;
+                    NewTilesCount = 0;
+                    Equipment = null;
                 }
 
                 public void Assign(Track source)

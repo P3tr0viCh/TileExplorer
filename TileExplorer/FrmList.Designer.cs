@@ -95,6 +95,7 @@
             this.toolStripLeft.Name = "toolStripLeft";
             this.toolStripLeft.Size = new System.Drawing.Size(41, 107);
             this.toolStripLeft.TabIndex = 0;
+            this.toolStripLeft.MouseEnter += new System.EventHandler(this.ToolStripLeft_MouseEnter);
             // 
             // tsbtnAdd
             // 
