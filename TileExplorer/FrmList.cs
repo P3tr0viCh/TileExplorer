@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Utils;
+﻿using Newtonsoft.Json.Linq;
+using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -295,9 +296,19 @@ namespace TileExplorer
             Selected = value;
         }
 
+        private void DataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+        }
+
         private void BindingSource_PositionChanged(object sender, EventArgs e)
         {
-            MainForm.SelectMapItem(this, Selected);
+            switch (ChildFormType)
+            {
+                case ChildFormType.TrackList:
+                case ChildFormType.MarkerList:
+                    MainForm.SelectMapItem(this, Selected);
+                    break;
+            }
         }
 
         private void DataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -341,15 +352,24 @@ namespace TileExplorer
         {
             if (e.ColumnIndex == columnDistanceIndex)
             {
-                var value = (double)e.Value;
-
-                e.Value = value / 1000;
+                e.Value = (double)e.Value / 1000;
             }
         }
 
         private void ToolStripLeft_MouseEnter(object sender, EventArgs e)
         {
             Activate();
+        }
+
+        private void FrmList_Activated(object sender, EventArgs e)
+        {
+            switch (ChildFormType)
+            {
+                case ChildFormType.TrackList:
+                case ChildFormType.MarkerList:
+                    MainForm.SelectMapItem(this, Selected);
+                    break;
+            }
         }
     }
 }

@@ -258,6 +258,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="GPX_Icon.ico" />
+    <None Include="Resources\SelectTracks.sql" />
+    <None Include="Resources\SelectListItemById.sql" />
+    <None Include="Resources\SelectTilesByTrackId.sql" />
     <None Include="Resources\SelectTilesByTrackIds.sql" />
     <None Include="Resources\SelectTiles.sql" />
     <None Include="Resources\ConnectionString.txt" />

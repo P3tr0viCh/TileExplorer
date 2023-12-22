@@ -179,15 +179,13 @@ namespace TileExplorer
 
         public async Task<int> GetTileIdByXYAsync(Tile tile)
         {
-            return await Task.Run(() =>
+            using (var connection = GetConnection())
             {
-                using (var connection = GetConnection())
-                {
-                    return connection.ExecuteScalarAsync<int>(
-                        ResourcesSql.SelectTileIdByXY,
-                        new { x = tile.X, y = tile.Y });
-                }
-            });
+                return await connection.ExecuteScalarAsync<int>(
+                    ResourcesSql.SelectTileIdByXY,
+                    new { x = tile.X, y = tile.Y });
+            }
+            //            });
         }
 
         public async Task DeleteTrackAsync(Track track)
@@ -257,11 +255,8 @@ namespace TileExplorer
 
             using (var connection = GetConnection())
             {
-                var sql = new Sql.Query()
-                {
-                    table = Sql.TableName<T>(),
-                    where = "id = :id"
-                }.Select();
+                var sql = string.Format(ResourcesSql.SelectListItemById,
+                                        Sql.TableName<T>());
 
                 Utils.WriteDebug(sql);
 
@@ -284,19 +279,7 @@ namespace TileExplorer
                 case nameof(Tile):
                     if (filter != null)
                     {
-                        sql = new Sql.Query()
-                        {
-                            table = Sql.TableName<Tile>(),
-                            where = "id IN (" +
-                                new Sql.Query()
-                                {
-                                    fields = "tileid",
-                                    table = Sql.TableName<TracksTiles>(),
-                                    where = "trackid = :trackid"
-                                }.Select() +
-                                    ")"
-                        }.Select();
-
+                        sql = ResourcesSql.SelectTilesByTrackId;
                         param = new { trackid = ((Track)filter).Id };
                     }
                     else
@@ -313,34 +296,10 @@ namespace TileExplorer
                 case nameof(Track):
                     if (filter == null)
                     {
-                        sql = "SELECT id, text, " +
-                            "datetimestart, datetimefinish, " +
-                            "distance, equipmentid " +
-                            "FROM tracks " +
-                            Filter.Default.ToSql() + " " +
-                        "ORDER BY datetimestart;";
+                        sql = Filter.Default.ToSql();
 
-                        /*                            sql = "SELECT id, text, " +
-                                                    "dt AS datetimestart, datetimefinish, " +
-                                                    "distance, " +
-                                                    "equipmentid, " +
-                                                    "SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount " +
-                                                    "FROM (" +
-                                                        "SELECT *, EXISTS(" +
-                                                            "SELECT tileid, datetimestart " +
-                                                            "FROM tracks LEFT JOIN tracks_tiles ON tracks.id = tracks_tiles.trackid " +
-                                                            "WHERE tileid = tid AND datetimestart < dt) AS e " +
-                                                        "FROM (" +
-                                                            "SELECT tracks.id AS id, text, " +
-                                                                "datetimestart AS dt, datetimefinish, " +
-                                                                "distance, equipmentid, tileid AS tid " +
-                                                            "FROM tracks " +
-                                                            "LEFT JOIN tracks_tiles ON tracks.id = tracks_tiles.trackid" +
-                                                             Filter.Default.ToSql() + " " +
-                                                        ")" +
-                                                    ") " +
-                                                    "GROUP BY dt " +
-                                                    "ORDER BY dt;";*/
+                        sql = string.Format(
+                            ResourcesSql.SelectTracks, sql);
                     }
                     else
                     {
@@ -366,22 +325,23 @@ namespace TileExplorer
         {
             Utils.WriteDebug(typeof(T).Name);
 
-            return await Task.Run(() =>
+            GetQuery<T>(out string sql, out object param, filter);
+
+            return await Task.Run(async () =>
             {
                 using (var connection = GetConnection())
                 {
-                    GetQuery<T>(out string sql, out object param, filter);
 
-                    var list = connection.Query<T>(sql, param);
+                    var list = await connection.QueryAsync<T>(sql, param);
 
                     switch (typeof(T).Name)
                     {
                         case nameof(Track):
                             foreach (var item in list.Cast<Track>())
                             {
-                                item.Equipment =
-                                    ListItemLoadAsync<Equipment>(item.EquipmentId).Result;
-                            }
+/*                                item.Equipment = await 
+                                    ListItemLoadAsync<Equipment>(item.EquipmentId);
+*/                            }
 
                             break;
                         case nameof(Results):

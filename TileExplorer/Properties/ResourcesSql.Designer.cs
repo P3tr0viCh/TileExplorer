@@ -221,6 +221,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  SELECT * FROM {0} WHERE id = :id;.
+        /// </summary>
+        internal static string SelectListItemById {
+            get {
+                return ResourceManager.GetString("SelectListItemById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT * FROM markers ORDER BY text;.
         /// </summary>
         internal static string SelectMarkers {
@@ -267,6 +276,19 @@ namespace TileExplorer.Properties {
         ///   Looks up a localized string similar to SELECT * FROM tiles
         ///WHERE id IN (
         ///	SELECT tileid FROM tracks_tiles
+        ///	WHERE trackid = :trackid
+        ///);.
+        /// </summary>
+        internal static string SelectTilesByTrackId {
+            get {
+                return ResourceManager.GetString("SelectTilesByTrackId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM tiles
+        ///WHERE id IN (
+        ///	SELECT tileid FROM tracks_tiles
         ///	WHERE trackid IN (
         ///		SELECT id FROM tracks
         ///		{0}
@@ -285,6 +307,31 @@ namespace TileExplorer.Properties {
         internal static string SelectTrackPointsByTrackId {
             get {
                 return ResourceManager.GetString("SelectTrackPointsByTrackId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT id, text, dt AS datetimestart, datetimefinish, 
+        ///	distance, equipmentid,
+        ///	SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount
+        ///FROM (
+        ///	SELECT *,
+        ///		EXISTS(
+        ///			SELECT tileid, datetimestart
+        ///			FROM tracks 
+        ///				LEFT JOIN tracks_tiles ON tracks.id = tracks_tiles.trackid
+        ///			WHERE tileid = tid AND datetimestart &lt; dt
+        ///		) AS e
+        ///	FROM (
+        ///		SELECT tracks.id AS id, text,
+        ///			datetimestart AS dt, datetimefinish,
+        ///			distance, equipmentid, tileid AS tid
+        ///		FROM tracks
+        ///			LEFT JOIN tracks_tiles ON trac [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SelectTracks {
+            get {
+                return ResourceManager.GetString("SelectTracks", resourceCulture);
             }
         }
         

@@ -4,7 +4,6 @@
 
 using GMap.NET;
 using GMap.NET.WindowsForms;
-using Newtonsoft.Json.Linq;
 using P3tr0viCh.Utils;
 using System;
 using System.Collections;
@@ -122,6 +121,8 @@ namespace TileExplorer
             {
                 ShowChildForm(ChildFormType.Filter, true);
             }
+
+            Selected = null;
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -493,7 +494,7 @@ namespace TileExplorer
             FrmAbout.Show(new FrmAbout.Options() { Link = Resources.GitHubLink });
         }
 
-        private async void UpdateSelectedTrackTiles(Track track)
+        private void UpdateSelectedTrackTiles(Track track)
         {
             foreach (var tile in tilesOverlay.Polygons.Cast<MapItemTile>())
             {
@@ -502,7 +503,10 @@ namespace TileExplorer
 
             if (track == null) return;
 
-            var tiles = await Database.Default.ListLoadAsync<Tile>(track);
+            var tiles = Task.Run(() =>
+            {
+                return Database.Default.ListLoadAsync<Tile>(track);
+            }).Result;
 
             foreach (var tile in from item in tilesOverlay.Polygons.Cast<MapItemTile>()
                                  from tile in tiles
@@ -518,6 +522,17 @@ namespace TileExplorer
         private bool MarkerMoving;
 
         private IMapItem selected = null;
+
+        private void ChildFormSetSelected(ChildFormType childFormType, BaseId baseId)
+        {
+            foreach (var frm in Application.OpenForms)
+            {
+                if (frm is IChildForm form && form.ChildFormType == childFormType)
+                {
+                    ((IListForm)form).SetSelected(baseId);
+                }
+            }
+        }
 
         public IMapItem Selected
         {
@@ -536,41 +551,30 @@ namespace TileExplorer
 
                 selected = value;
 
-                if (selected != null)
+                if (selected == null)
                 {
-                    selected.Selected = true;
-
-                    switch (selected.Type)
-                    {
-                        case MapItemType.Marker:
-                            foreach (var frm in Application.OpenForms)
-                            {
-                                if (frm is IChildForm form && form.ChildFormType == ChildFormType.MarkerList)
-                                {
-                                    ((IListForm)form).SetSelected(selected.Model);
-                                }
-                            }
-
-                            UpdateSelectedTrackTiles(null);
-
-                            break;
-                        case MapItemType.Track:
-                            foreach (var frm in Application.OpenForms)
-                            {
-                                if (frm is IChildForm form && form.ChildFormType == ChildFormType.TrackList)
-                                {
-                                    ((IListForm)form).SetSelected(selected.Model);
-                                }
-                            }
-
-                            UpdateSelectedTrackTiles((Track)selected.Model);
-
-                            break;
-                    }
+                    SelectedTrackTiles = null;
+                    return;
                 }
-                else
+
+                selected.Selected = true;
+
+                switch (selected.Type)
                 {
-                    UpdateSelectedTrackTiles(null);
+                    case MapItemType.Marker:
+                        SelectedTrackTiles = null;
+
+                        ChildFormSetSelected(ChildFormType.MarkerList,
+                            selected.Model);
+
+                        break;
+                    case MapItemType.Track:
+                        SelectedTrackTiles = selected.Model as Track;
+
+                        ChildFormSetSelected(ChildFormType.TrackList,
+                            selected.Model);
+
+                        break;
                 }
             }
         }
@@ -599,18 +603,31 @@ namespace TileExplorer
             }
         }
 
+        private Track selectedTrackTiles;
+        public Track SelectedTrackTiles
+        {
+            set
+            {
+                if (value == selectedTrackTiles) return;
+
+                selectedTrackTiles = value;
+
+                UpdateSelectedTrackTiles(value);
+            }
+        }
+
         private IMapItem MouseOverMapItem()
         {
             if (gMapControl.IsMouseOverMarker)
             {
                 return markersOverlay.Markers.Cast<MapItemMarker>()
-                    .Where(m => m.IsMouseOver).FirstOrDefault();
+                .Where(m => m.IsMouseOver).FirstOrDefault();
             }
 
             if (gMapControl.IsMouseOverRoute)
             {
                 return tracksOverlay.Routes.Cast<MapItemTrack>()
-                    .Where(m => m.IsMouseOver).FirstOrDefault();
+                .Where(m => m.IsMouseOver).FirstOrDefault();
             }
 
             return null;
@@ -842,9 +859,9 @@ namespace TileExplorer
                 await Database.Default.MarkerDeleteAsync(marker);
 
                 markersOverlay.Markers.Remove(markersOverlay.Markers
-                        .Cast<MapItemMarker>()
-                        .Where(t => t.Model.Id == marker.Id).Single()
-                        );
+                .Cast<MapItemMarker>()
+                .Where(t => t.Model.Id == marker.Id).Single()
+                );
 
                 await UpdateDataAsync(DataLoad.MarkerList);
 
@@ -884,10 +901,10 @@ namespace TileExplorer
                 await Database.Default.DeleteTrackAsync(track);
 
                 tracksOverlay.Routes.Remove(
-                    tracksOverlay.Routes
-                        .Cast<MapItemTrack>()
-                        .Where(t => t.Model.Id == track.Id).Single()
-                        );
+                tracksOverlay.Routes
+                .Cast<MapItemTrack>()
+                .Where(t => t.Model.Id == track.Id).Single()
+                );
 
                 await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TrackList);
             }
@@ -1027,8 +1044,8 @@ namespace TileExplorer
                         case ChildFormType.Results:
                         case ChildFormType.TileInfo:
                             updateData = load.HasFlag(DataLoad.Tracks) ||
-                                load.HasFlag(DataLoad.TrackList) ||
-                                load.HasFlag(DataLoad.TracksInfo);
+                            load.HasFlag(DataLoad.TrackList) ||
+                            load.HasFlag(DataLoad.TracksInfo);
 
                             break;
                         case ChildFormType.TrackList:
@@ -1348,6 +1365,12 @@ namespace TileExplorer
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
+            else
+            {
+                Selected = null;
+
+                SelectedTrackTiles = value is Track ? value as Track : null;
+            }
         }
 
         private async void EquipmentChangeAsync(Equipment equipment)
@@ -1463,8 +1486,8 @@ namespace TileExplorer
             var rightBottomY = Utils.Osm.LatToTileY(pointRightBottom);
 
             foreach (var tile in gridOverlay.Polygons.Cast<MapItemTile>().
-                Where(t => t.Model.X < TileLeftTop.X || t.Model.Y < TileLeftTop.Y ||
-                           t.Model.X > TileRightBottom.X || t.Model.Y > TileRightBottom.Y).ToList())
+            Where(t => t.Model.X < TileLeftTop.X || t.Model.Y < TileLeftTop.Y ||
+            t.Model.X > TileRightBottom.X || t.Model.Y > TileRightBottom.Y).ToList())
             {
                 gridOverlay.Polygons.Remove(tile);
             }
@@ -1475,7 +1498,7 @@ namespace TileExplorer
                     if (x >= TileLeftTop.X && x <= TileRightBottom.X && y >= TileLeftTop.Y && y <= TileRightBottom.Y) continue;
 
                     if (tilesOverlay.Polygons.Cast<MapItemTile>().ToList().
-                        Exists(t => t.Model.X == x && t.Model.Y == y)) continue;
+                    Exists(t => t.Model.X == x && t.Model.Y == y)) continue;
 
                     gridOverlay.Polygons.Add(new MapItemTile(new Tile(x, y)));
                 }
@@ -1505,9 +1528,9 @@ namespace TileExplorer
             {
                 databaseHome =
 #if DEBUG
-                    Files.ExecutableDirectory();
+                Files.ExecutableDirectory();
 #else
-                    Files.AppDataDirectory();
+Files.AppDataDirectory();
 #endif
             }
 
@@ -1610,9 +1633,9 @@ namespace TileExplorer
             }
 
             var url = string.Format(open ? Resources.OsmUrlOpen : Resources.OsmUrlEdit,
-                zoom,
-                gMapControl.Position.Lat.ToString(CultureInfo.InvariantCulture),
-                gMapControl.Position.Lng.ToString(CultureInfo.InvariantCulture));
+            zoom,
+            gMapControl.Position.Lat.ToString(CultureInfo.InvariantCulture),
+            gMapControl.Position.Lng.ToString(CultureInfo.InvariantCulture));
 
             Process.Start(url);
         }
@@ -1646,7 +1669,7 @@ namespace TileExplorer
         private void ShowTileInfo()
         {
             ShowTileInfoAsync(gMapControl.FromLocalToLatLng(
-                                    MenuPopupPoint.X, MenuPopupPoint.Y));
+                MenuPopupPoint.X, MenuPopupPoint.Y));
         }
 
         private void MiMapShowTileInfo_Click(object sender, EventArgs e)
