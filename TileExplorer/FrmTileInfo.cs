@@ -68,10 +68,16 @@ namespace TileExplorer
 
             try
             {
-                await Database.Default.LoadTileInfoAsync(Tile);
+                Tile.Tracks = await Database.Default.ListLoadAsync<Track>(Tile);
+
+                slCount.Text = string.Format(Resources.StatusTracksCount, Tile.Tracks.Count);
+
+                trackBindingSource.DataSource = Tile.Tracks;
             }
             catch (Exception e)
             {
+                slCount.Text = string.Empty;
+
                 Utils.WriteError(e);
 
                 Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
@@ -80,10 +86,6 @@ namespace TileExplorer
             {
                 MainForm.Status = ProgramStatus.Idle;
             }
-
-            slCount.Text = string.Format(Resources.StatusTracksCount, Tile.Tracks.Count);
-
-            trackBindingSource.DataSource = Tile.Tracks;
         }
     }
 }

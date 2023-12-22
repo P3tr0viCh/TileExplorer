@@ -1076,7 +1076,7 @@ namespace TileExplorer
 
                 var tile = new Tile(position);
 
-                if (await Database.Default.TileExistsAsync(tile) == 0)
+                if (await Database.Default.GetTileIdByXYAsync(tile) == 0)
                 {
                     await Database.Default.TileSaveAsync(tile);
 
@@ -1106,7 +1106,13 @@ namespace TileExplorer
 
             try
             {
-                await Database.Default.TileDeleteAsync(new Tile(position));
+                var tile = new Tile(position);
+
+                tile.Id = await Database.Default.GetTileIdByXYAsync(tile);
+
+                if (tile.Id <= Sql.NewId) return;
+
+                await Database.Default.TileDeleteAsync(tile);
 
                 await UpdateDataAsync(DataLoad.Tiles);
             }
@@ -1183,7 +1189,7 @@ namespace TileExplorer
 
                 foreach (var trackTile in trackTiles)
                 {
-                    id = await Database.Default.TileExistsAsync(trackTile);
+                    id = await Database.Default.GetTileIdByXYAsync(trackTile);
 
                     if (id == 0)
                     {
@@ -1621,9 +1627,13 @@ namespace TileExplorer
             OsmAction(false);
         }
 
-        private async void ShowTileInfoAsync(Tile tile)
+        private async void ShowTileInfoAsync(PointLatLng position)
         {
-            if (await Database.Default.TileExistsAsync(tile) == 0)
+            var tile = new Tile(position);
+
+            tile.Id = await Database.Default.GetTileIdByXYAsync(tile);
+
+            if (tile.Id <= Sql.NewId)
             {
                 Msg.Info(Resources.MsgTileNotVisited);
 
@@ -1635,9 +1645,8 @@ namespace TileExplorer
 
         private void ShowTileInfo()
         {
-            var position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
-
-            ShowTileInfoAsync(new Tile(position));
+            ShowTileInfoAsync(gMapControl.FromLocalToLatLng(
+                                    MenuPopupPoint.X, MenuPopupPoint.Y));
         }
 
         private void MiMapShowTileInfo_Click(object sender, EventArgs e)

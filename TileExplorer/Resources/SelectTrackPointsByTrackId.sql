@@ -1,0 +1,1 @@
+SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;

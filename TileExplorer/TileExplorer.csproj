@@ -138,6 +138,11 @@
     </Compile>
     <Compile Include="MapItemMarkerCross.cs" />
     <Compile Include="Properties\AppSettings.cs" />
+    <Compile Include="Properties\ResourcesSql.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResourcesSql.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils.Tiles.cs" />
     <Compile Include="Utils.Gpx.cs" />
     <Compile Include="Utils.Osm.cs" />
@@ -219,6 +224,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Properties\ResourcesSql.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourcesSql.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Database.Models.Equipment.datasource" />
     <None Include="Properties\DataSources\Database.Models.Track.datasource" />
@@ -249,6 +258,27 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="GPX_Icon.ico" />
+    <None Include="Resources\SelectTilesByTrackIds.sql" />
+    <None Include="Resources\SelectTiles.sql" />
+    <None Include="Resources\ConnectionString.txt" />
+    <None Include="Resources\SelectTracksInfo.sql" />
+    <None Include="Resources\SelectTileIdByXY.sql" />
+    <None Include="Resources\SelectTracksByTileId.sql" />
+    <None Include="Resources\SelectTrackPointsByTrackId.sql" />
+    <None Include="Resources\SelectResults.sql" />
+    <None Include="Resources\SelectMarkers.sql" />
+    <None Include="Resources\SelectEquipments.sql" />
+    <None Include="Resources\CreateIndexTracksTilesTrackId.sql" />
+    <None Include="Resources\CreateIndexTracksTilesTileId.sql" />
+    <None Include="Resources\CreateIndexTracksPointsTrackId.sql" />
+    <None Include="Resources\CreateIndexTracksDateTimeStart.sql" />
+    <None Include="Resources\CreateTriggerTracksTilesAD.sql" />
+    <None Include="Resources\CreateTableTracksTiles.sql" />
+    <None Include="Resources\CreateTableTracksPoints.sql" />
+    <None Include="Resources\CreateTableTracks.sql" />
+    <None Include="Resources\CreateTableTiles.sql" />
+    <None Include="Resources\CreateTableMarkers.sql" />
+    <None Include="Resources\CreateTableEquipments.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
