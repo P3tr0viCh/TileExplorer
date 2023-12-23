@@ -500,6 +500,8 @@ namespace TileExplorer
             {
                 tile.Selected = false;
             }
+            
+            gMapControl.Invalidate();
 
             if (track == null) return;
 
@@ -542,6 +544,11 @@ namespace TileExplorer
             }
             set
             {
+                if (selected == null)
+                {
+                    SelectedTrackTiles = null;
+                }
+
                 if (selected == value) return;
 
                 if (selected != null)
@@ -553,7 +560,7 @@ namespace TileExplorer
 
                 if (selected == null)
                 {
-                    SelectedTrackTiles = null;
+                    gMapControl.Invalidate();
                     return;
                 }
 
@@ -603,15 +610,10 @@ namespace TileExplorer
             }
         }
 
-        private Track selectedTrackTiles;
         public Track SelectedTrackTiles
         {
             set
             {
-                if (value == selectedTrackTiles) return;
-
-                selectedTrackTiles = value;
-
                 UpdateSelectedTrackTiles(value);
             }
         }
@@ -990,11 +992,11 @@ namespace TileExplorer
                 }
                 else
                 {
+                    SelectedTrackTiles = null;
+
                     if (Selected != null)
                     {
                         Selected = null;
-
-                        UpdateSelectedTrackTiles(null);
 
                         gMapControl.Invalidate();
                     }
@@ -1289,12 +1291,10 @@ namespace TileExplorer
             {
                 for (var i = Application.OpenForms.Count - 1; i > 0; i--)
                 {
-                    if (Application.OpenForms[i] is IChildForm form)
+                    if (Application.OpenForms[i] is IChildForm form && 
+                        form.ChildFormType == childFormType)
                     {
-                        if (form.ChildFormType == childFormType)
-                        {
-                            Application.OpenForms[i].Close();
-                        }
+                        Application.OpenForms[i].Close();
                     }
                 }
             }
@@ -1617,6 +1617,7 @@ Files.AppDataDirectory();
 
         public void ChildFormClosed(object sender)
         {
+            Selected = null;
             ChildFormMenuItemState(((IChildForm)sender).ChildFormType).Checked = false;
         }
 

@@ -334,32 +334,6 @@ namespace TileExplorer
 
                     var list = await connection.QueryAsync<T>(sql, param);
 
-                    switch (typeof(T).Name)
-                    {
-                        case nameof(Track):
-                            foreach (var item in list.Cast<Track>())
-                            {
-/*                                item.Equipment = await 
-                                    ListItemLoadAsync<Equipment>(item.EquipmentId);
-*/                            }
-
-                            break;
-                        case nameof(Results):
-                            var results = list.Cast<Results>();
-
-                            var resultSum = new Results { Count = 0, DistanceSum = 0.0 };
-
-                            foreach (var item in results)
-                            {
-                                resultSum.Count += item.Count;
-                                resultSum.DistanceSum += item.DistanceSum;
-                            }
-
-                            results.AsList().Add(resultSum);
-
-                            break;
-                    }
-
                     return (List<T>)list;
                 }
             });

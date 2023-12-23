@@ -159,16 +159,16 @@ namespace TileExplorer
                 [DisplayName("Снаряжение: название")]
                 [Write(false)]
                 [Computed]
-                public string EquipmentText => Equipment.Text;
+                public string EquipmentText { get => Equipment.Text; set => Equipment.Text = value; }
                 [DisplayName("Снаряжение: марка")]
                 [Write(false)]
                 [Computed]
-                public string EquipmentBrand => Equipment.Brand;
+                public string EquipmentBrand { get => Equipment.Brand; set => Equipment.Brand = value; }
 
                 [DisplayName("Снаряжение: модель")]
                 [Write(false)]
                 [Computed]
-                public string EquipmentModel => Equipment.Model;
+                public string EquipmentModel { get => Equipment.Model; set => Equipment.Model = value; }
 
                 public new void Clear()
                 {

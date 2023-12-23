@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿#if DEBUG
+//#define SHOW_ALL_COLUMNS
+#endif
+
 using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
@@ -80,10 +83,17 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Track.Text)].DisplayIndex = 0;
 
                     dataGridView.Columns[nameof(Track.Equipment)].Visible = false;
-                    dataGridView.Columns[nameof(Track.EquipmentId)].Visible = false;
-                    dataGridView.Columns[nameof(Track.EquipmentText)].Visible = false;
-                    dataGridView.Columns[nameof(Track.EquipmentBrand)].Visible = false;
-                    dataGridView.Columns[nameof(Track.EquipmentModel)].Visible = false;
+
+                    var visible =
+#if SHOW_ALL_COLUMNS
+                        true;
+#else
+                        false;
+#endif
+                    dataGridView.Columns[nameof(Track.EquipmentId)].Visible = visible;
+                    dataGridView.Columns[nameof(Track.EquipmentText)].Visible = visible;
+                    dataGridView.Columns[nameof(Track.EquipmentBrand)].Visible = visible;
+                    dataGridView.Columns[nameof(Track.EquipmentModel)].Visible = visible;
 
                     break;
                 case ChildFormType.MarkerList:
@@ -294,10 +304,6 @@ namespace TileExplorer
         public void SetSelected(BaseId value)
         {
             Selected = value;
-        }
-
-        private void DataGridView_SelectionChanged(object sender, EventArgs e)
-        {
         }
 
         private void BindingSource_PositionChanged(object sender, EventArgs e)
