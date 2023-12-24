@@ -500,7 +500,7 @@ namespace TileExplorer
             {
                 tile.Selected = false;
             }
-            
+
             gMapControl.Invalidate();
 
             if (track == null) return;
@@ -1016,7 +1016,11 @@ namespace TileExplorer
 
             if (load == default)
             {
-                load = DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TrackList | DataLoad.MarkerList;
+                load = DataLoad.Tiles |
+                       DataLoad.TracksInfo |
+                       DataLoad.TrackList |
+                       DataLoad.MarkerList |
+                       DataLoad.EquipmentList;
 
                 if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
 
@@ -1051,7 +1055,8 @@ namespace TileExplorer
 
                             break;
                         case ChildFormType.TrackList:
-                            updateData = load.HasFlag(DataLoad.TrackList);
+                            updateData = load.HasFlag(DataLoad.TrackList) ||
+                                load.HasFlag(DataLoad.EquipmentList);
 
                             break;
                         case ChildFormType.MarkerList:
@@ -1059,7 +1064,8 @@ namespace TileExplorer
 
                             break;
                         case ChildFormType.EquipmentList:
-                            updateData = load.HasFlag(DataLoad.EquipmentList);
+                            updateData = load.HasFlag(DataLoad.EquipmentList) ||
+                                load.HasFlag(DataLoad.TrackList);
 
                             break;
                         default:
@@ -1291,7 +1297,7 @@ namespace TileExplorer
             {
                 for (var i = Application.OpenForms.Count - 1; i > 0; i--)
                 {
-                    if (Application.OpenForms[i] is IChildForm form && 
+                    if (Application.OpenForms[i] is IChildForm form &&
                         form.ChildFormType == childFormType)
                     {
                         Application.OpenForms[i].Close();
