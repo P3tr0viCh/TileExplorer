@@ -214,11 +214,6 @@ namespace TileExplorer
 
                     break;
                 case ChildFormType.EquipmentList:
-                    dataGridView.Columns[nameof(Equipment.Count)].DefaultCellStyle =
-                        DataGridViewCellStyles.Count;
-                    dataGridView.Columns[nameof(Equipment.DistanceSum)].DefaultCellStyle =
-                        DataGridViewCellStyles.DistanceSum;
-
                     break;
                 default:
                     throw new NotImplementedException();

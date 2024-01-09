@@ -312,14 +312,6 @@ namespace TileExplorer
                     }
                 }
 
-                [DisplayName("Треки")]
-                [Write(false)]
-                public int Count { get; set; } = 0;
-
-                [DisplayName("Расстояние")]
-                [Write(false)]
-                public double DistanceSum { get; set; } = 0;
-
                 public new void Clear()
                 {
                     base.Clear();
