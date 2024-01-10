@@ -164,13 +164,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Не удалось загрузить результаты.
+        ///   Looks up a localized string similar to Не удалось загрузить результаты по снаряжению.
         ///Ошибка:
         ///{0}..
         /// </summary>
-        internal static string MsgDatabaseLoadListResultsFail {
+        internal static string MsgDatabaseLoadListResultEquipmentsFail {
             get {
-                return ResourceManager.GetString("MsgDatabaseLoadListResultsFail", resourceCulture);
+                return ResourceManager.GetString("MsgDatabaseLoadListResultEquipmentsFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить результаты по годам.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgDatabaseLoadListResultYearsFail {
+            get {
+                return ResourceManager.GetString("MsgDatabaseLoadListResultYearsFail", resourceCulture);
             }
         }
         
@@ -420,6 +431,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Другое.
+        /// </summary>
+        internal static string TextOther {
+            get {
+                return ResourceManager.GetString("TextOther", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Итого.
+        /// </summary>
+        internal static string TextTotal {
+            get {
+                return ResourceManager.GetString("TextTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Снаряжение.
         /// </summary>
         internal static string TitleListEquipments {
@@ -438,11 +467,20 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Итоги.
+        ///   Looks up a localized string similar to Итоги по снаряжению.
         /// </summary>
-        internal static string TitleListResults {
+        internal static string TitleListResultEquipments {
             get {
-                return ResourceManager.GetString("TitleListResults", resourceCulture);
+                return ResourceManager.GetString("TitleListResultEquipments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Итоги по годам.
+        /// </summary>
+        internal static string TitleListResultYears {
+            get {
+                return ResourceManager.GetString("TitleListResultYears", resourceCulture);
             }
         }
         

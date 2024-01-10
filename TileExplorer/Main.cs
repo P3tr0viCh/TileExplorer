@@ -101,9 +101,13 @@ namespace TileExplorer
 
             _ = UpdateDataAsync();
 
-            if (AppSettings.Default.VisibleResults)
+            if (AppSettings.Default.VisibleResultYears)
             {
-                ShowChildForm(ChildFormType.Results, true);
+                ShowChildForm(ChildFormType.ResultYears, true);
+            }
+            if (AppSettings.Default.VisibleResultEquipments)
+            {
+                ShowChildForm(ChildFormType.ResultEquipments, true);
             }
             if (AppSettings.Default.VisibleTrackList)
             {
@@ -139,7 +143,8 @@ namespace TileExplorer
 
             AppSettings.Default.VisibleFilter = ChildFormMenuItemState(ChildFormType.Filter).Checked;
 
-            AppSettings.Default.VisibleResults = ChildFormMenuItemState(ChildFormType.Results).Checked;
+            AppSettings.Default.VisibleResultYears = ChildFormMenuItemState(ChildFormType.ResultYears).Checked;
+            AppSettings.Default.VisibleResultEquipments = ChildFormMenuItemState(ChildFormType.ResultEquipments).Checked;
             AppSettings.Default.VisibleTrackList = ChildFormMenuItemState(ChildFormType.TrackList).Checked;
             AppSettings.Default.VisibleMarkerList = ChildFormMenuItemState(ChildFormType.MarkerList).Checked;
             AppSettings.Default.VisibleEquipmentList = ChildFormMenuItemState(ChildFormType.EquipmentList).Checked;
@@ -860,9 +865,9 @@ namespace TileExplorer
             {
                 await Database.Default.MarkerDeleteAsync(marker);
 
-                markersOverlay.Markers.Remove(markersOverlay.Markers
-                .Cast<MapItemMarker>()
-                .Where(t => t.Model.Id == marker.Id).Single()
+                markersOverlay.Markers.Remove(
+                    markersOverlay.Markers.Cast<MapItemMarker>()
+                    .Where(t => t.Model.Id == marker.Id).SingleOrDefault()
                 );
 
                 await UpdateDataAsync(DataLoad.MarkerList);
@@ -903,9 +908,8 @@ namespace TileExplorer
                 await Database.Default.DeleteTrackAsync(track);
 
                 tracksOverlay.Routes.Remove(
-                tracksOverlay.Routes
-                .Cast<MapItemTrack>()
-                .Where(t => t.Model.Id == track.Id).Single()
+                    tracksOverlay.Routes.Cast<MapItemTrack>()
+                    .Where(t => t.Model.Id == track.Id).SingleOrDefault()
                 );
 
                 await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TrackList);
@@ -1047,16 +1051,17 @@ namespace TileExplorer
                 {
                     switch (frmChild.ChildFormType)
                     {
-                        case ChildFormType.Results:
+                        case ChildFormType.ResultYears:
+                        case ChildFormType.ResultEquipments:
                         case ChildFormType.TileInfo:
                             updateData = load.HasFlag(DataLoad.Tracks) ||
-                            load.HasFlag(DataLoad.TrackList) ||
-                            load.HasFlag(DataLoad.TracksInfo);
+                                         load.HasFlag(DataLoad.TrackList) ||
+                                         load.HasFlag(DataLoad.TracksInfo);
 
                             break;
                         case ChildFormType.TrackList:
                             updateData = load.HasFlag(DataLoad.TrackList) ||
-                                load.HasFlag(DataLoad.EquipmentList);
+                                         load.HasFlag(DataLoad.EquipmentList);
 
                             break;
                         case ChildFormType.MarkerList:
@@ -1065,7 +1070,7 @@ namespace TileExplorer
                             break;
                         case ChildFormType.EquipmentList:
                             updateData = load.HasFlag(DataLoad.EquipmentList) ||
-                                load.HasFlag(DataLoad.TrackList);
+                                         load.HasFlag(DataLoad.TrackList);
 
                             break;
                         default:
@@ -1283,7 +1288,8 @@ namespace TileExplorer
                             break;
                         case ChildFormType.TrackList:
                         case ChildFormType.MarkerList:
-                        case ChildFormType.Results:
+                        case ChildFormType.ResultYears:
+                        case ChildFormType.ResultEquipments:
                         case ChildFormType.EquipmentList:
                             FrmList.ShowFrm(this, childFormType);
 
@@ -1323,7 +1329,7 @@ namespace TileExplorer
 
         private void MiMainDataResults_Click(object sender, EventArgs e)
         {
-            ShowChildForm(ChildFormType.Results, !miMainDataResults.Checked);
+
         }
 
         private void MiMainDataFilter_Click(object sender, EventArgs e)
@@ -1572,11 +1578,6 @@ Files.AppDataDirectory();
             ShowSettings();
         }
 
-        private void TsbtnResults_Click(object sender, EventArgs e)
-        {
-            miMainDataResults.PerformClick();
-        }
-
         private void TsbtnTrackList_Click(object sender, EventArgs e)
         {
             miMainDataTrackList.PerformClick();
@@ -1607,8 +1608,10 @@ Files.AppDataDirectory();
                     return miMainDataTrackList;
                 case ChildFormType.MarkerList:
                     return miMainDataMarkerList;
-                case ChildFormType.Results:
-                    return miMainDataResults;
+                case ChildFormType.ResultYears:
+                    return miMainDataResultYears;
+                case ChildFormType.ResultEquipments:
+                    return miMainDataResultEquipments;
                 case ChildFormType.EquipmentList:
                     return miMainDataEquipmentList;
                 default:
@@ -1682,6 +1685,41 @@ Files.AppDataDirectory();
         private void MiMapShowTileInfo_Click(object sender, EventArgs e)
         {
             ShowTileInfo();
+        }
+
+        private void MiResultYears_Click(object sender, EventArgs e)
+        {
+            miMainDataResultYears.PerformClick();
+        }
+
+        private void MiResultEquipments_Click(object sender, EventArgs e)
+        {
+            miMainDataResultEquipments.PerformClick();
+        }
+
+        private void MiMainDataResultYears_Click(object sender, EventArgs e)
+        {
+            ShowChildForm(ChildFormType.ResultYears, !miMainDataResultYears.Checked);
+        }
+
+        private void MiMainDataResultEquipments_Click(object sender, EventArgs e)
+        {
+            ShowChildForm(ChildFormType.ResultEquipments, !miMainDataResultEquipments.Checked);
+        }
+
+        private void TsbtnResults_ButtonClick(object sender, EventArgs e)
+        {
+            if (ChildFormMenuItemState(ChildFormType.ResultYears).Checked &&
+                ChildFormMenuItemState(ChildFormType.ResultEquipments).Checked)
+            {
+                ShowChildForm(ChildFormType.ResultYears, false);
+                ShowChildForm(ChildFormType.ResultEquipments, false);
+            }
+            else
+            {
+                ShowChildForm(ChildFormType.ResultYears, true);
+                ShowChildForm(ChildFormType.ResultEquipments, true);
+            }
         }
     }
 }

@@ -163,8 +163,11 @@
   <data name="SelectMarkers" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectMarkers.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
-  <data name="SelectResults" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SelectResults.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  <data name="SelectResultEquipments" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectResultEquipments.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="SelectResultYears" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectResultYears.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="SelectTileIdByXY" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectTileIdByXY.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>

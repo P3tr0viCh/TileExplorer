@@ -270,8 +270,11 @@ namespace TileExplorer
 
             switch (typeof(T).Name)
             {
-                case nameof(Results):
-                    sql = ResourcesSql.SelectResults;
+                case nameof(ResultYears):
+                    sql = ResourcesSql.SelectResultYears;
+                    break;
+                case nameof(ResultEquipments):
+                    sql = ResourcesSql.SelectResultEquipments;
                     break;
                 case nameof(Marker):
                     sql = ResourcesSql.SelectMarkers;

@@ -325,7 +325,9 @@ namespace TileExplorer.Properties
         [Browsable(false)]
         public bool VisibleEquipmentList { get; set; } = true;
         [Browsable(false)]
-        public bool VisibleResults { get; set; } = true;
+        public bool VisibleResultYears { get; set; } = true;
+        [Browsable(false)]
+        public bool VisibleResultEquipments { get; set; } = true;
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
@@ -335,7 +337,9 @@ namespace TileExplorer.Properties
         [Browsable(false)]
         public FormState FormStateMain { get; set; }
         [Browsable(false)]
-        public FormState FormStateResults { get; set; }
+        public FormState FormStateResultYears { get; set; }
+        [Browsable(false)]
+        public FormState FormStateResultEquipments { get; set; }
         [Browsable(false)]
         public FormState FormStateTrackList { get; set; }
         [Browsable(false)]
@@ -349,7 +353,9 @@ namespace TileExplorer.Properties
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
-        public ColumnState[] ColumnsResults { get; set; }
+        public ColumnState[] ColumnsResultYears { get; set; }
+        [Browsable(false)]
+        public ColumnState[] ColumnsResultEquipments { get; set; }
         [Browsable(false)]
         public ColumnState[] ColumnsTrackList { get; set; }
         [Browsable(false)]

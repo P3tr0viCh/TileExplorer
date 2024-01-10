@@ -154,8 +154,13 @@
 Ошибка:
 {0}.</value>
   </data>
-  <data name="MsgDatabaseLoadListResultsFail" xml:space="preserve">
-    <value>Не удалось загрузить результаты.
+  <data name="MsgDatabaseLoadListResultEquipmentsFail" xml:space="preserve">
+    <value>Не удалось загрузить результаты по снаряжению.
+Ошибка:
+{0}.</value>
+  </data>
+  <data name="MsgDatabaseLoadListResultYearsFail" xml:space="preserve">
+    <value>Не удалось загрузить результаты по годам.
 Ошибка:
 {0}.</value>
   </data>
@@ -242,14 +247,23 @@
   <data name="StatusZoom" xml:space="preserve">
     <value>Масштаб: {0}</value>
   </data>
+  <data name="TextOther" xml:space="preserve">
+    <value>Другое</value>
+  </data>
+  <data name="TextTotal" xml:space="preserve">
+    <value>Итого</value>
+  </data>
   <data name="TitleListEquipments" xml:space="preserve">
     <value>Снаряжение</value>
   </data>
   <data name="TitleListMarkers" xml:space="preserve">
     <value>Маркеры</value>
   </data>
-  <data name="TitleListResults" xml:space="preserve">
-    <value>Итоги</value>
+  <data name="TitleListResultEquipments" xml:space="preserve">
+    <value>Итоги по снаряжению</value>
+  </data>
+  <data name="TitleListResultYears" xml:space="preserve">
+    <value>Итоги по годам</value>
   </data>
   <data name="TitleListTracks" xml:space="preserve">
     <value>Треки</value>

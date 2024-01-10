@@ -22,7 +22,7 @@ namespace TileExplorer
 
         public ChildFormType ChildFormType { get; set; }
 
-        private int columnDistanceIndex = -1;
+        private int columnFormattingIndex = -1;
 
         public FrmList()
         {
@@ -54,8 +54,11 @@ namespace TileExplorer
                 case ChildFormType.MarkerList:
                     bindingSource.DataSource = typeof(Marker);
                     break;
-                case ChildFormType.Results:
-                    bindingSource.DataSource = typeof(Results);
+                case ChildFormType.ResultYears:
+                    bindingSource.DataSource = typeof(ResultYears);
+                    break;
+                case ChildFormType.ResultEquipments:
+                    bindingSource.DataSource = typeof(ResultEquipments);
                     break;
                 case ChildFormType.EquipmentList:
                     bindingSource.DataSource = typeof(Equipment);
@@ -76,7 +79,7 @@ namespace TileExplorer
                     AppSettings.LoadFormState(this, AppSettings.Default.FormStateTrackList);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsTrackList);
 
-                    columnDistanceIndex = dataGridView.Columns[nameof(Track.Distance)].Index;
+                    columnFormattingIndex = dataGridView.Columns[nameof(Track.Distance)].Index;
                     dataGridView.CellFormatting +=
                         new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingTrackList);
 
@@ -111,13 +114,30 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;
 
                     break;
-                case ChildFormType.Results:
-                    Text = Resources.TitleListResults;
+                case ChildFormType.ResultYears:
+                    Text = Resources.TitleListResultYears;
 
                     toolStripLeft.Visible = false;
 
-                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateResults);
-                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsResults);
+                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateResultYears);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsResultYears);
+
+                    columnFormattingIndex = dataGridView.Columns[nameof(ResultYears.Year)].Index;
+                    dataGridView.CellFormatting +=
+                        new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingResultYears);
+
+                    break;
+                case ChildFormType.ResultEquipments:
+                    Text = Resources.TitleListResultEquipments;
+
+                    toolStripLeft.Visible = false;
+
+                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateResultEquipments);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsResultEquipments);
+
+                    columnFormattingIndex = dataGridView.Columns[nameof(ResultEquipments.Text)].Index;
+                    dataGridView.CellFormatting +=
+                        new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingResultEquipments);
 
                     break;
                 case ChildFormType.EquipmentList:
@@ -158,9 +178,14 @@ namespace TileExplorer
                     AppSettings.Default.ColumnsMarkerList = AppSettings.SaveDataGridColumns(dataGridView);
 
                     break;
-                case ChildFormType.Results:
-                    AppSettings.Default.FormStateResults = AppSettings.SaveFormState(this);
-                    AppSettings.Default.ColumnsResults = AppSettings.SaveDataGridColumns(dataGridView);
+                case ChildFormType.ResultYears:
+                    AppSettings.Default.FormStateResultYears = AppSettings.SaveFormState(this);
+                    AppSettings.Default.ColumnsResultYears = AppSettings.SaveDataGridColumns(dataGridView);
+
+                    break;
+                case ChildFormType.ResultEquipments:
+                    AppSettings.Default.FormStateResultEquipments = AppSettings.SaveFormState(this);
+                    AppSettings.Default.ColumnsResultEquipments = AppSettings.SaveDataGridColumns(dataGridView);
 
                     break;
                 case ChildFormType.EquipmentList:
@@ -204,12 +229,19 @@ namespace TileExplorer
                         DataGridViewCellStyles.LatLng;
 
                     break;
-                case ChildFormType.Results:
-                    dataGridView.Columns[nameof(Results.Year)].DefaultCellStyle =
+                case ChildFormType.ResultYears:
+                    dataGridView.Columns[nameof(ResultYears.Year)].DefaultCellStyle =
                         DataGridViewCellStyles.Year;
-                    dataGridView.Columns[nameof(Results.Count)].DefaultCellStyle =
+                    dataGridView.Columns[nameof(ResultYears.Count)].DefaultCellStyle =
                         DataGridViewCellStyles.Count;
-                    dataGridView.Columns[nameof(Results.DistanceSum)].DefaultCellStyle =
+                    dataGridView.Columns[nameof(ResultYears.DistanceSum)].DefaultCellStyle =
+                        DataGridViewCellStyles.DistanceSum;
+
+                    break;
+                case ChildFormType.ResultEquipments:
+                    dataGridView.Columns[nameof(ResultEquipments.Count)].DefaultCellStyle =
+                        DataGridViewCellStyles.Count;
+                    dataGridView.Columns[nameof(ResultEquipments.DistanceSum)].DefaultCellStyle =
                         DataGridViewCellStyles.DistanceSum;
 
                     break;
@@ -242,10 +274,16 @@ namespace TileExplorer
                         bindingSource.DataSource = await ListLoadAsync<Marker>();
 
                         break;
-                    case ChildFormType.Results:
-                        errorMsg = Resources.MsgDatabaseLoadListResultsFail;
+                    case ChildFormType.ResultYears:
+                        errorMsg = Resources.MsgDatabaseLoadListResultYearsFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<Results>();
+                        bindingSource.DataSource = await ListLoadAsync<ResultYears>();
+
+                        break;
+                    case ChildFormType.ResultEquipments:
+                        errorMsg = Resources.MsgDatabaseLoadListResultEquipmentsFail;
+
+                        bindingSource.DataSource = await ListLoadAsync<ResultEquipments>();
 
                         break;
                     case ChildFormType.EquipmentList:
@@ -356,9 +394,25 @@ namespace TileExplorer
 
         private void DataGridView_CellFormattingTrackList(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == columnDistanceIndex)
+            if (e.ColumnIndex == columnFormattingIndex)
             {
                 e.Value = (double)e.Value / 1000;
+            }
+        }
+
+        private void DataGridView_CellFormattingResultYears(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == columnFormattingIndex)
+            {
+                if ((int)e.Value == 0) e.Value = Resources.TextTotal;
+            }
+        }
+
+        private void DataGridView_CellFormattingResultEquipments(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == columnFormattingIndex)
+            {
+                if (string.IsNullOrEmpty(e.Value as string)) e.Value = Resources.TextOther;
             }
         }
 

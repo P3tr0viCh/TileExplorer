@@ -212,7 +212,8 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM equipments ORDER BY text;.
+        ///   Looks up a localized string similar to SELECT * FROM equipments
+        ///ORDER BY text;.
         /// </summary>
         internal static string SelectEquipments {
             get {
@@ -239,18 +240,37 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT 
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string SelectResultEquipments {
+            get {
+                return ResourceManager.GetString("SelectResultEquipments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT (CASE WHEN year = 32000 THEN NULL ELSE year END) AS year, count, distancesum
+        ///FROM
+        ///(SELECT 
         ///    CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year,
         ///    COUNT(*) AS count,
         ///    SUM(distance) / 1000.0 AS distancesum
         ///FROM
         ///    tracks
         ///GROUP BY year
-        ///ORDER BY year;.
+        ///	UNION
+        ///SELECT 
+        ///    32000 AS year,
+        ///    COUNT(*) AS count,
+        ///    SUM(distance) / 1000.0 AS distancesum
+        ///FROM
+        ///    tracks
+        ///ORDER BY year
+        ///);.
         /// </summary>
-        internal static string SelectResults {
+        internal static string SelectResultYears {
             get {
-                return ResourceManager.GetString("SelectResults", resourceCulture);
+                return ResourceManager.GetString("SelectResultYears", resourceCulture);
             }
         }
         
@@ -311,8 +331,8 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT id, text, dt AS datetimestart, datetimefinish, 
-        ///	distance, equipmentid,
+        ///   Looks up a localized string similar to SELECT id, text, dt AS datetimestart, datetimefinish, distance,
+        ///	equipmentid, equipmenttext, equipmentbrand, equipmentmodel,
         ///	SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount
         ///FROM (
         ///	SELECT *,
@@ -323,11 +343,9 @@ namespace TileExplorer.Properties {
         ///			WHERE tileid = tid AND datetimestart &lt; dt
         ///		) AS e
         ///	FROM (
-        ///		SELECT tracks.id AS id, text,
+        ///		SELECT tracks.id AS id, tracks.text AS text,
         ///			datetimestart AS dt, datetimefinish,
-        ///			distance, equipmentid, tileid AS tid
-        ///		FROM tracks
-        ///			LEFT JOIN tracks_tiles ON trac [rest of string was truncated]&quot;;.
+        ///			distance, tileid AS tid,        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectTracks {
             get {

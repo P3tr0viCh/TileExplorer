@@ -38,7 +38,8 @@ namespace TileExplorer
             Filter,
             TrackList,
             MarkerList,
-            Results,
+            ResultYears,
+            ResultEquipments,
             TileInfo,
             EquipmentList,
         }

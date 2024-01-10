@@ -239,7 +239,7 @@ namespace TileExplorer
                 public double Distance { get; set; }
             }
 
-            public class Results : BaseId
+            public class ResultYears : BaseId
             {
                 [DisplayName("Год")]
                 public int Year { get => (int)Id; set => Id = value; }
@@ -249,29 +249,18 @@ namespace TileExplorer
 
                 [DisplayName("Расстояние")]
                 public double DistanceSum { get; set; } = 0;
+            }
 
-                public new void Clear()
-                {
-                    base.Clear();
+            public class ResultEquipments : BaseId
+            {
+                [DisplayName("Название")]
+                public string Text { get; set; } = string.Empty;
 
-                    Count = 0;
-                    DistanceSum = 0;
-                }
+                [DisplayName("Треки")]
+                public int Count { get; set; } = 0;
 
-                public void Assign(Results source)
-                {
-                    if (source == null)
-                    {
-                        Clear();
-
-                        return;
-                    }
-
-                    base.Assign(source);
-
-                    Count = source.Count;
-                    DistanceSum = source.DistanceSum;
-                }
+                [DisplayName("Расстояние")]
+                public double DistanceSum { get; set; } = 0;
             }
 
             [Table("equipments")]

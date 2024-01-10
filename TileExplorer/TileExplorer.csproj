@@ -258,6 +258,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="GPX_Icon.ico" />
+    <None Include="Resources\SelectResultYears.sql" />
+    <None Include="Resources\SelectResultEquipments.sql" />
     <None Include="Resources\SelectTracks.sql" />
     <None Include="Resources\SelectListItemById.sql" />
     <None Include="Resources\SelectTilesByTrackId.sql" />
@@ -268,7 +270,6 @@
     <None Include="Resources\SelectTileIdByXY.sql" />
     <None Include="Resources\SelectTracksByTileId.sql" />
     <None Include="Resources\SelectTrackPointsByTrackId.sql" />
-    <None Include="Resources\SelectResults.sql" />
     <None Include="Resources\SelectMarkers.sql" />
     <None Include="Resources\SelectEquipments.sql" />
     <None Include="Resources\CreateIndexTracksTilesTrackId.sql" />
