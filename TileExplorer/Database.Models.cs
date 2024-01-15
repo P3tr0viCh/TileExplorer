@@ -5,6 +5,7 @@ using System.ComponentModel;
 using static TileExplorer.Enums;
 using Newtonsoft.Json;
 using GMap.NET;
+using P3tr0viCh.Utils;
 
 namespace TileExplorer
 {
@@ -116,13 +117,7 @@ namespace TileExplorer
                 [DisplayName("Время")]
                 [Write(false)]
                 [Computed]
-                public TimeSpan Duration
-                {
-                    get
-                    {
-                        return DateTimeFinish - DateTimeStart;
-                    }
-                }
+                public string DurationAsString => (DateTimeFinish - DateTimeStart).ToHoursMinutesString();
 
                 [DisplayName("Расстояние")]
                 public double Distance { get; set; } = 0;
@@ -249,6 +244,12 @@ namespace TileExplorer
 
                 [DisplayName("Расстояние")]
                 public double DistanceSum { get; set; } = 0;
+
+                [DisplayName("Время в днях")]
+                public double DurationSum { get; set; } = 0;
+
+                [DisplayName("Время")]
+                public string DurationSumAsString => TimeSpan.FromDays(DurationSum).ToHoursMinutesString();
             }
 
             public class ResultEquipments : BaseId
@@ -261,6 +262,12 @@ namespace TileExplorer
 
                 [DisplayName("Расстояние")]
                 public double DistanceSum { get; set; } = 0;
+
+                [DisplayName("Время в днях")]
+                public double DurationSum { get; set; } = 0;
+
+                [DisplayName("Время")]
+                public string DurationSumAsString => TimeSpan.FromDays(DurationSum).ToHoursMinutesString();
             }
 
             [Table("equipments")]

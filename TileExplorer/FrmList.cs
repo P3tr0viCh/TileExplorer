@@ -122,6 +122,8 @@ namespace TileExplorer
                     AppSettings.LoadFormState(this, AppSettings.Default.FormStateResultYears);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsResultYears);
 
+                    dataGridView.Columns[nameof(ResultYears.DurationSum)].Visible = false;
+
                     columnFormattingIndex = dataGridView.Columns[nameof(ResultYears.Year)].Index;
                     dataGridView.CellFormatting +=
                         new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingResultYears);
@@ -134,6 +136,8 @@ namespace TileExplorer
 
                     AppSettings.LoadFormState(this, AppSettings.Default.FormStateResultEquipments);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsResultEquipments);
+
+                    dataGridView.Columns[nameof(ResultEquipments.DurationSum)].Visible = false;
 
                     columnFormattingIndex = dataGridView.Columns[nameof(ResultEquipments.Text)].Index;
                     dataGridView.CellFormatting +=
@@ -214,8 +218,8 @@ namespace TileExplorer
                         DataGridViewCellStyles.DateTime;
                     dataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle =
                         DataGridViewCellStyles.DateTime;
-                    dataGridView.Columns[nameof(Track.Duration)].DefaultCellStyle =
-                        DataGridViewCellStyles.Duration;
+                    dataGridView.Columns[nameof(Track.DurationAsString)].DefaultCellStyle =
+                        DataGridViewCellStyles.DurationAsString;
                     dataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle =
                         DataGridViewCellStyles.Distance;
                     dataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle =
@@ -236,6 +240,8 @@ namespace TileExplorer
                         DataGridViewCellStyles.Count;
                     dataGridView.Columns[nameof(ResultYears.DistanceSum)].DefaultCellStyle =
                         DataGridViewCellStyles.DistanceSum;
+                    dataGridView.Columns[nameof(ResultYears.DurationSumAsString)].DefaultCellStyle =
+                        DataGridViewCellStyles.DurationAsString;
 
                     break;
                 case ChildFormType.ResultEquipments:
@@ -243,6 +249,8 @@ namespace TileExplorer
                         DataGridViewCellStyles.Count;
                     dataGridView.Columns[nameof(ResultEquipments.DistanceSum)].DefaultCellStyle =
                         DataGridViewCellStyles.DistanceSum;
+                    dataGridView.Columns[nameof(ResultEquipments.DurationSumAsString)].DefaultCellStyle =
+                        DataGridViewCellStyles.DurationAsString;
 
                     break;
                 case ChildFormType.EquipmentList:

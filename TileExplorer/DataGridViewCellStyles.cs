@@ -33,10 +33,9 @@ namespace TileExplorer
             Format = AppSettings.Default.FormatLatLng
         };
 
-        public static readonly DataGridViewCellStyle Duration = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle DurationAsString = new DataGridViewCellStyle()
         {
-            Alignment = DataGridViewContentAlignment.TopRight,
-            Format = "hh\\:mm"
+            Alignment = DataGridViewContentAlignment.TopRight
         };
 
         public static readonly DataGridViewCellStyle Date = new DataGridViewCellStyle()

@@ -111,7 +111,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="FrmEquipment.cs">
