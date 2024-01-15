@@ -32,9 +32,9 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.slCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.trackBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ColumnDateTimeStart = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.trackBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBindingSource)).BeginInit();
@@ -74,10 +74,6 @@
             this.dataGridView.Size = new System.Drawing.Size(384, 131);
             this.dataGridView.TabIndex = 2;
             // 
-            // trackBindingSource
-            // 
-            this.trackBindingSource.DataSource = typeof(TileExplorer.Database.Models.Track);
-            // 
             // ColumnDateTimeStart
             // 
             this.ColumnDateTimeStart.DataPropertyName = "DateTimeStart";
@@ -94,6 +90,10 @@
             this.ColumnText.ReadOnly = true;
             this.ColumnText.Width = 180;
             // 
+            // trackBindingSource
+            // 
+            this.trackBindingSource.DataSource = typeof(TileExplorer.Database.Models.Track);
+            // 
             // FrmTileInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -105,6 +105,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FrmTileInfo";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

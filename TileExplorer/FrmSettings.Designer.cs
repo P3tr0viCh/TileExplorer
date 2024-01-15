@@ -92,6 +92,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(5);
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(400, 400);
             this.Name = "FrmSettings";
             this.ShowInTaskbar = false;
