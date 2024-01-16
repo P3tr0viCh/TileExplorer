@@ -227,7 +227,7 @@
     <value>Центр: {0:F6}, {1:F6}</value>
   </data>
   <data name="StatusTileId" xml:space="preserve">
-    <value>Плитка: {0}, {1}</value>
+    <value>Плитка: {0}x{1}</value>
   </data>
   <data name="StatusTilesMaxCluster" xml:space="preserve">
     <value>Кластер: {0}</value>

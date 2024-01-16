@@ -1687,16 +1687,6 @@ Files.AppDataDirectory();
             ShowTileInfo();
         }
 
-        private void MiResultYears_Click(object sender, EventArgs e)
-        {
-            miMainDataResultYears.PerformClick();
-        }
-
-        private void MiResultEquipments_Click(object sender, EventArgs e)
-        {
-            miMainDataResultEquipments.PerformClick();
-        }
-
         private void MiMainDataResultYears_Click(object sender, EventArgs e)
         {
             ShowChildForm(ChildFormType.ResultYears, !miMainDataResultYears.Checked);
@@ -1707,7 +1697,7 @@ Files.AppDataDirectory();
             ShowChildForm(ChildFormType.ResultEquipments, !miMainDataResultEquipments.Checked);
         }
 
-        private void TsbtnResults_ButtonClick(object sender, EventArgs e)
+        private void TsbtnResults_Click(object sender, EventArgs e)
         {
             if (ChildFormMenuItemState(ChildFormType.ResultYears).Checked &&
                 ChildFormMenuItemState(ChildFormType.ResultEquipments).Checked)

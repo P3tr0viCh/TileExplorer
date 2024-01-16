@@ -368,7 +368,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Плитка: {0}, {1}.
+        ///   Looks up a localized string similar to Плитка: {0}x{1}.
         /// </summary>
         internal static string StatusTileId {
             get {
