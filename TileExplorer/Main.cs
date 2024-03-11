@@ -1199,6 +1199,11 @@ namespace TileExplorer
 
                 Utils.WriteDebug("OpenTrackFromFileAsync done");
 
+                if (!FrmTrack.ShowDlg(this, track))
+                {
+                    continue;
+                }
+
                 await Database.Default.SaveTrackAsync(track);
 
                 Utils.WriteDebug("SaveTrackAsync done");
