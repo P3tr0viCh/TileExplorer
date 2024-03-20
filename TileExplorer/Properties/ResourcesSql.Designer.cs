@@ -167,9 +167,13 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS tracks_points (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        ///	trackid INTEGER, num INTEGER,
+        ///	trackid INTEGER,
+        ///	num INTEGER,
         ///	lat REAL NOT NULL, lng REAL NOT NULL,
-        ///	datetime TEXT, ele REAL, distance REAL,
+        ///	datetime TEXT,
+        ///	ele REAL,
+        ///	distance REAL,
+        ///	showonmap INTEGER DEFAULT 0,
         ///	FOREIGN KEY (trackid) REFERENCES tracks (id)
         ///	ON DELETE CASCADE
         ///	ON UPDATE CASCADE
@@ -240,7 +244,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to SELECT text, count, distancesum, durationsum FROM
+        ///(
+        ///	SELECT equipmentid, COUNT(*) AS count, SUM(distance) / 1000 AS distancesum, SUM(JULIANDAY(datetimefinish) - JULIANDAY(datetimestart)) as durationsum,
+        ///		CASE WHEN equipmentid = 0 THEN 2 ELSE 1 END AS type
+        ///	FROM tracks GROUP BY equipmentid
+        ///)
+        ///LEFT JOIN equipments
+        ///ON equipments.id = equipmentid
+        ///ORDER BY type, text;.
         /// </summary>
         internal static string SelectResultEquipments {
             get {
@@ -249,12 +261,13 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT (CASE WHEN year = 32000 THEN NULL ELSE year END) AS year, count, distancesum
+        ///   Looks up a localized string similar to SELECT (CASE WHEN year = 32000 THEN NULL ELSE year END) AS year, count, distancesum, durationsum
         ///FROM
         ///(SELECT 
         ///    CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year,
         ///    COUNT(*) AS count,
-        ///    SUM(distance) / 1000.0 AS distancesum
+        ///    SUM(distance) / 1000.0 AS distancesum, 
+        ///	SUM(JULIANDAY(datetimefinish) - JULIANDAY(datetimestart)) as durationsum
         ///FROM
         ///    tracks
         ///GROUP BY year
@@ -262,11 +275,8 @@ namespace TileExplorer.Properties {
         ///SELECT 
         ///    32000 AS year,
         ///    COUNT(*) AS count,
-        ///    SUM(distance) / 1000.0 AS distancesum
-        ///FROM
-        ///    tracks
-        ///ORDER BY year
-        ///);.
+        ///    SUM(distance) / 1000.0 AS distancesum,
+        ///	SUM(JULIANDAY(datetimefinish) - JULIANDAY(datetimestar [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectResultYears {
             get {
@@ -322,11 +332,20 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;.
+        ///   Looks up a localized string similar to SELECT * FROM tracks_points WHERE trackid = :trackid and showonmap ORDER BY num;.
         /// </summary>
         internal static string SelectTrackPointsByTrackId {
             get {
                 return ResourceManager.GetString("SelectTrackPointsByTrackId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;.
+        /// </summary>
+        internal static string SelectTrackPointsByTrackIdFull {
+            get {
+                return ResourceManager.GetString("SelectTrackPointsByTrackIdFull", resourceCulture);
             }
         }
         
@@ -375,6 +394,15 @@ namespace TileExplorer.Properties {
         internal static string SelectTracksInfo {
             get {
                 return ResourceManager.GetString("SelectTracksInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM tracks;.
+        /// </summary>
+        internal static string SelectTracksOnly {
+            get {
+                return ResourceManager.GetString("SelectTracksOnly", resourceCulture);
             }
         }
     }

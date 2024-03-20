@@ -1,1 +1,1 @@
-SELECT * FROM tracks_points WHERE trackid = :trackid ORDER BY num;
+SELECT * FROM tracks_points WHERE trackid = :trackid and showonmap ORDER BY num;

@@ -13,6 +13,9 @@ namespace TileExplorer
     {
         public class Models
         {
+            private const int DEFAULT_OFFSET_X = 20;
+            private const int DEFAULT_OFFSET_Y = -10;
+
             public class BaseId
             {
                 [Key]
@@ -217,6 +220,8 @@ namespace TileExplorer
                 public double Ele { get; set; }
 
                 public double Distance { get; set; }
+
+                public bool ShowOnMap { get; set; }
             }
 
             [Table("tracks_tiles")]

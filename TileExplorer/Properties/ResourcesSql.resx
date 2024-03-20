@@ -184,6 +184,9 @@
   <data name="SelectTrackPointsByTrackId" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectTrackPointsByTrackId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="SelectTrackPointsByTrackIdFull" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectTrackPointsByTrackIdFull.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
   <data name="SelectTracks" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectTracks.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
@@ -192,5 +195,8 @@
   </data>
   <data name="SelectTracksInfo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectTracksInfo.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="SelectTracksOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectTracksOnly.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
 </root>

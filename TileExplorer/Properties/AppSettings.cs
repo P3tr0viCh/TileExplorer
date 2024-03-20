@@ -214,7 +214,7 @@ namespace TileExplorer.Properties
 
         [LocalizedCategory("SettingsCategoryDesignTracks")]
         [DisplayName("Расстояние между точками")]
-        [Description("Минимальное расстояние между точками трека в метрах")]
+        [Description("Минимальное расстояние между точками трека в метрах для отображения на карте")]
         public int TrackMinDistancePoint { get; set; } = 100;
 
         // ------------------------------------------------------------------------------------------------------------

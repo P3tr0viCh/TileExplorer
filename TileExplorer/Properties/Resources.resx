@@ -196,6 +196,9 @@
   <data name="QuestionTrackDelete" xml:space="preserve">
     <value>Удалить трек «{0}»?</value>
   </data>
+  <data name="QuestionUpdateTrackMinDistancePoint" xml:space="preserve">
+    <value>Расстояние между точками трека для отображения изменилось. Обновить имеющиеся в базе треки?</value>
+  </data>
   <data name="SettingsCategoryCommon" xml:space="preserve">
     <value>Общее</value>
   </data>

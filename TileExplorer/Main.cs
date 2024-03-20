@@ -363,7 +363,7 @@ namespace TileExplorer
             Utils.WriteDebug("end");
         }
 
-        private async Task LoadTracksAsync(bool loadPoints)
+        private async Task LoadTracksAsync()
         {
             Utils.WriteDebug("start");
 
@@ -373,10 +373,7 @@ namespace TileExplorer
 
             foreach (var track in tracks)
             {
-                if (loadPoints)
-                {
-                    track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
-                }
+                track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
 
                 tracksOverlay.Routes.Add(new MapItemTrack(track));
 
@@ -1037,7 +1034,7 @@ namespace TileExplorer
 
             if (load.HasFlag(DataLoad.TracksInfo)) await LoadTracksInfoAsync();
 
-            if (load.HasFlag(DataLoad.Tracks)) await LoadTracksAsync(true);
+            if (load.HasFlag(DataLoad.Tracks)) await LoadTracksAsync();
 
             if (load.HasFlag(DataLoad.Markers)) await LoadMarkersAsync();
 
@@ -1087,13 +1084,36 @@ namespace TileExplorer
             }
         }
 
+        private async Task UpdateUpdateTrackMinDistancePointAsync()
+        {
+            Status = ProgramStatus.SaveData;
+
+            try
+            {
+                Utils.WriteDebug("start");
+
+                var tracks = await Database.Default.ListLoadAsync<Track>(new { onlyTrack = true });
+
+                foreach (var track in tracks)
+                {
+                    track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track, full = true });
+
+                    Utils.Tracks.UpdateTrackMinDistancePoint(track);
+
+                    await Database.Default.UpdateTrackMinDistancePointAsync(track);
+                }
+
+                Utils.WriteDebug("end");
+            }
+            finally
+            {
+                Status = ProgramStatus.Idle;
+            }
+        }
+
         private void MiMainDataUpdate_Click(object sender, EventArgs e)
         {
-            Status = ProgramStatus.LoadData;
-
             _ = UpdateDataAsync();
-
-            Status = ProgramStatus.Idle;
         }
 
         private async void AddTileAsync()
@@ -1503,8 +1523,8 @@ namespace TileExplorer
             var rightBottomY = Utils.Osm.LatToTileY(pointRightBottom);
 
             foreach (var tile in gridOverlay.Polygons.Cast<MapItemTile>().
-            Where(t => t.Model.X < TileLeftTop.X || t.Model.Y < TileLeftTop.Y ||
-            t.Model.X > TileRightBottom.X || t.Model.Y > TileRightBottom.Y).ToList())
+                Where(t => t.Model.X < TileLeftTop.X || t.Model.Y < TileLeftTop.Y ||
+                    t.Model.X > TileRightBottom.X || t.Model.Y > TileRightBottom.Y).ToList())
             {
                 gridOverlay.Polygons.Remove(tile);
             }
@@ -1515,7 +1535,7 @@ namespace TileExplorer
                     if (x >= TileLeftTop.X && x <= TileRightBottom.X && y >= TileLeftTop.Y && y <= TileRightBottom.Y) continue;
 
                     if (tilesOverlay.Polygons.Cast<MapItemTile>().ToList().
-                    Exists(t => t.Model.X == x && t.Model.Y == y)) continue;
+                        Exists(t => t.Model.X == x && t.Model.Y == y)) continue;
 
                     gridOverlay.Polygons.Add(new MapItemTile(new Tile(x, y)));
                 }
@@ -1558,8 +1578,10 @@ Files.AppDataDirectory();
             Database.Default.FileName = databaseFileName;
         }
 
-        private void ShowSettings()
+        private async void ShowSettingsAsync()
         {
+            int TrackMinDistancePoint = AppSettings.Default.TrackMinDistancePoint;
+
             if (FrmSettings.ShowDlg(this))
             {
                 UpdateDatabaseFileName();
@@ -1574,13 +1596,21 @@ Files.AppDataDirectory();
                     }
                 }
 
-                _ = UpdateDataAsync();
+                if (TrackMinDistancePoint != AppSettings.Default.TrackMinDistancePoint)
+                {
+                    if (Msg.Question(Resources.QuestionUpdateTrackMinDistancePoint))
+                    {
+                        await UpdateUpdateTrackMinDistancePointAsync();
+                    }
+                }
+
+                await UpdateDataAsync();
             }
         }
 
         private void MiMainSettings_Click(object sender, EventArgs e)
         {
-            ShowSettings();
+            ShowSettingsAsync();
         }
 
         private void TsbtnTrackList_Click(object sender, EventArgs e)

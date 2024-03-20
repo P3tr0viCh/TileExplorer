@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
@@ -14,9 +14,6 @@ namespace TileExplorer
 {
     public partial class Database
     {
-        private const int DEFAULT_OFFSET_X = 20;
-        private const int DEFAULT_OFFSET_Y = -10;
-
         private static readonly Database defaultInstance = new Database();
 
         public static Database Default
@@ -249,21 +246,6 @@ namespace TileExplorer
             });
         }
 
-        public async Task<T> ListItemLoadAsync<T>(long itemId)
-        {
-            if (itemId <= Sql.NewId) return default;
-
-            using (var connection = GetConnection())
-            {
-                var sql = string.Format(ResourcesSql.SelectListItemById,
-                                        Sql.TableName<T>());
-
-                Utils.WriteDebug(sql);
-
-                return await connection.QueryFirstOrDefaultAsync<T>(sql, new { id = itemId });
-            }
-        }
-
         private void GetQuery<T>(out string sql, out object param, in object filter)
         {
             param = null;
@@ -301,18 +283,40 @@ namespace TileExplorer
                     {
                         sql = Filter.Default.ToSql();
 
-                        sql = string.Format(
-                            ResourcesSql.SelectTracks, sql);
+                        sql = string.Format(ResourcesSql.SelectTracks, sql);
                     }
                     else
                     {
-                        sql = ResourcesSql.SelectTracksByTileId;
-                        param = new { tileid = ((Tile)filter).Id };
+                        if (filter.GetType() == typeof(Tile))
+                        {
+                            sql = ResourcesSql.SelectTracksByTileId;
+
+                            param = new { tileid = ((Tile)filter).Id };
+                        }
+                        else
+                        {
+                            sql = ResourcesSql.SelectTracksOnly;
+                        }
                     }
                     break;
                 case nameof(TrackPoint):
-                    sql = ResourcesSql.SelectTrackPointsByTrackId;
-                    param = new { trackid = ((Track)filter).Id };
+                    if (filter?.GetType() == typeof(Track))
+                    {
+                        sql = ResourcesSql.SelectTrackPointsByTrackId;
+
+                        param = new { trackid = ((Track)filter).Id };
+                    }
+                    else
+                    {
+                        sql = ResourcesSql.SelectTrackPointsByTrackIdFull;
+
+                        dynamic f = filter;
+
+                        Track track = f.track;
+
+                        param = new { trackid = track.Id };
+                    }
+
                     break;
                 case nameof(Equipment):
                     sql = ResourcesSql.SelectEquipments;
@@ -334,10 +338,30 @@ namespace TileExplorer
             {
                 using (var connection = GetConnection())
                 {
-
                     var list = await connection.QueryAsync<T>(sql, param);
 
                     return (List<T>)list;
+                }
+            });
+        }
+
+        public async Task UpdateTrackMinDistancePointAsync(Track track)
+        {
+            await Task.Run(() =>
+            {
+                using (var connection = GetConnection())
+                {
+                    connection.Open();
+
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        foreach (var point in track.TrackPoints)
+                        {
+                            connection.UpdateAsync(point, transaction);
+                        }
+
+                        transaction.Commit();
+                    }
                 }
             });
         }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -15,6 +16,33 @@ namespace TileExplorer
             private static string XmlGetText(XmlNode node)
             {
                 return node != null ? node.InnerText : string.Empty;
+            }
+
+            public static void UpdateTrackMinDistancePoint(Track track)
+            {
+                if (track.TrackPoints.Count < 2) return;
+
+                double distance = 0;
+
+                track.TrackPoints.First().ShowOnMap = true;
+
+                for (var i = 1; i < track.TrackPoints.Count - 1; i++)
+                {
+                    if (distance >= AppSettings.Default.TrackMinDistancePoint)
+                    {
+                        distance = 0;
+
+                        track.TrackPoints[i].ShowOnMap = true;
+                    }
+                    else
+                    {
+                        distance += track.TrackPoints[i].Distance;
+
+                        track.TrackPoints[i].ShowOnMap = false;
+                    }
+                }
+
+                track.TrackPoints.Last().ShowOnMap = true;
             }
 
             public static Track OpenTrackFromFile(string path)
@@ -69,12 +97,13 @@ namespace TileExplorer
                     foreach (var point in track.TrackPoints)
                     {
                         point.Distance = Geo.Haversine(pointPrev.Lat, pointPrev.Lng, point.Lat, point.Lng);
-                        
+
                         track.Distance += point.Distance;
 
                         pointPrev = point;
                     }
-                                       
+
+                    UpdateTrackMinDistancePoint(track);
 
                     var trkname = XmlGetText(trackXml.DocumentElement["trk"]?["name"]);
 

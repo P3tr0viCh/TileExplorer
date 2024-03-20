@@ -49,27 +49,7 @@ namespace TileExplorer
 
             if (Model.TrackPoints == null) return;
 
-            double distance = 0;
-
-            if (Model.TrackPoints.Count < 2) return;
-
-            Points.Add(Utils.TrackPointToPointLatLng(Model.TrackPoints.First()));
-
-            for (var i = 1; i < Model.TrackPoints.Count - 1; i++)
-            {
-                if (distance >= AppSettings.Default.TrackMinDistancePoint)
-                {
-                    distance = 0;
-
-                    Points.Add(Utils.TrackPointToPointLatLng(Model.TrackPoints[i]));
-                }
-                else
-                {
-                    distance += Model.TrackPoints[i].Distance;
-                }
-            }
-
-            Points.Add(Utils.TrackPointToPointLatLng(Model.TrackPoints.Last()));
+            Model.TrackPoints.ForEach(p => { Points.Add(Utils.TrackPointToPointLatLng(p)); });
         }
 
         public void UpdateColors()

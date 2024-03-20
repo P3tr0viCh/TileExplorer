@@ -278,6 +278,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Расстояние между точками трека для отображения изменилось. Обновить имеющиеся в базе треки?.
+        /// </summary>
+        internal static string QuestionUpdateTrackMinDistancePoint {
+            get {
+                return ResourceManager.GetString("QuestionUpdateTrackMinDistancePoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Общее.
         /// </summary>
         internal static string SettingsCategoryCommon {
