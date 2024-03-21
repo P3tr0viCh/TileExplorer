@@ -135,6 +135,7 @@
     <Compile Include="Main.ActionsSave.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ProgramStatus.cs" />
     <Compile Include="MapItemMarkerCross.cs" />
     <Compile Include="Properties\AppSettings.cs" />
     <Compile Include="Properties\ResourcesSql.Designer.cs">

@@ -91,6 +91,7 @@
             this.tsbtnTrackList = new System.Windows.Forms.ToolStripButton();
             this.tsbtnMarkerList = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbtnResults = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbtnFilter = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -112,7 +113,6 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
-            this.tsbtnResults = new System.Windows.Forms.ToolStripButton();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -373,7 +373,7 @@
             this.miMainShowGrid.CheckOnClick = true;
             this.miMainShowGrid.Name = "miMainShowGrid";
             this.miMainShowGrid.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.miMainShowGrid.Size = new System.Drawing.Size(180, 22);
+            this.miMainShowGrid.Size = new System.Drawing.Size(171, 22);
             this.miMainShowGrid.Text = "Сетка";
             this.miMainShowGrid.Click += new System.EventHandler(this.MiMainShowGrid_Click);
             // 
@@ -382,7 +382,7 @@
             this.miMainShowTracks.CheckOnClick = true;
             this.miMainShowTracks.Name = "miMainShowTracks";
             this.miMainShowTracks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.miMainShowTracks.Size = new System.Drawing.Size(180, 22);
+            this.miMainShowTracks.Size = new System.Drawing.Size(171, 22);
             this.miMainShowTracks.Text = "Треки";
             this.miMainShowTracks.Click += new System.EventHandler(this.MiMainShowTracks_Click);
             // 
@@ -391,14 +391,14 @@
             this.miMainShowMarkers.CheckOnClick = true;
             this.miMainShowMarkers.Name = "miMainShowMarkers";
             this.miMainShowMarkers.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.miMainShowMarkers.Size = new System.Drawing.Size(180, 22);
+            this.miMainShowMarkers.Size = new System.Drawing.Size(171, 22);
             this.miMainShowMarkers.Text = "Маркеры";
             this.miMainShowMarkers.Click += new System.EventHandler(this.MiMainShowMarkers_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(168, 6);
             // 
             // miMainHome
             // 
@@ -406,7 +406,7 @@
             this.miMainHomeGoto,
             this.miMainHomeSave});
             this.miMainHome.Name = "miMainHome";
-            this.miMainHome.Size = new System.Drawing.Size(180, 22);
+            this.miMainHome.Size = new System.Drawing.Size(171, 22);
             this.miMainHome.Text = "Дом";
             // 
             // miMainHomeGoto
@@ -428,13 +428,13 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(168, 6);
             // 
             // miMainGrayScale
             // 
             this.miMainGrayScale.CheckOnClick = true;
             this.miMainGrayScale.Name = "miMainGrayScale";
-            this.miMainGrayScale.Size = new System.Drawing.Size(180, 22);
+            this.miMainGrayScale.Size = new System.Drawing.Size(171, 22);
             this.miMainGrayScale.Text = "Оттенки серого";
             this.miMainGrayScale.Click += new System.EventHandler(this.MiMainGrayScale_Click);
             // 
@@ -642,7 +642,7 @@
             this.tsbtnFilter});
             this.toolStrip.Location = new System.Drawing.Point(0, 4);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(41, 173);
+            this.toolStrip.Size = new System.Drawing.Size(41, 154);
             this.toolStrip.TabIndex = 1;
             // 
             // tsbtnTrackList
@@ -675,6 +675,19 @@
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
             this.toolStripSeparator15.Size = new System.Drawing.Size(39, 6);
+            // 
+            // tsbtnResults
+            // 
+            this.tsbtnResults.AutoSize = false;
+            this.tsbtnResults.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbtnResults.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnResults.Image")));
+            this.tsbtnResults.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbtnResults.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbtnResults.Name = "tsbtnResults";
+            this.tsbtnResults.Size = new System.Drawing.Size(40, 32);
+            this.tsbtnResults.Text = "И";
+            this.tsbtnResults.ToolTipText = "Итоги";
+            this.tsbtnResults.Click += new System.EventHandler(this.TsbtnResults_Click);
             // 
             // toolStripSeparator10
             // 
@@ -826,19 +839,6 @@
             // 
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
-            // 
-            // tsbtnResults
-            // 
-            this.tsbtnResults.AutoSize = false;
-            this.tsbtnResults.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbtnResults.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnResults.Image")));
-            this.tsbtnResults.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbtnResults.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbtnResults.Name = "tsbtnResults";
-            this.tsbtnResults.Size = new System.Drawing.Size(40, 32);
-            this.tsbtnResults.Text = "И";
-            this.tsbtnResults.ToolTipText = "Итоги";
-            this.tsbtnResults.Click += new System.EventHandler(this.TsbtnResults_Click);
             // 
             // Main
             // 

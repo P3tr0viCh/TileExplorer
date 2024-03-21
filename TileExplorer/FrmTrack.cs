@@ -43,7 +43,7 @@ namespace TileExplorer
 
         private bool LoadData()
         {
-            MainForm.Status = ProgramStatus.LoadData;
+            var status = MainForm.ProgramStatus.Start(Status.LoadData);
 
             Utils.WriteDebug("start");
 
@@ -55,7 +55,7 @@ namespace TileExplorer
             {
                 Utils.WriteDebug("end");
 
-                MainForm.Status = ProgramStatus.Idle;
+                MainForm.ProgramStatus.Stop(status);
             }
         }
 

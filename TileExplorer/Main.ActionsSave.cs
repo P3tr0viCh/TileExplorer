@@ -34,7 +34,7 @@ namespace TileExplorer
             }
 #if DEBUG
             saveFileDialog.FileName = Files.TempFileName("xxx") + "." + saveFileDialog.DefaultExt;
-            
+
             return true;
 #else
             return saveFileDialog.ShowDialog(this) == DialogResult.OK;
@@ -93,33 +93,38 @@ namespace TileExplorer
 
         private void SaveTileBoundaryToFile()
         {
-            Status = ProgramStatus.SaveData;
-
-            var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
-            var pointTo = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
-
-            var tiles = new List<Tile>();
-
-            for (var x = Utils.Osm.LngToTileX(pointFrom); x <= Utils.Osm.LngToTileX(pointTo); x++)
-                for (var y = Utils.Osm.LatToTileY(pointFrom); y <= Utils.Osm.LatToTileY(pointTo); y++)
-                {
-                    tiles.Add(new Tile(x, y));
-                }
+            var status = ProgramStatus.Start(Status.SaveData);
 
             try
             {
-                if (!ShowSaveFileDialog(SaveFileDialogType.Osm)) return;
+                var pointFrom = gMapControl.FromLocalToLatLng(0, 0);
+                var pointTo = gMapControl.FromLocalToLatLng(gMapControl.Width, gMapControl.Height);
 
-                Utils.Osm.SaveTilesToFile(saveFileDialog.FileName, tiles);
+                var tiles = new List<Tile>();
+
+                for (var x = Utils.Osm.LngToTileX(pointFrom); x <= Utils.Osm.LngToTileX(pointTo); x++)
+                    for (var y = Utils.Osm.LatToTileY(pointFrom); y <= Utils.Osm.LatToTileY(pointTo); y++)
+                    {
+                        tiles.Add(new Tile(x, y));
+                    }
+
+                try
+                {
+                    if (!ShowSaveFileDialog(SaveFileDialogType.Osm)) return;
+
+                    Utils.Osm.SaveTilesToFile(saveFileDialog.FileName, tiles);
+                }
+                catch (Exception e)
+                {
+                    Utils.WriteError(e);
+
+                    Msg.Error(e.Message);
+                }
             }
-            catch (Exception e)
+            finally
             {
-                Utils.WriteError(e);
-
-                Msg.Error(e.Message);
+                ProgramStatus.Stop(status);
             }
-
-            Status = ProgramStatus.Idle;
         }
 
         private void SaveTileStatusToFile()

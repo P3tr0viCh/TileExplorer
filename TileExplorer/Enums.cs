@@ -21,7 +21,7 @@ namespace TileExplorer
         }
 
         [TypeConverter(typeof(EnumDescriptionConverter))]
-        public enum ProgramStatus
+        public enum Status
         {
             [Description("")]
             Idle,
@@ -33,7 +33,7 @@ namespace TileExplorer
             SaveData
         }
 
-        public enum ChildFormType
+        public enum ChildFormType 
         {
             Filter,
             TrackList,

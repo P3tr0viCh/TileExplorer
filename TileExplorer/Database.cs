@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
@@ -333,6 +334,8 @@ namespace TileExplorer
             Utils.WriteDebug(typeof(T).Name);
 
             GetQuery<T>(out string sql, out object param, filter);
+
+            //await Task.Delay(3000);
 
             return await Task.Run(async () =>
             {

@@ -17,10 +17,10 @@ namespace TileExplorer
             void ListItemAdd(object sender, BaseId value);
             void ListItemChange(object sender, BaseId value);
             void ListItemDelete(object sender, BaseId value);
-            
+
             void MarkerChanged(Marker marker);
 
-            ProgramStatus Status { set; }
+            ProgramStatus ProgramStatus { get; }
         }
 
         public interface IChildForm
@@ -34,7 +34,7 @@ namespace TileExplorer
 
         public interface IUpdateDataForm
         {
-            Task UpdateDataAsync();
+            void UpdateData();
         }
 
         public interface IListForm

@@ -32,6 +32,9 @@ namespace TileExplorer
 
         private readonly StatusStripPresenter statusStripPresenter;
 
+        private readonly ProgramStatus status = new ProgramStatus();
+        public ProgramStatus ProgramStatus { get { return status; } }
+
         public Main()
         {
             InitializeComponent();
@@ -59,7 +62,6 @@ namespace TileExplorer
 
         private void Main_Load(object sender, EventArgs e)
         {
-
             AppSettingsLoad();
 
             GMapLoad();
@@ -72,6 +74,8 @@ namespace TileExplorer
             Database.Filter.Default.Years = AppSettings.Default.Filter.Years;
 
             Database.Filter.Default.OnChanged += Filter_OnChanged;
+
+            ProgramStatus.StatusChanged += ProgramStatusStatusChanged;
 
             AppSettings.LoadFormState(this, AppSettings.Default.FormStateMain);
 
@@ -99,8 +103,6 @@ namespace TileExplorer
 
             StartUpdateGrid();
 
-            _ = UpdateDataAsync();
-
             if (AppSettings.Default.VisibleResultYears)
             {
                 ShowChildForm(ChildFormType.ResultYears, true);
@@ -127,6 +129,16 @@ namespace TileExplorer
             }
 
             Selected = null;
+
+            UpdateData();
+        }
+
+        private async void UpdateData()
+        {
+            await Task.Run(() =>
+            {
+                this.InvokeIfNeeded(() => _ = UpdateDataAsync());
+            });
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -227,8 +239,6 @@ namespace TileExplorer
             timerMapMove.Start();
         }
 
-        public ProgramStatus Status { set => statusStripPresenter.Status = value.Description(); }
-
         private void GMapControl_OnMapZoomChanged()
         {
             statusStripPresenter.Zoom = gMapControl.Zoom;
@@ -253,6 +263,11 @@ namespace TileExplorer
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void ProgramStatusStatusChanged(object sender, Status status)
+        {
+            statusStripPresenter.Status = status.Description();
         }
 
         public ToolStripStatusLabel GetLabel(StatusLabel label)
@@ -498,29 +513,38 @@ namespace TileExplorer
 
         private void UpdateSelectedTrackTiles(Track track)
         {
-            foreach (var tile in tilesOverlay.Polygons.Cast<MapItemTile>())
+            var status = ProgramStatus.Start(Status.LoadData);
+
+            try
             {
-                tile.Selected = false;
+                foreach (var tile in tilesOverlay.Polygons.Cast<MapItemTile>())
+                {
+                    tile.Selected = false;
+                }
+
+                gMapControl.Invalidate();
+
+                if (track == null) return;
+
+                var tiles = Task.Run(() =>
+                {
+                    return Database.Default.ListLoadAsync<Tile>(track);
+                }).Result;
+
+                foreach (var tile in from item in tilesOverlay.Polygons.Cast<MapItemTile>()
+                                     from tile in tiles
+                                     where item.Model.X == tile.X && item.Model.Y == tile.Y
+                                     select item)
+                {
+                    tile.Selected = true;
+                }
+
+                if (ActiveForm != this) gMapControl.Invalidate();
             }
-
-            gMapControl.Invalidate();
-
-            if (track == null) return;
-
-            var tiles = Task.Run(() =>
+            finally
             {
-                return Database.Default.ListLoadAsync<Tile>(track);
-            }).Result;
-
-            foreach (var tile in from item in tilesOverlay.Polygons.Cast<MapItemTile>()
-                                 from tile in tiles
-                                 where item.Model.X == tile.X && item.Model.Y == tile.Y
-                                 select item)
-            {
-                tile.Selected = true;
+                ProgramStatus.Stop(status);
             }
-
-            if (ActiveForm != this) gMapControl.Invalidate();
         }
 
         private bool MarkerMoving;
@@ -1011,7 +1035,7 @@ namespace TileExplorer
 
         private async Task UpdateDataAsync(DataLoad load = default)
         {
-            Status = ProgramStatus.LoadData;
+            var status = ProgramStatus.Start(Status.LoadData);
 
             Selected = null;
 
@@ -1038,7 +1062,7 @@ namespace TileExplorer
 
             if (load.HasFlag(DataLoad.Markers)) await LoadMarkersAsync();
 
-            Status = ProgramStatus.Idle;
+            ProgramStatus.Stop(status);
 
             bool updateData;
 
@@ -1078,7 +1102,7 @@ namespace TileExplorer
 
                     if (updateData)
                     {
-                        await frmUpdateData.UpdateDataAsync();
+                        frmUpdateData.UpdateData();
                     }
                 }
             }
@@ -1086,7 +1110,7 @@ namespace TileExplorer
 
         private async Task UpdateUpdateTrackMinDistancePointAsync()
         {
-            Status = ProgramStatus.SaveData;
+            var status = ProgramStatus.Start(Status.SaveData);
 
             try
             {
@@ -1107,18 +1131,20 @@ namespace TileExplorer
             }
             finally
             {
-                Status = ProgramStatus.Idle;
+                ProgramStatus.Stop(status);
             }
         }
 
         private void MiMainDataUpdate_Click(object sender, EventArgs e)
         {
-            _ = UpdateDataAsync();
+            if (ProgramStatus.Current != Status.Idle) return;
+
+            UpdateData();
         }
 
         private async void AddTileAsync()
         {
-            Status = ProgramStatus.SaveData;
+            var status = ProgramStatus.Start(Status.SaveData);
 
             try
             {
@@ -1139,7 +1165,7 @@ namespace TileExplorer
             }
             finally
             {
-                Status = ProgramStatus.Idle;
+                ProgramStatus.Stop(status);
             }
         }
 
@@ -1150,7 +1176,7 @@ namespace TileExplorer
 
         private async void DeleteTileAsync()
         {
-            Status = ProgramStatus.SaveData;
+            var status = ProgramStatus.Start(Status.SaveData);
 
             var position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
 
@@ -1168,7 +1194,7 @@ namespace TileExplorer
             }
             finally
             {
-                Status = ProgramStatus.Idle;
+                ProgramStatus.Stop(status);
             }
         }
 
@@ -1207,80 +1233,85 @@ namespace TileExplorer
 
         private async Task OpenTracksAsync(string[] files)
         {
-            Status = ProgramStatus.LoadGpx;
+            var status = ProgramStatus.Start(Status.LoadGpx);
 
             Track track;
 
             List<Tile> trackTiles;
 
-            foreach (var file in files)
+            try
             {
-                track = await OpenTrackFromFileAsync(file);
-
-                Utils.WriteDebug("OpenTrackFromFileAsync done");
-
-                if (!FrmTrack.ShowDlg(this, track))
+                foreach (var file in files)
                 {
-                    continue;
-                }
+                    track = await OpenTrackFromFileAsync(file);
 
-                await Database.Default.SaveTrackAsync(track);
+                    Utils.WriteDebug("OpenTrackFromFileAsync done");
 
-                Utils.WriteDebug("SaveTrackAsync done");
-
-                var mapTrack = new MapItemTrack(track);
-
-                tracksOverlay.Routes.Add(mapTrack);
-
-                Selected = mapTrack;
-
-                trackTiles = await GetTilesFromTrackAsync(track);
-
-                Utils.WriteDebug("GetTilesFromTrackAsync done");
-
-                var saveTiles = new List<Tile>();
-
-                int id;
-
-                foreach (var trackTile in trackTiles)
-                {
-                    id = await Database.Default.GetTileIdByXYAsync(trackTile);
-
-                    if (id == 0)
+                    if (!FrmTrack.ShowDlg(this, track))
                     {
-                        saveTiles.Add(trackTile);
+                        continue;
                     }
-                    else
+
+                    await Database.Default.SaveTrackAsync(track);
+
+                    Utils.WriteDebug("SaveTrackAsync done");
+
+                    var mapTrack = new MapItemTrack(track);
+
+                    tracksOverlay.Routes.Add(mapTrack);
+
+                    Selected = mapTrack;
+
+                    trackTiles = await GetTilesFromTrackAsync(track);
+
+                    Utils.WriteDebug("GetTilesFromTrackAsync done");
+
+                    var saveTiles = new List<Tile>();
+
+                    int id;
+
+                    foreach (var trackTile in trackTiles)
                     {
-                        trackTile.Id = id;
+                        id = await Database.Default.GetTileIdByXYAsync(trackTile);
+
+                        if (id == 0)
+                        {
+                            saveTiles.Add(trackTile);
+                        }
+                        else
+                        {
+                            trackTile.Id = id;
+                        }
                     }
-                }
 
-                Utils.WriteDebug("saveTiles count: " + saveTiles.Count);
+                    Utils.WriteDebug("saveTiles count: " + saveTiles.Count);
 
-                await Database.Default.SaveTilesAsync(saveTiles);
+                    await Database.Default.SaveTilesAsync(saveTiles);
 
-                Utils.WriteDebug("SaveTilesAsync done");
+                    Utils.WriteDebug("SaveTilesAsync done");
 
-                var tracksTiles = new List<TracksTiles>();
+                    var tracksTiles = new List<TracksTiles>();
 
-                foreach (var tile in trackTiles)
-                {
-                    tracksTiles.Add(new TracksTiles()
+                    foreach (var tile in trackTiles)
                     {
-                        TrackId = track.Id,
-                        TileId = tile.Id,
-                    });
+                        tracksTiles.Add(new TracksTiles()
+                        {
+                            TrackId = track.Id,
+                            TileId = tile.Id,
+                        });
+                    }
+
+                    Utils.WriteDebug("tracksTiles count: " + tracksTiles.Count);
+
+                    await Database.Default.SaveTracksTilesAsync(tracksTiles);
+
+                    Utils.WriteDebug("SaveTracksTilesAsync done");
                 }
-
-                Utils.WriteDebug("tracksTiles count: " + tracksTiles.Count);
-
-                await Database.Default.SaveTracksTilesAsync(tracksTiles);
-
-                Utils.WriteDebug("SaveTracksTilesAsync done");
             }
-
-            Status = ProgramStatus.Idle;
+            finally
+            {
+                ProgramStatus.Stop(status);
+            }
         }
 
         private async Task OpenTracksAsync()

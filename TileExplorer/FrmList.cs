@@ -163,9 +163,17 @@ namespace TileExplorer
 
             UpdateSettings();
 
-            _ = UpdateDataAsync();
-
             MainForm.ChildFormOpened(this);
+
+            UpdateData();
+        }
+
+        public async void UpdateData()
+        {
+            await Task.Run(() =>
+            {
+                ((Form)MainForm).InvokeIfNeeded(() => _ = UpdateDataAsync());
+            });
         }
 
         private void FrmListNew_FormClosing(object sender, FormClosingEventArgs e)
@@ -262,7 +270,9 @@ namespace TileExplorer
 
         public async Task UpdateDataAsync()
         {
-            MainForm.Status = ProgramStatus.LoadData;
+            Utils.WriteDebug("start");
+
+            var status = MainForm.ProgramStatus.Start(Status.LoadData);
 
             var errorMsg = string.Empty;
 
@@ -312,8 +322,10 @@ namespace TileExplorer
             }
             finally
             {
-                MainForm.Status = ProgramStatus.Idle;
+                MainForm.ProgramStatus.Stop(status);
             }
+
+            Utils.WriteDebug("end");
         }
 
         private async Task<List<T>> ListLoadAsync<T>()

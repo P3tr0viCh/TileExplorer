@@ -44,7 +44,7 @@ namespace TileExplorer
         {
             UpdateSettings();
 
-            _ = UpdateDataAsync();
+            UpdateData();
         }
 
         private void FrmTileInfo_KeyDown(object sender, KeyEventArgs e)
@@ -64,7 +64,7 @@ namespace TileExplorer
 
         public async Task UpdateDataAsync()
         {
-            MainForm.Status = ProgramStatus.LoadData;
+            var status = MainForm.ProgramStatus.Start(Status.LoadData);
 
             try
             {
@@ -84,8 +84,16 @@ namespace TileExplorer
             }
             finally
             {
-                MainForm.Status = ProgramStatus.Idle;
+                MainForm.ProgramStatus.Stop(status);
             }
+        }
+
+        public async void UpdateData()
+        {
+            await Task.Run(() =>
+            {
+                this.InvokeIfNeeded(() => _ = UpdateDataAsync());
+            });
         }
     }
 }
