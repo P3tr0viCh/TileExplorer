@@ -328,6 +328,8 @@ namespace TileExplorer.Properties
         public bool VisibleResultYears { get; set; } = true;
         [Browsable(false)]
         public bool VisibleResultEquipments { get; set; } = true;
+        [Browsable(false)]
+        public bool VisibleTracksTree { get; set; } = true;
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
@@ -350,6 +352,8 @@ namespace TileExplorer.Properties
         public FormState FormStateFilter { get; set; }
         [Browsable(false)]
         public FormState FormStateSettings { get; set; }
+        [Browsable(false)]
+        public FormState FormStateTracksTree { get; set; }
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]

@@ -169,6 +169,11 @@
 Ошибка:
 {0}.</value>
   </data>
+  <data name="MsgDatabaseLoadTracksTreeFail" xml:space="preserve">
+    <value>Не удалось загрузить треки по месяцам.
+Ошибка:
+{0}.</value>
+  </data>
   <data name="MsgTileNotVisited" xml:space="preserve">
     <value>Плитка не открыта.</value>
   </data>
@@ -256,6 +261,9 @@
   <data name="TextTotal" xml:space="preserve">
     <value>Итого</value>
   </data>
+  <data name="TextTracksTreeAll" xml:space="preserve">
+    <value>Все записи</value>
+  </data>
   <data name="TitleListEquipments" xml:space="preserve">
     <value>Снаряжение</value>
   </data>
@@ -270,5 +278,8 @@
   </data>
   <data name="TitleListTracks" xml:space="preserve">
     <value>Треки</value>
+  </data>
+  <data name="TitleTracksTree" xml:space="preserve">
+    <value>Треки по месяцам</value>
   </data>
 </root>

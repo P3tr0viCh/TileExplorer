@@ -338,6 +338,16 @@ namespace TileExplorer
                     Model = source.Model;
                 }
             }
+
+            [Table("tracks")]
+            public class TracksTree : BaseId
+            {
+                [DisplayName("Год")]
+                public int Year { get; set; }
+
+                [DisplayName("Месяц")]
+                public int Month { get; set; }
+            }
         }
     }
 }

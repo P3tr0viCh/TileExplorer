@@ -46,6 +46,8 @@ namespace TileExplorer
 
         private void FrmListNew_Load(object sender, EventArgs e)
         {
+            MainForm.ChildFormOpened(this);
+
             switch (ChildFormType)
             {
                 case ChildFormType.TrackList:
@@ -163,9 +165,10 @@ namespace TileExplorer
 
             UpdateSettings();
 
-            MainForm.ChildFormOpened(this);
-
-            UpdateData();
+            if (MainForm.ProgramStatus.Current != Status.Starting)
+            {
+                UpdateData();
+            }
         }
 
         public async void UpdateData()
@@ -268,7 +271,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task UpdateDataAsync()
+        private async Task UpdateDataAsync()
         {
             Utils.WriteDebug("start");
 

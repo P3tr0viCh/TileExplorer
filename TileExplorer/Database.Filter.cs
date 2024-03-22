@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Utils;
+﻿using Newtonsoft.Json.Linq;
+using P3tr0viCh.Utils;
 using System;
 using System.Linq;
 
@@ -96,6 +97,16 @@ namespace TileExplorer
 
                     if (Type == FilterType.Period) PerformOnChanged();
                 }
+            }
+
+            public void SetDates(DateTime dateFrom, DateTime dateTo)
+            {
+                if (this.dateFrom == dateFrom && this.dateTo == dateTo) return;
+
+                this.dateFrom = dateFrom;
+                this.dateTo = dateTo;
+
+                if (Type == FilterType.Period) PerformOnChanged();
             }
 
             private int[] years = default;

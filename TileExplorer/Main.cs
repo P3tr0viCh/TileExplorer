@@ -103,6 +103,8 @@ namespace TileExplorer
 
             StartUpdateGrid();
 
+            var starting = ProgramStatus.Start(Status.Starting);
+
             if (AppSettings.Default.VisibleResultYears)
             {
                 ShowChildForm(ChildFormType.ResultYears, true);
@@ -127,8 +129,12 @@ namespace TileExplorer
             {
                 ShowChildForm(ChildFormType.Filter, true);
             }
+            if (AppSettings.Default.VisibleTracksTree)
+            {
+                ShowChildForm(ChildFormType.TracksTree, true);
+            }
 
-            Selected = null;
+            ProgramStatus.Stop(starting);
 
             UpdateData();
         }
@@ -157,9 +163,12 @@ namespace TileExplorer
 
             AppSettings.Default.VisibleResultYears = ChildFormMenuItemState(ChildFormType.ResultYears).Checked;
             AppSettings.Default.VisibleResultEquipments = ChildFormMenuItemState(ChildFormType.ResultEquipments).Checked;
+
             AppSettings.Default.VisibleTrackList = ChildFormMenuItemState(ChildFormType.TrackList).Checked;
             AppSettings.Default.VisibleMarkerList = ChildFormMenuItemState(ChildFormType.MarkerList).Checked;
             AppSettings.Default.VisibleEquipmentList = ChildFormMenuItemState(ChildFormType.EquipmentList).Checked;
+
+            AppSettings.Default.VisibleTracksTree = ChildFormMenuItemState(ChildFormType.TracksTree).Checked;
 
             AppSettings.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
 
@@ -1045,7 +1054,8 @@ namespace TileExplorer
                        DataLoad.TracksInfo |
                        DataLoad.TrackList |
                        DataLoad.MarkerList |
-                       DataLoad.EquipmentList;
+                       DataLoad.EquipmentList |
+                       DataLoad.TracksTree;
 
                 if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
 
@@ -1092,6 +1102,10 @@ namespace TileExplorer
                         case ChildFormType.EquipmentList:
                             updateData = load.HasFlag(DataLoad.EquipmentList) ||
                                          load.HasFlag(DataLoad.TrackList);
+
+                            break;
+                        case ChildFormType.TracksTree:
+                            updateData = load.HasFlag(DataLoad.TracksTree);
 
                             break;
                         default:
@@ -1322,7 +1336,8 @@ namespace TileExplorer
 
             await OpenTracksAsync(openFileDialog.FileNames);
 
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks | DataLoad.TracksInfo | DataLoad.TrackList);
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks |
+                DataLoad.TracksInfo | DataLoad.TrackList | DataLoad.TracksTree);
         }
 
         private void MiMainDataOpenTrack_Click(object sender, EventArgs e)
@@ -1340,6 +1355,10 @@ namespace TileExplorer
                     {
                         case ChildFormType.Filter:
                             FrmFilter.ShowFrm(this);
+
+                            break;
+                        case ChildFormType.TracksTree:
+                            FrmTracksTree.ShowFrm(this);
 
                             break;
                         case ChildFormType.TrackList:
@@ -1391,6 +1410,11 @@ namespace TileExplorer
         private void MiMainDataFilter_Click(object sender, EventArgs e)
         {
             ShowChildForm(ChildFormType.Filter, !miMainDataFilter.Checked);
+        }
+
+        private void MiMainDataTracksTree_Click(object sender, EventArgs e)
+        {
+            ShowChildForm(ChildFormType.TracksTree, !miMainDataTracksTree.Checked);
         }
 
         private void MiMainGrayScale_Click(object sender, EventArgs e)
@@ -1659,6 +1683,11 @@ Files.AppDataDirectory();
             miMainDataFilter.PerformClick();
         }
 
+        private void tsbtnTracksTree_Click(object sender, EventArgs e)
+        {
+            miMainDataTracksTree.PerformClick();
+        }
+
         private void MiMainLeftPanel_Click(object sender, EventArgs e)
         {
             toolStripContainer.LeftToolStripPanelVisible = miMainLeftPanel.Checked;
@@ -1680,6 +1709,8 @@ Files.AppDataDirectory();
                     return miMainDataResultEquipments;
                 case ChildFormType.EquipmentList:
                     return miMainDataEquipmentList;
+                case ChildFormType.TracksTree:
+                    return miMainDataTracksTree;
                 default:
                     throw new NotImplementedException();
             }

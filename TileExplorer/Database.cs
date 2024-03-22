@@ -1,12 +1,14 @@
-﻿using Dapper;
+﻿#if DEBUG
+//#define SHOW_SQL
+#endif
+
+using Dapper;
 using Dapper.Contrib.Extensions;
 using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
@@ -86,7 +88,9 @@ namespace TileExplorer
                 var sql = string.Format(ResourcesSql.SelectTracksInfo,
                     filter.ToSql());
 
+#if SHOW_SQL
                 Utils.WriteDebug(sql);
+#endif
 
                 return await connection.QueryFirstAsync<TracksInfo>(sql);
             }
@@ -322,11 +326,16 @@ namespace TileExplorer
                 case nameof(Equipment):
                     sql = ResourcesSql.SelectEquipments;
                     break;
+                case nameof(TracksTree):
+                    sql = ResourcesSql.SelectTracksTree;
+                    break;
                 default:
                     throw new NotImplementedException();
             }
 
+#if SHOW_SQL
             Utils.WriteDebug(sql);
+#endif
         }
 
         public async Task<List<T>> ListLoadAsync<T>(object filter = null)

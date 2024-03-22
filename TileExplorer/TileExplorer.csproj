@@ -131,6 +131,12 @@
     <Compile Include="FrmTileInfo.Designer.cs">
       <DependentUpon>FrmTileInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmTracksTree.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmTracksTree.Designer.cs">
+      <DependentUpon>FrmTracksTree.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces.cs" />
     <Compile Include="Main.ActionsSave.cs">
       <SubType>Form</SubType>
@@ -211,6 +217,9 @@
     <EmbeddedResource Include="FrmFilter.resx">
       <DependentUpon>FrmFilter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmTracksTree.resx">
+      <DependentUpon>FrmTracksTree.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -258,6 +267,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="GPX_Icon.ico" />
+    <None Include="Resources\SelectTracksTree.sql" />
     <None Include="Resources\SelectTracksOnly.sql" />
     <None Include="Resources\SelectTrackPointsByTrackIdFull.sql" />
     <None Include="Resources\SelectResultYears.sql" />

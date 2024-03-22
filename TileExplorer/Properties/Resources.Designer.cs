@@ -197,6 +197,17 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить треки по месяцам.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgDatabaseLoadTracksTreeFail {
+            get {
+                return ResourceManager.GetString("MsgDatabaseLoadTracksTreeFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Плитка не открыта..
         /// </summary>
         internal static string MsgTileNotVisited {
@@ -458,6 +469,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Все записи.
+        /// </summary>
+        internal static string TextTracksTreeAll {
+            get {
+                return ResourceManager.GetString("TextTracksTreeAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Снаряжение.
         /// </summary>
         internal static string TitleListEquipments {
@@ -499,6 +519,15 @@ namespace TileExplorer.Properties {
         internal static string TitleListTracks {
             get {
                 return ResourceManager.GetString("TitleListTracks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Треки по месяцам.
+        /// </summary>
+        internal static string TitleTracksTree {
+            get {
+                return ResourceManager.GetString("TitleTracksTree", resourceCulture);
             }
         }
     }

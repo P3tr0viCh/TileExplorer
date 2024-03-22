@@ -25,6 +25,8 @@ namespace TileExplorer
         {
             [Description("")]
             Idle,
+            [Description("")]
+            Starting,
             [Description("Загрузка...")]
             LoadData,
             [Description("Чтение файла gpx...")]
@@ -38,10 +40,11 @@ namespace TileExplorer
             Filter,
             TrackList,
             MarkerList,
+            EquipmentList,
             ResultYears,
             ResultEquipments,
             TileInfo,
-            EquipmentList,
+            TracksTree,
         }
 
         [Flags]
@@ -54,6 +57,7 @@ namespace TileExplorer
             TrackList = 16,
             MarkerList = 32,
             EquipmentList = 64,
+            TracksTree = 128
         }
 
         public enum TileStatus

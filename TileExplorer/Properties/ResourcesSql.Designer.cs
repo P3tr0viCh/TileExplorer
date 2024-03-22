@@ -173,7 +173,7 @@ namespace TileExplorer.Properties {
         ///	datetime TEXT,
         ///	ele REAL,
         ///	distance REAL,
-        ///	showonmap INTEGER DEFAULT 0,
+        ///	showonmap INTEGER,
         ///	FOREIGN KEY (trackid) REFERENCES tracks (id)
         ///	ON DELETE CASCADE
         ///	ON UPDATE CASCADE
@@ -403,6 +403,17 @@ namespace TileExplorer.Properties {
         internal static string SelectTracksOnly {
             get {
                 return ResourceManager.GetString("SelectTracksOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT datetimestart, CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year, CAST(STRFTIME(&apos;%m&apos;, datetimestart) AS INTEGER) AS month
+        ///FROM tracks
+        ///GROUP by year, month;.
+        /// </summary>
+        internal static string SelectTracksTree {
+            get {
+                return ResourceManager.GetString("SelectTracksTree", resourceCulture);
             }
         }
     }
