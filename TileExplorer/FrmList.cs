@@ -24,6 +24,9 @@ namespace TileExplorer
 
         private int columnFormattingIndex = -1;
 
+        private string sortColumn = string.Empty;
+        private SortOrder sortOrder = SortOrder.None;
+
         public FrmList()
         {
             InitializeComponent();
@@ -99,6 +102,9 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Track.EquipmentText)].Visible = visible;
                     dataGridView.Columns[nameof(Track.EquipmentBrand)].Visible = visible;
                     dataGridView.Columns[nameof(Track.EquipmentModel)].Visible = visible;
+
+                    sortColumn = nameof(Track.DateTimeStart);
+                    sortOrder = SortOrder.Ascending;
 
                     break;
                 case ChildFormType.MarkerList:
@@ -286,7 +292,7 @@ namespace TileExplorer
                     case ChildFormType.TrackList:
                         errorMsg = Resources.MsgDatabaseLoadListTrackFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<Track>();
+                        bindingSource.DataSource = await ListLoadAsync<Track>(new { sortColumn, sortOrder });
 
                         break;
                     case ChildFormType.MarkerList:
@@ -331,13 +337,13 @@ namespace TileExplorer
             Utils.WriteDebug("end");
         }
 
-        private async Task<List<T>> ListLoadAsync<T>()
+        private async Task<List<T>> ListLoadAsync<T>(object orderBy = null)
         {
             Utils.WriteDebug("start");
 
             try
             {
-                return await Database.Default.ListLoadAsync<T>();
+                return await Database.Default.ListLoadAsync<T>(null, orderBy);
             }
             finally
             {
@@ -451,6 +457,47 @@ namespace TileExplorer
                 case ChildFormType.TrackList:
                 case ChildFormType.MarkerList:
                     MainForm.SelectMapItem(this, Selected);
+                    break;
+            }
+        }
+
+        private void DataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            switch (ChildFormType)
+            {
+                case ChildFormType.TrackList:
+                    if (e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationAsString)].Index)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        sortColumn = dataGridView.Columns[e.ColumnIndex].Name;
+                    }
+
+                    if (sortOrder == SortOrder.Ascending)
+                        sortOrder = SortOrder.Descending;
+                    else
+                        sortOrder = SortOrder.Ascending;
+
+                    UpdateData();
+
+                    break;
+            }
+        }
+
+        private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            if (sortColumn == string.Empty)
+            {
+                return;
+            }
+
+            switch (ChildFormType)
+            {
+                case ChildFormType.TrackList:
+                    dataGridView.Columns[sortColumn].HeaderCell.SortGlyphDirection = sortOrder;
+
                     break;
             }
         }

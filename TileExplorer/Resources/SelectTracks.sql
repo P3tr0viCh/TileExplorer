@@ -24,4 +24,4 @@ FROM (
 	)
 )
 GROUP BY id
-ORDER BY dt;
+ORDER BY {1};

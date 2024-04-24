@@ -64,6 +64,8 @@
             this.dataGridView.Size = new System.Drawing.Size(343, 240);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseDoubleClick);
+            this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_ColumnHeaderMouseClick);
+            this.dataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataGridView_DataBindingComplete);
             // 
             // toolStripContainer
             // 
@@ -94,7 +96,7 @@
             this.tsbtnDelete});
             this.toolStripLeft.Location = new System.Drawing.Point(0, 4);
             this.toolStripLeft.Name = "toolStripLeft";
-            this.toolStripLeft.Size = new System.Drawing.Size(41, 126);
+            this.toolStripLeft.Size = new System.Drawing.Size(41, 107);
             this.toolStripLeft.TabIndex = 0;
             this.toolStripLeft.MouseEnter += new System.EventHandler(this.ToolStripLeft_MouseEnter);
             // 

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -251,7 +252,7 @@ namespace TileExplorer
             });
         }
 
-        private void GetQuery<T>(out string sql, out object param, in object filter)
+        private void GetQuery<T>(out string sql, out object param, in object filter, in object orderBy = null)
         {
             param = null;
 
@@ -288,7 +289,34 @@ namespace TileExplorer
                     {
                         sql = Filter.Default.ToSql();
 
-                        sql = string.Format(ResourcesSql.SelectTracks, sql);
+                        var ord = nameof(Track.DateTimeStart);
+
+                        if (orderBy != null)
+                        {
+                            dynamic o = orderBy;
+
+                            string sortColumn = o.sortColumn;
+                            SortOrder sortOrder = o.sortOrder;
+
+                            if (sortColumn != string.Empty)
+                            {
+                                if (sortColumn == nameof(Track.EquipmentName))
+                                {
+                                    ord = nameof(Track.EquipmentId);
+                                }
+                                else
+                                {
+                                    ord = sortColumn;
+                                }
+                            }
+
+                            if (sortOrder == SortOrder.Descending)
+                            {
+                                ord += " DESC";
+                            }
+                        }
+
+                        sql = string.Format(ResourcesSql.SelectTracks, sql, ord);
                     }
                     else
                     {
@@ -338,11 +366,11 @@ namespace TileExplorer
 #endif
         }
 
-        public async Task<List<T>> ListLoadAsync<T>(object filter = null)
+        public async Task<List<T>> ListLoadAsync<T>(object filter = null, object orderBy = null)
         {
             Utils.WriteDebug(typeof(T).Name);
 
-            GetQuery<T>(out string sql, out object param, filter);
+            GetQuery<T>(out string sql, out object param, filter, orderBy);
 
             //await Task.Delay(3000);
 
