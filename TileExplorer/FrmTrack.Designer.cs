@@ -36,6 +36,9 @@
             this.lblEquipment = new System.Windows.Forms.Label();
             this.cboxEquipment = new System.Windows.Forms.ComboBox();
             this.equipmentBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.lblEleAscent = new System.Windows.Forms.Label();
+            this.tbEleAscent = new System.Windows.Forms.TextBox();
+            this.btnOKToALL = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,23 +60,23 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(336, 120);
+            this.btnCancel.Location = new System.Drawing.Point(336, 128);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
-            this.btnCancel.TabIndex = 5;
+            this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
             // 
             // btnOk
             // 
-            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOk.Location = new System.Drawing.Point(248, 120);
+            this.btnOk.Location = new System.Drawing.Point(248, 128);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
-            this.btnOk.TabIndex = 4;
+            this.btnOk.TabIndex = 6;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
             // 
             // lblEquipment
             // 
@@ -100,13 +103,42 @@
             // 
             this.equipmentBindingSource.DataSource = typeof(TileExplorer.Database.Models.Equipment);
             // 
+            // lblEleAscent
+            // 
+            this.lblEleAscent.AutoSize = true;
+            this.lblEleAscent.Location = new System.Drawing.Point(176, 64);
+            this.lblEleAscent.Name = "lblEleAscent";
+            this.lblEleAscent.Size = new System.Drawing.Size(60, 19);
+            this.lblEleAscent.TabIndex = 4;
+            this.lblEleAscent.Text = "Подъём";
+            // 
+            // tbEleAscent
+            // 
+            this.tbEleAscent.Location = new System.Drawing.Point(176, 86);
+            this.tbEleAscent.Name = "tbEleAscent";
+            this.tbEleAscent.Size = new System.Drawing.Size(80, 25);
+            this.tbEleAscent.TabIndex = 5;
+            // 
+            // btnOKToALL
+            // 
+            this.btnOKToALL.Location = new System.Drawing.Point(8, 128);
+            this.btnOKToALL.Name = "btnOKToALL";
+            this.btnOKToALL.Size = new System.Drawing.Size(96, 32);
+            this.btnOKToALL.TabIndex = 8;
+            this.btnOKToALL.Text = "OK для всех";
+            this.btnOKToALL.UseVisualStyleBackColor = true;
+            this.btnOKToALL.Click += new System.EventHandler(this.BtnOKToALL_Click);
+            // 
             // FrmTrack
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(424, 161);
+            this.ClientSize = new System.Drawing.Size(424, 169);
+            this.Controls.Add(this.btnOKToALL);
+            this.Controls.Add(this.tbEleAscent);
+            this.Controls.Add(this.lblEleAscent);
             this.Controls.Add(this.cboxEquipment);
             this.Controls.Add(this.lblEquipment);
             this.Controls.Add(this.tbText);
@@ -137,5 +169,8 @@
         private System.Windows.Forms.Label lblEquipment;
         private System.Windows.Forms.ComboBox cboxEquipment;
         private System.Windows.Forms.BindingSource equipmentBindingSource;
+        private System.Windows.Forms.Label lblEleAscent;
+        private System.Windows.Forms.TextBox tbEleAscent;
+        private System.Windows.Forms.Button btnOKToALL;
     }
 }

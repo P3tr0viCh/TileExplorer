@@ -18,6 +18,7 @@ namespace TileExplorer
             void ListItemChange(object sender, BaseId value);
             void ListItemDelete(object sender, BaseId value);
 
+            void TrackChanged(Track track);
             void MarkerChanged(Marker marker);
 
             ProgramStatus ProgramStatus { get; }

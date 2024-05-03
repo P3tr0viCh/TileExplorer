@@ -125,6 +125,9 @@ namespace TileExplorer
                 [DisplayName("Расстояние")]
                 public double Distance { get; set; } = 0;
 
+                [DisplayName("Подъём")]
+                public float EleAscent { get; set; } = 0;
+
                 [Write(false)]
                 [Computed]
                 public List<TrackPoint> TrackPoints { get; set; } = null;
@@ -173,10 +176,18 @@ namespace TileExplorer
                     base.Clear();
 
                     Text = string.Empty;
+
                     DateTimeStart = default;
                     DateTimeFinish = default;
+
                     Distance = 0;
+
+                    EleAscent = 0;
+
+                    TrackPoints = null;
+
                     NewTilesCount = 0;
+
                     Equipment = null;
                 }
 
@@ -198,10 +209,23 @@ namespace TileExplorer
 
                     Distance = source.Distance;
 
-                    TrackPoints.Clear();
-                    TrackPoints.AddRange(source.TrackPoints);
+                    EleAscent = source.EleAscent;
+
+                    if (source.TrackPoints == null)
+                    {
+                        TrackPoints = null;
+                    }
+                    else
+                    {
+                        TrackPoints = new List<TrackPoint>();
+
+                        TrackPoints.AddRange(source.TrackPoints);
+
+                    }
 
                     NewTilesCount = source.NewTilesCount;
+
+                    Equipment = source.Equipment;
                 }
             }
 

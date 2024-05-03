@@ -2,7 +2,6 @@
 using P3tr0viCh.Utils;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using static TileExplorer.Database.Models;
@@ -14,18 +13,6 @@ namespace TileExplorer
         public static PointLatLng TrackPointToPointLatLng(TrackPoint trackPointModel)
         {
             return new PointLatLng(trackPointModel.Lat, trackPointModel.Lng);
-        }
-
-        public static DateTime DateTimeParse(string str, DateTime def = default)
-        {
-            return DateTime.TryParseExact(str, Const.DATETIME_FORMAT_GPX, null, DateTimeStyles.AssumeLocal, out DateTime result) ?
-                result : def;
-        }
-
-        public static double DoubleParse(string str, double def = 0.0)
-        {
-            return double.TryParse(str, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out double result) ?
-                result : def;
         }
 
         public static string AssemblyNameAndVersion()

@@ -1,6 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Interfaces;
@@ -81,7 +82,7 @@ namespace TileExplorer
 
         private bool SaveData()
         {
-            _ = Database.Default.MarkerSaveAsync(Marker);
+            Task.Run(() => Database.Default.MarkerSaveAsync(Marker)).Wait();
 
             MainForm.MarkerChanged(Marker);
 

@@ -235,10 +235,16 @@ namespace TileExplorer
                         DataGridViewCellStyles.DateTime;
                     dataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle =
                         DataGridViewCellStyles.DateTime;
+
                     dataGridView.Columns[nameof(Track.DurationAsString)].DefaultCellStyle =
                         DataGridViewCellStyles.DurationAsString;
+
                     dataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle =
                         DataGridViewCellStyles.Distance;
+
+                    dataGridView.Columns[nameof(Track.EleAscent)].DefaultCellStyle =
+                        DataGridViewCellStyles.EleAscent;
+
                     dataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle =
                         DataGridViewCellStyles.Count;
 
@@ -463,6 +469,8 @@ namespace TileExplorer
 
         private void DataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Left) return;
+
             switch (ChildFormType)
             {
                 case ChildFormType.TrackList:

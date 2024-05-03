@@ -1,4 +1,4 @@
-SELECT id, text, dt AS datetimestart, datetimefinish, distance,
+SELECT id, text, dt AS datetimestart, datetimefinish, distance, eleascent,
 	equipmentid, equipmenttext, equipmentbrand, equipmentmodel,
 	SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount
 FROM (
@@ -12,7 +12,7 @@ FROM (
 	FROM (
 		SELECT tracks.id AS id, tracks.text AS text,
 			datetimestart AS dt, datetimefinish,
-			distance, tileid AS tid,
+			distance, eleascent, tileid AS tid,
 			equipmentid,
 			equipments.text AS equipmenttext,
 			equipments.brand AS equipmentbrand,

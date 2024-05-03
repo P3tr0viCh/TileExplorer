@@ -188,7 +188,6 @@ namespace TileExplorer
                     ResourcesSql.SelectTileIdByXY,
                     new { x = tile.X, y = tile.Y });
             }
-            //            });
         }
 
         public async Task DeleteTrackAsync(Track track)
@@ -201,6 +200,8 @@ namespace TileExplorer
 
         public async Task SaveTrackAsync(Track track)
         {
+            Utils.WriteDebug("start"); 
+            
             await Task.Run(() =>
             {
                 using (var connection = GetConnection())
@@ -229,6 +230,8 @@ namespace TileExplorer
                     }
                 }
             });
+
+            Utils.WriteDebug("end");
         }
 
         public async Task SaveTracksTilesAsync(List<TracksTiles> tracksTiles)

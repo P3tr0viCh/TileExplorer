@@ -741,10 +741,10 @@ namespace TileExplorer
                     switch (Selected.Type)
                     {
                         case MapItemType.Marker:
-                            MarkerChangeAsync(SelectedMarker.Model);
+                            MarkerChange(SelectedMarker.Model);
                             break;
                         case MapItemType.Track:
-                            TrackChangeAsync(SelectedTrack.Model);
+                            TrackChange(SelectedTrack.Model);
                             break;
                     }
                 }
@@ -842,23 +842,20 @@ namespace TileExplorer
             markersOverlay.IsVisibile = prevMarkersVisible;
         }
 
-        private async void MarkerChangeAsync(Marker marker)
+        private void MarkerChange(Marker marker)
         {
             if (marker == null) return;
 
-            if (FrmMarker.ShowDlg(this, marker))
-            {
-                await UpdateDataAsync(DataLoad.MarkerList);
-            }
+            FrmMarker.ShowDlg(this, marker);
 
             SelectMapItem(this, marker);
         }
 
         public void MarkerChanged(Marker marker)
         {
-            var mapMarker = FindMapItem(marker);
+            var mapItem = FindMapItem(marker);
 
-            if (mapMarker == null)
+            if (mapItem == null)
             {
                 markersOverlay.Markers.Remove(markerTemp);
 
@@ -868,9 +865,9 @@ namespace TileExplorer
             }
             else
             {
-                mapMarker.Model = marker;
+                mapItem.Model = marker;
 
-                mapMarker.NotifyModelChanged();
+                mapItem.NotifyModelChanged();
 
                 _ = UpdateDataAsync(DataLoad.MarkerList);
 
@@ -906,20 +903,20 @@ namespace TileExplorer
             }
         }
 
-        private async void TrackChangeAsync(Track track)
+        private void TrackChange(Track track)
         {
             if (track == null) return;
 
-            if (FrmTrack.ShowDlg(this, track))
-            {
-                await Database.Default.SaveTrackAsync(track);
-
-                await UpdateDataAsync(DataLoad.TrackList);
-
-                if (ActiveForm != this) gMapControl.Invalidate();
-            }
+            FrmTrack.ShowDlg(this, track);
 
             SelectMapItem(this, track);
+        }
+
+        public void TrackChanged(Track track)
+        {
+            _ = UpdateDataAsync(DataLoad.TrackList);
+
+            if (ActiveForm != this) gMapControl.Invalidate();
         }
 
         private async void TrackDeleteAsync(Track track)
@@ -960,7 +957,7 @@ namespace TileExplorer
 
         private void MiMarkerChange_Click(object sender, EventArgs e)
         {
-            MarkerChangeAsync(SelectedMarker.Model);
+            MarkerChange(SelectedMarker.Model);
         }
 
         private void MiMarkerDelete_Click(object sender, EventArgs e)
@@ -970,7 +967,7 @@ namespace TileExplorer
 
         private void MiTrackChange_Click(object sender, EventArgs e)
         {
-            TrackChangeAsync(SelectedTrack.Model);
+            TrackChange(SelectedTrack.Model);
         }
 
         private void MiTrackDelete_Click(object sender, EventArgs e)
@@ -1255,20 +1252,51 @@ namespace TileExplorer
 
             try
             {
+                var showDlg = true;
+
+                var canToAll = files.Count() > 1;
+
+                Equipment equipmentToAll = null;
+
+                var exitForEach = false;
+
                 foreach (var file in files)
                 {
                     track = await OpenTrackFromFileAsync(file);
 
                     Utils.WriteDebug("OpenTrackFromFileAsync done");
 
-                    if (!FrmTrack.ShowDlg(this, track))
+                    if (showDlg)
                     {
-                        continue;
+                        switch (FrmTrack.ShowDlg(this, track, canToAll))
+                        {
+                            case DialogResult.Cancel:
+                                continue;
+                            case DialogResult.Abort:
+                                exitForEach = true;
+
+                                break;
+                            case DialogResult.Yes:
+                                showDlg = false;
+
+                                equipmentToAll = track.Equipment;
+
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        track.Equipment = equipmentToAll;
+
+                        Task.Run(() => Database.Default.SaveTrackAsync(track)).Wait();
+
+                        TrackChanged(track);
                     }
 
-                    await Database.Default.SaveTrackAsync(track);
-
-                    Utils.WriteDebug("SaveTrackAsync done");
+                    if (exitForEach)
+                    {
+                        break;
+                    }
 
                     var mapTrack = new MapItemTrack(track);
 
@@ -1512,13 +1540,13 @@ namespace TileExplorer
         {
             if (value is Marker)
             {
-                MarkerChangeAsync(value as Marker);
+                MarkerChange(value as Marker);
                 return;
             }
 
             if (value is Track)
             {
-                TrackChangeAsync(value as Track);
+                TrackChange(value as Track);
                 return;
             }
 

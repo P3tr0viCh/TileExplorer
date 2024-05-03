@@ -17,6 +17,8 @@ namespace TileExplorer
 
         public ChildFormType ChildFormType => ChildFormType.TracksTree;
 
+        private bool selfChange = false;
+
         public FrmTracksTree()
         {
             InitializeComponent();
@@ -34,8 +36,6 @@ namespace TileExplorer
 
             return frm;
         }
-
-        private bool selfChange = false;
 
         private void FrmTracksTree_Load(object sender, System.EventArgs e)
         {

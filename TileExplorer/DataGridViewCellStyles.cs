@@ -27,6 +27,12 @@ namespace TileExplorer
             Format = AppSettings.Default.FormatDistance2
         };
 
+        public static readonly DataGridViewCellStyle EleAscent = new DataGridViewCellStyle()
+        {
+            Alignment = DataGridViewContentAlignment.TopRight,
+            Format = AppSettings.Default.FormatEleAscent
+        };
+
         public static readonly DataGridViewCellStyle LatLng = new DataGridViewCellStyle()
         {
             Alignment = DataGridViewContentAlignment.TopRight,

@@ -120,6 +120,9 @@
   <data name="ErrorDirectoryNotExists" xml:space="preserve">
     <value>Каталог «{0}» не существует.</value>
   </data>
+  <data name="ErrorNeedDigit" xml:space="preserve">
+    <value>Необходимо ввести число.</value>
+  </data>
   <data name="ErrorNeedText" xml:space="preserve">
     <value>Необходимо указать значение.</value>
   </data>
@@ -200,6 +203,12 @@
   </data>
   <data name="QuestionTrackDelete" xml:space="preserve">
     <value>Удалить трек «{0}»?</value>
+  </data>
+  <data name="QuestionTracksCancelToAll" xml:space="preserve">
+    <value>Остановить загрузку треков?</value>
+  </data>
+  <data name="QuestionTracksOKToAll" xml:space="preserve">
+    <value>Использовать снаряжение для всех треков?</value>
   </data>
   <data name="QuestionUpdateTrackMinDistancePoint" xml:space="preserve">
     <value>Расстояние между точками трека для отображения изменилось. Обновить имеющиеся в базе треки?</value>

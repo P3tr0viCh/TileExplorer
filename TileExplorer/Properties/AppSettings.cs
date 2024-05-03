@@ -243,6 +243,11 @@ namespace TileExplorer.Properties
         public string FormatDistance2 { get; set; } = "0";
 
         [LocalizedCategory("SettingsCategoryFormat")]
+        [DisplayName("Подъём")]
+        [Description("Формат подъёма")]
+        public string FormatEleAscent { get; set; } = "0";
+
+        [LocalizedCategory("SettingsCategoryFormat")]
         [DisplayName("Координаты")]
         [Description("Формат координат")]
         public string FormatLatLng { get; set; } = "0.000000";

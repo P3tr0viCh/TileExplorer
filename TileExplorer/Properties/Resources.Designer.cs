@@ -70,6 +70,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Необходимо ввести число..
+        /// </summary>
+        internal static string ErrorNeedDigit {
+            get {
+                return ResourceManager.GetString("ErrorNeedDigit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Необходимо указать значение..
         /// </summary>
         internal static string ErrorNeedText {
@@ -285,6 +294,24 @@ namespace TileExplorer.Properties {
         internal static string QuestionTrackDelete {
             get {
                 return ResourceManager.GetString("QuestionTrackDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Остановить загрузку треков?.
+        /// </summary>
+        internal static string QuestionTracksCancelToAll {
+            get {
+                return ResourceManager.GetString("QuestionTracksCancelToAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Использовать снаряжение для всех треков?.
+        /// </summary>
+        internal static string QuestionTracksOKToAll {
+            get {
+                return ResourceManager.GetString("QuestionTracksOKToAll", resourceCulture);
             }
         }
         
