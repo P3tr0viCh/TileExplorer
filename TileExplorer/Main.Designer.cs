@@ -95,6 +95,7 @@
             this.tsbtnResults = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbtnFilter = new System.Windows.Forms.ToolStripButton();
+            this.tsbtnTracksTree = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.cmMarker = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miMarkerChange = new System.Windows.Forms.ToolStripMenuItem();
@@ -107,6 +108,11 @@
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.miMapOsmOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapOsmEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.miMapCopyCoords = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapCopyCoordsFloat = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapCopyCoordsFloatLat = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapCopyCoordsFloatLng = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapTileAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapTileDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -114,7 +120,9 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
-            this.tsbtnTracksTree = new System.Windows.Forms.ToolStripButton();
+            this.miMapCopyCoordsFloat2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapCopyCoordsFloat2Lat = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapCopyCoordsFloat2Lng = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -720,6 +728,17 @@
             this.tsbtnFilter.ToolTipText = "Фильтр";
             this.tsbtnFilter.Click += new System.EventHandler(this.TsbtnFilter_Click);
             // 
+            // tsbtnTracksTree
+            // 
+            this.tsbtnTracksTree.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbtnTracksTree.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnTracksTree.Image")));
+            this.tsbtnTracksTree.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbtnTracksTree.Name = "tsbtnTracksTree";
+            this.tsbtnTracksTree.Size = new System.Drawing.Size(39, 28);
+            this.tsbtnTracksTree.Text = "ТМ";
+            this.tsbtnTracksTree.ToolTipText = "Треки по месяцам";
+            this.tsbtnTracksTree.Click += new System.EventHandler(this.tsbtnTracksTree_Click);
+            // 
             // cmMarker
             // 
             this.cmMarker.ImageScalingSize = new System.Drawing.Size(24, 24);
@@ -761,61 +780,101 @@
             this.toolStripSeparator13,
             this.miMapOsmOpen,
             this.miMapOsmEdit,
+            this.toolStripSeparator16,
+            this.miMapCopyCoords,
             this.miMapTileAdd,
             this.miMapTileDelete});
             this.cmMap.Name = "cmMap";
-            this.cmMap.Size = new System.Drawing.Size(200, 148);
+            this.cmMap.Size = new System.Drawing.Size(210, 198);
             this.cmMap.Opening += new System.ComponentModel.CancelEventHandler(this.CmMap_Opening);
             // 
             // miMapMarkerAdd
             // 
             this.miMapMarkerAdd.Name = "miMapMarkerAdd";
-            this.miMapMarkerAdd.Size = new System.Drawing.Size(199, 22);
+            this.miMapMarkerAdd.Size = new System.Drawing.Size(209, 22);
             this.miMapMarkerAdd.Text = "Добавить маркер...";
             this.miMapMarkerAdd.Click += new System.EventHandler(this.MiMapMarkerAdd_Click);
             // 
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(206, 6);
             // 
             // miMapShowTileInfo
             // 
             this.miMapShowTileInfo.Name = "miMapShowTileInfo";
-            this.miMapShowTileInfo.Size = new System.Drawing.Size(199, 22);
+            this.miMapShowTileInfo.Size = new System.Drawing.Size(209, 22);
             this.miMapShowTileInfo.Text = "Информация о плитке";
             this.miMapShowTileInfo.Click += new System.EventHandler(this.MiMapShowTileInfo_Click);
             // 
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator13.Size = new System.Drawing.Size(206, 6);
             // 
             // miMapOsmOpen
             // 
             this.miMapOsmOpen.Name = "miMapOsmOpen";
-            this.miMapOsmOpen.Size = new System.Drawing.Size(199, 22);
+            this.miMapOsmOpen.Size = new System.Drawing.Size(209, 22);
             this.miMapOsmOpen.Text = "Открыть в ОСМ";
             this.miMapOsmOpen.Click += new System.EventHandler(this.MiMainOsmOpen_Click);
             // 
             // miMapOsmEdit
             // 
             this.miMapOsmEdit.Name = "miMapOsmEdit";
-            this.miMapOsmEdit.Size = new System.Drawing.Size(199, 22);
+            this.miMapOsmEdit.Size = new System.Drawing.Size(209, 22);
             this.miMapOsmEdit.Text = "Редактировать в ОСМ";
             this.miMapOsmEdit.Click += new System.EventHandler(this.MiMainOsmEdit_Click);
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(206, 6);
+            // 
+            // miMapCopyCoords
+            // 
+            this.miMapCopyCoords.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miMapCopyCoordsFloat,
+            this.miMapCopyCoordsFloat2});
+            this.miMapCopyCoords.Name = "miMapCopyCoords";
+            this.miMapCopyCoords.Size = new System.Drawing.Size(209, 22);
+            this.miMapCopyCoords.Text = "Копировать координаты";
+            // 
+            // miMapCopyCoordsFloat
+            // 
+            this.miMapCopyCoordsFloat.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miMapCopyCoordsFloatLat,
+            this.miMapCopyCoordsFloatLng});
+            this.miMapCopyCoordsFloat.Name = "miMapCopyCoordsFloat";
+            this.miMapCopyCoordsFloat.Size = new System.Drawing.Size(182, 22);
+            this.miMapCopyCoordsFloat.Text = "51,196369, 58,298527";
+            this.miMapCopyCoordsFloat.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
+            // 
+            // miMapCopyCoordsFloatLat
+            // 
+            this.miMapCopyCoordsFloatLat.Name = "miMapCopyCoordsFloatLat";
+            this.miMapCopyCoordsFloatLat.Size = new System.Drawing.Size(180, 22);
+            this.miMapCopyCoordsFloatLat.Text = "51,196369";
+            this.miMapCopyCoordsFloatLat.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
+            // 
+            // miMapCopyCoordsFloatLng
+            // 
+            this.miMapCopyCoordsFloatLng.Name = "miMapCopyCoordsFloatLng";
+            this.miMapCopyCoordsFloatLng.Size = new System.Drawing.Size(180, 22);
+            this.miMapCopyCoordsFloatLng.Text = "58,298527";
+            this.miMapCopyCoordsFloatLng.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
             // 
             // miMapTileAdd
             // 
             this.miMapTileAdd.Name = "miMapTileAdd";
-            this.miMapTileAdd.Size = new System.Drawing.Size(199, 22);
+            this.miMapTileAdd.Size = new System.Drawing.Size(209, 22);
             this.miMapTileAdd.Text = "add tile";
             this.miMapTileAdd.Click += new System.EventHandler(this.MiMapTileAdd_Click);
             // 
             // miMapTileDelete
             // 
             this.miMapTileDelete.Name = "miMapTileDelete";
-            this.miMapTileDelete.Size = new System.Drawing.Size(199, 22);
+            this.miMapTileDelete.Size = new System.Drawing.Size(209, 22);
             this.miMapTileDelete.Text = "delete tile";
             this.miMapTileDelete.Click += new System.EventHandler(this.MiMapTileDelete_Click);
             // 
@@ -853,16 +912,29 @@
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
             // 
-            // tsbtnTracksTree
+            // miMapCopyCoordsFloat2
             // 
-            this.tsbtnTracksTree.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbtnTracksTree.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnTracksTree.Image")));
-            this.tsbtnTracksTree.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbtnTracksTree.Name = "tsbtnTracksTree";
-            this.tsbtnTracksTree.Size = new System.Drawing.Size(39, 28);
-            this.tsbtnTracksTree.Text = "ТМ";
-            this.tsbtnTracksTree.ToolTipText = "Треки по месяцам";
-            this.tsbtnTracksTree.Click += new System.EventHandler(this.tsbtnTracksTree_Click);
+            this.miMapCopyCoordsFloat2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miMapCopyCoordsFloat2Lat,
+            this.miMapCopyCoordsFloat2Lng});
+            this.miMapCopyCoordsFloat2.Name = "miMapCopyCoordsFloat2";
+            this.miMapCopyCoordsFloat2.Size = new System.Drawing.Size(182, 22);
+            this.miMapCopyCoordsFloat2.Text = "51.196369 58.298527";
+            this.miMapCopyCoordsFloat2.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
+            // 
+            // miMapCopyCoordsFloat2Lat
+            // 
+            this.miMapCopyCoordsFloat2Lat.Name = "miMapCopyCoordsFloat2Lat";
+            this.miMapCopyCoordsFloat2Lat.Size = new System.Drawing.Size(180, 22);
+            this.miMapCopyCoordsFloat2Lat.Text = "51.196369";
+            this.miMapCopyCoordsFloat2Lat.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
+            // 
+            // miMapCopyCoordsFloat2Lng
+            // 
+            this.miMapCopyCoordsFloat2Lng.Name = "miMapCopyCoordsFloat2Lng";
+            this.miMapCopyCoordsFloat2Lng.Size = new System.Drawing.Size(180, 22);
+            this.miMapCopyCoordsFloat2Lng.Text = "58.298527";
+            this.miMapCopyCoordsFloat2Lng.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
             // 
             // Main
             // 
@@ -988,6 +1060,14 @@
         private System.Windows.Forms.ToolStripButton tsbtnResults;
         private System.Windows.Forms.ToolStripMenuItem miMainDataTracksTree;
         private System.Windows.Forms.ToolStripButton tsbtnTracksTree;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
+        private System.Windows.Forms.ToolStripMenuItem miMapCopyCoords;
+        private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloat;
+        private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloatLat;
+        private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloatLng;
+        private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloat2;
+        private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloat2Lat;
+        private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloat2Lng;
     }
 }
 

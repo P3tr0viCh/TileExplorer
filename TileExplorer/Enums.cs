@@ -35,7 +35,7 @@ namespace TileExplorer
             SaveData
         }
 
-        public enum ChildFormType 
+        public enum ChildFormType
         {
             Filter,
             TrackList,

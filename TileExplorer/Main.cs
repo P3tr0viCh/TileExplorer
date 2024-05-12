@@ -943,16 +943,19 @@ namespace TileExplorer
             }
         }
 
-        private Point MenuPopupPoint;
+        private PointLatLng MenuPopupPointLatLng;
 
         private void CmMap_Opening(object sender, CancelEventArgs e)
         {
-            MenuPopupPoint = gMapControl.PointToClient(MousePosition);
+            var MenuPopupPoint = gMapControl.PointToClient(MousePosition);
+            MenuPopupPointLatLng = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
+
+            UpdateCopyCoords();
         }
 
         private void MiMapMarkerAdd_Click(object sender, EventArgs e)
         {
-            MarkerAdd(gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y));
+            MarkerAdd(MenuPopupPointLatLng);
         }
 
         private void MiMarkerChange_Click(object sender, EventArgs e)
@@ -1159,9 +1162,7 @@ namespace TileExplorer
 
             try
             {
-                var position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
-
-                var tile = new Tile(position);
+                var tile = new Tile(MenuPopupPointLatLng);
 
                 if (await Database.Default.GetTileIdByXYAsync(tile) == 0)
                 {
@@ -1189,11 +1190,9 @@ namespace TileExplorer
         {
             var status = ProgramStatus.Start(Status.SaveData);
 
-            var position = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
-
             try
             {
-                var tile = new Tile(position);
+                var tile = new Tile(MenuPopupPointLatLng);
 
                 tile.Id = await Database.Default.GetTileIdByXYAsync(tile);
 
@@ -1803,8 +1802,7 @@ Files.AppDataDirectory();
 
         private void ShowTileInfo()
         {
-            ShowTileInfoAsync(gMapControl.FromLocalToLatLng(
-                MenuPopupPoint.X, MenuPopupPoint.Y));
+            ShowTileInfoAsync(MenuPopupPointLatLng);
         }
 
         private void MiMapShowTileInfo_Click(object sender, EventArgs e)
@@ -1835,6 +1833,30 @@ Files.AppDataDirectory();
                 ShowChildForm(ChildFormType.ResultYears, true);
                 ShowChildForm(ChildFormType.ResultEquipments, true);
             }
+        }
+
+        private void UpdateCopyCoords()
+        {
+            miMapCopyCoordsFloatLat.Text =
+                MenuPopupPointLatLng.Lat.ToString(AppSettings.Default.FormatLatLng);
+            miMapCopyCoordsFloatLng.Text =
+                MenuPopupPointLatLng.Lng.ToString(AppSettings.Default.FormatLatLng);
+            miMapCopyCoordsFloat.Text = miMapCopyCoordsFloatLat.Text + ", " +
+                miMapCopyCoordsFloatLng.Text;
+
+            miMapCopyCoordsFloat2Lat.Text =
+                MenuPopupPointLatLng.Lat.ToString(AppSettings.Default.FormatLatLng, CultureInfo.InvariantCulture);
+            miMapCopyCoordsFloat2Lng.Text =
+                MenuPopupPointLatLng.Lng.ToString(AppSettings.Default.FormatLatLng, CultureInfo.InvariantCulture);
+            miMapCopyCoordsFloat2.Text = miMapCopyCoordsFloat2Lat.Text + " " +
+                miMapCopyCoordsFloat2Lng.Text;
+        }
+
+        private void MiMapCopyCoords_Click(object sender, EventArgs e)
+        {
+            cmMap.Hide();
+
+            Clipboard.SetText(((ToolStripMenuItem)sender).Text);
         }
     }
 }
