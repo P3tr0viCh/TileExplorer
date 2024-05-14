@@ -241,7 +241,7 @@ namespace TileExplorer
                 public double Lat { get; set; }
                 public double Lng { get; set; }
 
-                public double Ele { get; set; }
+                public float Ele { get; set; }
 
                 public double Distance { get; set; }
 

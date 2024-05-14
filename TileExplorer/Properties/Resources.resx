@@ -126,6 +126,10 @@
   <data name="ErrorNeedText" xml:space="preserve">
     <value>Необходимо указать значение.</value>
   </data>
+  <data name="ErrorOpenPath" xml:space="preserve">
+    <value>Во время запуска произошла ошибка:
+{0}</value>
+  </data>
   <data name="FileSaveDefaultExtGpx" xml:space="preserve">
     <value>gpx</value>
   </data>
@@ -290,5 +294,8 @@
   </data>
   <data name="TitleTracksTree" xml:space="preserve">
     <value>Треки по месяцам</value>
+  </data>
+  <data name="UpdaterFileName" xml:space="preserve">
+    <value>Updater.exe</value>
   </data>
 </root>

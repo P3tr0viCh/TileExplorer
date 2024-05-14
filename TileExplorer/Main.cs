@@ -1858,5 +1858,10 @@ Files.AppDataDirectory();
 
             Clipboard.SetText(((ToolStripMenuItem)sender).Text);
         }
+
+        private void MiMainCheckUpdates_Click(object sender, EventArgs e)
+        {
+            Utils.OpenPath(Resources.UpdaterFileName);
+        }
     }
 }

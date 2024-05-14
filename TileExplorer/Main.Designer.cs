@@ -113,6 +113,9 @@
             this.miMapCopyCoordsFloat = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapCopyCoordsFloatLat = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapCopyCoordsFloatLng = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapCopyCoordsFloat2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapCopyCoordsFloat2Lat = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMapCopyCoordsFloat2Lng = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapTileAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.miMapTileDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -120,9 +123,8 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
-            this.miMapCopyCoordsFloat2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMapCopyCoordsFloat2Lat = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMapCopyCoordsFloat2Lng = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainCheckUpdates = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -610,6 +612,8 @@
             // miMainHelp
             // 
             this.miMainHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miMainCheckUpdates,
+            this.toolStripSeparator17,
             this.miMainAbout});
             this.miMainHelp.Name = "miMainHelp";
             this.miMainHelp.Size = new System.Drawing.Size(65, 20);
@@ -618,7 +622,7 @@
             // miMainAbout
             // 
             this.miMainAbout.Name = "miMainAbout";
-            this.miMainAbout.Size = new System.Drawing.Size(149, 22);
+            this.miMainAbout.Size = new System.Drawing.Size(204, 22);
             this.miMainAbout.Text = "О программе";
             this.miMainAbout.Click += new System.EventHandler(this.MiMainAbout_Click);
             // 
@@ -785,7 +789,7 @@
             this.miMapTileAdd,
             this.miMapTileDelete});
             this.cmMap.Name = "cmMap";
-            this.cmMap.Size = new System.Drawing.Size(210, 198);
+            this.cmMap.Size = new System.Drawing.Size(210, 176);
             this.cmMap.Opening += new System.ComponentModel.CancelEventHandler(this.CmMap_Opening);
             // 
             // miMapMarkerAdd
@@ -853,16 +857,40 @@
             // miMapCopyCoordsFloatLat
             // 
             this.miMapCopyCoordsFloatLat.Name = "miMapCopyCoordsFloatLat";
-            this.miMapCopyCoordsFloatLat.Size = new System.Drawing.Size(180, 22);
+            this.miMapCopyCoordsFloatLat.Size = new System.Drawing.Size(125, 22);
             this.miMapCopyCoordsFloatLat.Text = "51,196369";
             this.miMapCopyCoordsFloatLat.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
             // 
             // miMapCopyCoordsFloatLng
             // 
             this.miMapCopyCoordsFloatLng.Name = "miMapCopyCoordsFloatLng";
-            this.miMapCopyCoordsFloatLng.Size = new System.Drawing.Size(180, 22);
+            this.miMapCopyCoordsFloatLng.Size = new System.Drawing.Size(125, 22);
             this.miMapCopyCoordsFloatLng.Text = "58,298527";
             this.miMapCopyCoordsFloatLng.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
+            // 
+            // miMapCopyCoordsFloat2
+            // 
+            this.miMapCopyCoordsFloat2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miMapCopyCoordsFloat2Lat,
+            this.miMapCopyCoordsFloat2Lng});
+            this.miMapCopyCoordsFloat2.Name = "miMapCopyCoordsFloat2";
+            this.miMapCopyCoordsFloat2.Size = new System.Drawing.Size(182, 22);
+            this.miMapCopyCoordsFloat2.Text = "51.196369 58.298527";
+            this.miMapCopyCoordsFloat2.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
+            // 
+            // miMapCopyCoordsFloat2Lat
+            // 
+            this.miMapCopyCoordsFloat2Lat.Name = "miMapCopyCoordsFloat2Lat";
+            this.miMapCopyCoordsFloat2Lat.Size = new System.Drawing.Size(125, 22);
+            this.miMapCopyCoordsFloat2Lat.Text = "51.196369";
+            this.miMapCopyCoordsFloat2Lat.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
+            // 
+            // miMapCopyCoordsFloat2Lng
+            // 
+            this.miMapCopyCoordsFloat2Lng.Name = "miMapCopyCoordsFloat2Lng";
+            this.miMapCopyCoordsFloat2Lng.Size = new System.Drawing.Size(125, 22);
+            this.miMapCopyCoordsFloat2Lng.Text = "58.298527";
+            this.miMapCopyCoordsFloat2Lng.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
             // 
             // miMapTileAdd
             // 
@@ -912,29 +940,17 @@
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
             // 
-            // miMapCopyCoordsFloat2
+            // miMainCheckUpdates
             // 
-            this.miMapCopyCoordsFloat2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miMapCopyCoordsFloat2Lat,
-            this.miMapCopyCoordsFloat2Lng});
-            this.miMapCopyCoordsFloat2.Name = "miMapCopyCoordsFloat2";
-            this.miMapCopyCoordsFloat2.Size = new System.Drawing.Size(182, 22);
-            this.miMapCopyCoordsFloat2.Text = "51.196369 58.298527";
-            this.miMapCopyCoordsFloat2.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
+            this.miMainCheckUpdates.Name = "miMainCheckUpdates";
+            this.miMainCheckUpdates.Size = new System.Drawing.Size(204, 22);
+            this.miMainCheckUpdates.Text = "Проверить обновления";
+            this.miMainCheckUpdates.Click += new System.EventHandler(this.MiMainCheckUpdates_Click);
             // 
-            // miMapCopyCoordsFloat2Lat
+            // toolStripSeparator17
             // 
-            this.miMapCopyCoordsFloat2Lat.Name = "miMapCopyCoordsFloat2Lat";
-            this.miMapCopyCoordsFloat2Lat.Size = new System.Drawing.Size(180, 22);
-            this.miMapCopyCoordsFloat2Lat.Text = "51.196369";
-            this.miMapCopyCoordsFloat2Lat.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
-            // 
-            // miMapCopyCoordsFloat2Lng
-            // 
-            this.miMapCopyCoordsFloat2Lng.Name = "miMapCopyCoordsFloat2Lng";
-            this.miMapCopyCoordsFloat2Lng.Size = new System.Drawing.Size(180, 22);
-            this.miMapCopyCoordsFloat2Lng.Text = "58.298527";
-            this.miMapCopyCoordsFloat2Lng.Click += new System.EventHandler(this.MiMapCopyCoords_Click);
+            this.toolStripSeparator17.Name = "toolStripSeparator17";
+            this.toolStripSeparator17.Size = new System.Drawing.Size(201, 6);
             // 
             // Main
             // 
@@ -1068,6 +1084,8 @@
         private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloat2;
         private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloat2Lat;
         private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloat2Lng;
+        private System.Windows.Forms.ToolStripMenuItem miMainCheckUpdates;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
     }
 }
 

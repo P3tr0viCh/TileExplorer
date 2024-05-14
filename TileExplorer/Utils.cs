@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -51,6 +52,20 @@ namespace TileExplorer
         public static void ComboBoxInsertItem(ComboBox comboBox, int index, BaseId value)
         {
             ComboBoxInsertItem((BindingSource)comboBox.DataSource, index, value);
+        }
+
+        public static void OpenPath(string path)
+        {
+            try
+            {
+                Process.Start(path);
+            }
+            catch (Exception e)
+            {
+                WriteError(e);
+
+                Msg.Error(Resources.ErrorOpenPath, e.Message);
+            }
         }
     }
 }

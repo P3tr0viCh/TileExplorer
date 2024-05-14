@@ -88,6 +88,16 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Во время запуска произошла ошибка:
+        ///{0}.
+        /// </summary>
+        internal static string ErrorOpenPath {
+            get {
+                return ResourceManager.GetString("ErrorOpenPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to gpx.
         /// </summary>
         internal static string FileSaveDefaultExtGpx {
@@ -555,6 +565,15 @@ namespace TileExplorer.Properties {
         internal static string TitleTracksTree {
             get {
                 return ResourceManager.GetString("TitleTracksTree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updater.exe.
+        /// </summary>
+        internal static string UpdaterFileName {
+            get {
+                return ResourceManager.GetString("UpdaterFileName", resourceCulture);
             }
         }
     }
