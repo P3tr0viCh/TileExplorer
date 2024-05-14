@@ -295,7 +295,4 @@
   <data name="TitleTracksTree" xml:space="preserve">
     <value>Треки по месяцам</value>
   </data>
-  <data name="UpdaterFileName" xml:space="preserve">
-    <value>Updater.exe</value>
-  </data>
 </root>

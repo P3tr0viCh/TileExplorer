@@ -567,14 +567,5 @@ namespace TileExplorer.Properties {
                 return ResourceManager.GetString("TitleTracksTree", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Updater.exe.
-        /// </summary>
-        internal static string UpdaterFileName {
-            get {
-                return ResourceManager.GetString("UpdaterFileName", resourceCulture);
-            }
-        }
     }
 }

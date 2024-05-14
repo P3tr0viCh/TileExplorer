@@ -1861,7 +1861,11 @@ Files.AppDataDirectory();
 
         private void MiMainCheckUpdates_Click(object sender, EventArgs e)
         {
-            Utils.OpenPath(Resources.UpdaterFileName);
+            var updaterPath = Directory.GetParent(Files.ExecutableDirectory()).FullName;
+
+            updaterPath = Path.Combine(updaterPath, "updater", "Updater.exe");
+
+            Utils.OpenPath(updaterPath);
         }
     }
 }

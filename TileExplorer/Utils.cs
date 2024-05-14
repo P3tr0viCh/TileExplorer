@@ -58,6 +58,8 @@ namespace TileExplorer
         {
             try
             {
+                WriteDebug(path);
+
                 Process.Start(path);
             }
             catch (Exception e)
