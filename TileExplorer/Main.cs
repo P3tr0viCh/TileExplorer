@@ -48,7 +48,7 @@ namespace TileExplorer
                 Files.AppDataDirectory();
 #endif
 
-            Utils.WriteDebug("Settings: " + AppSettings.FilePath);
+            DebugWrite.Line("Settings: " + AppSettings.FilePath, "Main");
         }
 
         private void Filter_OnChanged()
@@ -182,16 +182,16 @@ namespace TileExplorer
 
         public void AppSettingsLoad()
         {
-            if (AppSettings.Default.Load()) return;
+            if (AppSettings.Load()) return;
 
-            Utils.WriteError(AppSettings.LastError);
+            DebugWrite.Error(AppSettings.LastError);
         }
 
         public void AppSettingsSave()
         {
-            if (AppSettings.Default.Save()) return;
+            if (AppSettings.Save()) return;
 
-            Utils.WriteError(AppSettings.LastError);
+            DebugWrite.Error(AppSettings.LastError);
         }
 
         private void GMapLoad()
@@ -200,7 +200,7 @@ namespace TileExplorer
 
             GMap.NET.MapProviders.GMapProvider.UserAgent = Utils.AssemblyNameAndVersion();
 
-            Utils.WriteDebug("useragent: " + GMap.NET.MapProviders.GMapProvider.UserAgent);
+            DebugWrite.Line("useragent: " + GMap.NET.MapProviders.GMapProvider.UserAgent);
 
             gMapControl.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
             gMapControl.MapProvider.RefererUrl = AppSettings.Default.MapRefererUrl;
@@ -358,7 +358,7 @@ namespace TileExplorer
 
         private async Task LoadTilesAsync()
         {
-            Utils.WriteDebug("start");
+            DebugWrite.Line("start");
 
             tilesOverlay.Clear();
 
@@ -384,12 +384,12 @@ namespace TileExplorer
 #endif
             }
 
-            Utils.WriteDebug("end");
+            DebugWrite.Line("end");
         }
 
         private async Task LoadTracksAsync()
         {
-            Utils.WriteDebug("start");
+            DebugWrite.Line("start");
 
             tracksOverlay.Clear();
 
@@ -423,7 +423,7 @@ namespace TileExplorer
 
                     i++;
 
-                    Utils.WriteDebug(Geo.Haversine(lat1, lng1, lat2, lng2));
+                    DebugWrite.Line(Geo.Haversine(lat1, lng1, lat2, lng2));
                     
                     lat1 = lat2;
                     lng1 = lng2;
@@ -431,12 +431,12 @@ namespace TileExplorer
 #endif
             }
 
-            Utils.WriteDebug("end");
+            DebugWrite.Line("end");
         }
 
         private async Task LoadMarkersAsync()
         {
-            Utils.WriteDebug("start");
+            DebugWrite.Line("start");
 
             markersOverlay.Clear();
 
@@ -447,19 +447,19 @@ namespace TileExplorer
                 markersOverlay.Markers.Add(new MapItemMarker(marker));
             }
 
-            Utils.WriteDebug("end");
+            DebugWrite.Line("end");
         }
 
         private async Task LoadTracksInfoAsync()
         {
-            Utils.WriteDebug("start");
+            DebugWrite.Line("start");
 
             var tracksInfo = await Database.Default.LoadTracksInfoAsync(Database.Filter.Default);
 
             statusStripPresenter.TracksCount = tracksInfo.Count;
             statusStripPresenter.TracksDistance = tracksInfo.Distance / 1000.0;
 
-            Utils.WriteDebug("end");
+            DebugWrite.Line("end");
         }
 
         private FormWindowState savedWindowState;
@@ -1062,7 +1062,7 @@ namespace TileExplorer
                 if (miMainShowMarkers.Checked) load |= DataLoad.Markers;
             }
 
-            Utils.WriteDebug($"Loading data {load}");
+            DebugWrite.Line($"Loading data {load}");
 
             if (load.HasFlag(DataLoad.Tiles)) await LoadTilesAsync();
 
@@ -1128,7 +1128,7 @@ namespace TileExplorer
 
             try
             {
-                Utils.WriteDebug("start");
+                DebugWrite.Line("start");
 
                 var tracks = await Database.Default.ListLoadAsync<Track>(new { onlyTrack = true });
 
@@ -1141,7 +1141,7 @@ namespace TileExplorer
                     await Database.Default.UpdateTrackMinDistancePointAsync(track);
                 }
 
-                Utils.WriteDebug("end");
+                DebugWrite.Line("end");
             }
             finally
             {
@@ -1263,7 +1263,7 @@ namespace TileExplorer
                 {
                     track = await OpenTrackFromFileAsync(file);
 
-                    Utils.WriteDebug("OpenTrackFromFileAsync done");
+                    DebugWrite.Line("OpenTrackFromFileAsync done");
 
                     if (showDlg)
                     {
@@ -1305,7 +1305,7 @@ namespace TileExplorer
 
                     trackTiles = await GetTilesFromTrackAsync(track);
 
-                    Utils.WriteDebug("GetTilesFromTrackAsync done");
+                    DebugWrite.Line("GetTilesFromTrackAsync done");
 
                     var saveTiles = new List<Tile>();
 
@@ -1325,11 +1325,11 @@ namespace TileExplorer
                         }
                     }
 
-                    Utils.WriteDebug("saveTiles count: " + saveTiles.Count);
+                    DebugWrite.Line("saveTiles count: " + saveTiles.Count);
 
                     await Database.Default.SaveTilesAsync(saveTiles);
 
-                    Utils.WriteDebug("SaveTilesAsync done");
+                    DebugWrite.Line("SaveTilesAsync done");
 
                     var tracksTiles = new List<TracksTiles>();
 
@@ -1342,11 +1342,11 @@ namespace TileExplorer
                         });
                     }
 
-                    Utils.WriteDebug("tracksTiles count: " + tracksTiles.Count);
+                    DebugWrite.Line("tracksTiles count: " + tracksTiles.Count);
 
                     await Database.Default.SaveTracksTilesAsync(tracksTiles);
 
-                    Utils.WriteDebug("SaveTracksTilesAsync done");
+                    DebugWrite.Line("SaveTracksTilesAsync done");
                 }
             }
             finally
@@ -1655,7 +1655,7 @@ Files.AppDataDirectory();
 
             var databaseFileName = Path.Combine(databaseHome, Files.DatabaseFileName());
 
-            Utils.WriteDebug("database: " + databaseFileName);
+            DebugWrite.Line("database: " + databaseFileName);
 
             Database.Default.FileName = databaseFileName;
         }

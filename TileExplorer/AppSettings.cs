@@ -3,9 +3,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms.Design;
+using TileExplorer.Properties;
 using static TileExplorer.Enums;
 
-namespace TileExplorer.Properties
+namespace TileExplorer
 {
     public class LocalizedCategoryAttribute : CategoryAttribute
     {

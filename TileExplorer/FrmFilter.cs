@@ -60,7 +60,7 @@ namespace TileExplorer
         {
             AppSettings.Default.FormStateFilter = AppSettings.SaveFormState(this);
 
-            AppSettings.Default.Save();
+            AppSettings.Save();
         }
 
         private void FrmFilter_FormClosed(object sender, FormClosedEventArgs e)

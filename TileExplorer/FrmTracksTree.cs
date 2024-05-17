@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
-using static TileExplorer.Database;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
@@ -16,8 +15,6 @@ namespace TileExplorer
         public IMainForm MainForm => Owner as IMainForm;
 
         public ChildFormType ChildFormType => ChildFormType.TracksTree;
-
-        private bool selfChange = false;
 
         public FrmTracksTree()
         {
@@ -45,21 +42,17 @@ namespace TileExplorer
 
             UpdateSettings();
 
-            selfChange = true;
-
             if (MainForm.ProgramStatus.Current != Status.Starting)
             {
                 UpdateData();
             }
-
-            selfChange = false;
         }
 
         private void FrmTracksTree_FormClosing(object sender, FormClosingEventArgs e)
         {
             AppSettings.Default.FormStateTracksTree = AppSettings.SaveFormState(this);
 
-            AppSettings.Default.Save();
+            AppSettings.Save();
         }
 
         private void FrmTracksTree_FormClosed(object sender, FormClosedEventArgs e)
@@ -69,7 +62,6 @@ namespace TileExplorer
 
         public void UpdateSettings()
         {
-
         }
 
         private async Task UpdateDataAsync()
@@ -84,7 +76,7 @@ namespace TileExplorer
             }
             catch (Exception e)
             {
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(Resources.MsgDatabaseLoadTracksTreeFail, e.Message);
             }
@@ -111,7 +103,7 @@ namespace TileExplorer
 
         private void CreateTracksTree(List<TracksTree> list)
         {
-            list.ForEach(t => { Utils.WriteDebug($"year: {t.Year}, month: {t.Month}"); });
+            list.ForEach(t => { DebugWrite.Line($"year: {t.Year}, month: {t.Month}"); });
 
             treeView.Nodes.Clear();
 
@@ -150,11 +142,7 @@ namespace TileExplorer
 
             treeView.ExpandAll();
 
-            selfChange = true;
-
             treeView.SelectedNode = root;
-
-            selfChange = false;
         }
 
         private void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -168,30 +156,30 @@ namespace TileExplorer
 
             if (node.Parent == null)
             {
-                Utils.WriteDebug("all records");
+                DebugWrite.Line("all records");
 
-                Filter.Default.Type = Filter.FilterType.None;
+                Database.Filter.Default.Type = Database.Filter.FilterType.None;
             }
             else
             {
                 if (node.Parent.Tag == null)
                 {
-                    Utils.WriteDebug($"year: {node.Tag}");
+                    DebugWrite.Line($"year: {node.Tag}");
 
-                    Filter.Default.Years = new int[] { (int)node.Tag };
+                    Database.Filter.Default.Years = new int[] { (int)node.Tag };
 
-                    Filter.Default.Type = Filter.FilterType.Years;
+                    Database.Filter.Default.Type = Database.Filter.FilterType.Years;
                 }
                 else
                 {
-                    Utils.WriteDebug($"year: {node.Parent.Tag}, month: {node.Tag}");
+                    DebugWrite.Line($"year: {node.Parent.Tag}, month: {node.Tag}");
 
-                    Filter.Default.SetDates(
+                    Database.Filter.Default.SetDates(
                         new DateTime((int)node.Parent.Tag, (int)node.Tag, 1),
                         new DateTime((int)node.Parent.Tag, (int)node.Tag,
                             DateTime.DaysInMonth((int)node.Parent.Tag, (int)node.Tag)));
 
-                    Filter.Default.Type = Filter.FilterType.Period;
+                    Database.Filter.Default.Type = Database.Filter.FilterType.Period;
                 }
             }
         }

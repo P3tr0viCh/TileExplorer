@@ -107,7 +107,7 @@ namespace TileExplorer
                     xml.Close();
                 }
 
-                WriteDebug("end write gpx");
+                DebugWrite.Line("end write gpx");
             }
         }
     }

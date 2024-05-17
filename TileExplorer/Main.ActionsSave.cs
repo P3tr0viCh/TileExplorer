@@ -85,7 +85,7 @@ namespace TileExplorer
             }
             catch (Exception e)
             {
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(e.Message);
             }
@@ -116,7 +116,7 @@ namespace TileExplorer
                 }
                 catch (Exception e)
                 {
-                    Utils.WriteError(e);
+                    DebugWrite.Error(e);
 
                     Msg.Error(e.Message);
                 }
@@ -153,7 +153,7 @@ namespace TileExplorer
             }
             catch (Exception e)
             {
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(e.Message);
             }

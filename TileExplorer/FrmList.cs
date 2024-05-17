@@ -40,7 +40,7 @@ namespace TileExplorer
                 ChildFormType = childFormType,
             };
 
-            Debug.WriteLine("ListType = " + childFormType);
+            DebugWrite.Line($"ListType = {childFormType}");
 
             frm.Show(owner);
 
@@ -218,7 +218,7 @@ namespace TileExplorer
                     throw new NotImplementedException();
             }
 
-            AppSettings.Default.Save();
+            AppSettings.Save();
         }
 
         private void FrmListNew_FormClosed(object sender, FormClosedEventArgs e)
@@ -285,7 +285,7 @@ namespace TileExplorer
 
         private async Task UpdateDataAsync()
         {
-            Utils.WriteDebug("start");
+            DebugWrite.Line("start");
 
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
 
@@ -331,7 +331,7 @@ namespace TileExplorer
             }
             catch (Exception e)
             {
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(errorMsg, e.Message);
             }
@@ -340,12 +340,12 @@ namespace TileExplorer
                 MainForm.ProgramStatus.Stop(status);
             }
 
-            Utils.WriteDebug("end");
+            DebugWrite.Line("end");
         }
 
         private async Task<List<T>> ListLoadAsync<T>(object orderBy = null)
         {
-            Utils.WriteDebug("start");
+            DebugWrite.Line("start");
 
             try
             {
@@ -353,7 +353,7 @@ namespace TileExplorer
             }
             finally
             {
-                Utils.WriteDebug("end");
+                DebugWrite.Line("end");
             }
         }
 

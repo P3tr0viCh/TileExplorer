@@ -18,7 +18,7 @@ namespace TileExplorer
         {
             using (var frm = new FrmSettings())
             {
-                AppSettings.Default.Save();
+                AppSettings.Save();
 
                 AppSettings.LoadFormState(frm, AppSettings.Default.FormStateSettings);
 
@@ -28,13 +28,13 @@ namespace TileExplorer
                 {
                     AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(frm);
 
-                    AppSettings.Default.Save();
+                    AppSettings.Save();
 
                     return true;
                 }
                 else
                 {
-                    AppSettings.Default.Load();
+                    AppSettings.Load();
 
                     AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(frm);
 

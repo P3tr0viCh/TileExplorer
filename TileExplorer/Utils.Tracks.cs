@@ -46,11 +46,11 @@ namespace TileExplorer
 
                 try
                 {
-                    WriteDebug(path);
+                    DebugWrite.Line(path);
 
                     trackGpx.OpenFromFile(path);
 
-                    WriteDebug("xml loaded");
+                    DebugWrite.Line("xml loaded");
 
                     track.Text = trackGpx.Text;
 
@@ -80,18 +80,18 @@ namespace TileExplorer
                         });
                     }
 
-                    WriteDebug($"point count: {track.TrackPoints.Count}");
+                    DebugWrite.Line($"point count: {track.TrackPoints.Count}");
 
                     UpdateTrackMinDistancePoint(track);
                 }
                 catch (Exception e)
                 {
-                    WriteDebug($"error: {e.Message}");
+                    DebugWrite.Error(e);
 
                     Msg.Error(e.Message);
                 }
 
-                WriteDebug("end open file");
+                DebugWrite.Line("end open file");
 
                 return track;
             }

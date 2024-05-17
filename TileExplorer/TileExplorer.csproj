@@ -78,7 +78,7 @@
     </Reference>
     <Reference Include="P3tr0viCh.Utils, Version=1.0.8522.26839, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Projects.exe\P3tr0viCh.Utils\Release\P3tr0viCh.Utils.dll</HintPath>
+      <HintPath>..\..\..\..\Projects.exe\P3tr0viCh.Utils\$(Configuration)\P3tr0viCh.Utils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -143,7 +143,7 @@
     </Compile>
     <Compile Include="ProgramStatus.cs" />
     <Compile Include="MapItemMarkerCross.cs" />
-    <Compile Include="Properties\AppSettings.cs" />
+    <Compile Include="AppSettings.cs" />
     <Compile Include="Properties\ResourcesSql.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -23,27 +23,6 @@ namespace TileExplorer
             return string.Format("{0}/{1}", assemblyDecorator.Assembly.GetName().Name, assemblyDecorator.VersionString());
         }
 
-        public static void WriteDebug(string s, [CallerMemberName] string memberName = "")
-        {
-            Debug.WriteLine(memberName + ": " + s);
-        }
-
-        public static void WriteError(Exception e, [CallerMemberName] string memberName = "")
-        {
-            if (e == null) return;
-
-            WriteError(e.Message, memberName);
-
-            WriteError(e.InnerException, memberName);
-        }
-
-        public static void WriteError(string err, [CallerMemberName] string memberName = "")
-        {
-            var error = string.Format("{0} fail: {1}", memberName, err);
-
-            Debug.WriteLine(error);
-        }
-
         public static void ComboBoxInsertItem(BindingSource bindingSource, int index, BaseId value)
         {
             bindingSource.Insert(index, value);
@@ -58,13 +37,13 @@ namespace TileExplorer
         {
             try
             {
-                WriteDebug(path);
+                DebugWrite.Line(path);
 
                 Process.Start(path);
             }
             catch (Exception e)
             {
-                WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(Resources.ErrorOpenPath, e.Message);
             }

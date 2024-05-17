@@ -90,7 +90,7 @@ namespace TileExplorer
                     filter.ToSql());
 
 #if SHOW_SQL
-                Utils.WriteDebug(sql);
+                DebugWrite.Line(sql);
 #endif
 
                 return await connection.QueryFirstAsync<TracksInfo>(sql);
@@ -200,7 +200,7 @@ namespace TileExplorer
 
         public async Task SaveTrackAsync(Track track)
         {
-            Utils.WriteDebug("start"); 
+            DebugWrite.Line("start"); 
             
             await Task.Run(() =>
             {
@@ -231,7 +231,7 @@ namespace TileExplorer
                 }
             });
 
-            Utils.WriteDebug("end");
+            DebugWrite.Line("end");
         }
 
         public async Task SaveTracksTilesAsync(List<TracksTiles> tracksTiles)
@@ -365,13 +365,13 @@ namespace TileExplorer
             }
 
 #if SHOW_SQL
-            Utils.WriteDebug(sql);
+            DebugWrite.Line(sql);
 #endif
         }
 
         public async Task<List<T>> ListLoadAsync<T>(object filter = null, object orderBy = null)
         {
-            Utils.WriteDebug(typeof(T).Name);
+            DebugWrite.Line(typeof(T).Name);
 
             GetQuery<T>(out string sql, out object param, filter, orderBy);
 

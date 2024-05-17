@@ -78,7 +78,7 @@ namespace TileExplorer
             {
                 slCount.Text = string.Empty;
 
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
             }

@@ -71,7 +71,7 @@ namespace TileExplorer
         {
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
 
-            Utils.WriteDebug("start");
+            DebugWrite.Line("start");
 
             try
             {
@@ -79,7 +79,7 @@ namespace TileExplorer
             }
             finally
             {
-                Utils.WriteDebug("end");
+                DebugWrite.Line("end");
 
                 MainForm.ProgramStatus.Stop(status);
             }
@@ -98,7 +98,7 @@ namespace TileExplorer
             }
             catch (Exception e)
             {
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(Resources.MsgDatabaseLoadListEquipmentsFail, e.Message);
 

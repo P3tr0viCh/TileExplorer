@@ -1,4 +1,5 @@
 ﻿using GMap.NET;
+using P3tr0viCh.Utils;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
@@ -199,7 +200,7 @@ namespace TileExplorer
                     xml.Close();
                 }
 
-                WriteDebug("end write osm");
+                DebugWrite.Line("end write osm");
             }
         }
     }
