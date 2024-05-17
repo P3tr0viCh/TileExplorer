@@ -217,30 +217,6 @@
   <data name="QuestionUpdateTrackMinDistancePoint" xml:space="preserve">
     <value>Расстояние между точками трека для отображения изменилось. Обновить имеющиеся в базе треки?</value>
   </data>
-  <data name="SettingsCategoryCommon" xml:space="preserve">
-    <value>Общее</value>
-  </data>
-  <data name="SettingsCategoryDesignMarkers" xml:space="preserve">
-    <value>Маркеры</value>
-  </data>
-  <data name="SettingsCategoryDesignTiles" xml:space="preserve">
-    <value>Плитки</value>
-  </data>
-  <data name="SettingsCategoryDesignTracks" xml:space="preserve">
-    <value>Треки</value>
-  </data>
-  <data name="SettingsCategoryFormat" xml:space="preserve">
-    <value>Формат</value>
-  </data>
-  <data name="SettingsCategoryOsm" xml:space="preserve">
-    <value>OpenStreetMap</value>
-  </data>
-  <data name="SettingsCategoryTileStatus" xml:space="preserve">
-    <value>Файл статуса плиток</value>
-  </data>
-  <data name="SettingsCategoryTileStatusOsmand" xml:space="preserve">
-    <value>Файл статуса плиток: Османд</value>
-  </data>
   <data name="StatusMousePosition" xml:space="preserve">
     <value>Курсор: {0:F6}, {1:F6}</value>
   </data>

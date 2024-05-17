@@ -3,296 +3,283 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms.Design;
-using TileExplorer.Properties;
 using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
-    public class LocalizedCategoryAttribute : CategoryAttribute
-    {
-        static string Localize(string key)
-        {
-            return Resources.ResourceManager.GetString(key);
-        }
-
-        public LocalizedCategoryAttribute(string key) : base(Localize(key))
-        {
-        }
-    }
-
     public class AppSettings : SettingsBase<AppSettings>
     {
         public readonly Database.Filter Filter = new Database.Filter();
 
-        [LocalizedCategory("SettingsCategoryCommon")]
-        [DisplayName("Расположение базы данных")]
-        [Description("Расположение файла базы данных. Пустое значение – \\AppData\\Roaming\\TileExplorer\\")]
+        [LocalizedAttribute.Category("Category.Common", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("DatabaseHome.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("DatabaseHome.Description", "Properties.Resources.Settings")]
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
         public string DatabaseHome { get; set; } = string.Empty;
 
         // ------------------------------------------------------------------------------------------------------------
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Фон")]
-        [Description("Цвет фона маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerFill.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerFill.Description", "Properties.Resources.Settings")]
         public Color ColorMarkerFill { get; set; } = Color.FromArgb(44, 165, 126);
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Прозрачность")]
-        [Description("Прозрачность фона маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerFillAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerFillAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorMarkerFillAlpha { get; set; } = 220;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Цвет текста")]
-        [Description("Цвет текста маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerText.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerText.Description", "Properties.Resources.Settings")]
         public Color ColorMarkerText { get; set; } = Color.FromArgb(44, 165, 126);
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Прозрачность текста")]
-        [Description("Прозрачность текста маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerTextAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerTextAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorMarkerTextAlpha { get; set; } = 255;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Цвет фона текста")]
-        [Description("Цвет фона текста маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerTextFill.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerTextFill.Description", "Properties.Resources.Settings")]
         public Color ColorMarkerTextFill { get; set; } = Color.LightGray;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Прозрачность фона текста")]
-        [Description("Прозрачность фона текста маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerTextFillAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerTextFillAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorMarkerTextFillAlpha { get; set; } = 220;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Цвет линий")]
-        [Description("Цвет линий маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerLine.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerLine.Description", "Properties.Resources.Settings")]
         public Color ColorMarkerLine { get; set; } = Color.Gray;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Фон выделенного")]
-        [Description("Цвет фона выделенного маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerSelectedFill.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerSelectedFill.Description", "Properties.Resources.Settings")]
         public Color ColorMarkerSelectedFill { get; set; } = Color.DarkSlateBlue;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Прозрачность выделенного")]
-        [Description("Прозрачность фона выделенного маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerSelectedFillAlphaDisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerSelectedFillAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorMarkerSelectedFillAlpha { get; set; } = 220;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Прозрачность линий")]
-        [Description("Прозрачность линий маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerLineAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerLineAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorMarkerLineAlpha { get; set; } = 160;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Цвет линий выделенного")]
-        [Description("Цвет линий выделенного маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerSelectedLine.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerSelectedLine.Description", "Properties.Resources.Settings")]
         public Color ColorMarkerSelectedLine { get; set; } = Color.DarkSlateBlue;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Прозрачность линий выделенного")]
-        [Description("Прозрачность линий выделенного маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorMarkerSelectedLineAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorMarkerSelectedLineAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorMarkerSelectedLineAlpha { get; set; } = 220;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Толщина линий")]
-        [Description("Толщина линий маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("WidthMarkerLine.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("WidthMarkerLine.Description", "Properties.Resources.Settings")]
         public int WidthMarkerLine { get; set; } = 1;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Толщина линий выделенного")]
-        [Description("Толщина линий выделенного маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("WidthMarkerLineSelected.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("WidthMarkerLineSelected.Description", "Properties.Resources.Settings")]
         public int WidthMarkerLineSelected { get; set; } = 2;
 
-        [LocalizedCategory("SettingsCategoryDesignMarkers")]
-        [DisplayName("Шрифт")]
-        [Description("Шрифт маркера")]
+        [LocalizedAttribute.Category("Category.DesignMarkers", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("FontMarker.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("FontMarker.Description", "Properties.Resources.Settings")]
         public Font FontMarker { get; set; } = new Font("Arial", 10);
 
         // ------------------------------------------------------------------------------------------------------------
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Кластер: цвет")]
-        [Description("Цвет плитки кластера")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileCluster.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileCluster.Description", "Properties.Resources.Settings")]
         public Color ColorTileCluster { get; set; } = Color.FromArgb(220, 220, 20);
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Кластер: прозрачность")]
-        [Description("Прозрачность плитки кластера")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileClusterAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileClusterAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileClusterAlpha { get; set; } = 40;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Кластер: прозрачность линии")]
-        [Description("Прозрачность границы плитки кластера")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileClusterLineAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileClusterLineAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileClusterLineAlpha { get; set; } = 50;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Максимальный кластер: цвет")]
-        [Description("Цвет плиток максимального кластера")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileMaxCluster.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileMaxCluster.Description", "Properties.Resources.Settings")]
         public Color ColorTileMaxCluster { get; set; } = Color.FromArgb(44, 165, 126);
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Максимальный кластер: прозрачность")]
-        [Description("Прозрачность плиток максимального кластера")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileMaxClusterAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileMaxClusterAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileMaxClusterAlpha { get; set; } = 40;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Максимальный кластер: прозрачность линии")]
-        [Description("Прозрачность границ плиток максимального кластера")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileMaxClusterLineAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileMaxClusterLineAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileMaxClusterLineAlpha { get; set; } = 50;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Квадрат: цвет")]
-        [Description("Цвет плиток квадрата")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileMaxSquare.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileMaxSquare.Description", "Properties.Resources.Settings")]
         public Color ColorTileMaxSquare { get; set; } = Color.FromArgb(66, 140, 244);
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Квадрат: прозрачность")]
-        [Description("Прозрачность плиток квадрата")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileMaxSquareAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileMaxSquareAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileMaxSquareAlpha { get; set; } = 25;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Квадрат: прозрачность линии")]
-        [Description("Прозрачность границ плиток квадрата")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileMaxSquareLineAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileMaxSquareLineAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileMaxSquareLineAlpha { get; set; } = 50;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Открытая: цвет")]
-        [Description("Цвет открытых плиток")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileVisited.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileVisited.Description", "Properties.Resources.Settings")]
         public Color ColorTileVisited { get; set; } = Color.Red;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Открытая: прозрачность")]
-        [Description("Прозрачность открытых плиток")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileVisitedAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileVisitedAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileVisitedAlpha { get; set; } = 25;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Открытая: прозрачность линии")]
-        [Description("Прозрачность границ открытых плиток")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileVisitedLineAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileVisitedLineAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileVisitedLineAlpha { get; set; } = 25;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Выбранный трек: цвет")]
-        [Description("Цвет плитки выбранного трека")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileTrackSelected.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileTrackSelected.Description", "Properties.Resources.Settings")]
         public Color ColorTileTrackSelected { get; set; } = Color.DarkSlateBlue;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Выбранный трек: прозрачность")]
-        [Description("Прозрачность плитки выбранного трека")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileTrackSelectedAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileTrackSelectedAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileTrackSelectedAlpha { get; set; } = 144;
 
-        [LocalizedCategory("SettingsCategoryDesignTiles")]
-        [DisplayName("Выбранный трек: прозрачность границы")]
-        [Description("Прозрачность границы плитки выбранного трека")]
+        [LocalizedAttribute.Category("Category.DesignTiles", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTileTrackSelectedLineAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTileTrackSelectedLineAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTileTrackSelectedLineAlpha { get; set; } = 88;
 
         // ------------------------------------------------------------------------------------------------------------
-        [LocalizedCategory("SettingsCategoryDesignTracks")]
-        [DisplayName("Цвет")]
-        [Description("Цвет трека")]
+        [LocalizedAttribute.Category("Category.DesignTracks", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTrack.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTrack.Description", "Properties.Resources.Settings")]
         public Color ColorTrack { get; set; } = Color.Red;
 
-        [LocalizedCategory("SettingsCategoryDesignTracks")]
-        [DisplayName("Прозрачность")]
-        [Description("Прозрачность трека")]
+        [LocalizedAttribute.Category("Category.DesignTracks", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTrackAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTrackAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTrackAlpha { get; set; } = 144;
 
-        [LocalizedCategory("SettingsCategoryDesignTracks")]
-        [DisplayName("Цвет выбранного")]
-        [Description("Цвет выбранного трека")]
+        [LocalizedAttribute.Category("Category.DesignTracks", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTrackSelected.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTrackSelected.Description", "Properties.Resources.Settings")]
         public Color ColorTrackSelected { get; set; } = Color.DarkSlateBlue;
 
-        [LocalizedCategory("SettingsCategoryDesignTracks")]
-        [DisplayName("Прозрачность выбранного")]
-        [Description("Прозрачность выбранного трека")]
+        [LocalizedAttribute.Category("Category.DesignTracks", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("ColorTrackSelectedAlpha.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("ColorTrackSelectedAlpha.Description", "Properties.Resources.Settings")]
         public byte ColorTrackSelectedAlpha { get; set; } = 220;
 
-        [LocalizedCategory("SettingsCategoryDesignTracks")]
-        [DisplayName("Толщина")]
-        [Description("Толщина трека")]
+        [LocalizedAttribute.Category("Category.DesignTracks", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("WidthTrack.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("WidthTrack.Description", "Properties.Resources.Settings")]
         public int WidthTrack { get; set; } = 2;
 
-        [LocalizedCategory("SettingsCategoryDesignTracks")]
-        [DisplayName("Толщина выделенного")]
-        [Description("Толщина выделенного трека")]
+        [LocalizedAttribute.Category("Category.DesignTracks", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("WidthTrackSelected.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("WidthTrackSelected.Description", "Properties.Resources.Settings")]
         public int WidthTrackSelected { get; set; } = 4;
 
-        [LocalizedCategory("SettingsCategoryDesignTracks")]
-        [DisplayName("Расстояние между точками")]
-        [Description("Минимальное расстояние между точками трека в метрах для отображения на карте")]
+        [LocalizedAttribute.Category("Category.DesignTracks", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("TrackMinDistancePoint.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("TrackMinDistancePoint.Description", "Properties.Resources.Settings")]
         public int TrackMinDistancePoint { get; set; } = 100;
 
         // ------------------------------------------------------------------------------------------------------------
-        [LocalizedCategory("SettingsCategoryFormat")]
-        [DisplayName("Дата")]
-        [Description("Формат даты")]
+        [LocalizedAttribute.Category("Category.Format", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("FormatDate.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("FormatDate.Description", "Properties.Resources.Settings")]
         public string FormatDate { get; set; } = "yyyy.MM.dd";
 
-        [LocalizedCategory("SettingsCategoryFormat")]
-        [DisplayName("Время")]
-        [Description("Формат времени")]
+        [LocalizedAttribute.Category("Category.Format", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("FormatTime.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("FormatTime.Description", "Properties.Resources.Settings")]
         public string FormatTime { get; set; } = "HH:mm";
 
-        [LocalizedCategory("SettingsCategoryFormat")]
-        [DisplayName("Дата и время")]
-        [Description("Формат даты и времени")]
+        [LocalizedAttribute.Category("Category.Format", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("FormatDateTime.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("FormatDateTime.Description", "Properties.Resources.Settings")]
         public string FormatDateTime { get; set; } = "yyyy.MM.dd HH:mm";
 
-        [LocalizedCategory("SettingsCategoryFormat")]
-        [DisplayName("Расстояние")]
-        [Description("Формат расстояний")]
+        [LocalizedAttribute.Category("Category.Format", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("FormatDistance.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("FormatDistance.Description", "Properties.Resources.Settings")]
         public string FormatDistance { get; set; } = "0.00";
-        [LocalizedCategory("SettingsCategoryFormat")]
-        [DisplayName("Расстояние (км)")]
-        [Description("Формат расстояний (округлённое значение)")]
+        [LocalizedAttribute.Category("Category.Format", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("FormatDistance2.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("FormatDistance2.Description", "Properties.Resources.Settings")]
         public string FormatDistance2 { get; set; } = "0";
 
-        [LocalizedCategory("SettingsCategoryFormat")]
-        [DisplayName("Подъём")]
-        [Description("Формат подъёма")]
+        [LocalizedAttribute.Category("Category.Format", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("FormatEleAscent.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("FormatEleAscent.Description", "Properties.Resources.Settings")]
         public string FormatEleAscent { get; set; } = "0";
 
-        [LocalizedCategory("SettingsCategoryFormat")]
-        [DisplayName("Координаты")]
-        [Description("Формат координат")]
+        [LocalizedAttribute.Category("Category.Format", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("FormatLatLng.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("FormatLatLng.Description", "Properties.Resources.Settings")]
         public string FormatLatLng { get; set; } = "0.000000";
 
         // ------------------------------------------------------------------------------------------------------------
-        [LocalizedCategory("SettingsCategoryOsm")]
-        [DisplayName("Ключ")]
-        [Description("Ключ линии сетки")]
+        [LocalizedAttribute.Category("Category.Osm", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("OsmTileKey.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("OsmTileKey.Description", "Properties.Resources.Settings")]
         public string OsmTileKey { get; set; } = "boundary";
 
-        [LocalizedCategory("SettingsCategoryOsm")]
-        [DisplayName("Значение")]
-        [Description("Значение ключа линии сетки")]
+        [LocalizedAttribute.Category("Category.Osm", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("OsmTileValue.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("OsmTileValue.Description", "Properties.Resources.Settings")]
         public string OsmTileValue { get; set; } = "tile";
 
-        [LocalizedCategory("SettingsCategoryOsm")]
-        [DisplayName("Минимальный масштаб")]
-        [Description("Минимальный масштаб сетки")]
+        [LocalizedAttribute.Category("Category.Osm", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("SaveOsmTileMinZoom.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("SaveOsmTileMinZoom.Description", "Properties.Resources.Settings")]
         public int SaveOsmTileMinZoom { get; set; } = 10;
 
         // ------------------------------------------------------------------------------------------------------------
-        [LocalizedCategory("SettingsCategoryTileStatus")]
-        [DisplayName("Тип точки")]
-        [Description("Тип точки")]
+        [LocalizedAttribute.Category("Category.TileStatus", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("TileStatusFileWptType.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("TileStatusFileWptType.Description", "Properties.Resources.Settings")]
         public string TileStatusFileWptType { get; set; } = string.Empty;
 
-        [LocalizedCategory("SettingsCategoryTileStatusOsmand")]
-        [DisplayName("Информация для Османда")]
-        [Description("Добавить информацию для Османда")]
+        [LocalizedAttribute.Category("Category.TileStatusOsmand", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("TileStatusFileUseOsmand.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("TileStatusFileUseOsmand.Description", "Properties.Resources.Settings")]
         public bool TileStatusFileUseOsmand { get; set; } = true;
 
-        [LocalizedCategory("SettingsCategoryTileStatusOsmand")]
-        [DisplayName("Значок")]
-        [Description("Значок точки")]
+        [LocalizedAttribute.Category("Category.TileStatusOsmand", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("TileStatusFileOsmandIcon.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("TileStatusFileOsmandIcon.Description", "Properties.Resources.Settings")]
         public string TileStatusFileOsmandIcon { get; set; } = "special_star";
 
-        [LocalizedCategory("SettingsCategoryTileStatusOsmand")]
-        [DisplayName("Тип значка")]
-        [Description("Тип значка точки")]
+        [LocalizedAttribute.Category("Category.TileStatusOsmand", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("TileStatusFileOsmandIconBackground.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("TileStatusFileOsmandIconBackground.Description", "Properties.Resources.Settings")]
         public OsmandIconBackgroud TileStatusFileOsmandIconBackground { get; set; } = OsmandIconBackgroud.Circle;
 
-        [LocalizedCategory("SettingsCategoryTileStatusOsmand")]
-        [DisplayName("Цвет значка")]
-        [Description("Цвет значка точки")]
+        [LocalizedAttribute.Category("Category.TileStatusOsmand", "Properties.Resources.Settings")]
+        [LocalizedAttribute.DisplayName("TileStatusFileOsmandIconColor.DisplayName", "Properties.Resources.Settings")]
+        [LocalizedAttribute.Description("TileStatusFileOsmandIconColor.Description", "Properties.Resources.Settings")]
         public Color TileStatusFileOsmandIconColor { get; set; } = Color.Red;
 
         // ------------------------------------------------------------------------------------------------------------

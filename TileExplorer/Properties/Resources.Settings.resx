@@ -1,0 +1,462 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Category.Common" xml:space="preserve">
+    <value>Общее</value>
+  </data>
+  <data name="Category.DesignMarkers" xml:space="preserve">
+    <value>Маркеры</value>
+  </data>
+  <data name="Category.DesignTiles" xml:space="preserve">
+    <value>Плитки</value>
+  </data>
+  <data name="Category.DesignTracks" xml:space="preserve">
+    <value>Треки</value>
+  </data>
+  <data name="Category.Format" xml:space="preserve">
+    <value>Формат</value>
+  </data>
+  <data name="Category.Osm" xml:space="preserve">
+    <value>ОпенСтритМап</value>
+  </data>
+  <data name="Category.TileStatus" xml:space="preserve">
+    <value>Файл статуса плиток</value>
+  </data>
+  <data name="Category.TileStatusOsmand" xml:space="preserve">
+    <value>Файл статуса плиток: Османд</value>
+  </data>
+  <data name="ColorMarkerFill.Description" xml:space="preserve">
+    <value>Цвет фона маркера</value>
+  </data>
+  <data name="ColorMarkerFill.DisplayName" xml:space="preserve">
+    <value>Фон</value>
+  </data>
+  <data name="ColorMarkerFillAlpha.Description" xml:space="preserve">
+    <value>Прозрачность фона маркера</value>
+  </data>
+  <data name="ColorMarkerFillAlpha.DisplayName" xml:space="preserve">
+    <value>Прозрачность</value>
+  </data>
+  <data name="ColorMarkerLine.Description" xml:space="preserve">
+    <value>Цвет линий маркера</value>
+  </data>
+  <data name="ColorMarkerLine.DisplayName" xml:space="preserve">
+    <value>Цвет линий</value>
+  </data>
+  <data name="ColorMarkerLineAlpha.Description" xml:space="preserve">
+    <value>Прозрачность линий маркера</value>
+  </data>
+  <data name="ColorMarkerLineAlpha.DisplayName" xml:space="preserve">
+    <value>Прозрачность линий</value>
+  </data>
+  <data name="ColorMarkerSelectedFill.Description" xml:space="preserve">
+    <value>Цвет фона выделенного маркера</value>
+  </data>
+  <data name="ColorMarkerSelectedFill.DisplayName" xml:space="preserve">
+    <value>Фон выделенного</value>
+  </data>
+  <data name="ColorMarkerSelectedFillAlpha.Description" xml:space="preserve">
+    <value>Прозрачность фона выделенного маркера</value>
+  </data>
+  <data name="ColorMarkerSelectedFillAlphaDisplayName" xml:space="preserve">
+    <value>Прозрачность выделенного</value>
+  </data>
+  <data name="ColorMarkerSelectedLine.Description" xml:space="preserve">
+    <value>Цвет линий выделенного маркера</value>
+  </data>
+  <data name="ColorMarkerSelectedLine.DisplayName" xml:space="preserve">
+    <value>Цвет линий выделенного</value>
+  </data>
+  <data name="ColorMarkerSelectedLineAlpha.Description" xml:space="preserve">
+    <value>Прозрачность линий выделенного маркера</value>
+  </data>
+  <data name="ColorMarkerSelectedLineAlpha.DisplayName" xml:space="preserve">
+    <value>Прозрачность линий выделенного</value>
+  </data>
+  <data name="ColorMarkerText.Description" xml:space="preserve">
+    <value>Цвет текста маркера</value>
+  </data>
+  <data name="ColorMarkerText.DisplayName" xml:space="preserve">
+    <value>Цвет текста</value>
+  </data>
+  <data name="ColorMarkerTextAlpha.Description" xml:space="preserve">
+    <value>Прозрачность текста маркера</value>
+  </data>
+  <data name="ColorMarkerTextAlpha.DisplayName" xml:space="preserve">
+    <value>Прозрачность текста</value>
+  </data>
+  <data name="ColorMarkerTextFill.Description" xml:space="preserve">
+    <value>Цвет фона текста маркера</value>
+  </data>
+  <data name="ColorMarkerTextFill.DisplayName" xml:space="preserve">
+    <value>Цвет фона текста</value>
+  </data>
+  <data name="ColorMarkerTextFillAlpha.Description" xml:space="preserve">
+    <value>Прозрачность фона текста маркера</value>
+  </data>
+  <data name="ColorMarkerTextFillAlpha.DisplayName" xml:space="preserve">
+    <value>Прозрачность фона текста</value>
+  </data>
+  <data name="ColorTileCluster.Description" xml:space="preserve">
+    <value>Цвет плитки кластера</value>
+  </data>
+  <data name="ColorTileCluster.DisplayName" xml:space="preserve">
+    <value>Кластер: цвет</value>
+  </data>
+  <data name="ColorTileClusterAlpha.Description" xml:space="preserve">
+    <value>Прозрачность плитки кластера</value>
+  </data>
+  <data name="ColorTileClusterAlpha.DisplayName" xml:space="preserve">
+    <value>Кластер: прозрачность</value>
+  </data>
+  <data name="ColorTileClusterLineAlpha.Description" xml:space="preserve">
+    <value>Прозрачность границы плитки кластера</value>
+  </data>
+  <data name="ColorTileClusterLineAlpha.DisplayName" xml:space="preserve">
+    <value>Кластер: прозрачность линии</value>
+  </data>
+  <data name="ColorTileMaxCluster.Description" xml:space="preserve">
+    <value>Цвет плиток максимального кластера</value>
+  </data>
+  <data name="ColorTileMaxCluster.DisplayName" xml:space="preserve">
+    <value>Максимальный кластер: цвет</value>
+  </data>
+  <data name="ColorTileMaxClusterAlpha.Description" xml:space="preserve">
+    <value>Прозрачность плиток максимального кластера</value>
+  </data>
+  <data name="ColorTileMaxClusterAlpha.DisplayName" xml:space="preserve">
+    <value>Максимальный кластер: прозрачность</value>
+  </data>
+  <data name="ColorTileMaxClusterLineAlpha.Description" xml:space="preserve">
+    <value>Прозрачность границ плиток максимального кластера</value>
+  </data>
+  <data name="ColorTileMaxClusterLineAlpha.DisplayName" xml:space="preserve">
+    <value>Максимальный кластер: прозрачность линии</value>
+  </data>
+  <data name="ColorTileMaxSquare.Description" xml:space="preserve">
+    <value>Цвет плиток квадрата</value>
+  </data>
+  <data name="ColorTileMaxSquare.DisplayName" xml:space="preserve">
+    <value>Квадрат: цвет</value>
+  </data>
+  <data name="ColorTileMaxSquareAlpha.Description" xml:space="preserve">
+    <value>Прозрачность плиток квадрата</value>
+  </data>
+  <data name="ColorTileMaxSquareAlpha.DisplayName" xml:space="preserve">
+    <value>Квадрат: прозрачность</value>
+  </data>
+  <data name="ColorTileMaxSquareLineAlpha.Description" xml:space="preserve">
+    <value>Прозрачность границ плиток квадрата</value>
+  </data>
+  <data name="ColorTileMaxSquareLineAlpha.DisplayName" xml:space="preserve">
+    <value>Квадрат: прозрачность линии</value>
+  </data>
+  <data name="ColorTileTrackSelected.Description" xml:space="preserve">
+    <value>Цвет плитки выбранного трека</value>
+  </data>
+  <data name="ColorTileTrackSelected.DisplayName" xml:space="preserve">
+    <value>Выбранный трек: цвет</value>
+  </data>
+  <data name="ColorTileTrackSelectedAlpha.Description" xml:space="preserve">
+    <value>Прозрачность плитки выбранного трека</value>
+  </data>
+  <data name="ColorTileTrackSelectedAlpha.DisplayName" xml:space="preserve">
+    <value>Выбранный трек: прозрачность</value>
+  </data>
+  <data name="ColorTileTrackSelectedLineAlpha.Description" xml:space="preserve">
+    <value>Прозрачность границы плитки выбранного трека</value>
+  </data>
+  <data name="ColorTileTrackSelectedLineAlpha.DisplayName" xml:space="preserve">
+    <value>Выбранный трек: прозрачность границы</value>
+  </data>
+  <data name="ColorTileVisited.Description" xml:space="preserve">
+    <value>Цвет открытых плиток</value>
+  </data>
+  <data name="ColorTileVisited.DisplayName" xml:space="preserve">
+    <value>Открытая: цвет</value>
+  </data>
+  <data name="ColorTileVisitedAlpha.Description" xml:space="preserve">
+    <value>Прозрачность открытых плиток</value>
+  </data>
+  <data name="ColorTileVisitedAlpha.DisplayName" xml:space="preserve">
+    <value>Открытая: прозрачность</value>
+  </data>
+  <data name="ColorTileVisitedLineAlpha.Description" xml:space="preserve">
+    <value>Прозрачность границ открытых плиток</value>
+  </data>
+  <data name="ColorTileVisitedLineAlpha.DisplayName" xml:space="preserve">
+    <value>Открытая: прозрачность линии</value>
+  </data>
+  <data name="ColorTrack.Description" xml:space="preserve">
+    <value>Цвет трека</value>
+  </data>
+  <data name="ColorTrack.DisplayName" xml:space="preserve">
+    <value>Цвет</value>
+  </data>
+  <data name="ColorTrackAlpha.Description" xml:space="preserve">
+    <value>Прозрачность трека</value>
+  </data>
+  <data name="ColorTrackAlpha.DisplayName" xml:space="preserve">
+    <value>Прозрачность</value>
+  </data>
+  <data name="ColorTrackSelected.Description" xml:space="preserve">
+    <value>Цвет выбранного трека</value>
+  </data>
+  <data name="ColorTrackSelected.DisplayName" xml:space="preserve">
+    <value>Цвет выбранного</value>
+  </data>
+  <data name="ColorTrackSelectedAlpha.Description" xml:space="preserve">
+    <value>Прозрачность выбранного трека</value>
+  </data>
+  <data name="ColorTrackSelectedAlpha.DisplayName" xml:space="preserve">
+    <value>Прозрачность выбранного</value>
+  </data>
+  <data name="DatabaseHome.Description" xml:space="preserve">
+    <value>Расположение файла базы данных. Пустое значение – \AppData\Roaming\TileExplorer\</value>
+  </data>
+  <data name="DatabaseHome.DisplayName" xml:space="preserve">
+    <value>Расположение базы данных</value>
+  </data>
+  <data name="FontMarker.Description" xml:space="preserve">
+    <value>Шрифт маркера</value>
+  </data>
+  <data name="FontMarker.DisplayName" xml:space="preserve">
+    <value>Шрифт</value>
+  </data>
+  <data name="FormatDate.Description" xml:space="preserve">
+    <value>Формат даты</value>
+  </data>
+  <data name="FormatDate.DisplayName" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="FormatDateTime.Description" xml:space="preserve">
+    <value>Формат даты и времени</value>
+  </data>
+  <data name="FormatDateTime.DisplayName" xml:space="preserve">
+    <value>Дата и время</value>
+  </data>
+  <data name="FormatDistance.Description" xml:space="preserve">
+    <value>Формат расстояний</value>
+  </data>
+  <data name="FormatDistance.DisplayName" xml:space="preserve">
+    <value>Расстояние</value>
+  </data>
+  <data name="FormatDistance2.Description" xml:space="preserve">
+    <value>Формат расстояний (округлённое значение)</value>
+  </data>
+  <data name="FormatDistance2.DisplayName" xml:space="preserve">
+    <value>Расстояние (км)</value>
+  </data>
+  <data name="FormatEleAscent.Description" xml:space="preserve">
+    <value>Формат подъёма</value>
+  </data>
+  <data name="FormatEleAscent.DisplayName" xml:space="preserve">
+    <value>Подъём</value>
+  </data>
+  <data name="FormatLatLng.Description" xml:space="preserve">
+    <value>Формат координат</value>
+  </data>
+  <data name="FormatLatLng.DisplayName" xml:space="preserve">
+    <value>Координаты</value>
+  </data>
+  <data name="FormatTime.Description" xml:space="preserve">
+    <value>Формат времени</value>
+  </data>
+  <data name="FormatTime.DisplayName" xml:space="preserve">
+    <value>Время</value>
+  </data>
+  <data name="OsmTileKey.Description" xml:space="preserve">
+    <value>Ключ линии сетки</value>
+  </data>
+  <data name="OsmTileKey.DisplayName" xml:space="preserve">
+    <value>Ключ</value>
+  </data>
+  <data name="OsmTileValue.Description" xml:space="preserve">
+    <value>Значение ключа линии сетки</value>
+  </data>
+  <data name="OsmTileValue.DisplayName" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="SaveOsmTileMinZoom.Description" xml:space="preserve">
+    <value>Минимальный масштаб сетки</value>
+  </data>
+  <data name="SaveOsmTileMinZoom.DisplayName" xml:space="preserve">
+    <value>Минимальный масштаб</value>
+  </data>
+  <data name="TileStatusFileOsmandIcon.Description" xml:space="preserve">
+    <value>Значок точки</value>
+  </data>
+  <data name="TileStatusFileOsmandIcon.DisplayName" xml:space="preserve">
+    <value>Значок</value>
+  </data>
+  <data name="TileStatusFileOsmandIconBackground.Description" xml:space="preserve">
+    <value>Тип значка точки</value>
+  </data>
+  <data name="TileStatusFileOsmandIconBackground.DisplayName" xml:space="preserve">
+    <value>Тип значка</value>
+  </data>
+  <data name="TileStatusFileOsmandIconColor.Description" xml:space="preserve">
+    <value>Цвет значка точки</value>
+  </data>
+  <data name="TileStatusFileOsmandIconColor.DisplayName" xml:space="preserve">
+    <value>Цвет значка</value>
+  </data>
+  <data name="TileStatusFileUseOsmand.Description" xml:space="preserve">
+    <value>Добавить информацию для Османда</value>
+  </data>
+  <data name="TileStatusFileUseOsmand.DisplayName" xml:space="preserve">
+    <value>Информация для Османда</value>
+  </data>
+  <data name="TileStatusFileWptType.Description" xml:space="preserve">
+    <value>Тип точки</value>
+  </data>
+  <data name="TileStatusFileWptType.DisplayName" xml:space="preserve">
+    <value>Тип точки</value>
+  </data>
+  <data name="TrackMinDistancePoint.Description" xml:space="preserve">
+    <value>Минимальное расстояние между точками трека в метрах для отображения на карте</value>
+  </data>
+  <data name="TrackMinDistancePoint.DisplayName" xml:space="preserve">
+    <value>Расстояние между точками</value>
+  </data>
+  <data name="WidthMarkerLine.Description" xml:space="preserve">
+    <value>Толщина линий маркера</value>
+  </data>
+  <data name="WidthMarkerLine.DisplayName" xml:space="preserve">
+    <value>Толщина линий</value>
+  </data>
+  <data name="WidthMarkerLineSelected.Description" xml:space="preserve">
+    <value>Толщина линий выделенного маркера</value>
+  </data>
+  <data name="WidthMarkerLineSelected.DisplayName" xml:space="preserve">
+    <value>Толщина линий выделенного</value>
+  </data>
+  <data name="WidthTrack.Description" xml:space="preserve">
+    <value>Толщина трека</value>
+  </data>
+  <data name="WidthTrack.DisplayName" xml:space="preserve">
+    <value>Толщина</value>
+  </data>
+  <data name="WidthTrackSelected.Description" xml:space="preserve">
+    <value>Толщина выделенного трека</value>
+  </data>
+  <data name="WidthTrackSelected.DisplayName" xml:space="preserve">
+    <value>Толщина выделенного</value>
+  </data>
+</root>

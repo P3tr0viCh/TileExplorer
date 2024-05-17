@@ -144,6 +144,11 @@
     <Compile Include="ProgramStatus.cs" />
     <Compile Include="MapItemMarkerCross.cs" />
     <Compile Include="AppSettings.cs" />
+    <Compile Include="Properties\Resources.Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.Settings.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\ResourcesSql.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -233,6 +238,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Properties\Resources.Settings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Settings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\ResourcesSql.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ResourcesSql.Designer.cs</LastGenOutput>
