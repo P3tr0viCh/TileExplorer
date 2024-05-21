@@ -4,6 +4,7 @@
 
 using GMap.NET;
 using GMap.NET.WindowsForms;
+using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Utils;
 using System;
 using System.Collections;
@@ -75,7 +76,9 @@ namespace TileExplorer
 
             Database.Filter.Default.OnChanged += Filter_OnChanged;
 
-            ProgramStatus.StatusChanged += ProgramStatusStatusChanged;
+            ProgramStatus.StatusChanged += ProgramStatus_StatusChanged;
+
+            UpdateApp.Default.StatusChanged += UpdateApp_StatusChanged;
 
             AppSettings.LoadFormState(this, AppSettings.Default.FormStateMain);
 
@@ -149,6 +152,16 @@ namespace TileExplorer
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (!UpdateApp.Default.CanClose())
+            {
+                if (!Msg.Question(Resources.AppUpdateQuestionInProgress))
+                {
+                    e.Cancel = true;
+
+                    return;
+                }
+            }
+
             FullScreen = false;
 
             AppSettings.Default.FormStateMain = AppSettings.SaveFormState(this);
@@ -274,9 +287,37 @@ namespace TileExplorer
             Close();
         }
 
-        private void ProgramStatusStatusChanged(object sender, Status status)
+        private void ProgramStatus_StatusChanged(object sender, Status status)
         {
             statusStripPresenter.Status = status.Description();
+        }
+
+        private void UpdateApp_StatusChanged(object sender, AppUpdate.Status status)
+        {
+            DebugWrite.Line(status.ToString());
+
+            switch (status)
+            {
+                case AppUpdate.Status.CheckLatest:
+                    statusStripPresenter.UpdateStatus = Resources.AppUpdateInfoStatusCheckLatest;
+
+                    break;
+                case AppUpdate.Status.Download:
+                    statusStripPresenter.UpdateStatus = Resources.AppUpdateInfoStatusDownload;
+
+                    break;
+                case AppUpdate.Status.ArchiveExtract:
+                    statusStripPresenter.UpdateStatus = Resources.AppUpdateInfoStatusExtract;
+
+                    break;
+                case AppUpdate.Status.Check:
+                case AppUpdate.Status.CheckLocal:
+                case AppUpdate.Status.Update:
+                case AppUpdate.Status.Idle:
+                default:
+                    statusStripPresenter.UpdateStatus = string.Empty;
+                    break;
+            }
         }
 
         public ToolStripStatusLabel GetLabel(StatusLabel label)
@@ -288,6 +329,7 @@ namespace TileExplorer
                 case StatusLabel.Position: return slPosition;
                 case StatusLabel.MousePosition: return slMousePosition;
                 case StatusLabel.Status: return slStatus;
+                case StatusLabel.UpdateStatus: return slUpdateStatus;
                 case StatusLabel.TracksCount: return slTracksCount;
                 case StatusLabel.TracksDistance: return slTracksDistance;
                 case StatusLabel.TilesVisited: return slTilesVisited;
@@ -1861,11 +1903,7 @@ Files.AppDataDirectory();
 
         private void MiMainCheckUpdates_Click(object sender, EventArgs e)
         {
-            var updaterPath = Directory.GetParent(Files.ExecutableDirectory()).FullName;
-
-            updaterPath = Path.Combine(updaterPath, "updater", "Updater.exe");
-
-            Utils.OpenPath(updaterPath);
+            UpdateApp.Default.Update();
         }
     }
 }

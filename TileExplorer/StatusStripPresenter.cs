@@ -19,6 +19,7 @@ namespace TileExplorer
             MousePosition = new PointLatLng(0, 0);
 
             Status = string.Empty;
+            UpdateStatus = string.Empty;
 
             TracksCount = 0;
             TracksDistance = 0;
@@ -68,6 +69,14 @@ namespace TileExplorer
             set
             {
                 view.GetLabel(StatusLabel.Status).Text = value;
+            }
+        }
+
+        public string UpdateStatus
+        {
+            set
+            {
+                view.GetLabel(StatusLabel.UpdateStatus).Text = value;
             }
         }
 

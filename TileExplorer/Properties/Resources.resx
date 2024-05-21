@@ -117,6 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppUpdateErrorFileWrongLocation" xml:space="preserve">
+    <value>Файл должен находиться в каталоге c номером версии, например, {0}.</value>
+  </data>
+  <data name="AppUpdateErrorInProgress" xml:space="preserve">
+    <value>Не удалось проверить или установить обновление.
+Ошибка:
+{0}.</value>
+  </data>
+  <data name="AppUpdateInfoAlreadyLatest" xml:space="preserve">
+    <value>Установлена актуальная версия.</value>
+  </data>
+  <data name="AppUpdateInfoInProgress" xml:space="preserve">
+    <value>Процесс обновления уже запущен.</value>
+  </data>
+  <data name="AppUpdateInfoStatusCheckLatest" xml:space="preserve">
+    <value>Поиск обновления</value>
+  </data>
+  <data name="AppUpdateInfoStatusDownload" xml:space="preserve">
+    <value>Загрузка обновления</value>
+  </data>
+  <data name="AppUpdateInfoStatusExtract" xml:space="preserve">
+    <value>Установка обновления</value>
+  </data>
+  <data name="AppUpdateInfoUpdated" xml:space="preserve">
+    <value>Программа обновлена. Перезапустите для применения обновления.</value>
+  </data>
+  <data name="AppUpdateQuestionInProgress" xml:space="preserve">
+    <value>Происходит процесс обновления. Прервать?</value>
+  </data>
   <data name="ErrorDirectoryNotExists" xml:space="preserve">
     <value>Каталог «{0}» не существует.</value>
   </data>

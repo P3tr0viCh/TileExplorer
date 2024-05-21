@@ -86,6 +86,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainCheckUpdates = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
@@ -123,8 +125,7 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
-            this.miMainCheckUpdates = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+            this.slUpdateStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -165,7 +166,7 @@
             this.gMapControl.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.gMapControl.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gMapControl.ShowTileGridLines = false;
-            this.gMapControl.Size = new System.Drawing.Size(679, 415);
+            this.gMapControl.Size = new System.Drawing.Size(807, 415);
             this.gMapControl.TabIndex = 0;
             this.gMapControl.Zoom = 0D;
             this.gMapControl.OnPositionChanged += new GMap.NET.PositionChanged(this.GMapControl_OnPositionChanged);
@@ -185,6 +186,7 @@
             this.slTileId,
             this.slMousePosition,
             this.slStatus,
+            this.slUpdateStatus,
             this.slTracksCount,
             this.slTracksDistance,
             this.slTilesVisited,
@@ -192,7 +194,7 @@
             this.slTilesMaxSquare});
             this.statusStrip.Location = new System.Drawing.Point(0, 0);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(720, 22);
+            this.statusStrip.Size = new System.Drawing.Size(848, 22);
             this.statusStrip.TabIndex = 1;
             // 
             // slZoom
@@ -222,7 +224,7 @@
             // slStatus
             // 
             this.slStatus.Name = "slStatus";
-            this.slStatus.Size = new System.Drawing.Size(52, 17);
+            this.slStatus.Size = new System.Drawing.Size(90, 17);
             this.slStatus.Spring = true;
             this.slStatus.Text = "status";
             // 
@@ -268,7 +270,7 @@
             this.miMainHelp});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(720, 24);
+            this.menuStrip.Size = new System.Drawing.Size(848, 24);
             this.menuStrip.TabIndex = 2;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -385,7 +387,7 @@
             this.miMainShowGrid.CheckOnClick = true;
             this.miMainShowGrid.Name = "miMainShowGrid";
             this.miMainShowGrid.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.miMainShowGrid.Size = new System.Drawing.Size(171, 22);
+            this.miMainShowGrid.Size = new System.Drawing.Size(180, 22);
             this.miMainShowGrid.Text = "Сетка";
             this.miMainShowGrid.Click += new System.EventHandler(this.MiMainShowGrid_Click);
             // 
@@ -394,7 +396,7 @@
             this.miMainShowTracks.CheckOnClick = true;
             this.miMainShowTracks.Name = "miMainShowTracks";
             this.miMainShowTracks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.miMainShowTracks.Size = new System.Drawing.Size(171, 22);
+            this.miMainShowTracks.Size = new System.Drawing.Size(180, 22);
             this.miMainShowTracks.Text = "Треки";
             this.miMainShowTracks.Click += new System.EventHandler(this.MiMainShowTracks_Click);
             // 
@@ -403,14 +405,14 @@
             this.miMainShowMarkers.CheckOnClick = true;
             this.miMainShowMarkers.Name = "miMainShowMarkers";
             this.miMainShowMarkers.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.miMainShowMarkers.Size = new System.Drawing.Size(171, 22);
+            this.miMainShowMarkers.Size = new System.Drawing.Size(180, 22);
             this.miMainShowMarkers.Text = "Маркеры";
             this.miMainShowMarkers.Click += new System.EventHandler(this.MiMainShowMarkers_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(168, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // miMainHome
             // 
@@ -418,7 +420,7 @@
             this.miMainHomeGoto,
             this.miMainHomeSave});
             this.miMainHome.Name = "miMainHome";
-            this.miMainHome.Size = new System.Drawing.Size(171, 22);
+            this.miMainHome.Size = new System.Drawing.Size(180, 22);
             this.miMainHome.Text = "Дом";
             // 
             // miMainHomeGoto
@@ -440,13 +442,13 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(168, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // miMainGrayScale
             // 
             this.miMainGrayScale.CheckOnClick = true;
             this.miMainGrayScale.Name = "miMainGrayScale";
-            this.miMainGrayScale.Size = new System.Drawing.Size(171, 22);
+            this.miMainGrayScale.Size = new System.Drawing.Size(180, 22);
             this.miMainGrayScale.Text = "Оттенки серого";
             this.miMainGrayScale.Click += new System.EventHandler(this.MiMainGrayScale_Click);
             // 
@@ -619,6 +621,18 @@
             this.miMainHelp.Size = new System.Drawing.Size(65, 20);
             this.miMainHelp.Text = "Справка";
             // 
+            // miMainCheckUpdates
+            // 
+            this.miMainCheckUpdates.Name = "miMainCheckUpdates";
+            this.miMainCheckUpdates.Size = new System.Drawing.Size(204, 22);
+            this.miMainCheckUpdates.Text = "Проверить обновления";
+            this.miMainCheckUpdates.Click += new System.EventHandler(this.MiMainCheckUpdates_Click);
+            // 
+            // toolStripSeparator17
+            // 
+            this.toolStripSeparator17.Name = "toolStripSeparator17";
+            this.toolStripSeparator17.Size = new System.Drawing.Size(201, 6);
+            // 
             // miMainAbout
             // 
             this.miMainAbout.Name = "miMainAbout";
@@ -637,7 +651,7 @@
             // 
             this.toolStripContainer.ContentPanel.AutoScroll = true;
             this.toolStripContainer.ContentPanel.Controls.Add(this.gMapControl);
-            this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(679, 415);
+            this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(807, 415);
             this.toolStripContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             // 
             // toolStripContainer.LeftToolStripPanel
@@ -645,7 +659,7 @@
             this.toolStripContainer.LeftToolStripPanel.Controls.Add(this.toolStrip);
             this.toolStripContainer.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer.Name = "toolStripContainer";
-            this.toolStripContainer.Size = new System.Drawing.Size(720, 461);
+            this.toolStripContainer.Size = new System.Drawing.Size(848, 461);
             this.toolStripContainer.TabIndex = 3;
             // 
             // toolStripContainer.TopToolStripPanel
@@ -940,22 +954,17 @@
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
             // 
-            // miMainCheckUpdates
+            // slUpdateStatus
             // 
-            this.miMainCheckUpdates.Name = "miMainCheckUpdates";
-            this.miMainCheckUpdates.Size = new System.Drawing.Size(204, 22);
-            this.miMainCheckUpdates.Text = "Проверить обновления";
-            this.miMainCheckUpdates.Click += new System.EventHandler(this.MiMainCheckUpdates_Click);
-            // 
-            // toolStripSeparator17
-            // 
-            this.toolStripSeparator17.Name = "toolStripSeparator17";
-            this.toolStripSeparator17.Size = new System.Drawing.Size(201, 6);
+            this.slUpdateStatus.Name = "slUpdateStatus";
+            this.slUpdateStatus.Size = new System.Drawing.Size(90, 17);
+            this.slUpdateStatus.Spring = true;
+            this.slUpdateStatus.Text = "update status";
             // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(720, 461);
+            this.ClientSize = new System.Drawing.Size(848, 461);
             this.Controls.Add(this.toolStripContainer);
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1086,6 +1095,7 @@
         private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloat2Lng;
         private System.Windows.Forms.ToolStripMenuItem miMainCheckUpdates;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
+        private System.Windows.Forms.ToolStripStatusLabel slUpdateStatus;
     }
 }
 

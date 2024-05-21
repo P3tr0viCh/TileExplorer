@@ -100,6 +100,7 @@ namespace TileExplorer
             MousePosition,
 
             Status,
+            UpdateStatus,
 
             TracksCount,
             TracksDistance,

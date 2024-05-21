@@ -61,6 +61,89 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Файл должен находиться в каталоге c номером версии, например, {0}..
+        /// </summary>
+        internal static string AppUpdateErrorFileWrongLocation {
+            get {
+                return ResourceManager.GetString("AppUpdateErrorFileWrongLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось проверить или установить обновление.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string AppUpdateErrorInProgress {
+            get {
+                return ResourceManager.GetString("AppUpdateErrorInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Установлена актуальная версия..
+        /// </summary>
+        internal static string AppUpdateInfoAlreadyLatest {
+            get {
+                return ResourceManager.GetString("AppUpdateInfoAlreadyLatest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Процесс обновления уже запущен..
+        /// </summary>
+        internal static string AppUpdateInfoInProgress {
+            get {
+                return ResourceManager.GetString("AppUpdateInfoInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Поиск обновления.
+        /// </summary>
+        internal static string AppUpdateInfoStatusCheckLatest {
+            get {
+                return ResourceManager.GetString("AppUpdateInfoStatusCheckLatest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Загрузка обновления.
+        /// </summary>
+        internal static string AppUpdateInfoStatusDownload {
+            get {
+                return ResourceManager.GetString("AppUpdateInfoStatusDownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Установка обновления.
+        /// </summary>
+        internal static string AppUpdateInfoStatusExtract {
+            get {
+                return ResourceManager.GetString("AppUpdateInfoStatusExtract", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Программа обновлена. Перезапустите для применения обновления..
+        /// </summary>
+        internal static string AppUpdateInfoUpdated {
+            get {
+                return ResourceManager.GetString("AppUpdateInfoUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Происходит процесс обновления. Прервать?.
+        /// </summary>
+        internal static string AppUpdateQuestionInProgress {
+            get {
+                return ResourceManager.GetString("AppUpdateQuestionInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Каталог «{0}» не существует..
         /// </summary>
         internal static string ErrorDirectoryNotExists {
