@@ -52,7 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>GPX_Icon.ico</ApplicationIcon>
+    <ApplicationIcon>TileExplorer.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -274,7 +274,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="GPX_Icon.ico" />
+    <Content Include="TileExplorer.ico" />
     <None Include="Resources\SelectTracksTree.sql" />
     <None Include="Resources\SelectTracksOnly.sql" />
     <None Include="Resources\SelectTrackPointsByTrackIdFull.sql" />
