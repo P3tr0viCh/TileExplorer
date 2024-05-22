@@ -280,7 +280,7 @@ namespace TileExplorer
                     {
                         sql = Filter.Default.ToSql();
 
-                        if (string.IsNullOrEmpty(sql))
+                        if (sql.IsEmpty())
                             sql = ResourcesSql.SelectTiles;
                         else
                             sql = string.Format(

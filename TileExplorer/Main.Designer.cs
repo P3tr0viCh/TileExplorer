@@ -37,6 +37,7 @@
             this.slTileId = new System.Windows.Forms.ToolStripStatusLabel();
             this.slMousePosition = new System.Windows.Forms.ToolStripStatusLabel();
             this.slStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slUpdateStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTracksCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTracksDistance = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTilesVisited = new System.Windows.Forms.ToolStripStatusLabel();
@@ -58,6 +59,7 @@
             this.miMainMap = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainShowGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainShowTracks = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainShowTiles = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainShowMarkers = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainHome = new System.Windows.Forms.ToolStripMenuItem();
@@ -125,7 +127,6 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapMove = new System.Windows.Forms.Timer(this.components);
-            this.slUpdateStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -227,6 +228,13 @@
             this.slStatus.Size = new System.Drawing.Size(90, 17);
             this.slStatus.Spring = true;
             this.slStatus.Text = "status";
+            // 
+            // slUpdateStatus
+            // 
+            this.slUpdateStatus.Name = "slUpdateStatus";
+            this.slUpdateStatus.Size = new System.Drawing.Size(90, 17);
+            this.slUpdateStatus.Spring = true;
+            this.slUpdateStatus.Text = "update status";
             // 
             // slTracksCount
             // 
@@ -373,6 +381,7 @@
             this.miMainMap.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miMainShowGrid,
             this.miMainShowTracks,
+            this.miMainShowTiles,
             this.miMainShowMarkers,
             this.toolStripSeparator2,
             this.miMainHome,
@@ -399,6 +408,15 @@
             this.miMainShowTracks.Size = new System.Drawing.Size(180, 22);
             this.miMainShowTracks.Text = "Треки";
             this.miMainShowTracks.Click += new System.EventHandler(this.MiMainShowTracks_Click);
+            // 
+            // miMainShowTiles
+            // 
+            this.miMainShowTiles.CheckOnClick = true;
+            this.miMainShowTiles.Name = "miMainShowTiles";
+            this.miMainShowTiles.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+            this.miMainShowTiles.Size = new System.Drawing.Size(180, 22);
+            this.miMainShowTiles.Text = "Плитки";
+            this.miMainShowTiles.Click += new System.EventHandler(this.MiMainShowTiles_Click);
             // 
             // miMainShowMarkers
             // 
@@ -954,13 +972,6 @@
             this.timerMapMove.Interval = 222;
             this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
             // 
-            // slUpdateStatus
-            // 
-            this.slUpdateStatus.Name = "slUpdateStatus";
-            this.slUpdateStatus.Size = new System.Drawing.Size(90, 17);
-            this.slUpdateStatus.Spring = true;
-            this.slUpdateStatus.Text = "update status";
-            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1096,6 +1107,7 @@
         private System.Windows.Forms.ToolStripMenuItem miMainCheckUpdates;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
         private System.Windows.Forms.ToolStripStatusLabel slUpdateStatus;
+        private System.Windows.Forms.ToolStripMenuItem miMainShowTiles;
     }
 }
 

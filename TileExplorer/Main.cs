@@ -91,6 +91,7 @@ namespace TileExplorer
             miMapTileDelete.Visible = false;
 #endif
             miMainShowGrid.Checked = AppSettings.Default.VisibleGrid;
+            miMainShowTiles.Checked = AppSettings.Default.VisibleTiles;
             miMainShowTracks.Checked = AppSettings.Default.VisibleTracks;
             miMainShowMarkers.Checked = AppSettings.Default.VisibleMarkers;
 
@@ -169,6 +170,7 @@ namespace TileExplorer
             AppSettings.Default.MapGrayScale = miMainGrayScale.Checked;
 
             AppSettings.Default.VisibleGrid = miMainShowGrid.Checked;
+            AppSettings.Default.VisibleTiles = miMainShowTiles.Checked;
             AppSettings.Default.VisibleTracks = miMainShowTracks.Checked;
             AppSettings.Default.VisibleMarkers = miMainShowMarkers.Checked;
 
@@ -826,6 +828,11 @@ namespace TileExplorer
             CheckAndLoadData(DataLoad.Tracks);
         }
 
+        private void MiMainShowTiles_Click(object sender, EventArgs e)
+        {
+            tilesOverlay.IsVisibile = miMainShowTiles.Checked;
+        }
+
         private void HomeGoto()
         {
             gMapControl.Zoom = AppSettings.Default.HomeZoom;
@@ -925,7 +932,7 @@ namespace TileExplorer
 
             var name = marker.Text;
 
-            if (string.IsNullOrEmpty(name))
+            if (name.IsEmpty())
             {
                 name = marker.Lat.ToString() + ":" + marker.Lng.ToString();
             }
@@ -967,7 +974,7 @@ namespace TileExplorer
 
             var name = track.Text;
 
-            if (string.IsNullOrEmpty(name))
+            if (name.IsEmpty())
             {
                 name = track.DateTimeStart.ToString();
             }
@@ -1685,7 +1692,7 @@ namespace TileExplorer
         {
             var databaseHome = AppSettings.Default.DatabaseHome;
 
-            if (string.IsNullOrEmpty(databaseHome))
+            if (databaseHome.IsEmpty())
             {
                 databaseHome =
 #if DEBUG

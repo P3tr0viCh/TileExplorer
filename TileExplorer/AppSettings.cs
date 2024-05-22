@@ -310,6 +310,8 @@ namespace TileExplorer
         [Browsable(false)]
         public bool VisibleTracks { get; set; } = true;
         [Browsable(false)]
+        public bool VisibleTiles { get; set; } = true;
+        [Browsable(false)]
         public bool VisibleFilter { get; set; } = true;
         [Browsable(false)]
         public bool VisibleMarkerList { get; set; } = true;

@@ -41,7 +41,7 @@ namespace TileExplorer
             {
                 return P3tr0viCh.Utils.Osm.TileYToLat(y, Const.TILE_ZOOM);
             }
-            
+
             private class OsmNode
             {
                 public int Id;
@@ -181,7 +181,7 @@ namespace TileExplorer
                                 xml.WriteAttributeString("ref", "-" + way.NodeId2);
                                 xml.WriteEndElement();
 
-                                if (!string.IsNullOrEmpty(AppSettings.Default.OsmTileKey))
+                                if (!AppSettings.Default.OsmTileKey.IsEmpty())
                                 {
                                     xml.WriteStartElement("tag");
                                     xml.WriteAttributeString("k", AppSettings.Default.OsmTileKey);

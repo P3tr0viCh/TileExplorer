@@ -318,14 +318,14 @@ namespace TileExplorer
                 {
                     get
                     {
-                        if (string.IsNullOrEmpty(Text))
+                        if (Text.IsEmpty())
                         {
-                            if (string.IsNullOrEmpty(Brand))
+                            if (Brand.IsEmpty())
                             {
                                 return Model;
                             }
 
-                            if (string.IsNullOrEmpty(Model))
+                            if (Model.IsEmpty())
                             {
                                 return Brand;
                             }

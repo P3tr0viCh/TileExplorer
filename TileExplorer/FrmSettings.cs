@@ -45,7 +45,7 @@ namespace TileExplorer
 
         private bool CheckDirectory(string path)
         {
-            if (string.IsNullOrEmpty(path)) return true;
+            if (path.IsEmpty()) return true;
 
             if (Directory.Exists(path)) return true;
 

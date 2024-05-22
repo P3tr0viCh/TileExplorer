@@ -181,7 +181,7 @@ namespace TileExplorer
                         break;
                 }
 
-                if (!string.IsNullOrEmpty(sql)) sql = " WHERE " + sql;
+                if (!sql.IsEmpty()) sql = " WHERE " + sql;
 
                 return sql;
             }

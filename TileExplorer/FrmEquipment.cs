@@ -54,9 +54,9 @@ namespace TileExplorer
             tbBrand.Text = tbBrand.Text.Trim();
             tbModel.Text = tbModel.Text.Trim();
 
-            if (string.IsNullOrEmpty(tbText.Text) &&
-                string.IsNullOrEmpty(tbBrand.Text) &&
-                string.IsNullOrEmpty(tbModel.Text))
+            if (tbText.Text.IsEmpty() &&
+                tbBrand.Text.IsEmpty() &&
+                tbModel.Text.IsEmpty())
             {
                 tbText.Focus();
 

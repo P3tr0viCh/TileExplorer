@@ -447,7 +447,7 @@ namespace TileExplorer
         {
             if (e.ColumnIndex == columnFormattingIndex)
             {
-                if (string.IsNullOrEmpty(e.Value as string)) e.Value = Resources.TextOther;
+                if ((e.Value as string).IsEmpty()) e.Value = Resources.TextOther;
             }
         }
 

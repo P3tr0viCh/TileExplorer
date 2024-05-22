@@ -65,7 +65,7 @@ namespace TileExplorer
 
                         xml.WriteElementString("time", now);
 
-                        if (!string.IsNullOrEmpty(AppSettings.Default.TileStatusFileWptType))
+                        if (!AppSettings.Default.TileStatusFileWptType.IsEmpty())
                         {
                             xml.WriteElementString("type", AppSettings.Default.TileStatusFileWptType);
                         }
