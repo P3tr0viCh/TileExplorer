@@ -5,7 +5,6 @@
 using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -98,6 +97,9 @@ namespace TileExplorer
 #else
                         false;
 #endif
+                    dataGridView.Columns[nameof(Track.Gpx)].Visible = visible;
+                    dataGridView.Columns[nameof(Track.Duration)].Visible = visible;
+                    dataGridView.Columns[nameof(Track.DurationInMove)].Visible = visible;
                     dataGridView.Columns[nameof(Track.EquipmentId)].Visible = visible;
                     dataGridView.Columns[nameof(Track.EquipmentText)].Visible = visible;
                     dataGridView.Columns[nameof(Track.EquipmentBrand)].Visible = visible;
@@ -237,6 +239,8 @@ namespace TileExplorer
                         DataGridViewCellStyles.DateTime;
 
                     dataGridView.Columns[nameof(Track.DurationAsString)].DefaultCellStyle =
+                        DataGridViewCellStyles.DurationAsString;
+                    dataGridView.Columns[nameof(Track.DurationInMoveAsString)].DefaultCellStyle =
                         DataGridViewCellStyles.DurationAsString;
 
                     dataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle =
@@ -474,7 +478,8 @@ namespace TileExplorer
             switch (ChildFormType)
             {
                 case ChildFormType.TrackList:
-                    if (e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationAsString)].Index)
+                    if (e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationAsString)].Index ||
+                        e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationInMoveAsString)].Index)
                     {
                         return;
                     }

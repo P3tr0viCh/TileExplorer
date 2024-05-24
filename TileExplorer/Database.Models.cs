@@ -109,24 +109,71 @@ namespace TileExplorer
             [Table("tracks")]
             public class Track : BaseId
             {
+                private readonly Gpx.Track gpx = new Gpx.Track();
+                [Write(false)]
+                public Gpx.Track Gpx
+                {
+                    get => gpx;
+                    set => gpx.Assign(value);
+                }
+
                 [DisplayName("Название")]
-                public string Text { get; set; } = string.Empty;
+                public string Text
+                {
+                    get => gpx.Text;
+                    set => gpx.Text = value;
+                }
 
                 [DisplayName("Начало")]
-                public DateTime DateTimeStart { get; set; } = default;
+                public DateTime DateTimeStart
+                {
+                    get => gpx.DateTimeStart;
+                    set => gpx.DateTimeStart = value;
+                }
                 [DisplayName("Окончание")]
-                public DateTime DateTimeFinish { get; set; } = default;
+                public DateTime DateTimeFinish
+                {
+                    get => gpx.DateTimeFinish;
+                    set => gpx.DateTimeFinish = value;
+                }
+
+                [DisplayName("Время")]
+                public long Duration
+                {
+                    get => gpx.Duration;
+                    set => gpx.Duration = value;
+                }
 
                 [DisplayName("Время")]
                 [Write(false)]
                 [Computed]
-                public string DurationAsString => (DateTimeFinish - DateTimeStart).ToHoursMinutesString();
+                public string DurationAsString => TimeSpan.FromSeconds(Duration).ToHoursMinutesString();
+
+                [DisplayName("Время в движении")]
+                public long DurationInMove
+                {
+                    get => gpx.DurationInMove;
+                    set => gpx.DurationInMove = value;
+                }
+
+                [DisplayName("Время в движении")]
+                [Write(false)]
+                [Computed]
+                public string DurationInMoveAsString => TimeSpan.FromSeconds(DurationInMove).ToHoursMinutesString();
 
                 [DisplayName("Расстояние")]
-                public double Distance { get; set; } = 0;
+                public double Distance
+                {
+                    get => gpx.Distance;
+                    set => gpx.Distance = value;
+                }
 
                 [DisplayName("Подъём")]
-                public float EleAscent { get; set; } = 0;
+                public float EleAscent
+                {
+                    get => gpx.EleAscent;
+                    set => gpx.EleAscent = value;
+                }
 
                 [Write(false)]
                 [Computed]
@@ -180,6 +227,9 @@ namespace TileExplorer
                     DateTimeStart = default;
                     DateTimeFinish = default;
 
+                    Duration = 0;
+                    DurationInMove = 0;
+
                     Distance = 0;
 
                     EleAscent = 0;
@@ -202,14 +252,7 @@ namespace TileExplorer
 
                     base.Assign(source);
 
-                    Text = source.Text;
-
-                    DateTimeStart = source.DateTimeStart;
-                    DateTimeFinish = source.DateTimeFinish;
-
-                    Distance = source.Distance;
-
-                    EleAscent = source.EleAscent;
+                    Gpx = source.Gpx;
 
                     if (source.TrackPoints == null)
                     {

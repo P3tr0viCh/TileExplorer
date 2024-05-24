@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -42,28 +41,17 @@ namespace TileExplorer
             {
                 var track = new Track();
 
-                var trackGpx = new P3tr0viCh.Utils.Gpx.Track();
-
                 try
                 {
                     DebugWrite.Line(path);
 
-                    trackGpx.OpenFromFile(path);
+                    track.Gpx.OpenFromFile(path);
 
                     DebugWrite.Line("xml loaded");
 
-                    track.Text = trackGpx.Text;
-
-                    track.DateTimeStart = trackGpx.DateTimeStart;
-                    track.DateTimeFinish = trackGpx.DateTimeFinish;
-
-                    track.Distance = trackGpx.Distance;
-
-                    track.EleAscent = trackGpx.EleAscent;
-
                     track.TrackPoints = new List<TrackPoint>();
 
-                    foreach (var point in trackGpx.Points)
+                    foreach (var point in track.Gpx.Points)
                     {
                         track.TrackPoints.Add(new TrackPoint()
                         {

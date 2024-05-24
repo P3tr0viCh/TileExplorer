@@ -145,11 +145,24 @@ namespace TileExplorer
 
         private bool SaveData()
         {
-            Task.Run(() => Database.Default.SaveTrackAsync(Track)).Wait();
+            try
+            {
+                Task.Run(() => Database.Default.SaveTrackAsync(Track)).Wait();
 
-            MainForm.TrackChanged(Track);
+                MainForm.TrackChanged(Track);
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+
+                var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
+
+                Msg.Error(msg);
+
+                return false;
+            }
         }
 
         private bool ApplyData()
