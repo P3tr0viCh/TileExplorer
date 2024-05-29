@@ -144,6 +144,35 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Процесс архивации уже запущен..
+        /// </summary>
+        internal static string BackupInfoInProgress {
+            get {
+                return ResourceManager.GetString("BackupInfoInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось сохранить архив.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string BackupSaveFail {
+            get {
+                return ResourceManager.GetString("BackupSaveFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архив сохранён в &apos;{0}&apos;..
+        /// </summary>
+        internal static string BackupSaveOk {
+            get {
+                return ResourceManager.GetString("BackupSaveOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Каталог «{0}» не существует..
         /// </summary>
         internal static string ErrorDirectoryNotExists {

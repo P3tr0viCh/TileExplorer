@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Xml;
-using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -17,14 +17,14 @@ namespace TileExplorer
             {
                 if (tiles.Count == 0) return;
 
-                using (var xml = new XmlTextWriter(fileName, null))
+                using (var xml = new XmlTextWriter(fileName, Encoding.UTF8))
                 {
                     xml.Formatting = Formatting.Indented;
                     xml.Indentation = 2;
 
-                    var now = DateTime.Now.ToString(Const.DATETIME_FORMAT_GPX);
+                    var now = DateTime.UtcNow.ToString(Const.DATETIME_FORMAT_GPX);
 
-                    xml.WriteStartDocument();
+                    xml.WriteStartDocument(true);
 
                     xml.WriteStartElement("gpx");
                     {

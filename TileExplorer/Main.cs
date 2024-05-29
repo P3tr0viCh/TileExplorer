@@ -1912,5 +1912,46 @@ Files.AppDataDirectory();
         {
             UpdateApp.Default.Update();
         }
+
+        private async void BackupSave()
+        {
+            if (ProgramStatus.Contains(Status.BackupSave))
+            {
+                Msg.Info(Resources.BackupInfoInProgress);
+
+                return;
+            }
+
+            var status = ProgramStatus.Start(Status.BackupSave);
+
+            try
+            {
+                var dir = Path.Combine(Files.ExecutableDirectory(), "backup");
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                await Utils.Backup.SaveAsync(dir);
+
+                Msg.Info(Resources.BackupSaveOk, dir);
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(Resources.BackupSaveFail, e.Message);
+            }
+            finally
+            {
+                ProgramStatus.Stop(status);
+            }
+        }
+
+        private void MiMainDataBackupSave_Click(object sender, EventArgs e)
+        {
+            BackupSave();
+        }
     }
 }

@@ -146,6 +146,17 @@
   <data name="AppUpdateQuestionInProgress" xml:space="preserve">
     <value>Происходит процесс обновления. Прервать?</value>
   </data>
+  <data name="BackupInfoInProgress" xml:space="preserve">
+    <value>Процесс архивации уже запущен.</value>
+  </data>
+  <data name="BackupSaveFail" xml:space="preserve">
+    <value>Не удалось сохранить архив.
+Ошибка:
+{0}.</value>
+  </data>
+  <data name="BackupSaveOk" xml:space="preserve">
+    <value>Архив сохранён в '{0}'.</value>
+  </data>
   <data name="ErrorDirectoryNotExists" xml:space="preserve">
     <value>Каталог «{0}» не существует.</value>
   </data>

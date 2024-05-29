@@ -2,8 +2,8 @@
 using P3tr0viCh.Utils;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Xml;
-using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -60,12 +60,12 @@ namespace TileExplorer
 
                 var id = 0;
 
-                using (var xml = new XmlTextWriter(fileName, null))
+                using (var xml = new XmlTextWriter(fileName, Encoding.UTF8))
                 {
                     xml.Formatting = Formatting.Indented;
                     xml.Indentation = 2;
 
-                    xml.WriteStartDocument();
+                    xml.WriteStartDocument(true);
 
                     xml.WriteStartElement("osm");
                     {

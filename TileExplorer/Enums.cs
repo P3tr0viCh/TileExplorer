@@ -32,7 +32,9 @@ namespace TileExplorer
             [Description("Чтение файла gpx...")]
             LoadGpx,
             [Description("Сохранение...")]
-            SaveData
+            SaveData,
+            [Description("Сохранение в архив...")]
+            BackupSave,
         }
 
         public enum ChildFormType
