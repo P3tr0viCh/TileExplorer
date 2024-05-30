@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms.Design;
 using static TileExplorer.Enums;
+using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -329,6 +330,21 @@ namespace TileExplorer
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]
         public bool VisibleLeftPanel { get; set; } = true;
+
+        // ------------------------------------------------------------------------------------------------------------
+        private readonly BackupSettings backupSettings = new BackupSettings();
+        [Browsable(false)]
+        public BackupSettings BackupSettings
+        {
+            get
+            {
+                return backupSettings;
+            }
+            set
+            {
+                backupSettings.Assign(value);
+            }
+        }
 
         // ------------------------------------------------------------------------------------------------------------
         [Browsable(false)]

@@ -1,29 +1,98 @@
-﻿using GMap.NET.Internals;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Utils.Backup;
 
 namespace TileExplorer
 {
     public static partial class Utils
     {
-        public static class Backup
+        public class BackupSettings
         {
-            private const string fileNameMarkers = "markers.gpx";
-            private const string fileNameEquipments = "equipments.xml";
+            public string Directory { get; set; } = string.Empty;
 
-            private static async Task SaveMarkers(string dir)
+            public FileType FileTypeMarkers { get; set; } = default;
+            public FileType FileTypeEquipments { get; set; } = default;
+
+            public void Clear()
+            {
+                Directory = string.Empty;
+
+                FileTypeMarkers = default;
+                FileTypeEquipments = default;
+            }
+
+            public void Assign(BackupSettings source)
+            {
+                if (source == null)
+                {
+                    Clear();
+
+                    return;
+                }
+
+                Directory = source.Directory;
+
+                FileTypeMarkers = source.FileTypeMarkers;
+                FileTypeEquipments = source.FileTypeEquipments;
+            }
+        }
+
+        public class Backup
+        {
+            [Flags]
+            public enum FileType
+            {
+                ExcelXml = 1,
+                Gpx = 2,
+            }
+
+            private const string fileNameExtXml = ".xml";
+            private const string fileNameExtGpx = ".gpx";
+
+            private const string fileNameMarkers = "markers";
+            private const string fileNameEquipments = "equipments";
+
+            private readonly BackupSettings settings = new BackupSettings();
+            public BackupSettings Settings
+            {
+                get
+                {
+                    return settings;
+                }
+                set
+                {
+                    settings.Assign(value);
+                }
+            }
+
+            private string GetFileNameExt(FileType fileType)
+            {
+                switch (fileType)
+                {
+                    case FileType.ExcelXml: return fileNameExtXml;
+                    case FileType.Gpx: return fileNameExtGpx;
+                    default: return string.Empty;
+                }
+            }
+
+            private string GetFileName(string fileName, FileType fileType)
+            {
+                return Path.Combine(Settings.Directory, fileName + GetFileNameExt(fileType));
+            }
+
+            private void SaveMarkersAsGpx(List<Marker> markers)
             {
                 DebugWrite.Line("start");
 
-                var markers = await Database.Default.ListLoadAsync<Marker>();
-
-                var fileName = Path.Combine(dir, fileNameMarkers);
+                var fileName = GetFileName(fileNameMarkers, FileType.Gpx);
 
                 using (var xml = new XmlTextWriter(fileName, Encoding.UTF8))
                 {
@@ -78,98 +147,157 @@ namespace TileExplorer
 
                 DebugWrite.Line("end");
             }
-
-            private static void XmlExcelWriteCellEquipments(XmlTextWriter xml, string value)
+            private void SaveMarkersAsExcelXml(List<Marker> markers)
             {
-                xml.WriteStartElement("Cell");
+                DebugWrite.Line("start");
+
+                var fileName = GetFileName(fileNameMarkers, FileType.ExcelXml);
+
+                var table = new DataTable()
                 {
-                    xml.WriteStartElement("Data");
-                    xml.WriteAttributeString("ss:Type", "String");
-                    xml.WriteValue(value);
-                    xml.WriteEndElement();
+                    TableName = "Markers"
+                };
+
+                table.Columns.Add(new DataColumn()
+                {
+                    DataType = typeof(double),
+                    ColumnName = "Latitude",
+                });
+                table.Columns.Add(new DataColumn()
+                {
+                    DataType = typeof(double),
+                    ColumnName = "Longitude",
+                });
+                table.Columns.Add(new DataColumn()
+                {
+                    DataType = typeof(string),
+                    ColumnName = "Text",
+                });
+                table.Columns.Add(new DataColumn()
+                {
+                    DataType = typeof(bool),
+                    ColumnName = "TextVisible",
+                });
+                table.Columns.Add(new DataColumn()
+                {
+                    DataType = typeof(int),
+                    ColumnName = "OffsetX",
+                });
+                table.Columns.Add(new DataColumn()
+                {
+                    DataType = typeof(int),
+                    ColumnName = "OffsetY",
+                });
+
+                foreach (var marker in markers)
+                {
+                    var row = table.NewRow();
+
+                    row["Latitude"] = marker.Lat;
+                    row["Longitude"] = marker.Lng;
+                    row["Text"] = marker.Text;
+                    row["TextVisible"] = marker.IsTextVisible;
+                    row["OffsetX"] = marker.OffsetX;
+                    row["OffsetY"] = marker.OffsetY;
+
+                    table.Rows.Add(row);
                 }
-                xml.WriteEndElement();
+
+                new DataTableFile()
+                {
+                    FileName = fileName,
+                    Table = table,
+                    Author = AssemblyNameAndVersion(),
+
+                }.WriteToExcelXml();
+
+                DebugWrite.Line("end");
             }
 
-            private static void XmlExcelWriteRowEquipments(XmlTextWriter xml, Equipment equipment)
+            private async Task SaveMarkers()
             {
-                xml.WriteStartElement("Row");
+                if (Settings.FileTypeMarkers == default)
                 {
-                    XmlExcelWriteCellEquipments(xml, equipment.Text);
-                    XmlExcelWriteCellEquipments(xml, equipment.Brand);
-                    XmlExcelWriteCellEquipments(xml, equipment.Model);
+                    return;
                 }
-                xml.WriteEndElement();
+
+                var markers = await Database.Default.ListLoadAsync<Marker>();
+
+                if (Settings.FileTypeMarkers.HasFlag(FileType.ExcelXml))
+                {
+                    SaveMarkersAsExcelXml(markers);
+                }
+                if (Settings.FileTypeMarkers.HasFlag(FileType.Gpx))
+                {
+                    SaveMarkersAsGpx(markers);
+                }
             }
 
-            private static async Task SaveEquipments(string dir)
+            private async Task SaveEquipmentsAsExcelXml()
             {
                 DebugWrite.Line("start");
 
                 var equipments = await Database.Default.ListLoadAsync<Equipment>();
 
-                var fileName = Path.Combine(dir, fileNameEquipments);
+                var fileName = GetFileName(fileNameEquipments, FileType.ExcelXml);
 
-                using (var xml = new XmlTextWriter(fileName, Encoding.UTF8))
+                var table = new DataTable()
                 {
-                    xml.Formatting = Formatting.Indented;
-                    xml.Indentation = 2;
+                    TableName = "Equipments"
+                };
 
-                    var now = DateTime.UtcNow.ToString(Const.DATETIME_FORMAT_GPX);
+                table.Columns.Add(new DataColumn()
+                {
+                    DataType = typeof(string),
+                    ColumnName = "Text",
+                });
+                table.Columns.Add(new DataColumn()
+                {
+                    DataType = typeof(string),
+                    ColumnName = "Brand",
+                });
+                table.Columns.Add(new DataColumn()
+                {
+                    DataType = typeof(string),
+                    ColumnName = "Model",
+                });
 
-                    xml.WriteStartDocument();
-                    xml.WriteProcessingInstruction("mso-application", "progid=\"Excel.Sheet\"");
+                foreach (var equipment in equipments)
+                {
+                    var row = table.NewRow();
 
-                    xml.WriteStartElement("Workbook");
-                    {
-                        xml.WriteAttributeString("xmlns", "urn:schemas-microsoft-com:office:spreadsheet");
-                        xml.WriteAttributeString("xmlns:o", "urn:schemas-microsoft-com:office:office");
-                        xml.WriteAttributeString("xmlns:x", "urn:schemas-microsoft-com:office:excel");
-                        xml.WriteAttributeString("xmlns:ss", "urn:schemas-microsoft-com:office:spreadsheet");
-                        xml.WriteAttributeString("xmlns:html", "http://www.w3.org/TR/REC-html40");
-                    }
+                    row["Text"] = equipment.Text;
+                    row["Brand"] = equipment.Brand;
+                    row["Model"] = equipment.Model;
 
-                    xml.WriteStartElement("DocumentProperties");
-                    {
-                        xml.WriteAttributeString("xmlns", "urn:schemas-microsoft-com:office:office");
-
-                        xml.WriteElementString("Author", AssemblyNameAndVersion());
-                        xml.WriteElementString("Created", now);
-                    }
-                    xml.WriteEndElement();
-
-                    xml.WriteStartElement("Worksheet");
-                    {
-                        xml.WriteAttributeString("ss:Name", "equipments");
-                    }
-
-                    xml.WriteStartElement("Table");
-
-                    XmlExcelWriteRowEquipments(xml, new Equipment() { Text = "Text", Brand = "Brand", Model = "Model" });
-
-                    foreach (var equipment in equipments)
-                    {
-                        XmlExcelWriteRowEquipments(xml, equipment);
-                    }
-
-                    xml.WriteEndElement();
-
-                    xml.WriteEndElement();
-
-                    xml.WriteEndElement();
-
-                    xml.WriteEndDocument();
-
-                    xml.Close();
+                    table.Rows.Add(row);
                 }
+
+                new DataTableFile()
+                {
+                    FileName = fileName,
+                    Table = table,
+                    Author = AssemblyNameAndVersion(),
+
+                }.WriteToExcelXml();
 
                 DebugWrite.Line("end");
             }
 
-            public static async Task SaveAsync(string dir)
+            private async Task SaveEquipments()
             {
-                await SaveMarkers(dir);
-                await SaveEquipments(dir);
+                if (Settings.FileTypeEquipments == default)
+                {
+                    return;
+                }
+
+                await SaveEquipmentsAsExcelXml();
+            }
+
+            public async Task SaveAsync()
+            {
+                await SaveMarkers();
+                await SaveEquipments();
             }
         }
     }

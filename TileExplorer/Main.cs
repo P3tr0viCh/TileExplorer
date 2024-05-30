@@ -1759,7 +1759,7 @@ Files.AppDataDirectory();
             miMainDataFilter.PerformClick();
         }
 
-        private void tsbtnTracksTree_Click(object sender, EventArgs e)
+        private void TsbtnTracksTree_Click(object sender, EventArgs e)
         {
             miMainDataTracksTree.PerformClick();
         }
@@ -1922,20 +1922,23 @@ Files.AppDataDirectory();
                 return;
             }
 
+            if (!FrmBackup.ShowDlg(this))
+            {
+                return;
+            }
+
             var status = ProgramStatus.Start(Status.BackupSave);
 
             try
             {
-                var dir = Path.Combine(Files.ExecutableDirectory(), "backup");
-
-                if (!Directory.Exists(dir))
+                var backup = new Utils.Backup
                 {
-                    Directory.CreateDirectory(dir);
-                }
+                    Settings = AppSettings.Default.BackupSettings
+                };
 
-                await Utils.Backup.SaveAsync(dir);
+                await backup.SaveAsync();
 
-                Msg.Info(Resources.BackupSaveOk, dir);
+                Msg.Info(Resources.BackupSaveOk, backup.Settings.Directory);
             }
             catch (Exception e)
             {

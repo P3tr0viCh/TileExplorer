@@ -144,6 +144,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не выбраны данные для архивирования..
+        /// </summary>
+        internal static string BackupErrorNothingSave {
+            get {
+                return ResourceManager.GetString("BackupErrorNothingSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Процесс архивации уже запущен..
         /// </summary>
         internal static string BackupInfoInProgress {

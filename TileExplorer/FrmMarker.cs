@@ -1,6 +1,5 @@
 ﻿using P3tr0viCh.Utils;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database.Models;
@@ -72,7 +71,7 @@ namespace TileExplorer
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(e.Message);
 

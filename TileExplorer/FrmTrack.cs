@@ -1,6 +1,5 @@
 ﻿using P3tr0viCh.Utils;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -135,7 +134,7 @@ namespace TileExplorer
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(e.Message);
 
@@ -155,7 +154,7 @@ namespace TileExplorer
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                DebugWrite.Error(e);
 
                 var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
 

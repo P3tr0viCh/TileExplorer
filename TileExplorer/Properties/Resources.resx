@@ -146,6 +146,9 @@
   <data name="AppUpdateQuestionInProgress" xml:space="preserve">
     <value>Происходит процесс обновления. Прервать?</value>
   </data>
+  <data name="BackupErrorNothingSave" xml:space="preserve">
+    <value>Не выбраны данные для архивирования.</value>
+  </data>
   <data name="BackupInfoInProgress" xml:space="preserve">
     <value>Процесс архивации уже запущен.</value>
   </data>
