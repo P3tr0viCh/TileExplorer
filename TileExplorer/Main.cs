@@ -67,7 +67,13 @@ namespace TileExplorer
 
             GMapLoad();
 
-            UpdateDatabaseFileName();
+            if (!SetDatabaseFileName())
+            {
+                WindowState = FormWindowState.Minimized;
+                Tag = true;
+                Application.Exit();
+                return;
+            }
 
             Database.Filter.Default.Day = AppSettings.Default.Filter.Day;
             Database.Filter.Default.DateFrom = AppSettings.Default.Filter.DateFrom;
@@ -153,6 +159,8 @@ namespace TileExplorer
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (Tag != null && (bool)Tag) return;
+
             if (!UpdateApp.Default.CanClose())
             {
                 if (!Msg.Question(Resources.AppUpdateQuestionInProgress))
@@ -1688,18 +1696,32 @@ namespace TileExplorer
             UpdateGrid();
         }
 
-        private void UpdateDatabaseFileName()
+        private bool SetDatabaseFileName()
         {
             var databaseHome = AppSettings.Default.DatabaseHome;
 
-            if (databaseHome.IsEmpty())
-            {
-                databaseHome =
+            var defaultDatabaseHome =
 #if DEBUG
                 Files.ExecutableDirectory();
 #else
-Files.AppDataDirectory();
+                Files.AppDataDirectory();
 #endif
+            if (databaseHome.IsEmpty())
+            {
+                databaseHome = defaultDatabaseHome;
+            }
+
+            if (!Directory.Exists(databaseHome))
+            {
+                DebugWrite.Error("database directory not exists: " + databaseHome);
+
+                if (Msg.Question(Resources.ErrorDatabaseDirectoryNotExists, databaseHome, defaultDatabaseHome))
+                {
+                    AppSettings.Default.DatabaseHome = string.Empty;
+                    return SetDatabaseFileName();
+                }
+
+                return false;
             }
 
             var databaseFileName = Path.Combine(databaseHome, Files.DatabaseFileName());
@@ -1707,6 +1729,8 @@ Files.AppDataDirectory();
             DebugWrite.Line("database: " + databaseFileName);
 
             Database.Default.FileName = databaseFileName;
+
+            return true;
         }
 
         private async void ShowSettingsAsync()
@@ -1715,7 +1739,11 @@ Files.AppDataDirectory();
 
             if (FrmSettings.ShowDlg(this))
             {
-                UpdateDatabaseFileName();
+                if (!SetDatabaseFileName())
+                {
+                    Application.Exit();
+                    return;
+                }
 
                 DataGridViewCellStyles.UpdateSettings();
 

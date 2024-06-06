@@ -160,6 +160,12 @@
   <data name="BackupSaveOk" xml:space="preserve">
     <value>Архив сохранён в '{0}'.</value>
   </data>
+  <data name="ErrorDatabaseDirectoryNotExists" xml:space="preserve">
+    <value>Каталог с базой данных «{0}» не существует.
+Установить расположение по умолчанию «{1}»?
+
+Отказ приведёт к закрытию приложения.</value>
+  </data>
   <data name="ErrorDirectoryNotExists" xml:space="preserve">
     <value>Каталог «{0}» не существует.</value>
   </data>

@@ -24,6 +24,7 @@ namespace TileExplorer
         private int columnFormattingIndex = -1;
 
         private string sortColumn = string.Empty;
+        private int sortColumnIndex = -1;
         private SortOrder sortOrder = SortOrder.None;
 
         public FrmList()
@@ -106,7 +107,8 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Track.EquipmentModel)].Visible = visible;
 
                     sortColumn = nameof(Track.DateTimeStart);
-                    sortOrder = SortOrder.Ascending;
+                    sortColumnIndex = dataGridView.Columns[sortColumn].Index;
+                    sortOrder = SortOrder.Descending;
 
                     break;
                 case ChildFormType.MarkerList:
@@ -478,20 +480,28 @@ namespace TileExplorer
             switch (ChildFormType)
             {
                 case ChildFormType.TrackList:
-                    if (e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationAsString)].Index ||
-                        e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationInMoveAsString)].Index)
+                    if (e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationAsString)].Index)
                     {
-                        return;
+                        sortColumn = nameof(Track.Duration);
                     }
                     else
                     {
-                        sortColumn = dataGridView.Columns[e.ColumnIndex].Name;
+                        if (e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationInMoveAsString)].Index)
+                        {
+                            sortColumn = nameof(Track.DurationInMove);
+                        }
+                        else
+                        {
+                            sortColumn = dataGridView.Columns[e.ColumnIndex].Name;
+                        }
                     }
 
-                    if (sortOrder == SortOrder.Ascending)
-                        sortOrder = SortOrder.Descending;
-                    else
-                        sortOrder = SortOrder.Ascending;
+                    if (sortColumnIndex == e.ColumnIndex)
+                    {
+                        sortOrder = sortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+                    }
+
+                    sortColumnIndex = e.ColumnIndex;
 
                     UpdateData();
 
@@ -501,7 +511,7 @@ namespace TileExplorer
 
         private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            if (sortColumn == string.Empty)
+            if (sortColumn == string.Empty || sortColumnIndex == -1)
             {
                 return;
             }
@@ -509,7 +519,7 @@ namespace TileExplorer
             switch (ChildFormType)
             {
                 case ChildFormType.TrackList:
-                    dataGridView.Columns[sortColumn].HeaderCell.SortGlyphDirection = sortOrder;
+                    dataGridView.Columns[sortColumnIndex].HeaderCell.SortGlyphDirection = sortOrder;
 
                     break;
             }
