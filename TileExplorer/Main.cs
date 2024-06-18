@@ -61,6 +61,18 @@ namespace TileExplorer
             _ = UpdateDataAsync(load);
         }
 
+        private bool AbnormalExit
+        {
+            get
+            {
+                return Tag != null && (bool)Tag;
+            }
+            set
+            {
+                Tag = value;
+            }
+        }
+
         private void Main_Load(object sender, EventArgs e)
         {
             AppSettingsLoad();
@@ -70,7 +82,7 @@ namespace TileExplorer
             if (!SetDatabaseFileName())
             {
                 WindowState = FormWindowState.Minimized;
-                Tag = true;
+                AbnormalExit = true;
                 Application.Exit();
                 return;
             }
@@ -159,7 +171,7 @@ namespace TileExplorer
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Tag != null && (bool)Tag) return;
+            if (AbnormalExit) return;
 
             if (!UpdateApp.Default.CanClose())
             {
@@ -302,28 +314,28 @@ namespace TileExplorer
             statusStripPresenter.Status = status.Description();
         }
 
-        private void UpdateApp_StatusChanged(object sender, AppUpdate.Status status)
+        private void UpdateApp_StatusChanged(object sender, UpdateStatus status)
         {
             DebugWrite.Line(status.ToString());
 
             switch (status)
             {
-                case AppUpdate.Status.CheckLatest:
+                case UpdateStatus.CheckLatest:
                     statusStripPresenter.UpdateStatus = Resources.AppUpdateInfoStatusCheckLatest;
 
                     break;
-                case AppUpdate.Status.Download:
+                case UpdateStatus.Download:
                     statusStripPresenter.UpdateStatus = Resources.AppUpdateInfoStatusDownload;
 
                     break;
-                case AppUpdate.Status.ArchiveExtract:
+                case UpdateStatus.ArchiveExtract:
                     statusStripPresenter.UpdateStatus = Resources.AppUpdateInfoStatusExtract;
 
                     break;
-                case AppUpdate.Status.Check:
-                case AppUpdate.Status.CheckLocal:
-                case AppUpdate.Status.Update:
-                case AppUpdate.Status.Idle:
+                case UpdateStatus.Check:
+                case UpdateStatus.CheckLocal:
+                case UpdateStatus.Update:
+                case UpdateStatus.Idle:
                 default:
                     statusStripPresenter.UpdateStatus = string.Empty;
                     break;

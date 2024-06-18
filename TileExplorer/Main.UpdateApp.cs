@@ -5,7 +5,6 @@ using System.IO;
 using System.Net.Http;
 using System.Windows.Forms;
 using TileExplorer.Properties;
-using static P3tr0viCh.AppUpdate.AppUpdate;
 
 namespace TileExplorer
 {
@@ -20,72 +19,72 @@ namespace TileExplorer
             private static readonly UpdateApp instance = new UpdateApp();
             public static UpdateApp Default => instance;
 
-            public event ProgramStatus<Status>.StatusChangedEventHandler StatusChanged;
+            public event ProgramStatus<UpdateStatus>.StatusChangedEventHandler StatusChanged;
 
-            private Config Config = null;
+            private AppUpdate AppUpdate = null;
 
             public bool CanClose()
             {
-                if (Config == null)
+                if (AppUpdate == null)
                 {
                     return true;
                 }
 
-                return Config.Status.IsIdle();
+                return AppUpdate.Status.IsIdle();
             }
 
             public async void Update()
             {
-                if (Config != null)
+                if (AppUpdate != null)
                 {
                     Msg.Info(Resources.AppUpdateInfoInProgress);
 
                     return;
                 }
 
-                Config = new Config()
-                {
-                    LocalFile = Application.ExecutablePath,
-                };
+                AppUpdate = new AppUpdate();
 
-                Config.GitHub.Owner = GitHubOwner;
-                Config.GitHub.Repo = GitHubRepo;
-                Config.GitHub.ArchiveFile = GitHubArchiveFile;
+                AppUpdate.Config.LocalFile = Application.ExecutablePath;
 
-                Config.Status.StatusChanged += StatusChanged;
+                AppUpdate.Config.Location = P3tr0viCh.AppUpdate.Location.GitHub;
 
+                AppUpdate.Config.GitHub.Owner = GitHubOwner;
+                AppUpdate.Config.GitHub.Repo = GitHubRepo;
+                AppUpdate.Config.GitHub.ArchiveFile = GitHubArchiveFile;
+
+                AppUpdate.Status.StatusChanged += StatusChanged;
 
                 var errorMsg = string.Empty;
 
                 try
                 {
-                    Config.Check();
+                    AppUpdate.Check();
 
-                    await Config.CheckLatestVersionAsync();
+                    await AppUpdate.CheckLatestVersionAsync();
 
-                    if (Config.IsLatestVersion())
+                    if (AppUpdate.Versions.IsLatest())
                     {
                         Msg.Info(Resources.AppUpdateInfoAlreadyLatest);
 
                         return;
                     }
 
-                    await Config.UpdateAsync();
+                    await AppUpdate.UpdateAsync();
 
                     Msg.Info(Resources.AppUpdateInfoUpdated);
                 }
                 catch (LocalFileWrongLocationException)
                 {
-                    var path = Path.Combine(Directory.GetParent(Config.LocalFile).FullName,
-                        Config.LocalVersion.ToString(),
-                        Path.GetFileName(Config.LocalFile));
+                    var path = Path.Combine(Directory.GetParent(AppUpdate.Config.LocalFile).FullName,
+                        AppUpdate.Versions.Local.ToString(),
+                        Path.GetFileName(AppUpdate.Config.LocalFile));
 
                     errorMsg = string.Format(Resources.AppUpdateErrorFileWrongLocation, path);
                 }
                 catch (HttpRequestException e)
                 {
                     DebugWrite.Error(e);
-                    
+
                     errorMsg = e.Message;
                 }
                 catch (Exception e)
@@ -96,7 +95,7 @@ namespace TileExplorer
                 }
                 finally
                 {
-                    Config = null;
+                    AppUpdate = null;
                 }
 
                 if (!errorMsg.IsEmpty())
