@@ -271,6 +271,12 @@ namespace TileExplorer
                         DataGridViewCellStyles.DistanceSum;
                     dataGridView.Columns[nameof(ResultYears.DurationSumAsString)].DefaultCellStyle =
                         DataGridViewCellStyles.DurationAsString;
+                    dataGridView.Columns[nameof(ResultYears.DistanceStep0)].DefaultCellStyle =
+                        DataGridViewCellStyles.DistanceStep;
+                    dataGridView.Columns[nameof(ResultYears.DistanceStep1)].DefaultCellStyle =
+                        DataGridViewCellStyles.DistanceStep;
+                    dataGridView.Columns[nameof(ResultYears.DistanceStep2)].DefaultCellStyle =
+                        DataGridViewCellStyles.DistanceStep;
 
                     break;
                 case ChildFormType.ResultEquipments:

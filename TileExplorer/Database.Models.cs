@@ -322,6 +322,13 @@ namespace TileExplorer
 
                 [DisplayName("Время")]
                 public string DurationSumAsString => TimeSpan.FromDays(DurationSum).ToHoursMinutesString();
+
+                [DisplayName("50-")]
+                public double DistanceStep0 { get; set; } = 0;
+                [DisplayName("50+")]
+                public double DistanceStep1 { get; set; } = 0;
+                [DisplayName("100+")]
+                public double DistanceStep2 { get; set; } = 0;
             }
 
             public class ResultEquipments : BaseId
