@@ -6,7 +6,7 @@ using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
-    public static partial class Utils
+    internal static partial class Utils
     {
         public static class Tracks
         {

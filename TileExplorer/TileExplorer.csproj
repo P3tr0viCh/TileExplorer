@@ -164,7 +164,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ResourcesSql.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utils.Backup.cs" />
+    <Compile Include="Backup.cs" />
     <Compile Include="Utils.Tiles.cs" />
     <Compile Include="Utils.Gpx.cs" />
     <Compile Include="Utils.Osm.cs" />

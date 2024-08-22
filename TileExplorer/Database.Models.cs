@@ -110,6 +110,7 @@ namespace TileExplorer
             public class Track : BaseId
             {
                 private readonly Gpx.Track gpx = new Gpx.Track();
+
                 [Write(false)]
                 public Gpx.Track Gpx
                 {
@@ -167,6 +168,10 @@ namespace TileExplorer
                     get => gpx.Distance;
                     set => gpx.Distance = value;
                 }
+
+                [DisplayName("Скорость")]
+                [Write(false)]
+                public float AverageSpeed { get; set; }
 
                 [DisplayName("Подъём")]
                 public float EleAscent

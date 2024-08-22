@@ -21,7 +21,7 @@ namespace TileExplorer
 
         public ChildFormType ChildFormType { get; set; }
 
-        private int columnFormattingIndex = -1;
+        private int[] columnFormattingIndex;
 
         private string sortColumn = string.Empty;
         private int sortColumnIndex = -1;
@@ -84,7 +84,11 @@ namespace TileExplorer
                     AppSettings.LoadFormState(this, AppSettings.Default.FormStateTrackList);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsTrackList);
 
-                    columnFormattingIndex = dataGridView.Columns[nameof(Track.Distance)].Index;
+                    columnFormattingIndex = new int[2];
+
+                    columnFormattingIndex[0] = dataGridView.Columns[nameof(Track.Distance)].Index;
+                    columnFormattingIndex[1] = dataGridView.Columns[nameof(Track.AverageSpeed)].Index;
+
                     dataGridView.CellFormatting +=
                         new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingTrackList);
 
@@ -136,7 +140,9 @@ namespace TileExplorer
 
                     dataGridView.Columns[nameof(ResultYears.DurationSum)].Visible = false;
 
-                    columnFormattingIndex = dataGridView.Columns[nameof(ResultYears.Year)].Index;
+                    columnFormattingIndex = new int[1];
+                    columnFormattingIndex[0] = dataGridView.Columns[nameof(ResultYears.Year)].Index;
+
                     dataGridView.CellFormatting +=
                         new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingResultYears);
 
@@ -151,7 +157,9 @@ namespace TileExplorer
 
                     dataGridView.Columns[nameof(ResultEquipments.DurationSum)].Visible = false;
 
-                    columnFormattingIndex = dataGridView.Columns[nameof(ResultEquipments.Text)].Index;
+                    columnFormattingIndex = new int[1];
+                    columnFormattingIndex[0] = dataGridView.Columns[nameof(ResultEquipments.Text)].Index;
+
                     dataGridView.CellFormatting +=
                         new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingResultEquipments);
 
@@ -247,6 +255,9 @@ namespace TileExplorer
 
                     dataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle =
                         DataGridViewCellStyles.Distance;
+
+                    dataGridView.Columns[nameof(Track.AverageSpeed)].DefaultCellStyle =
+                        DataGridViewCellStyles.Speed;
 
                     dataGridView.Columns[nameof(Track.EleAscent)].DefaultCellStyle =
                         DataGridViewCellStyles.EleAscent;
@@ -441,15 +452,22 @@ namespace TileExplorer
 
         private void DataGridView_CellFormattingTrackList(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == columnFormattingIndex)
+            if (e.ColumnIndex == columnFormattingIndex[0])
             {
                 e.Value = (double)e.Value / 1000;
+            }
+            else
+            {
+                if (e.ColumnIndex == columnFormattingIndex[1])
+                {
+                    e.Value = (float)e.Value * 3.6;
+                }
             }
         }
 
         private void DataGridView_CellFormattingResultYears(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == columnFormattingIndex)
+            if (e.ColumnIndex == columnFormattingIndex[0])
             {
                 if ((int)e.Value == 0) e.Value = Resources.TextTotal;
             }
@@ -457,7 +475,7 @@ namespace TileExplorer
 
         private void DataGridView_CellFormattingResultEquipments(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == columnFormattingIndex)
+            if (e.ColumnIndex == columnFormattingIndex[0])
             {
                 if ((e.Value as string).IsEmpty()) e.Value = Resources.TextOther;
             }

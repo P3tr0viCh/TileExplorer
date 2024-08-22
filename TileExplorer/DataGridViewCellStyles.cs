@@ -21,6 +21,12 @@ namespace TileExplorer
             Format = AppSettings.Default.FormatDistance
         };
 
+        public static readonly DataGridViewCellStyle Speed = new DataGridViewCellStyle()
+        {
+            Alignment = DataGridViewContentAlignment.TopRight,
+            Format = "0.0"
+        };
+
         public static readonly DataGridViewCellStyle DistanceSum = new DataGridViewCellStyle()
         {
             Alignment = DataGridViewContentAlignment.TopRight,

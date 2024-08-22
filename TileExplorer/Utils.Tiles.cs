@@ -6,7 +6,7 @@ using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
-    public static partial class Utils
+    internal static partial class Utils
     {
         public static class Tiles
         {

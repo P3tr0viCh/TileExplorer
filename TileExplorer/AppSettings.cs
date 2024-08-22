@@ -3,12 +3,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms.Design;
+using static TileExplorer.Backup;
 using static TileExplorer.Enums;
-using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
-    public class AppSettings : SettingsBase<AppSettings>
+    internal class AppSettings : SettingsBase<AppSettings>
     {
         public readonly Database.Filter Filter = new Database.Filter();
 
@@ -333,6 +333,7 @@ namespace TileExplorer
 
         // ------------------------------------------------------------------------------------------------------------
         private readonly BackupSettings backupSettings = new BackupSettings();
+       
         [Browsable(false)]
         public BackupSettings BackupSettings
         {

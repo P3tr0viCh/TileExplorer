@@ -1971,7 +1971,7 @@ namespace TileExplorer
 
             try
             {
-                var backup = new Utils.Backup
+                var backup = new Backup
                 {
                     Settings = AppSettings.Default.BackupSettings
                 };
