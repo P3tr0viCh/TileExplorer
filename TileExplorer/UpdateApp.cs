@@ -1,8 +1,10 @@
 ﻿using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Utils;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 
@@ -12,7 +14,13 @@ namespace TileExplorer
     {
         private const string GitHubOwner = "P3tr0viCh";
         private const string GitHubRepo = "TileExplorer";
-        private const string GitHubArchiveFile = "latest.zip";
+
+        public class UpdateResult
+        {
+            public bool IsError = false;
+            public bool CanRestart = false;
+            public string Message;
+        }
 
         private static readonly UpdateApp instance = new UpdateApp();
         public static UpdateApp Default => instance;
@@ -31,13 +39,34 @@ namespace TileExplorer
             return AppUpdate.Status.IsIdle();
         }
 
-        public async void Update()
+        private string GetProgramStartFileName()
         {
+            return Path.Combine(
+                Directory.GetParent(Application.ExecutablePath).Parent.FullName,
+                Path.GetFileName(Application.ExecutablePath));
+        }
+
+        public void AppRestart()
+        {
+            var programStart = GetProgramStartFileName();
+
+            DebugWrite.Line(programStart);
+
+            if (File.Exists(programStart))
+            {
+                Process.Start(programStart, "");
+            }
+        }
+
+        public async Task<UpdateResult> UpdateAsync()
+        {
+            var result = new UpdateResult();
+
             if (AppUpdate != null)
             {
-                Msg.Info(Resources.AppUpdateInfoInProgress);
+                result.Message = Resources.AppUpdateInfoInProgress;
 
-                return;
+                return result;
             }
 
             AppUpdate = new AppUpdate();
@@ -48,11 +77,8 @@ namespace TileExplorer
 
             AppUpdate.Config.GitHub.Owner = GitHubOwner;
             AppUpdate.Config.GitHub.Repo = GitHubRepo;
-            AppUpdate.Config.GitHub.ArchiveFile = GitHubArchiveFile;
 
             AppUpdate.Status.StatusChanged += StatusChanged;
-
-            var errorMsg = string.Empty;
 
             try
             {
@@ -62,14 +88,17 @@ namespace TileExplorer
 
                 if (AppUpdate.Versions.IsLatest())
                 {
-                    Msg.Info(Resources.AppUpdateInfoAlreadyLatest);
+                    result.Message = Resources.AppUpdateInfoAlreadyLatest;
 
-                    return;
+                    return result;
+
                 }
 
                 await AppUpdate.UpdateAsync();
 
-                Msg.Info(Resources.AppUpdateInfoUpdated);
+                result.CanRestart = true;
+
+                result.Message = Resources.AppUpdateQuestionUpdated;
             }
             catch (LocalFileWrongLocationException)
             {
@@ -77,29 +106,29 @@ namespace TileExplorer
                     AppUpdate.Versions.Local.ToString(),
                     Path.GetFileName(AppUpdate.Config.LocalFile));
 
-                errorMsg = string.Format(Resources.AppUpdateErrorFileWrongLocation, path);
+                result.IsError = true;
+                result.Message = string.Format(Resources.AppUpdateErrorFileWrongLocation, path);
             }
             catch (HttpRequestException e)
             {
                 DebugWrite.Error(e);
 
-                errorMsg = e.Message;
+                result.IsError = true;
+                result.Message = e.Message;
             }
             catch (Exception e)
             {
                 DebugWrite.Error(e);
 
-                errorMsg = e.Message;
+                result.IsError = true;
+                result.Message = e.Message;
             }
             finally
             {
                 AppUpdate = null;
             }
 
-            if (!errorMsg.IsEmpty())
-            {
-                Msg.Error(Resources.AppUpdateErrorInProgress, errorMsg);
-            }
+            return result;
         }
     }
 }

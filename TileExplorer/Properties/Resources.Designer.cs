@@ -126,20 +126,20 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Программа обновлена. Перезапустите для применения обновления..
-        /// </summary>
-        internal static string AppUpdateInfoUpdated {
-            get {
-                return ResourceManager.GetString("AppUpdateInfoUpdated", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Происходит процесс обновления. Прервать?.
         /// </summary>
         internal static string AppUpdateQuestionInProgress {
             get {
                 return ResourceManager.GetString("AppUpdateQuestionInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Программа обновлена. Перезапустить для применения обновления?.
+        /// </summary>
+        internal static string AppUpdateQuestionUpdated {
+            get {
+                return ResourceManager.GetString("AppUpdateQuestionUpdated", resourceCulture);
             }
         }
         

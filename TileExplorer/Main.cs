@@ -1498,11 +1498,6 @@ namespace TileExplorer
             ShowChildForm(ChildFormType.EquipmentList, !miMainDataEquipmentList.Checked);
         }
 
-        private void MiMainDataResults_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void MiMainDataFilter_Click(object sender, EventArgs e)
         {
             ShowChildForm(ChildFormType.Filter, !miMainDataFilter.Checked);
@@ -1948,9 +1943,35 @@ namespace TileExplorer
             Clipboard.SetText(((ToolStripMenuItem)sender).Text);
         }
 
-        private void MiMainCheckUpdates_Click(object sender, EventArgs e)
+        private async Task CheckUpdate()
         {
-            UpdateApp.Default.Update();
+            var result = await UpdateApp.Default.UpdateAsync();
+
+            if (result.IsError)
+            {
+                Msg.Error(Resources.AppUpdateErrorInProgress, result.Message);
+            }
+            else
+            {
+                if (result.CanRestart)
+                {
+                    if (Msg.Question(result.Message))
+                    {
+                        Close();
+
+                        UpdateApp.Default.AppRestart();
+                    }
+                }
+                else
+                {
+                    Msg.Info(result.Message);
+                }
+            }
+        }
+
+        private async void MiMainCheckUpdates_Click(object sender, EventArgs e)
+        {
+            await CheckUpdate();
         }
 
         private async void BackupSave()
