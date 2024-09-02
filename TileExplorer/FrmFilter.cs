@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
@@ -36,7 +35,7 @@ namespace TileExplorer
 
         private void FrmFilter_Load(object sender, EventArgs e)
         {
-            AppSettings.LoadFormState(this, AppSettings.Default.FormStateFilter);
+            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStateFilter);
  
             UpdateSettings();
 
@@ -58,9 +57,9 @@ namespace TileExplorer
 
         private void FrmFilter_FormClosing(object sender, FormClosingEventArgs e)
         {
-            AppSettings.Default.FormStateFilter = AppSettings.SaveFormState(this);
+            AppSettings.Local.Default.FormStateFilter = AppSettings.Local.SaveFormState(this);
 
-            AppSettings.Save();
+            AppSettings.LocalSave();
         }
 
         private void FrmFilter_FormClosed(object sender, FormClosedEventArgs e)
@@ -145,10 +144,10 @@ namespace TileExplorer
 
         public void UpdateSettings()
         {
-            dtpDay.CustomFormat = AppSettings.Default.FormatDate;
+            dtpDay.CustomFormat = AppSettings.Roaming.Default.FormatDate;
 
-            dtpDateFrom.CustomFormat = AppSettings.Default.FormatDate;
-            dtpDateTo.CustomFormat = AppSettings.Default.FormatDate;
+            dtpDateFrom.CustomFormat = AppSettings.Roaming.Default.FormatDate;
+            dtpDateTo.CustomFormat = AppSettings.Roaming.Default.FormatDate;
         }
 
         public Task UpdateDataAsync()

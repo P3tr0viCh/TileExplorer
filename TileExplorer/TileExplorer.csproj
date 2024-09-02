@@ -114,6 +114,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppSettings.Local.cs" />
+    <Compile Include="AppSettings.Roaming.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="FrmBackup.cs">

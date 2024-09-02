@@ -38,7 +38,7 @@ namespace TileExplorer
         {
             MainForm.ChildFormOpened(this);
 
-            AppSettings.LoadFormState(this, AppSettings.Default.FormStateTracksTree);
+            AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateTracksTree);
 
             UpdateSettings();
 
@@ -50,9 +50,9 @@ namespace TileExplorer
 
         private void FrmTracksTree_FormClosing(object sender, FormClosingEventArgs e)
         {
-            AppSettings.Default.FormStateTracksTree = AppSettings.SaveFormState(this);
+            AppSettings.Local.Default.FormStateTracksTree = AppSettings.SaveFormState(this);
 
-            AppSettings.Save();
+            AppSettings.LocalSave();
         }
 
         private void FrmTracksTree_FormClosed(object sender, FormClosedEventArgs e)

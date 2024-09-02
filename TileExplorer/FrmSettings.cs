@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using TileExplorer.Properties;
-using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
@@ -20,13 +19,13 @@ namespace TileExplorer
             {
                 AppSettings.Save();
 
-                AppSettings.LoadFormState(frm, AppSettings.Default.FormStateSettings);
+                AppSettings.LoadFormState(frm, AppSettings.Local.Default.FormStateSettings);
 
-                frm.propertyGrid.SelectedObject = AppSettings.Default;
+                frm.propertyGrid.SelectedObject = new AppSettings();
 
                 if (frm.ShowDialog(owner) == DialogResult.OK)
                 {
-                    AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(frm);
+                    AppSettings.Local.Default.FormStateSettings = AppSettings.SaveFormState(frm);
 
                     AppSettings.Save();
 
@@ -36,7 +35,7 @@ namespace TileExplorer
                 {
                     AppSettings.Load();
 
-                    AppSettings.Default.FormStateSettings = AppSettings.SaveFormState(frm);
+                    AppSettings.Local.Default.FormStateSettings = AppSettings.SaveFormState(frm);
 
                     return false;
                 }
@@ -56,7 +55,7 @@ namespace TileExplorer
 
         private void BtnOk_Click(object sender, EventArgs e)
         {
-            if (CheckDirectory(AppSettings.Default.DatabaseHome))
+            if (CheckDirectory(AppSettings.Local.Default.DatabaseHome))
             {
                 DialogResult = DialogResult.OK;
             }

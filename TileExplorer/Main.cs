@@ -42,14 +42,21 @@ namespace TileExplorer
 
             statusStripPresenter = new StatusStripPresenter(this);
 
-            AppSettings.Directory =
 #if DEBUG
-                 Files.ExecutableDirectory();
+            AppSettings.Local.Directory = Files.ExecutableDirectory();
+            AppSettings.Local.FileName = Path.Combine(AppSettings.Local.Directory,
+                 Path.ChangeExtension(Files.ExecutableName(), ".Local.config"));
+
+            AppSettings.Roaming.Directory = Files.ExecutableDirectory();
+            AppSettings.Roaming.FileName = Path.Combine(AppSettings.Roaming.Directory,
+                Path.ChangeExtension(Files.ExecutableName(), ".Roaming.config"));
 #else
-                Files.AppDataDirectory();
+            AppSettings.Local.Directory = Files.AppDataLocalDirectory();
+            AppSettings.Roaming.Directory = Files.AppDataRoamingDirectory();
 #endif
 
-            DebugWrite.Line("Settings: " + AppSettings.FilePath, "Main");
+            DebugWrite.Line("Settings Local: " + AppSettings.Local.FilePath, "Main");
+            DebugWrite.Line("Settings Roaming: " + AppSettings.Roaming.FilePath, "Main");
         }
 
         private void Filter_OnChanged()
@@ -75,7 +82,7 @@ namespace TileExplorer
 
         private void Main_Load(object sender, EventArgs e)
         {
-            AppSettingsLoad();
+            AppSettings.Load();
 
             GMapLoad();
 
@@ -87,10 +94,10 @@ namespace TileExplorer
                 return;
             }
 
-            Database.Filter.Default.Day = AppSettings.Default.Filter.Day;
-            Database.Filter.Default.DateFrom = AppSettings.Default.Filter.DateFrom;
-            Database.Filter.Default.DateTo = AppSettings.Default.Filter.DateTo;
-            Database.Filter.Default.Years = AppSettings.Default.Filter.Years;
+            Database.Filter.Default.Day = AppSettings.Local.Default.Filter.Day;
+            Database.Filter.Default.DateFrom = AppSettings.Local.Default.Filter.DateFrom;
+            Database.Filter.Default.DateTo = AppSettings.Local.Default.Filter.DateTo;
+            Database.Filter.Default.Years = AppSettings.Local.Default.Filter.Years;
 
             Database.Filter.Default.OnChanged += Filter_OnChanged;
 
@@ -98,7 +105,7 @@ namespace TileExplorer
 
             UpdateApp.Default.StatusChanged += UpdateApp_StatusChanged;
 
-            AppSettings.LoadFormState(this, AppSettings.Default.FormStateMain);
+            AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateMain);
 
 #if DEBUG && DUMMY_TILES
             DummyTiles();
@@ -108,50 +115,50 @@ namespace TileExplorer
             miMapTileAdd.Visible = false;
             miMapTileDelete.Visible = false;
 #endif
-            miMainShowGrid.Checked = AppSettings.Default.VisibleGrid;
-            miMainShowTiles.Checked = AppSettings.Default.VisibleTiles;
-            miMainShowTracks.Checked = AppSettings.Default.VisibleTracks;
-            miMainShowMarkers.Checked = AppSettings.Default.VisibleMarkers;
+            miMainShowGrid.Checked = AppSettings.Local.Default.VisibleGrid;
+            miMainShowTiles.Checked = AppSettings.Local.Default.VisibleTiles;
+            miMainShowTracks.Checked = AppSettings.Local.Default.VisibleTracks;
+            miMainShowMarkers.Checked = AppSettings.Local.Default.VisibleMarkers;
 
-            miMainGrayScale.Checked = AppSettings.Default.MapGrayScale;
+            miMainGrayScale.Checked = AppSettings.Local.Default.MapGrayScale;
             gMapControl.GrayScaleMode = miMainGrayScale.Checked;
 
             gridOverlay.IsVisibile = miMainShowGrid.Checked;
             tracksOverlay.IsVisibile = miMainShowTracks.Checked;
             markersOverlay.IsVisibile = miMainShowMarkers.Checked;
 
-            miMainLeftPanel.Checked = AppSettings.Default.VisibleLeftPanel;
+            miMainLeftPanel.Checked = AppSettings.Local.Default.VisibleLeftPanel;
             toolStripContainer.LeftToolStripPanelVisible = miMainLeftPanel.Checked;
 
             StartUpdateGrid();
 
             var starting = ProgramStatus.Start(Status.Starting);
 
-            if (AppSettings.Default.VisibleResultYears)
+            if (AppSettings.Local.Default.VisibleResultYears)
             {
                 ShowChildForm(ChildFormType.ResultYears, true);
             }
-            if (AppSettings.Default.VisibleResultEquipments)
+            if (AppSettings.Local.Default.VisibleResultEquipments)
             {
                 ShowChildForm(ChildFormType.ResultEquipments, true);
             }
-            if (AppSettings.Default.VisibleTrackList)
+            if (AppSettings.Local.Default.VisibleTrackList)
             {
                 ShowChildForm(ChildFormType.TrackList, true);
             }
-            if (AppSettings.Default.VisibleMarkerList)
+            if (AppSettings.Local.Default.VisibleMarkerList)
             {
                 ShowChildForm(ChildFormType.MarkerList, true);
             }
-            if (AppSettings.Default.VisibleEquipmentList)
+            if (AppSettings.Local.Default.VisibleEquipmentList)
             {
                 ShowChildForm(ChildFormType.EquipmentList, true);
             }
-            if (AppSettings.Default.VisibleFilter)
+            if (AppSettings.Local.Default.VisibleFilter)
             {
                 ShowChildForm(ChildFormType.Filter, true);
             }
-            if (AppSettings.Default.VisibleTracksTree)
+            if (AppSettings.Local.Default.VisibleTracksTree)
             {
                 ShowChildForm(ChildFormType.TracksTree, true);
             }
@@ -185,48 +192,34 @@ namespace TileExplorer
 
             FullScreen = false;
 
-            AppSettings.Default.FormStateMain = AppSettings.SaveFormState(this);
+            AppSettings.Local.Default.FormStateMain = AppSettings.SaveFormState(this);
 
-            AppSettings.Default.MapGrayScale = miMainGrayScale.Checked;
+            AppSettings.Local.Default.MapGrayScale = miMainGrayScale.Checked;
 
-            AppSettings.Default.VisibleGrid = miMainShowGrid.Checked;
-            AppSettings.Default.VisibleTiles = miMainShowTiles.Checked;
-            AppSettings.Default.VisibleTracks = miMainShowTracks.Checked;
-            AppSettings.Default.VisibleMarkers = miMainShowMarkers.Checked;
+            AppSettings.Local.Default.VisibleGrid = miMainShowGrid.Checked;
+            AppSettings.Local.Default.VisibleTiles = miMainShowTiles.Checked;
+            AppSettings.Local.Default.VisibleTracks = miMainShowTracks.Checked;
+            AppSettings.Local.Default.VisibleMarkers = miMainShowMarkers.Checked;
 
-            AppSettings.Default.VisibleFilter = ChildFormMenuItemState(ChildFormType.Filter).Checked;
+            AppSettings.Local.Default.VisibleFilter = ChildFormMenuItemState(ChildFormType.Filter).Checked;
 
-            AppSettings.Default.VisibleResultYears = ChildFormMenuItemState(ChildFormType.ResultYears).Checked;
-            AppSettings.Default.VisibleResultEquipments = ChildFormMenuItemState(ChildFormType.ResultEquipments).Checked;
+            AppSettings.Local.Default.VisibleResultYears = ChildFormMenuItemState(ChildFormType.ResultYears).Checked;
+            AppSettings.Local.Default.VisibleResultEquipments = ChildFormMenuItemState(ChildFormType.ResultEquipments).Checked;
 
-            AppSettings.Default.VisibleTrackList = ChildFormMenuItemState(ChildFormType.TrackList).Checked;
-            AppSettings.Default.VisibleMarkerList = ChildFormMenuItemState(ChildFormType.MarkerList).Checked;
-            AppSettings.Default.VisibleEquipmentList = ChildFormMenuItemState(ChildFormType.EquipmentList).Checked;
+            AppSettings.Local.Default.VisibleTrackList = ChildFormMenuItemState(ChildFormType.TrackList).Checked;
+            AppSettings.Local.Default.VisibleMarkerList = ChildFormMenuItemState(ChildFormType.MarkerList).Checked;
+            AppSettings.Local.Default.VisibleEquipmentList = ChildFormMenuItemState(ChildFormType.EquipmentList).Checked;
 
-            AppSettings.Default.VisibleTracksTree = ChildFormMenuItemState(ChildFormType.TracksTree).Checked;
+            AppSettings.Local.Default.VisibleTracksTree = ChildFormMenuItemState(ChildFormType.TracksTree).Checked;
 
-            AppSettings.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
+            AppSettings.Local.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
 
-            AppSettings.Default.Filter.Day = Database.Filter.Default.Day;
-            AppSettings.Default.Filter.DateFrom = Database.Filter.Default.DateFrom;
-            AppSettings.Default.Filter.DateTo = Database.Filter.Default.DateTo;
-            AppSettings.Default.Filter.Years = Database.Filter.Default.Years;
+            AppSettings.Local.Default.Filter.Day = Database.Filter.Default.Day;
+            AppSettings.Local.Default.Filter.DateFrom = Database.Filter.Default.DateFrom;
+            AppSettings.Local.Default.Filter.DateTo = Database.Filter.Default.DateTo;
+            AppSettings.Local.Default.Filter.Years = Database.Filter.Default.Years;
 
-            AppSettingsSave();
-        }
-
-        public void AppSettingsLoad()
-        {
-            if (AppSettings.Load()) return;
-
-            DebugWrite.Error(AppSettings.LastError);
-        }
-
-        public void AppSettingsSave()
-        {
-            if (AppSettings.Save()) return;
-
-            DebugWrite.Error(AppSettings.LastError);
+            AppSettings.LocalSave();
         }
 
         private void GMapLoad()
@@ -238,7 +231,7 @@ namespace TileExplorer
             DebugWrite.Line("useragent: " + GMap.NET.MapProviders.GMapProvider.UserAgent);
 
             gMapControl.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
-            gMapControl.MapProvider.RefererUrl = AppSettings.Default.MapRefererUrl;
+            gMapControl.MapProvider.RefererUrl = Const.MAP_REFERER_URL;
 
             gMapControl.ShowCenter = false;
 
@@ -247,19 +240,7 @@ namespace TileExplorer
 
             HomeGoto();
 
-            switch (AppSettings.Default.MouseWheelZoomType)
-            {
-                case 0:
-                    gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
-                    break;
-                case 1:
-                default:
-                    gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
-                    break;
-                case 2:
-                    gMapControl.MouseWheelZoomType = MouseWheelZoomType.ViewCenter;
-                    break;
-            }
+            gMapControl.MouseWheelZoomType = AppSettings.Roaming.Default.MouseWheelZoomType;
 
             gMapControl.CanDragMap = true;
             gMapControl.DragButton = MouseButtons.Left;
@@ -287,7 +268,7 @@ namespace TileExplorer
         {
             statusStripPresenter.Zoom = gMapControl.Zoom;
 
-            miMainSaveTileBoundaryToFile.Enabled = gMapControl.Zoom >= AppSettings.Default.SaveOsmTileMinZoom;
+            miMainSaveTileBoundaryToFile.Enabled = gMapControl.Zoom >= AppSettings.Roaming.Default.SaveOsmTileMinZoom;
 
             StartUpdateGrid();
         }
@@ -855,15 +836,15 @@ namespace TileExplorer
 
         private void HomeGoto()
         {
-            gMapControl.Zoom = AppSettings.Default.HomeZoom;
-            gMapControl.Position = new PointLatLng(AppSettings.Default.HomeLat, AppSettings.Default.HomeLng);
+            gMapControl.Zoom = AppSettings.Local.Default.HomeZoom;
+            gMapControl.Position = new PointLatLng(AppSettings.Local.Default.HomeLat, AppSettings.Local.Default.HomeLng);
         }
 
         private void HomeSave()
         {
-            AppSettings.Default.HomeZoom = (int)gMapControl.Zoom;
-            AppSettings.Default.HomeLat = gMapControl.Position.Lat;
-            AppSettings.Default.HomeLng = gMapControl.Position.Lng;
+            AppSettings.Local.Default.HomeZoom = (int)gMapControl.Zoom;
+            AppSettings.Local.Default.HomeLat = gMapControl.Position.Lat;
+            AppSettings.Local.Default.HomeLng = gMapControl.Position.Lng;
         }
 
         private void MiMainHomeGoto_Click(object sender, EventArgs e)
@@ -1648,7 +1629,7 @@ namespace TileExplorer
         {
             timerMapMove.Stop();
 
-            if (gMapControl.Zoom < AppSettings.Default.SaveOsmTileMinZoom || !miMainShowGrid.Checked)
+            if (gMapControl.Zoom < AppSettings.Roaming.Default.SaveOsmTileMinZoom || !miMainShowGrid.Checked)
             {
                 gridOverlay.IsVisibile = false;
 
@@ -1705,13 +1686,13 @@ namespace TileExplorer
 
         private bool SetDatabaseFileName()
         {
-            var databaseHome = AppSettings.Default.DatabaseHome;
+            var databaseHome = AppSettings.Local.Default.DatabaseHome;
 
             var defaultDatabaseHome =
 #if DEBUG
                 Files.ExecutableDirectory();
 #else
-                Files.AppDataDirectory();
+                Files.AppDataRoamingDirectory();
 #endif
             if (databaseHome.IsEmpty())
             {
@@ -1724,7 +1705,8 @@ namespace TileExplorer
 
                 if (Msg.Question(Resources.ErrorDatabaseDirectoryNotExists, databaseHome, defaultDatabaseHome))
                 {
-                    AppSettings.Default.DatabaseHome = string.Empty;
+                    AppSettings.Local.Default.DatabaseHome = string.Empty;
+
                     return SetDatabaseFileName();
                 }
 
@@ -1742,7 +1724,7 @@ namespace TileExplorer
 
         private async void ShowSettingsAsync()
         {
-            int TrackMinDistancePoint = AppSettings.Default.TrackMinDistancePoint;
+            int TrackMinDistancePoint = AppSettings.Roaming.Default.TrackMinDistancePoint;
 
             if (FrmSettings.ShowDlg(this))
             {
@@ -1762,7 +1744,7 @@ namespace TileExplorer
                     }
                 }
 
-                if (TrackMinDistancePoint != AppSettings.Default.TrackMinDistancePoint)
+                if (TrackMinDistancePoint != AppSettings.Roaming.Default.TrackMinDistancePoint)
                 {
                     if (Msg.Question(Resources.QuestionUpdateTrackMinDistancePoint))
                     {
@@ -1922,16 +1904,16 @@ namespace TileExplorer
         private void UpdateCopyCoords()
         {
             miMapCopyCoordsFloatLat.Text =
-                MenuPopupPointLatLng.Lat.ToString(AppSettings.Default.FormatLatLng);
+                MenuPopupPointLatLng.Lat.ToString(AppSettings.Roaming.Default.FormatLatLng);
             miMapCopyCoordsFloatLng.Text =
-                MenuPopupPointLatLng.Lng.ToString(AppSettings.Default.FormatLatLng);
+                MenuPopupPointLatLng.Lng.ToString(AppSettings.Roaming.Default.FormatLatLng);
             miMapCopyCoordsFloat.Text = miMapCopyCoordsFloatLat.Text + ", " +
                 miMapCopyCoordsFloatLng.Text;
 
             miMapCopyCoordsFloat2Lat.Text =
-                MenuPopupPointLatLng.Lat.ToString(AppSettings.Default.FormatLatLng, CultureInfo.InvariantCulture);
+                MenuPopupPointLatLng.Lat.ToString(AppSettings.Roaming.Default.FormatLatLng, CultureInfo.InvariantCulture);
             miMapCopyCoordsFloat2Lng.Text =
-                MenuPopupPointLatLng.Lng.ToString(AppSettings.Default.FormatLatLng, CultureInfo.InvariantCulture);
+                MenuPopupPointLatLng.Lng.ToString(AppSettings.Roaming.Default.FormatLatLng, CultureInfo.InvariantCulture);
             miMapCopyCoordsFloat2.Text = miMapCopyCoordsFloat2Lat.Text + " " +
                 miMapCopyCoordsFloat2Lng.Text;
         }
@@ -1994,7 +1976,7 @@ namespace TileExplorer
             {
                 var backup = new Backup
                 {
-                    Settings = AppSettings.Default.BackupSettings
+                    Settings = AppSettings.Local.Default.BackupSettings
                 };
 
                 await backup.SaveAsync();

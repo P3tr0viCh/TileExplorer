@@ -181,11 +181,11 @@ namespace TileExplorer
                                 xml.WriteAttributeString("ref", "-" + way.NodeId2);
                                 xml.WriteEndElement();
 
-                                if (!AppSettings.Default.OsmTileKey.IsEmpty())
+                                if (!AppSettings.Roaming.Default.OsmTileKey.IsEmpty())
                                 {
                                     xml.WriteStartElement("tag");
-                                    xml.WriteAttributeString("k", AppSettings.Default.OsmTileKey);
-                                    xml.WriteAttributeString("v", AppSettings.Default.OsmTileValue);
+                                    xml.WriteAttributeString("k", AppSettings.Roaming.Default.OsmTileKey);
+                                    xml.WriteAttributeString("v", AppSettings.Roaming.Default.OsmTileValue);
                                     xml.WriteEndElement();
                                 }
                             }

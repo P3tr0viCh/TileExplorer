@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -15,8 +16,11 @@ namespace TileExplorer
 {
     public partial class Main
     {
-        private bool ShowSaveFileDialog(SaveFileDialogType type)
+        private bool ShowSaveFileDialog(SaveFileDialogType type, string initialDirectory)
         {
+            saveFileDialog.FileName = string.Empty;
+            saveFileDialog.InitialDirectory = initialDirectory;
+
             switch (type)
             {
                 case SaveFileDialogType.Png:
@@ -79,7 +83,9 @@ namespace TileExplorer
         {
             try
             {
-                if (!ShowSaveFileDialog(SaveFileDialogType.Png)) return;
+                if (!ShowSaveFileDialog(SaveFileDialogType.Png, AppSettings.Local.Default.DirectoryMapImage)) return;
+
+                AppSettings.Local.Default.DirectoryMapImage = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                 SaveToImage(saveFileDialog.FileName);
             }
@@ -110,7 +116,9 @@ namespace TileExplorer
 
                 try
                 {
-                    if (!ShowSaveFileDialog(SaveFileDialogType.Osm)) return;
+                    if (!ShowSaveFileDialog(SaveFileDialogType.Osm, AppSettings.Local.Default.DirectoryTileBoundary)) return;
+
+                    AppSettings.Local.Default.DirectoryTileBoundary = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                     Utils.Osm.SaveTilesToFile(saveFileDialog.FileName, tiles);
                 }
@@ -145,9 +153,11 @@ namespace TileExplorer
 
             try
             {
-                saveFileDialog.FileName = AppSettings.Default.TileStatusFileWptType;
+                saveFileDialog.FileName = AppSettings.Roaming.Default.TileStatusFileWptType;
 
-                if (!ShowSaveFileDialog(SaveFileDialogType.Gpx)) return;
+                if (!ShowSaveFileDialog(SaveFileDialogType.Gpx, AppSettings.Local.Default.DirectoryTileStatus)) return;
+                
+                AppSettings.Local.Default.DirectoryTileStatus = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                 Utils.Gpx.SaveTileStatusToFile(saveFileDialog.FileName, boudaryTiles);
             }

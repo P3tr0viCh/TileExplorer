@@ -3,7 +3,6 @@ using GMap.NET.WindowsForms;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
@@ -45,23 +44,23 @@ namespace TileExplorer
             Size = new Size(DEFAULT_SIZE, DEFAULT_SIZE);
             Offset = new Point(-DEFAULT_SIZE / 2, -DEFAULT_SIZE / 2);
 
-            DefaultStroke = new Pen(Color.FromArgb(AppSettings.Default.ColorMarkerLineAlpha, AppSettings.Default.ColorMarkerLine))
+            DefaultStroke = new Pen(Color.FromArgb(AppSettings.Roaming.Default.ColorMarkerLineAlpha, AppSettings.Roaming.Default.ColorMarkerLine))
             {
-                Width = AppSettings.Default.WidthMarkerLine,
+                Width = AppSettings.Roaming.Default.WidthMarkerLine,
                 LineJoin = LineJoin.Round,
                 StartCap = LineCap.RoundAnchor
             };
 
-            DefaultSelectedStroke = new Pen(Color.FromArgb(AppSettings.Default.ColorMarkerSelectedLineAlpha, AppSettings.Default.ColorMarkerSelectedLine))
+            DefaultSelectedStroke = new Pen(Color.FromArgb(AppSettings.Roaming.Default.ColorMarkerSelectedLineAlpha, AppSettings.Roaming.Default.ColorMarkerSelectedLine))
             {
-                Width = AppSettings.Default.WidthMarkerLineSelected,
+                Width = AppSettings.Roaming.Default.WidthMarkerLineSelected,
                 LineJoin = LineJoin.Round,
                 StartCap = LineCap.RoundAnchor
             };
 
-            DefaultFill = new SolidBrush(Color.FromArgb(AppSettings.Default.ColorMarkerFillAlpha, AppSettings.Default.ColorMarkerFill));
+            DefaultFill = new SolidBrush(Color.FromArgb(AppSettings.Roaming.Default.ColorMarkerFillAlpha, AppSettings.Roaming.Default.ColorMarkerFill));
 
-            DefaultSelectedFill = new SolidBrush(Color.FromArgb(AppSettings.Default.ColorMarkerSelectedFillAlpha, AppSettings.Default.ColorMarkerSelectedFill));
+            DefaultSelectedFill = new SolidBrush(Color.FromArgb(AppSettings.Roaming.Default.ColorMarkerSelectedFillAlpha, AppSettings.Roaming.Default.ColorMarkerSelectedFill));
 
             ToolTip = new MapItemMarkerToolTip(this);
 

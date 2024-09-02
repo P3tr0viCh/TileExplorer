@@ -1,8 +1,6 @@
 ﻿using GMap.NET.WindowsForms;
 using System;
 using System.Drawing;
-using System.Linq;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
@@ -24,11 +22,11 @@ namespace TileExplorer
         {
             item = new MapItem<Models.Track>(this, track);
 
-            DefaultStroke.Color = Color.FromArgb(AppSettings.Default.ColorTrackAlpha, AppSettings.Default.ColorTrack);
-            DefaultStroke.Width = AppSettings.Default.WidthTrack;
+            DefaultStroke.Color = Color.FromArgb(AppSettings.Roaming.Default.ColorTrackAlpha, AppSettings.Roaming.Default.ColorTrack);
+            DefaultStroke.Width = AppSettings.Roaming.Default.WidthTrack;
 
-            DefaultSelectedStroke = new Pen(Color.FromArgb(AppSettings.Default.ColorTrackSelectedAlpha,
-                AppSettings.Default.ColorTrackSelected), AppSettings.Default.WidthTrackSelected);
+            DefaultSelectedStroke = new Pen(Color.FromArgb(AppSettings.Roaming.Default.ColorTrackSelectedAlpha,
+                AppSettings.Roaming.Default.ColorTrackSelected), AppSettings.Roaming.Default.WidthTrackSelected);
 
             IsHitTestVisible = true;
 

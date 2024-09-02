@@ -81,8 +81,8 @@ namespace TileExplorer
 
                     toolStripLeft.Visible = true;
 
-                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateTrackList);
-                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsTrackList);
+                    AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateTrackList);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsTrackList);
 
                     columnFormattingIndex = new int[2];
 
@@ -120,8 +120,8 @@ namespace TileExplorer
 
                     toolStripLeft.Visible = true;
 
-                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateMarkerList);
-                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsMarkerList);
+                    AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateMarkerList);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsMarkerList);
 
                     dataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
 
@@ -135,8 +135,8 @@ namespace TileExplorer
 
                     toolStripLeft.Visible = false;
 
-                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateResultYears);
-                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsResultYears);
+                    AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateResultYears);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsResultYears);
 
                     dataGridView.Columns[nameof(ResultYears.DurationSum)].Visible = false;
 
@@ -152,8 +152,8 @@ namespace TileExplorer
 
                     toolStripLeft.Visible = false;
 
-                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateResultEquipments);
-                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsResultEquipments);
+                    AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateResultEquipments);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsResultEquipments);
 
                     dataGridView.Columns[nameof(ResultEquipments.DurationSum)].Visible = false;
 
@@ -169,8 +169,8 @@ namespace TileExplorer
 
                     toolStripLeft.Visible = true;
 
-                    AppSettings.LoadFormState(this, AppSettings.Default.FormStateEquipmentList);
-                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Default.ColumnsEquipmentList);
+                    AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateEquipmentList);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsEquipmentList);
 
                     dataGridView.Columns[nameof(Equipment.Name)].Visible = false;
 
@@ -202,35 +202,35 @@ namespace TileExplorer
             switch (ChildFormType)
             {
                 case ChildFormType.TrackList:
-                    AppSettings.Default.FormStateTrackList = AppSettings.SaveFormState(this);
-                    AppSettings.Default.ColumnsTrackList = AppSettings.SaveDataGridColumns(dataGridView);
+                    AppSettings.Local.Default.FormStateTrackList = AppSettings.SaveFormState(this);
+                    AppSettings.Local.Default.ColumnsTrackList = AppSettings.SaveDataGridColumns(dataGridView);
 
                     break;
                 case ChildFormType.MarkerList:
-                    AppSettings.Default.FormStateMarkerList = AppSettings.SaveFormState(this);
-                    AppSettings.Default.ColumnsMarkerList = AppSettings.SaveDataGridColumns(dataGridView);
+                    AppSettings.Local.Default.FormStateMarkerList = AppSettings.SaveFormState(this);
+                    AppSettings.Local.Default.ColumnsMarkerList = AppSettings.SaveDataGridColumns(dataGridView);
 
                     break;
                 case ChildFormType.ResultYears:
-                    AppSettings.Default.FormStateResultYears = AppSettings.SaveFormState(this);
-                    AppSettings.Default.ColumnsResultYears = AppSettings.SaveDataGridColumns(dataGridView);
+                    AppSettings.Local.Default.FormStateResultYears = AppSettings.SaveFormState(this);
+                    AppSettings.Local.Default.ColumnsResultYears = AppSettings.SaveDataGridColumns(dataGridView);
 
                     break;
                 case ChildFormType.ResultEquipments:
-                    AppSettings.Default.FormStateResultEquipments = AppSettings.SaveFormState(this);
-                    AppSettings.Default.ColumnsResultEquipments = AppSettings.SaveDataGridColumns(dataGridView);
+                    AppSettings.Local.Default.FormStateResultEquipments = AppSettings.SaveFormState(this);
+                    AppSettings.Local.Default.ColumnsResultEquipments = AppSettings.SaveDataGridColumns(dataGridView);
 
                     break;
                 case ChildFormType.EquipmentList:
-                    AppSettings.Default.FormStateEquipmentList = AppSettings.SaveFormState(this);
-                    AppSettings.Default.ColumnsEquipmentList = AppSettings.SaveDataGridColumns(dataGridView);
+                    AppSettings.Local.Default.FormStateEquipmentList = AppSettings.SaveFormState(this);
+                    AppSettings.Local.Default.ColumnsEquipmentList = AppSettings.SaveDataGridColumns(dataGridView);
 
                     break;
                 default:
                     throw new NotImplementedException();
             }
 
-            AppSettings.Save();
+            AppSettings.LocalSave();
         }
 
         private void FrmListNew_FormClosed(object sender, FormClosedEventArgs e)

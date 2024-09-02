@@ -49,6 +49,7 @@
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.Size = new System.Drawing.Size(384, 313);
             this.propertyGrid.TabIndex = 19;
+            this.propertyGrid.ToolbarVisible = false;
             // 
             // panelBottom
             // 

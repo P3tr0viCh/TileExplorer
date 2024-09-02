@@ -2,7 +2,6 @@
 using GMap.NET.WindowsForms;
 using System.Collections.Generic;
 using System.Drawing;
-using TileExplorer.Properties;
 using static TileExplorer.Database;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
@@ -43,28 +42,28 @@ namespace TileExplorer
             
             if (Selected)
             {
-                colorFill = Color.FromArgb(AppSettings.Default.ColorTileTrackSelectedAlpha, AppSettings.Default.ColorTileTrackSelected);
-                colorStroke = Color.FromArgb(AppSettings.Default.ColorTileTrackSelectedLineAlpha, AppSettings.Default.ColorTileTrackSelected);
+                colorFill = Color.FromArgb(AppSettings.Roaming.Default.ColorTileTrackSelectedAlpha, AppSettings.Roaming.Default.ColorTileTrackSelected);
+                colorStroke = Color.FromArgb(AppSettings.Roaming.Default.ColorTileTrackSelectedLineAlpha, AppSettings.Roaming.Default.ColorTileTrackSelected);
             }
             else
             {
                 switch (Model.Status)
                 {
                     case TileStatus.Visited:
-                        colorFill = Color.FromArgb(AppSettings.Default.ColorTileVisitedAlpha, AppSettings.Default.ColorTileVisited);
-                        colorStroke = Color.FromArgb(AppSettings.Default.ColorTileVisitedLineAlpha, AppSettings.Default.ColorTileVisited);
+                        colorFill = Color.FromArgb(AppSettings.Roaming.Default.ColorTileVisitedAlpha, AppSettings.Roaming.Default.ColorTileVisited);
+                        colorStroke = Color.FromArgb(AppSettings.Roaming.Default.ColorTileVisitedLineAlpha, AppSettings.Roaming.Default.ColorTileVisited);
                         break;
                     case TileStatus.Cluster:
-                        colorFill = Color.FromArgb(AppSettings.Default.ColorTileClusterAlpha, AppSettings.Default.ColorTileCluster);
-                        colorStroke = Color.FromArgb(AppSettings.Default.ColorTileClusterLineAlpha, AppSettings.Default.ColorTileCluster);
+                        colorFill = Color.FromArgb(AppSettings.Roaming.Default.ColorTileClusterAlpha, AppSettings.Roaming.Default.ColorTileCluster);
+                        colorStroke = Color.FromArgb(AppSettings.Roaming.Default.ColorTileClusterLineAlpha, AppSettings.Roaming.Default.ColorTileCluster);
                         break;
                     case TileStatus.MaxCluster:
-                        colorFill = Color.FromArgb(AppSettings.Default.ColorTileMaxClusterAlpha, AppSettings.Default.ColorTileMaxCluster);
-                        colorStroke = Color.FromArgb(AppSettings.Default.ColorTileMaxClusterLineAlpha, AppSettings.Default.ColorTileMaxCluster);
+                        colorFill = Color.FromArgb(AppSettings.Roaming.Default.ColorTileMaxClusterAlpha, AppSettings.Roaming.Default.ColorTileMaxCluster);
+                        colorStroke = Color.FromArgb(AppSettings.Roaming.Default.ColorTileMaxClusterLineAlpha, AppSettings.Roaming.Default.ColorTileMaxCluster);
                         break;
                     case TileStatus.MaxSquare:
-                        colorFill = Color.FromArgb(AppSettings.Default.ColorTileMaxSquareAlpha, AppSettings.Default.ColorTileMaxSquare);
-                        colorStroke = Color.FromArgb(AppSettings.Default.ColorTileMaxSquareLineAlpha, AppSettings.Default.ColorTileMaxSquare);
+                        colorFill = Color.FromArgb(AppSettings.Roaming.Default.ColorTileMaxSquareAlpha, AppSettings.Roaming.Default.ColorTileMaxSquare);
+                        colorStroke = Color.FromArgb(AppSettings.Roaming.Default.ColorTileMaxSquareLineAlpha, AppSettings.Roaming.Default.ColorTileMaxSquare);
                         break;
                     default:
                         colorFill = Color.Empty;

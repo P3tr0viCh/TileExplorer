@@ -31,7 +31,7 @@ namespace TileExplorer
                         xml.WriteAttributeString("version", "1.6");
                         xml.WriteAttributeString("creator", AssemblyNameAndVersion());
                         xml.WriteAttributeString("xmlns", "http://www.topografix.com/GPX/1/1");
-                        if (AppSettings.Default.TileStatusFileUseOsmand)
+                        if (AppSettings.Roaming.Default.TileStatusFileUseOsmand)
                         {
                             xml.WriteAttributeString("xmlns:osmand", "https://osmand.net");
                         }
@@ -65,18 +65,18 @@ namespace TileExplorer
 
                         xml.WriteElementString("time", now);
 
-                        if (!AppSettings.Default.TileStatusFileWptType.IsEmpty())
+                        if (!AppSettings.Roaming.Default.TileStatusFileWptType.IsEmpty())
                         {
-                            xml.WriteElementString("type", AppSettings.Default.TileStatusFileWptType);
+                            xml.WriteElementString("type", AppSettings.Roaming.Default.TileStatusFileWptType);
                         }
 
-                        if (AppSettings.Default.TileStatusFileUseOsmand)
+                        if (AppSettings.Roaming.Default.TileStatusFileUseOsmand)
                         {
                             xml.WriteStartElement("extensions");
                             {
-                                xml.WriteElementString("osmand:icon", AppSettings.Default.TileStatusFileOsmandIcon);
-                                xml.WriteElementString("osmand:background", AppSettings.Default.TileStatusFileOsmandIconBackground.ToString().ToLower());
-                                xml.WriteElementString("osmand:color", AppSettings.Default.TileStatusFileOsmandIconColor.ToHexString());
+                                xml.WriteElementString("osmand:icon", AppSettings.Roaming.Default.TileStatusFileOsmandIcon);
+                                xml.WriteElementString("osmand:background", AppSettings.Roaming.Default.TileStatusFileOsmandIconBackground.ToString().ToLower());
+                                xml.WriteElementString("osmand:color", AppSettings.Roaming.Default.TileStatusFileOsmandIconColor.ToHexString());
                             }
                             xml.WriteEndElement();
                         }
@@ -84,16 +84,16 @@ namespace TileExplorer
                         xml.WriteEndElement();
                     }
 
-                    if (AppSettings.Default.TileStatusFileUseOsmand)
+                    if (AppSettings.Roaming.Default.TileStatusFileUseOsmand)
                     {
                         xml.WriteStartElement("extensions");
                         xml.WriteStartElement("osmand:points_groups");
                         xml.WriteStartElement("group");
                         {
-                            xml.WriteAttributeString("name", AppSettings.Default.TileStatusFileWptType);
-                            xml.WriteAttributeString("icon", AppSettings.Default.TileStatusFileOsmandIcon);
-                            xml.WriteAttributeString("background", AppSettings.Default.TileStatusFileOsmandIconBackground.ToString().ToLower());
-                            xml.WriteAttributeString("color", AppSettings.Default.TileStatusFileOsmandIconColor.ToHexString());
+                            xml.WriteAttributeString("name", AppSettings.Roaming.Default.TileStatusFileWptType);
+                            xml.WriteAttributeString("icon", AppSettings.Roaming.Default.TileStatusFileOsmandIcon);
+                            xml.WriteAttributeString("background", AppSettings.Roaming.Default.TileStatusFileOsmandIconBackground.ToString().ToLower());
+                            xml.WriteAttributeString("color", AppSettings.Roaming.Default.TileStatusFileOsmandIconColor.ToHexString());
                         }
                         xml.WriteEndElement();
                         xml.WriteEndElement();

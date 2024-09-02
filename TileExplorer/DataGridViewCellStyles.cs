@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using TileExplorer.Properties;
 
 namespace TileExplorer
 {
@@ -18,7 +17,7 @@ namespace TileExplorer
         public static readonly DataGridViewCellStyle Distance = new DataGridViewCellStyle()
         {
             Alignment = DataGridViewContentAlignment.TopRight,
-            Format = AppSettings.Default.FormatDistance
+            Format = AppSettings.Roaming.Default.FormatDistance
         };
 
         public static readonly DataGridViewCellStyle Speed = new DataGridViewCellStyle()
@@ -30,25 +29,25 @@ namespace TileExplorer
         public static readonly DataGridViewCellStyle DistanceSum = new DataGridViewCellStyle()
         {
             Alignment = DataGridViewContentAlignment.TopRight,
-            Format = AppSettings.Default.FormatDistance2
+            Format = AppSettings.Roaming.Default.FormatDistance2
         };
 
         public static readonly DataGridViewCellStyle DistanceStep = new DataGridViewCellStyle()
         {
             Alignment = DataGridViewContentAlignment.TopRight,
-            Format = AppSettings.Default.FormatDistance2
+            Format = AppSettings.Roaming.Default.FormatDistance2
         };
 
         public static readonly DataGridViewCellStyle EleAscent = new DataGridViewCellStyle()
         {
             Alignment = DataGridViewContentAlignment.TopRight,
-            Format = AppSettings.Default.FormatEleAscent
+            Format = AppSettings.Roaming.Default.FormatEleAscent
         };
 
         public static readonly DataGridViewCellStyle LatLng = new DataGridViewCellStyle()
         {
             Alignment = DataGridViewContentAlignment.TopRight,
-            Format = AppSettings.Default.FormatLatLng
+            Format = AppSettings.Roaming.Default.FormatLatLng
         };
 
         public static readonly DataGridViewCellStyle DurationAsString = new DataGridViewCellStyle()
@@ -58,23 +57,23 @@ namespace TileExplorer
 
         public static readonly DataGridViewCellStyle Date = new DataGridViewCellStyle()
         {
-            Format = AppSettings.Default.FormatDate
+            Format = AppSettings.Roaming.Default.FormatDate
         };
 
         public static readonly DataGridViewCellStyle DateTime = new DataGridViewCellStyle()
         {
-            Format = AppSettings.Default.FormatDateTime
+            Format = AppSettings.Roaming.Default.FormatDateTime
         };
 
         public static void UpdateSettings()
         {
-            Distance.Format = AppSettings.Default.FormatDistance;
-            DistanceSum.Format = AppSettings.Default.FormatDistance2;
+            Distance.Format = AppSettings.Roaming.Default.FormatDistance;
+            DistanceSum.Format = AppSettings.Roaming.Default.FormatDistance2;
 
-            LatLng.Format = AppSettings.Default.FormatLatLng;
+            LatLng.Format = AppSettings.Roaming.Default.FormatLatLng;
 
-            Date.Format = AppSettings.Default.FormatDate;
-            DateTime.Format = AppSettings.Default.FormatDateTime;
+            Date.Format = AppSettings.Roaming.Default.FormatDate;
+            DateTime.Format = AppSettings.Roaming.Default.FormatDateTime;
         }
     }
 }

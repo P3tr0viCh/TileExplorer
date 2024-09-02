@@ -51,7 +51,7 @@ namespace TileExplorer
                 Owner = owner,
             })
             {
-                frm.Settings = AppSettings.Default.BackupSettings;
+                frm.Settings = AppSettings.Local.Default.BackupSettings;
 
                 return frm.ShowDialog(owner) == DialogResult.OK;
             }
@@ -128,9 +128,9 @@ namespace TileExplorer
         {
             try
             {
-                AppSettings.Default.BackupSettings = Settings;
+                AppSettings.Local.Default.BackupSettings = Settings;
 
-                AppSettings.Save();
+                AppSettings.LocalSave();
 
                 return true;
             }

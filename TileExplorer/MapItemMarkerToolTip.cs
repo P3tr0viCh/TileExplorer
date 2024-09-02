@@ -1,6 +1,5 @@
 ﻿using GMap.NET.WindowsForms;
 using System.Drawing;
-using TileExplorer.Properties;
 
 namespace TileExplorer
 {
@@ -9,12 +8,12 @@ namespace TileExplorer
         public MapItemMarkerToolTip(MapItemMarker marker) : base(marker)
         {
             ((SolidBrush)DefaultFill).Color = Color.FromArgb(
-                   AppSettings.Default.ColorMarkerTextFillAlpha, AppSettings.Default.ColorMarkerTextFill);
+                   AppSettings.Roaming.Default.ColorMarkerTextFillAlpha, AppSettings.Roaming.Default.ColorMarkerTextFill);
 
             ((SolidBrush)DefaultForeground).Color = Color.FromArgb(
-                AppSettings.Default.ColorMarkerTextAlpha, AppSettings.Default.ColorMarkerText);
+                AppSettings.Roaming.Default.ColorMarkerTextAlpha, AppSettings.Roaming.Default.ColorMarkerText);
 
-            Font = AppSettings.Default.FontMarker;
+            Font = AppSettings.Roaming.Default.FontMarker;
 
             TextPadding = new Size(4, 4);
 
