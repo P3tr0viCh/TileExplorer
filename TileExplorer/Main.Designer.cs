@@ -129,7 +129,7 @@
             this.cmTrack = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.timerMapMove = new System.Windows.Forms.Timer(this.components);
+            this.timerMapChange = new System.Windows.Forms.Timer(this.components);
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -176,6 +176,7 @@
             this.gMapControl.OnPositionChanged += new GMap.NET.PositionChanged(this.GMapControl_OnPositionChanged);
             this.gMapControl.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.GMapControl_OnMapZoomChanged);
             this.gMapControl.SizeChanged += new System.EventHandler(this.GMapControl_SizeChanged);
+            this.gMapControl.Paint += new System.Windows.Forms.PaintEventHandler(this.GMapControl_Paint);
             this.gMapControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseClick);
             this.gMapControl.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseDoubleClick);
             this.gMapControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GMapControl_MouseMove);
@@ -994,8 +995,8 @@
             // 
             // timerMapMove
             // 
-            this.timerMapMove.Interval = 222;
-            this.timerMapMove.Tick += new System.EventHandler(this.TimerMapMove_Tick);
+            this.timerMapChange.Interval = 222;
+            this.timerMapChange.Tick += new System.EventHandler(this.TimerMapChange_Tick);
             // 
             // Main
             // 
@@ -1088,7 +1089,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem miMainDataFilter;
         private System.Windows.Forms.ToolStripMenuItem miMainSaveTileBoundaryToFile;
-        private System.Windows.Forms.Timer timerMapMove;
+        private System.Windows.Forms.Timer timerMapChange;
         private System.Windows.Forms.ToolStripMenuItem miMainShowGrid;
         private System.Windows.Forms.ToolStripMenuItem miMainSettings;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;

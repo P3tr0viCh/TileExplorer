@@ -152,6 +152,7 @@
     <Compile Include="Main.ActionsSave.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MapZoomRuler.cs" />
     <Compile Include="UpdateApp.cs" />
     <Compile Include="ProgramStatus.cs" />
     <Compile Include="MapItemMarkerCross.cs" />

@@ -31,6 +31,8 @@ namespace TileExplorer
         private readonly GMapOverlay tracksOverlay = new GMapOverlay("tracks");
         private readonly GMapOverlay markersOverlay = new GMapOverlay("markers");
 
+        private readonly MapZoomRuler mapZoomRuler;
+
         private readonly StatusStripPresenter statusStripPresenter;
 
         private readonly ProgramStatus status = new ProgramStatus();
@@ -41,6 +43,8 @@ namespace TileExplorer
             InitializeComponent();
 
             statusStripPresenter = new StatusStripPresenter(this);
+
+            mapZoomRuler = new MapZoomRuler(gMapControl);
 
 #if DEBUG
             AppSettings.Local.Directory = Files.ExecutableDirectory();
@@ -250,6 +254,8 @@ namespace TileExplorer
             gMapControl.Overlays.Add(tracksOverlay);
             gMapControl.Overlays.Add(markersOverlay);
 
+            mapZoomRuler.Measure();
+
             statusStripPresenter.Zoom = gMapControl.Zoom;
             statusStripPresenter.Position = gMapControl.Position;
             statusStripPresenter.TileId = gMapControl.Position;
@@ -258,10 +264,20 @@ namespace TileExplorer
 
         private void StartUpdateGrid()
         {
-            if (!miMainShowGrid.Checked) return;
+            timerMapChange.Stop();
+            timerMapChange.Start();
+        }
 
-            timerMapMove.Stop();
-            timerMapMove.Start();
+        private void TimerMapChange_Tick(object sender, EventArgs e)
+        {
+            timerMapChange.Stop();
+
+            mapZoomRuler.Measure();
+
+            if (miMainShowGrid.Checked)
+            {
+                UpdateGrid();
+            }
         }
 
         private void GMapControl_OnMapZoomChanged()
@@ -269,6 +285,8 @@ namespace TileExplorer
             statusStripPresenter.Zoom = gMapControl.Zoom;
 
             miMainSaveTileBoundaryToFile.Enabled = gMapControl.Zoom >= AppSettings.Roaming.Default.SaveOsmTileMinZoom;
+
+            mapZoomRuler.Measure();
 
             StartUpdateGrid();
         }
@@ -1627,8 +1645,6 @@ namespace TileExplorer
 
         public void UpdateGrid()
         {
-            timerMapMove.Stop();
-
             if (gMapControl.Zoom < AppSettings.Roaming.Default.SaveOsmTileMinZoom || !miMainShowGrid.Checked)
             {
                 gridOverlay.IsVisibile = false;
@@ -1672,11 +1688,6 @@ namespace TileExplorer
 
             TileRightBottom.X = rightBottomX;
             TileRightBottom.Y = rightBottomY;
-        }
-
-        private void TimerMapMove_Tick(object sender, EventArgs e)
-        {
-            UpdateGrid();
         }
 
         private void MiMainShowGrid_Click(object sender, EventArgs e)
@@ -1998,6 +2009,11 @@ namespace TileExplorer
         private void MiMainDataBackupSave_Click(object sender, EventArgs e)
         {
             BackupSave();
+        }
+
+        private void GMapControl_Paint(object sender, PaintEventArgs e)
+        {
+            mapZoomRuler.Paint(e.Graphics);
         }
     }
 }

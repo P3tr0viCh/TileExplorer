@@ -549,6 +549,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to км.
+        /// </summary>
+        internal static string TextMapZoomRulerKM {
+            get {
+                return ResourceManager.GetString("TextMapZoomRulerKM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to м.
+        /// </summary>
+        internal static string TextMapZoomRulerM {
+            get {
+                return ResourceManager.GetString("TextMapZoomRulerM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Другое.
         /// </summary>
         internal static string TextOther {

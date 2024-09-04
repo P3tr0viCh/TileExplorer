@@ -320,4 +320,10 @@
   <data name="TitleTracksTree" xml:space="preserve">
     <value>Треки по месяцам</value>
   </data>
+  <data name="TextMapZoomRulerM" xml:space="preserve">
+    <value>м</value>
+  </data>
+  <data name="TextMapZoomRulerKM" xml:space="preserve">
+    <value>км</value>
+  </data>
 </root>
