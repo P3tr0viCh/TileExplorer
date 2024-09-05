@@ -49,6 +49,13 @@ namespace TileExplorer
             }
         }
 
+        public static void DirectoryCreate(string path)
+        {
+            DebugWrite.Line($"{path}");
+
+            Directory.CreateDirectory(path);
+        }
+
         public static void FileCopy(string sourceFileName, string destFileName)
         {
             DebugWrite.Line($"{sourceFileName} > {destFileName}");

@@ -40,6 +40,13 @@ namespace TileExplorer
 
         private BackupSettings Settings => AppSettings.Local.Default.BackupSettings;
 
+        private string GetDirectory()
+        {
+            var date = DateTime.Now.ToString("yyyy-MM-dd");
+
+            return Path.Combine(Settings.Directory, date);
+        }
+
         private string GetFileNameExt(FileType fileType)
         {
             switch (fileType)
@@ -52,7 +59,7 @@ namespace TileExplorer
 
         private string GetFileName(string fileName, FileType fileType)
         {
-            return Path.Combine(Settings.Directory, fileName + GetFileNameExt(fileType));
+            return Path.Combine(GetDirectory(), fileName + GetFileNameExt(fileType));
         }
 
         private void SaveMarkersAsGpx(List<Marker> markers)
@@ -272,7 +279,7 @@ namespace TileExplorer
                     DebugWrite.Line("save local");
 
                     Utils.FileCopy(AppSettings.Local.FilePath,
-                        Path.Combine(Settings.Directory, "Local." + Environment.MachineName + "." + Files.ExtConfig));
+                        Path.Combine(GetDirectory(), "Local." + Environment.MachineName + "." + Files.ExtConfig));
                 }
 
                 if (Settings.RoamingSettings)
@@ -280,7 +287,7 @@ namespace TileExplorer
                     DebugWrite.Line("save roaming");
 
                     Utils.FileCopy(AppSettings.Roaming.FilePath,
-                        Path.Combine(Settings.Directory, "Roaming." + Files.ExtConfig));
+                        Path.Combine(GetDirectory(), "Roaming." + Files.ExtConfig));
                 }
             });
 
@@ -289,6 +296,8 @@ namespace TileExplorer
 
         public async Task SaveAsync()
         {
+            Utils.DirectoryCreate(GetDirectory());
+
             await SaveMarkers();
             await SaveEquipments();
             await SaveSettings();
