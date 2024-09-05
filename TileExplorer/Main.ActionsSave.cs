@@ -39,6 +39,8 @@ namespace TileExplorer
 #if DEBUG
             saveFileDialog.FileName = Files.TempFileName("xxx") + "." + saveFileDialog.DefaultExt;
 
+            DebugWrite.Line(saveFileDialog.FileName);
+
             return true;
 #else
             return saveFileDialog.ShowDialog(this) == DialogResult.OK;
@@ -64,6 +66,8 @@ namespace TileExplorer
                     (toolStripContainer.ContentPanel.Height - imageSize.Height) / 2,
                     imageSize.Width,
                     imageSize.Height);
+
+                UpdateGrid();
 
                 gMapControl.ToImage().Save(fileName, ImageFormat.Png);
             }

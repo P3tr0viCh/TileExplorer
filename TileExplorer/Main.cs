@@ -254,8 +254,6 @@ namespace TileExplorer
             gMapControl.Overlays.Add(tracksOverlay);
             gMapControl.Overlays.Add(markersOverlay);
 
-            mapZoomRuler.Measure();
-
             statusStripPresenter.Zoom = gMapControl.Zoom;
             statusStripPresenter.Position = gMapControl.Position;
             statusStripPresenter.TileId = gMapControl.Position;
@@ -272,8 +270,6 @@ namespace TileExplorer
         {
             timerMapChange.Stop();
 
-            mapZoomRuler.Measure();
-
             if (miMainShowGrid.Checked)
             {
                 UpdateGrid();
@@ -285,8 +281,6 @@ namespace TileExplorer
             statusStripPresenter.Zoom = gMapControl.Zoom;
 
             miMainSaveTileBoundaryToFile.Enabled = gMapControl.Zoom >= AppSettings.Roaming.Default.SaveOsmTileMinZoom;
-
-            mapZoomRuler.Measure();
 
             StartUpdateGrid();
         }
@@ -1640,9 +1634,6 @@ namespace TileExplorer
             }
         }
 
-        private readonly Tile TileLeftTop = new Tile();
-        private readonly Tile TileRightBottom = new Tile();
-
         public void UpdateGrid()
         {
             if (gMapControl.Zoom < AppSettings.Roaming.Default.SaveOsmTileMinZoom || !miMainShowGrid.Checked)
@@ -1665,29 +1656,13 @@ namespace TileExplorer
             var rightBottomX = Utils.Osm.LngToTileX(pointRightBottom);
             var rightBottomY = Utils.Osm.LatToTileY(pointRightBottom);
 
-            foreach (var tile in gridOverlay.Polygons.Cast<MapItemTile>().
-                Where(t => t.Model.X < TileLeftTop.X || t.Model.Y < TileLeftTop.Y ||
-                    t.Model.X > TileRightBottom.X || t.Model.Y > TileRightBottom.Y).ToList())
-            {
-                gridOverlay.Polygons.Remove(tile);
-            }
+            gridOverlay.Polygons.Clear();
 
             for (var x = leftTopX; x <= rightBottomX; x++)
                 for (var y = leftTopY; y <= rightBottomY; y++)
                 {
-                    if (x >= TileLeftTop.X && x <= TileRightBottom.X && y >= TileLeftTop.Y && y <= TileRightBottom.Y) continue;
-
-                    if (tilesOverlay.Polygons.Cast<MapItemTile>().ToList().
-                        Exists(t => t.Model.X == x && t.Model.Y == y)) continue;
-
                     gridOverlay.Polygons.Add(new MapItemTile(new Tile(x, y)));
                 }
-
-            TileLeftTop.X = leftTopX;
-            TileLeftTop.Y = leftTopY;
-
-            TileRightBottom.X = rightBottomX;
-            TileRightBottom.Y = rightBottomY;
         }
 
         private void MiMainShowGrid_Click(object sender, EventArgs e)
