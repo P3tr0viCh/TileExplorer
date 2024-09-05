@@ -12,33 +12,6 @@ namespace TileExplorer
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        private readonly BackupSettings settings = new BackupSettings();
-        private BackupSettings Settings
-        {
-            get
-            {
-                return settings;
-            }
-            set
-            {
-                settings.Assign(value);
-
-                if (settings.Directory.IsEmpty())
-                {
-                    settings.Directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                }
-
-                folderBrowserDialog.SelectedPath = settings.Directory;
-
-                tbDirectory.Text = settings.Directory;
-
-                cboxMarkersExcelXml.Checked = settings.FileTypeMarkers.HasFlag(Backup.FileType.ExcelXml);
-                cboxMarkersGpx.Checked = settings.FileTypeMarkers.HasFlag(Backup.FileType.Gpx);
-
-                cboxEquipmentsExcelXml.Checked = settings.FileTypeEquipments.HasFlag(Backup.FileType.ExcelXml);
-            }
-        }
-
         public FrmBackup()
         {
             InitializeComponent();
@@ -51,9 +24,20 @@ namespace TileExplorer
                 Owner = owner,
             })
             {
-                frm.Settings = AppSettings.Local.Default.BackupSettings;
+                AppSettings.LocalSave();
 
-                return frm.ShowDialog(owner) == DialogResult.OK;
+                frm.SetData();
+
+                if (frm.ShowDialog(owner) == DialogResult.OK)
+                {
+                    return true;
+                }
+                else
+                {
+                    AppSettings.LocalLoad();
+
+                    return false;
+                }
             }
         }
 
@@ -67,6 +51,28 @@ namespace TileExplorer
             }
         }
 
+        private void SetData()
+        {
+            var settings = AppSettings.Local.Default.BackupSettings;
+
+            if (settings.Directory.IsEmpty())
+            {
+                settings.Directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
+
+            folderBrowserDialog.SelectedPath = settings.Directory;
+
+            tbDirectory.Text = settings.Directory;
+
+            cboxMarkersExcelXml.Checked = settings.Markers.HasFlag(FileType.ExcelXml);
+            cboxMarkersGpx.Checked = settings.Markers.HasFlag(FileType.Gpx);
+
+            cboxEquipmentsExcelXml.Checked = settings.Equipments.HasFlag(FileType.ExcelXml);
+
+            cboxLocalSettings.Checked = settings.LocalSettings;
+            cboxRoamingSettings.Checked = settings.RoamingSettings;
+        }
+
         private bool CheckData()
         {
             if (!Directory.Exists(tbDirectory.Text))
@@ -78,7 +84,9 @@ namespace TileExplorer
                 return false;
             }
 
-            if (!(cboxMarkersExcelXml.Checked || cboxMarkersGpx.Checked || cboxEquipmentsExcelXml.Checked))
+            if (!(cboxMarkersExcelXml.Checked || cboxMarkersGpx.Checked ||
+                cboxEquipmentsExcelXml.Checked ||
+                cboxLocalSettings.Checked || cboxRoamingSettings.Checked))
             {
                 Msg.Error(Resources.BackupErrorNothingSave);
 
@@ -90,58 +98,44 @@ namespace TileExplorer
 
         private bool UpdateData()
         {
-            try
+            var settings = AppSettings.Local.Default.BackupSettings;
+
+            settings.Directory = tbDirectory.Text;
+
+            settings.Markers = default;
+
+            if (cboxMarkersExcelXml.Checked)
             {
-                settings.Directory = tbDirectory.Text;
-
-                settings.FileTypeMarkers = default;
-
-                if (cboxMarkersExcelXml.Checked)
-                {
-                    settings.FileTypeMarkers |= Backup.FileType.ExcelXml;
-                }
-                if (cboxMarkersGpx.Checked)
-                {
-                    settings.FileTypeMarkers |= Backup.FileType.Gpx;
-                }
-
-                settings.FileTypeEquipments = default;
-
-                if (cboxEquipmentsExcelXml.Checked)
-                {
-                    settings.FileTypeEquipments |= Backup.FileType.ExcelXml;
-                }
-
-                return true;
+                settings.Markers |= FileType.ExcelXml;
             }
-            catch (Exception e)
+            if (cboxMarkersGpx.Checked)
             {
-                DebugWrite.Error(e);
-
-                Msg.Error(e.Message);
-
-                return false;
+                settings.Markers |= FileType.Gpx;
             }
+
+            settings.Equipments = default;
+
+            if (cboxEquipmentsExcelXml.Checked)
+            {
+                settings.Equipments |= FileType.ExcelXml;
+            }
+
+            settings.LocalSettings = cboxLocalSettings.Checked;
+            settings.RoamingSettings = cboxRoamingSettings.Checked;
+
+            return true;
         }
 
         private bool SaveData()
         {
-            try
+            if (!AppSettings.LocalSave())
             {
-                AppSettings.Local.Default.BackupSettings = Settings;
-
-                AppSettings.LocalSave();
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                DebugWrite.Error(e);
-
-                Msg.Error(e.Message);
+                Msg.Error(AppSettings.LastError.Message);
 
                 return false;
             }
+
+            return true;
         }
 
         private bool ApplyData()

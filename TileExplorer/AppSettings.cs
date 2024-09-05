@@ -1,4 +1,5 @@
 ﻿using P3tr0viCh.Utils;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
@@ -281,49 +282,73 @@ namespace TileExplorer
         [LocalizedAttribute.Description("TileStatusFileOsmandIconColor.Description", "Properties.Resources.Settings")]
         public Color TileStatusFileOsmandIconColor { get => Roaming.Default.TileStatusFileOsmandIconColor; set => Roaming.Default.TileStatusFileOsmandIconColor = value; }
 
+        public static Exception LastError { get; private set; } = null;
+
         // ------------------------------------------------------------------------------------------------------------
-        public static void LocalSave()
+        public static bool LocalSave()
         {
             if (!Local.Save())
             {
-                DebugWrite.Error(Local.LastError);
+                LastError = Local.LastError;
+
+                DebugWrite.Error(LastError);
+
+                return false;
             }
+
+            return true;
         }
 
-        public static void RoamingSave()
+        public static bool RoamingSave()
         {
             if (!Roaming.Save())
             {
-                DebugWrite.Error(Roaming.LastError);
+                LastError = Roaming.LastError;
+
+                DebugWrite.Error(LastError);
+
+                return false;
             }
+
+            return true;
         }
 
-        public static void Save()
+        public static bool Save()
         {
-            LocalSave();
-            RoamingSave();
+            return LocalSave() && RoamingSave();
         }
 
-        public static void LocalLoad()
+        public static bool LocalLoad()
         {
             if (!Local.Load())
             {
-                DebugWrite.Error(Local.LastError);
+                LastError = Local.LastError;
+
+                DebugWrite.Error(LastError);
+
+                return false;
             }
+
+            return true;
         }
 
-        public static void RoamingLoad()
+        public static bool RoamingLoad()
         {
             if (!Roaming.Load())
             {
-                DebugWrite.Error(Roaming.LastError);
+                LastError = Roaming.LastError;
+
+                DebugWrite.Error(LastError);
+
+                return false;
             }
+
+            return true;
         }
 
-        public static void Load()
+        public static bool Load()
         {
-            LocalLoad();
-            RoamingLoad();
+            return LocalLoad() && RoamingLoad();
         }
 
         public static Local.ColumnState[] SaveDataGridColumns(DataGridView dataGridView)

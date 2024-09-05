@@ -39,26 +39,30 @@
             this.cboxMarkersGpx = new System.Windows.Forms.CheckBox();
             this.gbEquipments = new System.Windows.Forms.GroupBox();
             this.cboxEquipmentsExcelXml = new System.Windows.Forms.CheckBox();
+            this.gbSettings = new System.Windows.Forms.GroupBox();
+            this.cboxLocalSettings = new System.Windows.Forms.CheckBox();
+            this.cboxRoamingSettings = new System.Windows.Forms.CheckBox();
             this.gbMarkers.SuspendLayout();
             this.gbEquipments.SuspendLayout();
+            this.gbSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(304, 160);
+            this.btnCancel.Location = new System.Drawing.Point(304, 248);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
-            this.btnCancel.TabIndex = 6;
+            this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(216, 160);
+            this.btnOk.Location = new System.Drawing.Point(216, 248);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
-            this.btnOk.TabIndex = 5;
+            this.btnOk.TabIndex = 6;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
@@ -140,13 +144,45 @@
             this.cboxEquipmentsExcelXml.Text = "Excel XML";
             this.cboxEquipmentsExcelXml.UseVisualStyleBackColor = true;
             // 
+            // gbSettings
+            // 
+            this.gbSettings.Controls.Add(this.cboxLocalSettings);
+            this.gbSettings.Controls.Add(this.cboxRoamingSettings);
+            this.gbSettings.Location = new System.Drawing.Point(8, 152);
+            this.gbSettings.Name = "gbSettings";
+            this.gbSettings.Size = new System.Drawing.Size(184, 88);
+            this.gbSettings.TabIndex = 5;
+            this.gbSettings.TabStop = false;
+            this.gbSettings.Text = "Настройки";
+            // 
+            // cboxLocalSettings
+            // 
+            this.cboxLocalSettings.AutoSize = true;
+            this.cboxLocalSettings.Location = new System.Drawing.Point(8, 24);
+            this.cboxLocalSettings.Name = "cboxLocalSettings";
+            this.cboxLocalSettings.Size = new System.Drawing.Size(98, 23);
+            this.cboxLocalSettings.TabIndex = 0;
+            this.cboxLocalSettings.Text = "Локальные";
+            this.cboxLocalSettings.UseVisualStyleBackColor = true;
+            // 
+            // cboxRoamingSettings
+            // 
+            this.cboxRoamingSettings.AutoSize = true;
+            this.cboxRoamingSettings.Location = new System.Drawing.Point(8, 56);
+            this.cboxRoamingSettings.Name = "cboxRoamingSettings";
+            this.cboxRoamingSettings.Size = new System.Drawing.Size(74, 23);
+            this.cboxRoamingSettings.TabIndex = 1;
+            this.cboxRoamingSettings.Text = "Общие";
+            this.cboxRoamingSettings.UseVisualStyleBackColor = true;
+            // 
             // FrmBackup
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(392, 201);
+            this.ClientSize = new System.Drawing.Size(392, 289);
+            this.Controls.Add(this.gbSettings);
             this.Controls.Add(this.gbEquipments);
             this.Controls.Add(this.gbMarkers);
             this.Controls.Add(this.lblDirectory);
@@ -168,6 +204,8 @@
             this.gbMarkers.PerformLayout();
             this.gbEquipments.ResumeLayout(false);
             this.gbEquipments.PerformLayout();
+            this.gbSettings.ResumeLayout(false);
+            this.gbSettings.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -186,5 +224,8 @@
         private System.Windows.Forms.CheckBox cboxMarkersGpx;
         private System.Windows.Forms.GroupBox gbEquipments;
         private System.Windows.Forms.CheckBox cboxEquipmentsExcelXml;
+        private System.Windows.Forms.GroupBox gbSettings;
+        private System.Windows.Forms.CheckBox cboxLocalSettings;
+        private System.Windows.Forms.CheckBox cboxRoamingSettings;
     }
 }

@@ -53,9 +53,19 @@ namespace TileExplorer
             return false;
         }
 
+        private bool CheckData()
+        {
+            if (!CheckDirectory(AppSettings.Local.Default.DatabaseHome))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private void BtnOk_Click(object sender, EventArgs e)
         {
-            if (CheckDirectory(AppSettings.Local.Default.DatabaseHome))
+            if (CheckData())
             {
                 DialogResult = DialogResult.OK;
             }

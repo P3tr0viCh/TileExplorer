@@ -376,7 +376,7 @@
             this.miMainBackupSave.Name = "miMainBackupSave";
             this.miMainBackupSave.Size = new System.Drawing.Size(133, 22);
             this.miMainBackupSave.Text = "Сохранить";
-            this.miMainBackupSave.Click += new System.EventHandler(this.MiMainDataBackupSave_Click);
+            this.miMainBackupSave.Click += new System.EventHandler(this.MiMainDataBackupSave_ClickAsync);
             // 
             // toolStripSeparator1
             // 
@@ -670,7 +670,7 @@
             this.miMainCheckUpdates.Name = "miMainCheckUpdates";
             this.miMainCheckUpdates.Size = new System.Drawing.Size(204, 22);
             this.miMainCheckUpdates.Text = "Проверить обновления";
-            this.miMainCheckUpdates.Click += new System.EventHandler(this.MiMainCheckUpdates_Click);
+            this.miMainCheckUpdates.Click += new System.EventHandler(this.MiMainCheckUpdates_ClickAsync);
             // 
             // toolStripSeparator17
             // 

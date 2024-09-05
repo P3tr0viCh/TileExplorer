@@ -2,6 +2,7 @@
 using P3tr0viCh.Utils;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
@@ -46,6 +47,13 @@ namespace TileExplorer
 
                 Msg.Error(Resources.ErrorOpenPath, e.Message);
             }
+        }
+
+        public static void FileCopy(string sourceFileName, string destFileName)
+        {
+            DebugWrite.Line($"{sourceFileName} > {destFileName}");
+
+            File.Copy(sourceFileName, destFileName, true);
         }
     }
 }

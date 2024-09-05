@@ -59,13 +59,7 @@ namespace TileExplorer
             public ColumnState[] ColumnsEquipmentList { get; set; }
 
             // ------------------------------------------------------------------------------------------------------------
-            private readonly BackupSettings backupSettings = new BackupSettings();
-
-            public BackupSettings BackupSettings
-            {
-                get => backupSettings;
-                set => backupSettings.Assign(value);
-            }
+            public BackupSettings BackupSettings = new BackupSettings();
         }
     }
 }

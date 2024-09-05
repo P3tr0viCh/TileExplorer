@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using static TileExplorer.Backup;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -30,45 +31,14 @@ namespace TileExplorer
         {
             public string Directory { get; set; } = string.Empty;
 
-            public FileType FileTypeMarkers { get; set; } = default;
-            public FileType FileTypeEquipments { get; set; } = default;
+            public FileType Markers { get; set; } = default;
+            public FileType Equipments { get; set; } = default;
 
-            public void Clear()
-            {
-                Directory = string.Empty;
-
-                FileTypeMarkers = default;
-                FileTypeEquipments = default;
-            }
-
-            public void Assign(BackupSettings source)
-            {
-                if (source == null)
-                {
-                    Clear();
-
-                    return;
-                }
-
-                Directory = source.Directory;
-
-                FileTypeMarkers = source.FileTypeMarkers;
-                FileTypeEquipments = source.FileTypeEquipments;
-            }
+            public bool LocalSettings { get; set; } = false;
+            public bool RoamingSettings { get; set; } = false;
         }
 
-        private readonly BackupSettings settings = new BackupSettings();
-        public BackupSettings Settings
-        {
-            get
-            {
-                return settings;
-            }
-            set
-            {
-                settings.Assign(value);
-            }
-        }
+        private BackupSettings Settings => AppSettings.Local.Default.BackupSettings;
 
         private string GetFileNameExt(FileType fileType)
         {
@@ -213,18 +183,18 @@ namespace TileExplorer
 
         private async Task SaveMarkers()
         {
-            if (Settings.FileTypeMarkers == default)
+            if (Settings.Markers == default)
             {
                 return;
             }
 
             var markers = await Database.Default.ListLoadAsync<Marker>();
 
-            if (Settings.FileTypeMarkers.HasFlag(FileType.ExcelXml))
+            if (Settings.Markers.HasFlag(FileType.ExcelXml))
             {
                 SaveMarkersAsExcelXml(markers);
             }
-            if (Settings.FileTypeMarkers.HasFlag(FileType.Gpx))
+            if (Settings.Markers.HasFlag(FileType.Gpx))
             {
                 SaveMarkersAsGpx(markers);
             }
@@ -283,7 +253,7 @@ namespace TileExplorer
 
         private async Task SaveEquipments()
         {
-            if (Settings.FileTypeEquipments == default)
+            if (Settings.Equipments == default)
             {
                 return;
             }
@@ -291,10 +261,37 @@ namespace TileExplorer
             await SaveEquipmentsAsExcelXml();
         }
 
+        private async Task SaveSettings()
+        {
+            DebugWrite.Line("start");
+
+            await Task.Run(() =>
+            {
+                if (Settings.LocalSettings)
+                {
+                    DebugWrite.Line("save local");
+
+                    Utils.FileCopy(AppSettings.Local.FilePath,
+                        Path.Combine(Settings.Directory, "Local." + Environment.MachineName + "." + Files.ExtConfig));
+                }
+
+                if (Settings.RoamingSettings)
+                {
+                    DebugWrite.Line("save roaming");
+
+                    Utils.FileCopy(AppSettings.Roaming.FilePath,
+                        Path.Combine(Settings.Directory, "Roaming." + Files.ExtConfig));
+                }
+            });
+
+            DebugWrite.Line("end");
+        }
+
         public async Task SaveAsync()
         {
             await SaveMarkers();
             await SaveEquipments();
+            await SaveSettings();
         }
     }
 }

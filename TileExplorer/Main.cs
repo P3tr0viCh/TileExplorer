@@ -1911,7 +1911,7 @@ namespace TileExplorer
             Clipboard.SetText(((ToolStripMenuItem)sender).Text);
         }
 
-        private async Task CheckUpdate()
+        private async Task CheckUpdateAsync()
         {
             var result = await UpdateApp.Default.UpdateAsync();
 
@@ -1937,12 +1937,12 @@ namespace TileExplorer
             }
         }
 
-        private async void MiMainCheckUpdates_Click(object sender, EventArgs e)
+        private async void MiMainCheckUpdates_ClickAsync(object sender, EventArgs e)
         {
-            await CheckUpdate();
+            await CheckUpdateAsync();
         }
 
-        private async void BackupSave()
+        private async Task BackupSaveAsync()
         {
             if (ProgramStatus.Contains(Status.BackupSave))
             {
@@ -1960,14 +1960,11 @@ namespace TileExplorer
 
             try
             {
-                var backup = new Backup
-                {
-                    Settings = AppSettings.Local.Default.BackupSettings
-                };
+                var backup = new Backup();
 
                 await backup.SaveAsync();
 
-                Msg.Info(Resources.BackupSaveOk, backup.Settings.Directory);
+                Msg.Info(Resources.BackupSaveOk, AppSettings.Local.Default.BackupSettings.Directory);
             }
             catch (Exception e)
             {
@@ -1981,9 +1978,9 @@ namespace TileExplorer
             }
         }
 
-        private void MiMainDataBackupSave_Click(object sender, EventArgs e)
+        private async void MiMainDataBackupSave_ClickAsync(object sender, EventArgs e)
         {
-            BackupSave();
+            await BackupSaveAsync();
         }
 
         private void GMapControl_Paint(object sender, PaintEventArgs e)
