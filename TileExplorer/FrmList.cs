@@ -6,6 +6,7 @@ using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -20,6 +21,8 @@ namespace TileExplorer
         public IMainForm MainForm => Owner as IMainForm;
 
         public ChildFormType ChildFormType { get; set; }
+
+        private readonly CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
         private int[] columnFormattingIndex;
 
@@ -80,6 +83,9 @@ namespace TileExplorer
                     Text = Resources.TitleListTracks;
 
                     toolStripLeft.Visible = true;
+
+                    toolStripSeparator1.Visible = true;
+                    tsbtnTrackEleChart.Visible = true;
 
                     AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateTrackList);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsTrackList);
@@ -189,12 +195,12 @@ namespace TileExplorer
             }
         }
 
-        public async void UpdateData()
+        public void UpdateData()
         {
-            await Task.Run(() =>
+            Task.Run(() =>
             {
-                ((Form)MainForm).InvokeIfNeeded(() => _ = UpdateDataAsync());
-            });
+                ((Form)MainForm).InvokeIfNeeded(async () => await UpdateDataAsync());
+            }, cancelTokenSource.Token);
         }
 
         private void FrmListNew_FormClosing(object sender, FormClosingEventArgs e)
@@ -235,6 +241,8 @@ namespace TileExplorer
 
         private void FrmListNew_FormClosed(object sender, FormClosedEventArgs e)
         {
+            cancelTokenSource.Cancel();
+
             MainForm.ChildFormClosed(this);
         }
 
@@ -316,6 +324,8 @@ namespace TileExplorer
 
             try
             {
+                //await Task.Delay(3000, cancelToken);
+
                 switch (ChildFormType)
                 {
                     case ChildFormType.TrackList:
@@ -351,6 +361,10 @@ namespace TileExplorer
                     default:
                         throw new NotImplementedException();
                 }
+            }
+            catch (TaskCanceledException e)
+            {
+                DebugWrite.Error(e);
             }
             catch (Exception e)
             {
@@ -450,6 +464,16 @@ namespace TileExplorer
             MainForm.ListItemDelete(this, Selected);
         }
 
+        private void ShowTrackEleChart()
+        {
+            FrmTrackEleChart.ShowFrm(Owner, Selected as Track);
+        }
+
+        private void TsbtnTrackEleChart_Click(object sender, EventArgs e)
+        {
+            ShowTrackEleChart();
+        }
+
         private void DataGridView_CellFormattingTrackList(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.ColumnIndex == columnFormattingIndex[0])
@@ -546,6 +570,17 @@ namespace TileExplorer
                     dataGridView.Columns[sortColumnIndex].HeaderCell.SortGlyphDirection = sortOrder;
 
                     break;
+            }
+        }
+
+        private void DataGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.ColumnIndex >= 0 && e.RowIndex >= 0)
+                {
+                    dataGridView.CurrentCell = dataGridView[e.ColumnIndex, e.RowIndex];
+                }
             }
         }
     }

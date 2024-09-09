@@ -348,7 +348,7 @@ namespace TileExplorer
 
                         dynamic f = filter;
 
-                        Track track = f.track;
+                        Track track = f.Track;
 
                         param = new { trackid = track.Id };
                     }

@@ -33,6 +33,7 @@ namespace TileExplorer
             ResultEquipments,
             TileInfo,
             TracksTree,
+            TrackEleChart,
         }
 
         [Flags]

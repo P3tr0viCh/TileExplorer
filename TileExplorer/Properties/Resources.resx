@@ -326,4 +326,14 @@
   <data name="TextMapZoomRulerKM" xml:space="preserve">
     <value>км</value>
   </data>
+  <data name="MsgDatabaseLoadTileInfoFail" xml:space="preserve">
+    <value>Не удалось загрузить информацию о плитке.
+Ошибка:
+{0}.</value>
+  </data>
+  <data name="MsgDatabaseLoadTrackEleChartFail" xml:space="preserve">
+    <value>Не удалось загрузить результаты трека.
+Ошибка:
+{0}.</value>
+  </data>
 </root>

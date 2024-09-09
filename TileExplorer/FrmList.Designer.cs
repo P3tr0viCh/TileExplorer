@@ -37,6 +37,8 @@
             this.tsbtnAdd = new System.Windows.Forms.ToolStripButton();
             this.tsbtnChange = new System.Windows.Forms.ToolStripButton();
             this.tsbtnDelete = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbtnTrackEleChart = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -64,6 +66,7 @@
             this.dataGridView.Size = new System.Drawing.Size(343, 240);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseDoubleClick);
+            this.dataGridView.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseDown);
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_ColumnHeaderMouseClick);
             this.dataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataGridView_DataBindingComplete);
             // 
@@ -93,10 +96,12 @@
             this.toolStripLeft.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbtnAdd,
             this.tsbtnChange,
-            this.tsbtnDelete});
+            this.tsbtnDelete,
+            this.toolStripSeparator1,
+            this.tsbtnTrackEleChart});
             this.toolStripLeft.Location = new System.Drawing.Point(0, 4);
             this.toolStripLeft.Name = "toolStripLeft";
-            this.toolStripLeft.Size = new System.Drawing.Size(41, 107);
+            this.toolStripLeft.Size = new System.Drawing.Size(41, 163);
             this.toolStripLeft.TabIndex = 0;
             this.toolStripLeft.MouseEnter += new System.EventHandler(this.ToolStripLeft_MouseEnter);
             // 
@@ -138,6 +143,24 @@
             this.tsbtnDelete.Text = "-";
             this.tsbtnDelete.ToolTipText = "Удалить";
             this.tsbtnDelete.Click += new System.EventHandler(this.TsbtnDelete_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(39, 6);
+            this.toolStripSeparator1.Visible = false;
+            // 
+            // tsbtnTrackEleChart
+            // 
+            this.tsbtnTrackEleChart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbtnTrackEleChart.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnTrackEleChart.Image")));
+            this.tsbtnTrackEleChart.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbtnTrackEleChart.Name = "tsbtnTrackEleChart";
+            this.tsbtnTrackEleChart.Size = new System.Drawing.Size(39, 28);
+            this.tsbtnTrackEleChart.Text = "toolStripButton1";
+            this.tsbtnTrackEleChart.ToolTipText = "График высоты";
+            this.tsbtnTrackEleChart.Visible = false;
+            this.tsbtnTrackEleChart.Click += new System.EventHandler(this.TsbtnTrackEleChart_Click);
             // 
             // FrmList
             // 
@@ -181,5 +204,7 @@
         private System.Windows.Forms.ToolStripButton tsbtnAdd;
         private System.Windows.Forms.ToolStripButton tsbtnChange;
         private System.Windows.Forms.ToolStripButton tsbtnDelete;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton tsbtnTrackEleChart;
     }
 }

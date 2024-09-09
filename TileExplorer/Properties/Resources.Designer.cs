@@ -349,6 +349,28 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить информацию о плитке.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgDatabaseLoadTileInfoFail {
+            get {
+                return ResourceManager.GetString("MsgDatabaseLoadTileInfoFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить результаты трека.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgDatabaseLoadTrackEleChartFail {
+            get {
+                return ResourceManager.GetString("MsgDatabaseLoadTrackEleChartFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Не удалось загрузить треки по месяцам.
         ///Ошибка:
         ///{0}..

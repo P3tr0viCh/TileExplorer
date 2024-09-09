@@ -1,6 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -15,6 +16,8 @@ namespace TileExplorer
         public IMainForm MainForm => Owner as IMainForm;
 
         public ChildFormType ChildFormType => ChildFormType.TileInfo;
+
+        private readonly CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
         private Tile Tile { get; set; } = null;
 
@@ -74,13 +77,17 @@ namespace TileExplorer
 
                 trackBindingSource.DataSource = Tile.Tracks;
             }
+            catch (TaskCanceledException e)
+            {
+                DebugWrite.Error(e);
+            }
             catch (Exception e)
             {
                 slCount.Text = string.Empty;
 
                 DebugWrite.Error(e);
 
-                Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
+                Msg.Error(Resources.MsgDatabaseLoadTileInfoFail, e.Message);
             }
             finally
             {
@@ -88,12 +95,17 @@ namespace TileExplorer
             }
         }
 
-        public async void UpdateData()
+        public void UpdateData()
         {
-            await Task.Run(() =>
+            Task.Run(() =>
             {
-                this.InvokeIfNeeded(() => _ = UpdateDataAsync());
-            });
+                this.InvokeIfNeeded(async () => await UpdateDataAsync());
+            }, cancelTokenSource.Token);
+        }
+
+        private void FrmTileInfo_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            cancelTokenSource.Cancel();
         }
     }
 }
