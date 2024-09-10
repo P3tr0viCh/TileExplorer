@@ -336,4 +336,10 @@
 Ошибка:
 {0}.</value>
   </data>
+  <data name="StatusDist" xml:space="preserve">
+    <value>Дистанция:  {0:F2}</value>
+  </data>
+  <data name="StatusEle" xml:space="preserve">
+    <value>Высота:  {0:F0}</value>
+  </data>
 </root>

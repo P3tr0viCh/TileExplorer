@@ -1,6 +1,7 @@
 ﻿using GMap.NET;
 using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
@@ -61,6 +62,15 @@ namespace TileExplorer
             DebugWrite.Line($"{sourceFileName} > {destFileName}");
 
             File.Copy(sourceFileName, destFileName, true);
+        }
+
+        public static double LinearInterpolate(double x, double x1, double y1, double x2, double y2)
+        {
+            var a = (y2 - y1) / (x2 - x1);
+            
+            var b = y1 - a * x1;
+            
+            return a * x + b;
         }
     }
 }

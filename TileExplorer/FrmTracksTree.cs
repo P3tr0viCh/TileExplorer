@@ -16,9 +16,15 @@ namespace TileExplorer
 
         public ChildFormType ChildFormType => ChildFormType.TracksTree;
 
+        internal readonly PresenterChildForm childFormPresenter;
+        internal readonly PresenterUpdateDataForm updateDataFormPresenter;
+
         public FrmTracksTree()
         {
             InitializeComponent();
+
+            childFormPresenter = new PresenterChildForm(this);
+            updateDataFormPresenter = new PresenterUpdateDataForm(this);
         }
 
         public static FrmTracksTree ShowFrm(Form owner)
@@ -36,8 +42,6 @@ namespace TileExplorer
 
         private void FrmTracksTree_Load(object sender, System.EventArgs e)
         {
-            MainForm.ChildFormOpened(this);
-
             AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateTracksTree);
 
             UpdateSettings();
@@ -53,11 +57,6 @@ namespace TileExplorer
             AppSettings.Local.Default.FormStateTracksTree = AppSettings.SaveFormState(this);
 
             AppSettings.LocalSave();
-        }
-
-        private void FrmTracksTree_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            MainForm.ChildFormClosed(this);
         }
 
         public void UpdateSettings()
@@ -86,12 +85,12 @@ namespace TileExplorer
             }
         }
 
-        public async void UpdateData()
+        public void UpdateData()
         {
-            await Task.Run(() =>
+            Task.Run(() =>
             {
-                this.InvokeIfNeeded(() => _ = UpdateDataAsync());
-            });
+                this.InvokeIfNeeded(async () => await UpdateDataAsync());
+            }, updateDataFormPresenter.CancelToken);
         }
 
         private string MonthTostring(int month)

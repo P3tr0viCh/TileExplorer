@@ -111,7 +111,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "FrmTileInfo";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmTileInfo_FormClosed);
             this.Load += new System.EventHandler(this.FrmTileInfo_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmTileInfo_KeyDown);
             this.statusStrip.ResumeLayout(false);

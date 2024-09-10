@@ -5,11 +5,11 @@ using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    internal class StatusStripPresenter
+    internal class PresenterStatusStrip
     {
         private readonly IStatusStripView view;
 
-        public StatusStripPresenter(IStatusStripView view)
+        public PresenterStatusStrip(IStatusStripView view)
         {
             this.view = view;
 

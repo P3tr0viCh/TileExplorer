@@ -22,7 +22,8 @@ namespace TileExplorer
 
         public ChildFormType ChildFormType { get; set; }
 
-        private readonly CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+        internal readonly PresenterChildForm childFormPresenter;
+        internal readonly PresenterUpdateDataForm updateDataFormPresenter;
 
         private int[] columnFormattingIndex;
 
@@ -33,6 +34,9 @@ namespace TileExplorer
         public FrmList()
         {
             InitializeComponent();
+
+            childFormPresenter = new PresenterChildForm(this);
+            updateDataFormPresenter = new PresenterUpdateDataForm(this);
         }
 
         public static FrmList ShowFrm(Form owner, ChildFormType childFormType)
@@ -52,8 +56,6 @@ namespace TileExplorer
 
         private void FrmListNew_Load(object sender, EventArgs e)
         {
-            MainForm.ChildFormOpened(this);
-
             switch (ChildFormType)
             {
                 case ChildFormType.TrackList:
@@ -200,7 +202,7 @@ namespace TileExplorer
             Task.Run(() =>
             {
                 ((Form)MainForm).InvokeIfNeeded(async () => await UpdateDataAsync());
-            }, cancelTokenSource.Token);
+            }, updateDataFormPresenter.CancelToken);
         }
 
         private void FrmListNew_FormClosing(object sender, FormClosingEventArgs e)
@@ -237,13 +239,6 @@ namespace TileExplorer
             }
 
             AppSettings.LocalSave();
-        }
-
-        private void FrmListNew_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            cancelTokenSource.Cancel();
-
-            MainForm.ChildFormClosed(this);
         }
 
         public void UpdateSettings()
@@ -466,7 +461,7 @@ namespace TileExplorer
 
         private void ShowTrackEleChart()
         {
-            FrmTrackEleChart.ShowFrm(Owner, Selected as Track);
+            FrmChartTrackEle.ShowFrm(Owner, Selected as Track);
         }
 
         private void TsbtnTrackEleChart_Click(object sender, EventArgs e)

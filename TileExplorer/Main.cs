@@ -33,7 +33,7 @@ namespace TileExplorer
 
         private readonly MapZoomRuler mapZoomRuler;
 
-        private readonly StatusStripPresenter statusStripPresenter;
+        private readonly PresenterStatusStrip statusStripPresenter;
 
         private readonly ProgramStatus status = new ProgramStatus();
         public ProgramStatus ProgramStatus { get { return status; } }
@@ -42,7 +42,7 @@ namespace TileExplorer
         {
             InitializeComponent();
 
-            statusStripPresenter = new StatusStripPresenter(this);
+            statusStripPresenter = new PresenterStatusStrip(this);
 
             mapZoomRuler = new MapZoomRuler(gMapControl);
 
@@ -205,16 +205,16 @@ namespace TileExplorer
             AppSettings.Local.Default.VisibleTracks = miMainShowTracks.Checked;
             AppSettings.Local.Default.VisibleMarkers = miMainShowMarkers.Checked;
 
-            AppSettings.Local.Default.VisibleFilter = ChildFormMenuItemState(ChildFormType.Filter).Checked;
+            AppSettings.Local.Default.VisibleFilter = GetChildFormMenuItemState(ChildFormType.Filter);
 
-            AppSettings.Local.Default.VisibleResultYears = ChildFormMenuItemState(ChildFormType.ResultYears).Checked;
-            AppSettings.Local.Default.VisibleResultEquipments = ChildFormMenuItemState(ChildFormType.ResultEquipments).Checked;
+            AppSettings.Local.Default.VisibleResultYears = GetChildFormMenuItemState(ChildFormType.ResultYears);
+            AppSettings.Local.Default.VisibleResultEquipments = GetChildFormMenuItemState(ChildFormType.ResultEquipments);
 
-            AppSettings.Local.Default.VisibleTrackList = ChildFormMenuItemState(ChildFormType.TrackList).Checked;
-            AppSettings.Local.Default.VisibleMarkerList = ChildFormMenuItemState(ChildFormType.MarkerList).Checked;
-            AppSettings.Local.Default.VisibleEquipmentList = ChildFormMenuItemState(ChildFormType.EquipmentList).Checked;
+            AppSettings.Local.Default.VisibleTrackList = GetChildFormMenuItemState(ChildFormType.TrackList);
+            AppSettings.Local.Default.VisibleMarkerList = GetChildFormMenuItemState(ChildFormType.MarkerList);
+            AppSettings.Local.Default.VisibleEquipmentList = GetChildFormMenuItemState(ChildFormType.EquipmentList);
 
-            AppSettings.Local.Default.VisibleTracksTree = ChildFormMenuItemState(ChildFormType.TracksTree).Checked;
+            AppSettings.Local.Default.VisibleTracksTree = GetChildFormMenuItemState(ChildFormType.TracksTree);
 
             AppSettings.Local.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
 
@@ -1438,7 +1438,7 @@ namespace TileExplorer
         {
             if (show)
             {
-                if (!ChildFormMenuItemState(childFormType).Checked)
+                if (!GetChildFormMenuItemState(childFormType))
                 {
                     switch (childFormType)
                     {
@@ -1772,7 +1772,7 @@ namespace TileExplorer
             toolStripContainer.LeftToolStripPanelVisible = miMainLeftPanel.Checked;
         }
 
-        public ToolStripMenuItem ChildFormMenuItemState(ChildFormType childFormType)
+        private ToolStripMenuItem GetChildFormMenuItem(ChildFormType childFormType)
         {
             switch (childFormType)
             {
@@ -1791,19 +1791,42 @@ namespace TileExplorer
                 case ChildFormType.TracksTree:
                     return miMainDataTracksTree;
                 default:
-                    throw new NotImplementedException();
+                    return null;
             }
+        }
+
+        private void SetChildFormMenuItemState(ChildFormType childFormType, bool state)
+        {
+            var item = GetChildFormMenuItem(childFormType);
+
+            if (item != null)
+            {
+                item.Checked = state;
+            }
+        }
+
+        private bool GetChildFormMenuItemState(ChildFormType childFormType)
+        {
+            var item = GetChildFormMenuItem(childFormType);
+
+            if (item != null)
+            {
+                return item.Checked;
+            }
+
+            throw new NotImplementedException();
         }
 
         public void ChildFormOpened(object sender)
         {
-            ChildFormMenuItemState(((IChildForm)sender).ChildFormType).Checked = true;
+            SetChildFormMenuItemState(((IChildForm)sender).ChildFormType, true);
         }
 
         public void ChildFormClosed(object sender)
         {
             Selected = null;
-            ChildFormMenuItemState(((IChildForm)sender).ChildFormType).Checked = false;
+            
+            SetChildFormMenuItemState(((IChildForm)sender).ChildFormType, false);
         }
 
         private void OsmAction(bool open)
@@ -1874,8 +1897,8 @@ namespace TileExplorer
 
         private void TsbtnResults_Click(object sender, EventArgs e)
         {
-            if (ChildFormMenuItemState(ChildFormType.ResultYears).Checked &&
-                ChildFormMenuItemState(ChildFormType.ResultEquipments).Checked)
+            if (GetChildFormMenuItemState(ChildFormType.ResultYears) &&
+                GetChildFormMenuItemState(ChildFormType.ResultEquipments))
             {
                 ShowChildForm(ChildFormType.ResultYears, false);
                 ShowChildForm(ChildFormType.ResultEquipments, false);

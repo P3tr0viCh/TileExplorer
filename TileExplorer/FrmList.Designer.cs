@@ -101,7 +101,7 @@
             this.tsbtnTrackEleChart});
             this.toolStripLeft.Location = new System.Drawing.Point(0, 4);
             this.toolStripLeft.Name = "toolStripLeft";
-            this.toolStripLeft.Size = new System.Drawing.Size(41, 163);
+            this.toolStripLeft.Size = new System.Drawing.Size(41, 107);
             this.toolStripLeft.TabIndex = 0;
             this.toolStripLeft.MouseEnter += new System.EventHandler(this.ToolStripLeft_MouseEnter);
             // 
@@ -180,7 +180,6 @@
             this.Text = "FrmList";
             this.Activated += new System.EventHandler(this.FrmList_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmListNew_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmListNew_FormClosed);
             this.Load += new System.EventHandler(this.FrmListNew_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();

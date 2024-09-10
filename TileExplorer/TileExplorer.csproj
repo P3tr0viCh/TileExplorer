@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="AppSettings.Local.cs" />
     <Compile Include="AppSettings.Roaming.cs" />
+    <Compile Include="PresenterChildForm.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="FrmBackup.cs">
@@ -143,11 +144,11 @@
     <Compile Include="FrmTileInfo.Designer.cs">
       <DependentUpon>FrmTileInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmTrackEleChart.cs">
+    <Compile Include="FrmChartTrackEle.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmTrackEleChart.Designer.cs">
-      <DependentUpon>FrmTrackEleChart.cs</DependentUpon>
+    <Compile Include="FrmChartTrackEle.Designer.cs">
+      <DependentUpon>FrmChartTrackEle.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmTracksTree.cs">
       <SubType>Form</SubType>
@@ -164,10 +165,10 @@
     <Compile Include="ProgramStatus.cs" />
     <Compile Include="MapItemMarkerCross.cs" />
     <Compile Include="AppSettings.cs" />
-    <Compile Include="Properties\Resources.Settings.Designer.cs">
+    <Compile Include="Properties\ResourcesSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.Settings.resx</DependentUpon>
+      <DependentUpon>ResourcesSettings.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\ResourcesSql.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -175,6 +176,7 @@
       <DependentUpon>ResourcesSql.resx</DependentUpon>
     </Compile>
     <Compile Include="Backup.cs" />
+    <Compile Include="PresenterUpdateDataForm.cs" />
     <Compile Include="Utils.Tiles.cs" />
     <Compile Include="Utils.Gpx.cs" />
     <Compile Include="Utils.Osm.cs" />
@@ -202,7 +204,7 @@
     <Compile Include="FrmSettings.Designer.cs">
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="StatusStripPresenter.cs" />
+    <Compile Include="PresenterStatusStrip.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Database.cs" />
@@ -246,8 +248,8 @@
     <EmbeddedResource Include="FrmFilter.resx">
       <DependentUpon>FrmFilter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmTrackEleChart.resx">
-      <DependentUpon>FrmTrackEleChart.cs</DependentUpon>
+    <EmbeddedResource Include="FrmChartTrackEle.resx">
+      <DependentUpon>FrmChartTrackEle.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmTracksTree.resx">
       <DependentUpon>FrmTracksTree.cs</DependentUpon>
@@ -265,9 +267,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.Settings.resx">
+    <EmbeddedResource Include="Properties\ResourcesSettings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Settings.Designer.cs</LastGenOutput>
+      <LastGenOutput>ResourcesSettings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\ResourcesSql.resx">
       <Generator>ResXFileCodeGenerator</Generator>
