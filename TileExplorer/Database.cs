@@ -143,25 +143,22 @@ namespace TileExplorer
             }
         }
 
-        public async Task SaveTilesAsync(List<Tile> tiles)
+        public async Task TilesSaveAsync(List<Tile> tiles)
         {
-            await Task.Run(() =>
+            using (var connection = GetConnection())
             {
-                using (var connection = GetConnection())
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
                 {
-                    connection.Open();
-
-                    using (var transaction = connection.BeginTransaction())
+                    foreach (var tile in tiles)
                     {
-                        foreach (var tile in tiles)
-                        {
-                            tile.Id = connection.Insert(tile, transaction);
-                        }
-
-                        transaction.Commit();
+                        tile.Id = await connection.InsertAsync(tile, transaction);
                     }
+
+                    transaction.Commit();
                 }
-            });
+            }
         }
 
         public async Task<int> TileSaveAsync(Tile tile)
@@ -190,7 +187,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task DeleteTrackAsync(Track track)
+        public async Task TrackDeleteAsync(Track track)
         {
             using (var connection = GetConnection())
             {
@@ -198,61 +195,55 @@ namespace TileExplorer
             }
         }
 
-        public async Task SaveTrackAsync(Track track)
+        public async Task TrackSaveAsync(Track track)
         {
-            DebugWrite.Line("start"); 
-            
-            await Task.Run(() =>
+            DebugWrite.Line("start");
+
+            using (var connection = GetConnection())
             {
-                using (var connection = GetConnection())
+                if (track.Id == Sql.NewId)
                 {
-                    if (track.Id == Sql.NewId)
-                    {
-                        connection.Open();
-
-                        using (var transaction = connection.BeginTransaction())
-                        {
-                            connection.Insert(track, transaction);
-
-                            foreach (var trackPoint in track.TrackPoints)
-                            {
-                                trackPoint.TrackId = track.Id;
-                            }
-
-                            connection.Insert(track.TrackPoints, transaction);
-
-                            transaction.Commit();
-                        }
-                    }
-                    else
-                    {
-                        connection.Update<Track>(track);
-                    }
-                }
-            });
-
-            DebugWrite.Line("end");
-        }
-
-        public async Task SaveTracksTilesAsync(List<TracksTiles> tracksTiles)
-        {
-            await Task.Run(() =>
-            {
-                using (var connection = GetConnection())
-                {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     using (var transaction = connection.BeginTransaction())
                     {
-                        foreach (var tracksTile in tracksTiles)
+                        await connection.InsertAsync(track, transaction);
+
+                        foreach (var trackPoint in track.TrackPoints)
                         {
-                            connection.Insert(tracksTile, transaction);
+                            trackPoint.TrackId = track.Id;
                         }
+
+                        await connection.InsertAsync(track.TrackPoints, transaction);
 
                         transaction.Commit();
                     }
                 }
-            });
+                else
+                {
+                    await connection.UpdateAsync(track);
+                }
+            }
+
+            DebugWrite.Line("end");
+        }
+
+        public async Task TracksTilesSaveAsync(List<TracksTiles> tracksTiles)
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    foreach (var tracksTile in tracksTiles)
+                    {
+                        await connection.InsertAsync(tracksTile, transaction);
+                    }
+
+                    transaction.Commit();
+                }
+            }
         }
 
         private void GetQuery<T>(out string sql, out object param, in object filter, in object orderBy = null)
@@ -348,7 +339,7 @@ namespace TileExplorer
 
                         dynamic f = filter;
 
-                        Track track = f.Track;
+                        Track track = f.track;
 
                         param = new { trackid = track.Id };
                     }
@@ -377,36 +368,34 @@ namespace TileExplorer
 
             //await Task.Delay(3000);
 
-            return await Task.Run(async () =>
+            using (var connection = GetConnection())
             {
-                using (var connection = GetConnection())
-                {
-                    var list = await connection.QueryAsync<T>(sql, param);
+                var list = await connection.QueryAsync<T>(sql, param);
 
-                    return (List<T>)list;
-                }
-            });
+                return (List<T>)list;
+            }
         }
 
         public async Task UpdateTrackMinDistancePointAsync(Track track)
         {
-            await Task.Run(() =>
+            DebugWrite.Line("start");
+
+            using (var connection = GetConnection())
             {
-                using (var connection = GetConnection())
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
                 {
-                    connection.Open();
-
-                    using (var transaction = connection.BeginTransaction())
+                    foreach (var point in track.TrackPoints)
                     {
-                        foreach (var point in track.TrackPoints)
-                        {
-                            connection.UpdateAsync(point, transaction);
-                        }
-
-                        transaction.Commit();
+                        await connection.UpdateAsync(point, transaction);
                     }
+
+                    transaction.Commit();
                 }
-            });
+            }
+
+            DebugWrite.Line("end");
         }
     }
 }

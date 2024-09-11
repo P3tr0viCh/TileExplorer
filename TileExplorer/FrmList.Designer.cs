@@ -180,6 +180,7 @@
             this.Text = "FrmList";
             this.Activated += new System.EventHandler(this.FrmList_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmListNew_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmList_FormClosed);
             this.Load += new System.EventHandler(this.FrmListNew_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();

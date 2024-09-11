@@ -21,9 +21,8 @@ namespace TileExplorer
         public ChildFormType ChildFormType => ChildFormType.ChartTrackEle;
 
         internal readonly PresenterChildForm childFormPresenter;
-        internal readonly PresenterUpdateDataForm updateDataFormPresenter;
 
-        private Track Track { get; set; } = null;
+        public Track Track { get; private set; } = null;
 
         private ChartArea ChartArea => chart.ChartAreas[0];
         private Series ChartSerial => chart.Series[0];
@@ -33,7 +32,6 @@ namespace TileExplorer
             InitializeComponent();
 
             childFormPresenter = new PresenterChildForm(this);
-            updateDataFormPresenter = new PresenterUpdateDataForm(this);
         }
 
         public static FrmChartTrackEle ShowFrm(Form owner, Track track)
@@ -57,6 +55,8 @@ namespace TileExplorer
 
         private void FrmTrackEleChart_Load(object sender, EventArgs e)
         {
+            CursorXPositionChanged();
+
             UpdateSettings();
 
             UpdateData();
@@ -79,6 +79,8 @@ namespace TileExplorer
                 AppSettings.Roaming.Default.ColorChartTrackEleSerial);
         }
 
+        private CancellationTokenSource cancellationTokenSource;
+
         public async Task UpdateDataAsync()
         {
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
@@ -89,12 +91,9 @@ namespace TileExplorer
 
                 ChartArea.CursorX.Position = double.NaN;
 
-                //await Task.Delay(3000, cancelTokenSource.Token);
+                //await Task.Delay(3000, cancellationTokenSource.Token);
 
-                if (Track.TrackPoints == null)
-                {
-                    Track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { Track, full = true });
-                }
+                Track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track = Track, full = true });
 
                 var minEle = double.MaxValue;
                 var maxEle = double.MinValue;
@@ -146,10 +145,16 @@ namespace TileExplorer
 
         public void UpdateData()
         {
+            cancellationTokenSource?.Cancel();
+
+            cancellationTokenSource?.Dispose();
+
+            cancellationTokenSource = new CancellationTokenSource();
+
             Task.Run(() =>
             {
                 this.InvokeIfNeeded(async () => await UpdateDataAsync());
-            }, updateDataFormPresenter.CancelToken);
+            }, cancellationTokenSource.Token);
         }
 
         private bool AllowCursorXMove = true;
@@ -158,7 +163,7 @@ namespace TileExplorer
         {
             var dist = ChartArea.CursorX.Position;
 
-            if (dist is double.NaN)
+            if (dist is double.NaN || ChartSerial.Points.Count == 0)
             {
                 slDist.Text = string.Empty;
 
@@ -209,6 +214,12 @@ namespace TileExplorer
             AllowCursorXMove = !AllowCursorXMove;
 
             CursorXPositionChanged();
+        }
+
+        private void FrmChartTrackEle_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
         }
     }
 }

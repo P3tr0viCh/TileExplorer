@@ -116,6 +116,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "FrmTrackEleChart";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmChartTrackEle_FormClosed);
             this.Load += new System.EventHandler(this.FrmTrackEleChart_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.statusStrip.ResumeLayout(false);

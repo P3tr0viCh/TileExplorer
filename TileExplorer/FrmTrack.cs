@@ -142,15 +142,33 @@ namespace TileExplorer
             }
         }
 
+        private async Task<bool> SaveDataAsync()
+        {
+            try
+            {
+                await Database.Default.TrackSaveAsync(Track);
+
+                await MainForm.TrackChanged(Track);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
+
+                Msg.Error(msg);
+
+                return false;
+            }
+        }
+        
         private bool SaveData()
         {
             try
             {
-                Task.Run(() => Database.Default.SaveTrackAsync(Track)).Wait();
-
-                MainForm.TrackChanged(Track);
-
-                return true;
+                return SaveDataAsync().Result;
             }
             catch (Exception e)
             {

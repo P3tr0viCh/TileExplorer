@@ -1,6 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -17,14 +18,12 @@ namespace TileExplorer
         public ChildFormType ChildFormType => ChildFormType.TracksTree;
 
         internal readonly PresenterChildForm childFormPresenter;
-        internal readonly PresenterUpdateDataForm updateDataFormPresenter;
 
         public FrmTracksTree()
         {
             InitializeComponent();
 
             childFormPresenter = new PresenterChildForm(this);
-            updateDataFormPresenter = new PresenterUpdateDataForm(this);
         }
 
         public static FrmTracksTree ShowFrm(Form owner)
@@ -63,6 +62,8 @@ namespace TileExplorer
         {
         }
 
+        private CancellationTokenSource cancellationTokenSource;
+
         private async Task UpdateDataAsync()
         {
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
@@ -87,10 +88,16 @@ namespace TileExplorer
 
         public void UpdateData()
         {
+            cancellationTokenSource?.Cancel();
+
+            cancellationTokenSource?.Dispose();
+
+            cancellationTokenSource = new CancellationTokenSource();
+
             Task.Run(() =>
             {
                 this.InvokeIfNeeded(async () => await UpdateDataAsync());
-            }, updateDataFormPresenter.CancelToken);
+            }, cancellationTokenSource.Token);
         }
 
         private string MonthTostring(int month)
@@ -181,6 +188,12 @@ namespace TileExplorer
                     Database.Filter.Default.Type = Database.Filter.FilterType.Period;
                 }
             }
+        }
+
+        private void FrmTracksTree_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
         }
     }
 }

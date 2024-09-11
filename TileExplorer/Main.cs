@@ -65,11 +65,9 @@ namespace TileExplorer
 
         private void Filter_OnChanged()
         {
-            var load = DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TrackList;
+            var load = DataLoad.Tiles | DataLoad.Tracks;
 
-            if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
-
-            _ = UpdateDataAsync(load);
+            UpdateData(load);
         }
 
         private bool AbnormalExit
@@ -172,11 +170,11 @@ namespace TileExplorer
             UpdateData();
         }
 
-        private async void UpdateData()
+        private void UpdateData(DataLoad load = default)
         {
-            await Task.Run(() =>
+            Task.Run(() =>
             {
-                this.InvokeIfNeeded(() => _ = UpdateDataAsync());
+                this.InvokeIfNeeded(async () => await UpdateDataAsync(load));
             });
         }
 
@@ -304,7 +302,7 @@ namespace TileExplorer
 
         private void ProgramStatus_StatusChanged(object sender, Status status)
         {
-            statusStripPresenter.Status = status.Description();
+            this.InvokeIfNeeded(() => statusStripPresenter.Status = status.Description());
         }
 
         private void UpdateApp_StatusChanged(object sender, UpdateStatus status)
@@ -737,7 +735,7 @@ namespace TileExplorer
                 {
                     await Database.Default.MarkerSaveAsync(SelectedMarker.Model);
 
-                    await UpdateDataAsync(DataLoad.MarkerList);
+                    await UpdateDataAsync(DataLoad.Markers);
                 }
 
                 return;
@@ -815,13 +813,13 @@ namespace TileExplorer
                 case DataLoad.Tracks:
                     if (tracksOverlay.Routes.Count == 0)
                     {
-                        _ = UpdateDataAsync(DataLoad.Tracks);
+                        UpdateData(DataLoad.Tracks);
                     }
                     break;
                 case DataLoad.Markers:
                     if (markersOverlay.Markers.Count == 0)
                     {
-                        _ = UpdateDataAsync(DataLoad.Markers);
+                        UpdateData(DataLoad.Markers);
                     }
                     break;
             }
@@ -896,7 +894,7 @@ namespace TileExplorer
 
             if (FrmMarker.ShowDlg(this, marker))
             {
-                _ = UpdateDataAsync(DataLoad.MarkerList);
+                UpdateData(DataLoad.Markers);
             }
 
             markersOverlay.Markers.Remove(markerTemp);
@@ -913,7 +911,7 @@ namespace TileExplorer
             SelectMapItem(this, marker);
         }
 
-        public void MarkerChanged(Marker marker)
+        public async Task MarkerChanged(Marker marker)
         {
             var mapItem = FindMapItem(marker);
 
@@ -923,7 +921,7 @@ namespace TileExplorer
 
                 markersOverlay.Markers.Add(new MapItemMarker(marker));
 
-                _ = UpdateDataAsync(DataLoad.MarkerList);
+                await UpdateDataAsync(DataLoad.Markers);
             }
             else
             {
@@ -931,7 +929,7 @@ namespace TileExplorer
 
                 mapItem.NotifyModelChanged();
 
-                _ = UpdateDataAsync(DataLoad.MarkerList);
+                await UpdateDataAsync(DataLoad.Markers);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
@@ -939,7 +937,7 @@ namespace TileExplorer
             SelectMapItem(this, marker);
         }
 
-        private async void MarkerDeleteAsync(Marker marker)
+        private async Task MarkerDeleteAsync(Marker marker)
         {
             if (marker == null) return;
 
@@ -959,7 +957,7 @@ namespace TileExplorer
                     .Where(t => t.Model.Id == marker.Id).SingleOrDefault()
                 );
 
-                await UpdateDataAsync(DataLoad.MarkerList);
+                await UpdateDataAsync(DataLoad.Markers);
 
                 if (ActiveForm != this) gMapControl.Invalidate();
             }
@@ -974,14 +972,14 @@ namespace TileExplorer
             SelectMapItem(this, track);
         }
 
-        public void TrackChanged(Track track)
+        public async Task TrackChanged(Track track)
         {
-            _ = UpdateDataAsync(DataLoad.TrackList);
+            await UpdateDataAsync(DataLoad.Tracks);
 
             if (ActiveForm != this) gMapControl.Invalidate();
         }
 
-        private async void TrackDeleteAsync(Track track)
+        private async Task TrackDeleteAsync(Track track)
         {
             if (track == null) return;
 
@@ -994,14 +992,14 @@ namespace TileExplorer
 
             if (Msg.Question(string.Format(Resources.QuestionTrackDelete, name)))
             {
-                await Database.Default.DeleteTrackAsync(track);
+                await Database.Default.TrackDeleteAsync(track);
 
                 tracksOverlay.Routes.Remove(
                     tracksOverlay.Routes.Cast<MapItemTrack>()
                     .Where(t => t.Model.Id == track.Id).SingleOrDefault()
                 );
 
-                await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo | DataLoad.TrackList);
+                await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
             }
         }
 
@@ -1027,7 +1025,7 @@ namespace TileExplorer
 
         private void MiMarkerDelete_Click(object sender, EventArgs e)
         {
-            MarkerDeleteAsync(SelectedMarker.Model);
+            Task.Run(async () => await MarkerDeleteAsync(SelectedMarker.Model));
         }
 
         private void MiTrackChange_Click(object sender, EventArgs e)
@@ -1037,7 +1035,7 @@ namespace TileExplorer
 
         private void MiTrackDelete_Click(object sender, EventArgs e)
         {
-            TrackDeleteAsync(SelectedTrack.Model);
+            Task.Run(async () => await TrackDeleteAsync(SelectedTrack.Model));
         }
 
         private PointLatLng MarkerMovingPrevPosition;
@@ -1113,26 +1111,30 @@ namespace TileExplorer
             if (load == default)
             {
                 load = DataLoad.Tiles |
-                       DataLoad.TracksInfo |
-                       DataLoad.TrackList |
-                       DataLoad.MarkerList |
-                       DataLoad.EquipmentList |
-                       DataLoad.TracksTree;
+                       DataLoad.Tracks |
+                       DataLoad.Markers |
+                       DataLoad.Equipments;
 
-                if (miMainShowTracks.Checked) load |= DataLoad.Tracks;
-
-                if (miMainShowMarkers.Checked) load |= DataLoad.Markers;
             }
 
             DebugWrite.Line($"Loading data {load}");
 
             if (load.HasFlag(DataLoad.Tiles)) await LoadTilesAsync();
 
-            if (load.HasFlag(DataLoad.TracksInfo)) await LoadTracksInfoAsync();
+            if (load.HasFlag(DataLoad.Tracks))
+            {
+                await LoadTracksInfoAsync();
 
-            if (load.HasFlag(DataLoad.Tracks)) await LoadTracksAsync();
+                if (miMainShowTracks.Checked) await LoadTracksAsync();
+            }
 
-            if (load.HasFlag(DataLoad.Markers)) await LoadMarkersAsync();
+            if (load.HasFlag(DataLoad.Markers))
+            {
+                if (miMainShowMarkers.Checked)
+                {
+                    await LoadMarkersAsync();
+                }
+            }
 
             ProgramStatus.Stop(status);
 
@@ -1147,27 +1149,25 @@ namespace TileExplorer
                         case ChildFormType.ResultYears:
                         case ChildFormType.ResultEquipments:
                         case ChildFormType.TileInfo:
-                            updateData = load.HasFlag(DataLoad.Tracks) ||
-                                         load.HasFlag(DataLoad.TrackList) ||
-                                         load.HasFlag(DataLoad.TracksInfo);
+                            updateData = load.HasFlag(DataLoad.Tracks);
 
                             break;
                         case ChildFormType.TrackList:
-                            updateData = load.HasFlag(DataLoad.TrackList) ||
-                                         load.HasFlag(DataLoad.EquipmentList);
+                            updateData = load.HasFlag(DataLoad.Tracks) ||
+                                         load.HasFlag(DataLoad.Equipments);
 
                             break;
                         case ChildFormType.MarkerList:
-                            updateData = load.HasFlag(DataLoad.MarkerList);
+                            updateData = load.HasFlag(DataLoad.Markers);
 
                             break;
                         case ChildFormType.EquipmentList:
-                            updateData = load.HasFlag(DataLoad.EquipmentList) ||
-                                         load.HasFlag(DataLoad.TrackList);
+                            updateData = load.HasFlag(DataLoad.Equipments) ||
+                                         load.HasFlag(DataLoad.Tracks);
 
                             break;
                         case ChildFormType.TracksTree:
-                            updateData = load.HasFlag(DataLoad.TracksTree);
+                            updateData = load.HasFlag(DataLoad.Tracks);
 
                             break;
                         default:
@@ -1213,8 +1213,6 @@ namespace TileExplorer
 
         private void MiMainDataUpdate_Click(object sender, EventArgs e)
         {
-            if (ProgramStatus.Current != Status.Idle) return;
-
             UpdateData();
         }
 
@@ -1349,9 +1347,9 @@ namespace TileExplorer
                     {
                         track.Equipment = equipmentToAll;
 
-                        Task.Run(() => Database.Default.SaveTrackAsync(track)).Wait();
+                        await Database.Default.TrackSaveAsync(track);
 
-                        TrackChanged(track);
+                        await TrackChanged(track);
                     }
 
                     if (exitForEach)
@@ -1389,7 +1387,7 @@ namespace TileExplorer
 
                     DebugWrite.Line("saveTiles count: " + saveTiles.Count);
 
-                    await Database.Default.SaveTilesAsync(saveTiles);
+                    await Database.Default.TilesSaveAsync(saveTiles);
 
                     DebugWrite.Line("SaveTilesAsync done");
 
@@ -1406,7 +1404,7 @@ namespace TileExplorer
 
                     DebugWrite.Line("tracksTiles count: " + tracksTiles.Count);
 
-                    await Database.Default.SaveTracksTilesAsync(tracksTiles);
+                    await Database.Default.TracksTilesSaveAsync(tracksTiles);
 
                     DebugWrite.Line("SaveTracksTilesAsync done");
                 }
@@ -1425,8 +1423,7 @@ namespace TileExplorer
 
             await OpenTracksAsync(openFileDialog.FileNames);
 
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks |
-                DataLoad.TracksInfo | DataLoad.TrackList | DataLoad.TracksTree);
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
         }
 
         private void MiMainDataOpenTrack_Click(object sender, EventArgs e)
@@ -1549,15 +1546,15 @@ namespace TileExplorer
             }
         }
 
-        private async void EquipmentChangeAsync(Equipment equipment)
+        private async Task EquipmentChangeAsync(Equipment equipment)
         {
             if (FrmEquipment.ShowDlg(this, equipment))
             {
-                await UpdateDataAsync(DataLoad.EquipmentList);
+                await UpdateDataAsync(DataLoad.Equipments);
             }
         }
 
-        private async void EquipmentDeleteAsync(Equipment equipment)
+        private async Task EquipmentDeleteAsync(Equipment equipment)
         {
             if (equipment == null) return;
 
@@ -1567,11 +1564,11 @@ namespace TileExplorer
             {
                 await Database.Default.EquipmentDeleteAsync(equipment);
 
-                await UpdateDataAsync(DataLoad.EquipmentList);
+                await UpdateDataAsync(DataLoad.Equipments);
             }
         }
 
-        public void ListItemAdd(object sender, BaseId value)
+        public async Task ListItemAdd(object sender, BaseId value)
         {
             if (value is Marker)
             {
@@ -1581,18 +1578,18 @@ namespace TileExplorer
 
             if (value is Track)
             {
-                _ = OpenTracksAsync();
+                await OpenTracksAsync();
                 return;
             }
 
             if (value is Equipment)
             {
-                EquipmentChangeAsync(value as Equipment);
+                await EquipmentChangeAsync(value as Equipment);
                 return;
             }
         }
 
-        public void ListItemChange(object sender, BaseId value)
+        public async Task ListItemChange(object sender, BaseId value)
         {
             if (value is Marker)
             {
@@ -1608,28 +1605,28 @@ namespace TileExplorer
 
             if (value is Equipment)
             {
-                EquipmentChangeAsync(value as Equipment);
+                await EquipmentChangeAsync(value as Equipment);
                 return;
             }
         }
 
-        public void ListItemDelete(object sender, BaseId value)
+        public async Task ListItemDelete(object sender, BaseId value)
         {
             if (value is Track)
             {
-                TrackDeleteAsync(value as Track);
+                await TrackDeleteAsync(value as Track);
                 return;
             }
 
             if (value is Marker)
             {
-                MarkerDeleteAsync(value as Marker);
+                await MarkerDeleteAsync(value as Marker);
                 return;
             }
 
             if (value is Equipment)
             {
-                EquipmentDeleteAsync(value as Equipment);
+                await EquipmentDeleteAsync(value as Equipment);
                 return;
             }
         }
@@ -1825,7 +1822,7 @@ namespace TileExplorer
         public void ChildFormClosed(object sender)
         {
             Selected = null;
-            
+
             SetChildFormMenuItemState(((IChildForm)sender).ChildFormType, false);
         }
 
@@ -2009,6 +2006,25 @@ namespace TileExplorer
         private void GMapControl_Paint(object sender, PaintEventArgs e)
         {
             mapZoomRuler.Paint(e.Graphics);
+        }
+
+        public void ShowChartTrackEle(object sender, Track value)
+        {
+            for (var i = 0; i < Application.OpenForms.Count; i++)
+            {
+                if (Application.OpenForms[i] is IChildForm form &&
+                    form.ChildFormType == ChildFormType.ChartTrackEle)
+                {
+                    if (((FrmChartTrackEle)Application.OpenForms[i]).Track.Id == value.Id)
+                    {
+                        Application.OpenForms[i].BringToFront();
+
+                        return;
+                    }
+                }
+            }
+
+            FrmChartTrackEle.ShowFrm(this, value);
         }
     }
 }

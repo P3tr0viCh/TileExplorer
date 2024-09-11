@@ -23,7 +23,6 @@ namespace TileExplorer
         public ChildFormType ChildFormType { get; set; }
 
         internal readonly PresenterChildForm childFormPresenter;
-        internal readonly PresenterUpdateDataForm updateDataFormPresenter;
 
         private int[] columnFormattingIndex;
 
@@ -36,7 +35,6 @@ namespace TileExplorer
             InitializeComponent();
 
             childFormPresenter = new PresenterChildForm(this);
-            updateDataFormPresenter = new PresenterUpdateDataForm(this);
         }
 
         public static FrmList ShowFrm(Form owner, ChildFormType childFormType)
@@ -197,14 +195,6 @@ namespace TileExplorer
             }
         }
 
-        public void UpdateData()
-        {
-            Task.Run(() =>
-            {
-                ((Form)MainForm).InvokeIfNeeded(async () => await UpdateDataAsync());
-            }, updateDataFormPresenter.CancelToken);
-        }
-
         private void FrmListNew_FormClosing(object sender, FormClosingEventArgs e)
         {
             switch (ChildFormType)
@@ -309,6 +299,8 @@ namespace TileExplorer
             }
         }
 
+        private CancellationTokenSource cancellationTokenSource;
+
         private async Task UpdateDataAsync()
         {
             DebugWrite.Line("start");
@@ -319,7 +311,7 @@ namespace TileExplorer
 
             try
             {
-                //await Task.Delay(3000, cancelToken);
+                //  await Task.Delay(3000, cancellationTokenSource.Token);
 
                 switch (ChildFormType)
                 {
@@ -373,6 +365,20 @@ namespace TileExplorer
             }
 
             DebugWrite.Line("end");
+        }
+
+        public void UpdateData()
+        {
+            cancellationTokenSource?.Cancel();
+
+            cancellationTokenSource?.Dispose();
+
+            cancellationTokenSource = new CancellationTokenSource();
+
+            Task.Run(() =>
+            {
+                ((Form)MainForm).InvokeIfNeeded(async () => await UpdateDataAsync());
+            }, cancellationTokenSource.Token);
         }
 
         private async Task<List<T>> ListLoadAsync<T>(object orderBy = null)
@@ -461,7 +467,9 @@ namespace TileExplorer
 
         private void ShowTrackEleChart()
         {
-            FrmChartTrackEle.ShowFrm(Owner, Selected as Track);
+            if (Selected == null) return;
+
+            MainForm.ShowChartTrackEle(this, Selected as Track);
         }
 
         private void TsbtnTrackEleChart_Click(object sender, EventArgs e)
@@ -577,6 +585,12 @@ namespace TileExplorer
                     dataGridView.CurrentCell = dataGridView[e.ColumnIndex, e.RowIndex];
                 }
             }
+        }
+
+        private void FrmList_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
         }
     }
 }

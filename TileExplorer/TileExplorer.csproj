@@ -176,7 +176,6 @@
       <DependentUpon>ResourcesSql.resx</DependentUpon>
     </Compile>
     <Compile Include="Backup.cs" />
-    <Compile Include="PresenterUpdateDataForm.cs" />
     <Compile Include="Utils.Tiles.cs" />
     <Compile Include="Utils.Gpx.cs" />
     <Compile Include="Utils.Osm.cs" />

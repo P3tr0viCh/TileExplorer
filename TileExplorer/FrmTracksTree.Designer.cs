@@ -58,6 +58,7 @@
             this.ShowInTaskbar = false;
             this.Text = "FrmTracksTree";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTracksTree_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmTracksTree_FormClosed);
             this.Load += new System.EventHandler(this.FrmTracksTree_Load);
             this.ResumeLayout(false);
 

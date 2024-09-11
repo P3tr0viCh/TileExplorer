@@ -1,6 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -17,7 +18,6 @@ namespace TileExplorer
         public ChildFormType ChildFormType => ChildFormType.TileInfo;
 
         internal readonly PresenterChildForm childFormPresenter;
-        internal readonly PresenterUpdateDataForm updateDataFormPresenter;
 
         private Tile Tile { get; set; } = null;
 
@@ -26,7 +26,6 @@ namespace TileExplorer
             InitializeComponent();
 
             childFormPresenter = new PresenterChildForm(this);
-            updateDataFormPresenter = new PresenterUpdateDataForm(this);
         }
 
         public static FrmTileInfo ShowFrm(Form owner, Tile tile)
@@ -68,6 +67,9 @@ namespace TileExplorer
             dataGridView.Refresh();
         }
 
+
+        private CancellationTokenSource cancellationTokenSource;
+
         public async Task UpdateDataAsync()
         {
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
@@ -100,10 +102,22 @@ namespace TileExplorer
 
         public void UpdateData()
         {
+            cancellationTokenSource?.Cancel();
+
+            cancellationTokenSource?.Dispose();
+
+            cancellationTokenSource = new CancellationTokenSource();
+
             Task.Run(() =>
             {
                 this.InvokeIfNeeded(async () => await UpdateDataAsync());
-            }, updateDataFormPresenter.CancelToken);
+            }, cancellationTokenSource.Token);
+        }
+
+        private void FrmTileInfo_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
         }
     }
 }
