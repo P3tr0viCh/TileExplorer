@@ -1,6 +1,5 @@
 ﻿using GMap.NET;
 using P3tr0viCh.Utils;
-using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using static TileExplorer.Enums;
 
@@ -37,6 +36,8 @@ namespace TileExplorer
             public Color ColorMarkerSelectedLine { get; set; } = Color.DarkSlateBlue;
 
             public byte ColorMarkerSelectedLineAlpha { get; set; } = 220;
+
+            public Color ColorMarkerPosition { get; set; } = Color.FromArgb(59, 167, 199);
 
             public int WidthMarkerLine { get; set; } = 1;
 

@@ -38,7 +38,7 @@
             this.tsbtnChange = new System.Windows.Forms.ToolStripButton();
             this.tsbtnDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbtnTrackEleChart = new System.Windows.Forms.ToolStripButton();
+            this.tsbtnChartTrackEle = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -98,7 +98,7 @@
             this.tsbtnChange,
             this.tsbtnDelete,
             this.toolStripSeparator1,
-            this.tsbtnTrackEleChart});
+            this.tsbtnChartTrackEle});
             this.toolStripLeft.Location = new System.Drawing.Point(0, 4);
             this.toolStripLeft.Name = "toolStripLeft";
             this.toolStripLeft.Size = new System.Drawing.Size(41, 107);
@@ -114,7 +114,6 @@
             this.tsbtnAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbtnAdd.Name = "tsbtnAdd";
             this.tsbtnAdd.Size = new System.Drawing.Size(40, 32);
-            this.tsbtnAdd.Text = "+";
             this.tsbtnAdd.ToolTipText = "Добавить";
             this.tsbtnAdd.Click += new System.EventHandler(this.TsbtnAdd_Click);
             // 
@@ -127,7 +126,6 @@
             this.tsbtnChange.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbtnChange.Name = "tsbtnChange";
             this.tsbtnChange.Size = new System.Drawing.Size(40, 32);
-            this.tsbtnChange.Text = "~";
             this.tsbtnChange.ToolTipText = "Изменить";
             this.tsbtnChange.Click += new System.EventHandler(this.TsbtnChange_Click);
             // 
@@ -140,7 +138,6 @@
             this.tsbtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbtnDelete.Name = "tsbtnDelete";
             this.tsbtnDelete.Size = new System.Drawing.Size(40, 32);
-            this.tsbtnDelete.Text = "-";
             this.tsbtnDelete.ToolTipText = "Удалить";
             this.tsbtnDelete.Click += new System.EventHandler(this.TsbtnDelete_Click);
             // 
@@ -150,17 +147,16 @@
             this.toolStripSeparator1.Size = new System.Drawing.Size(39, 6);
             this.toolStripSeparator1.Visible = false;
             // 
-            // tsbtnTrackEleChart
+            // tsbtnChartTrackEle
             // 
-            this.tsbtnTrackEleChart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbtnTrackEleChart.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnTrackEleChart.Image")));
-            this.tsbtnTrackEleChart.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbtnTrackEleChart.Name = "tsbtnTrackEleChart";
-            this.tsbtnTrackEleChart.Size = new System.Drawing.Size(39, 28);
-            this.tsbtnTrackEleChart.Text = "toolStripButton1";
-            this.tsbtnTrackEleChart.ToolTipText = "График высоты";
-            this.tsbtnTrackEleChart.Visible = false;
-            this.tsbtnTrackEleChart.Click += new System.EventHandler(this.TsbtnTrackEleChart_Click);
+            this.tsbtnChartTrackEle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbtnChartTrackEle.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnChartTrackEle.Image")));
+            this.tsbtnChartTrackEle.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbtnChartTrackEle.Name = "tsbtnChartTrackEle";
+            this.tsbtnChartTrackEle.Size = new System.Drawing.Size(39, 28);
+            this.tsbtnChartTrackEle.ToolTipText = "График высоты";
+            this.tsbtnChartTrackEle.Visible = false;
+            this.tsbtnChartTrackEle.Click += new System.EventHandler(this.TsbtnTrackEleChart_Click);
             // 
             // FrmList
             // 
@@ -173,7 +169,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(200, 100);
+            this.MinimumSize = new System.Drawing.Size(200, 160);
             this.Name = "FrmList";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -205,6 +201,6 @@
         private System.Windows.Forms.ToolStripButton tsbtnChange;
         private System.Windows.Forms.ToolStripButton tsbtnDelete;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton tsbtnTrackEleChart;
+        private System.Windows.Forms.ToolStripButton tsbtnChartTrackEle;
     }
 }

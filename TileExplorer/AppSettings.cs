@@ -82,6 +82,11 @@ namespace TileExplorer
         public byte ColorMarkerSelectedLineAlpha { get => Roaming.Default.ColorMarkerSelectedLineAlpha; set => Roaming.Default.ColorMarkerSelectedLineAlpha = value; }
 
         [LocalizedAttribute.Category("Category.DesignMarkers", Resource)]
+        [LocalizedAttribute.DisplayName("ColorMarkerPosition.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorMarkerPosition.Description", Resource)]
+        public Color ColorMarkerPosition { get => Roaming.Default.ColorMarkerPosition; set => Roaming.Default.ColorMarkerPosition = value; }
+
+        [LocalizedAttribute.Category("Category.DesignMarkers", Resource)]
         [LocalizedAttribute.DisplayName("WidthMarkerLine.DisplayName", Resource)]
         [LocalizedAttribute.Description("WidthMarkerLine.Description", Resource)]
         public int WidthMarkerLine { get => Roaming.Default.WidthMarkerLine; set => Roaming.Default.WidthMarkerLine = value; }
@@ -228,7 +233,7 @@ namespace TileExplorer
         [LocalizedAttribute.DisplayName("FormatDistance.DisplayName", Resource)]
         [LocalizedAttribute.Description("FormatDistance.Description", Resource)]
         public string FormatDistance { get => Roaming.Default.FormatDistance; set => Roaming.Default.FormatDistance = value; }
-        
+
         [LocalizedAttribute.Category("Category.Format", Resource)]
         [LocalizedAttribute.DisplayName("FormatDistance2.DisplayName", Resource)]
         [LocalizedAttribute.Description("FormatDistance2.Description", Resource)]

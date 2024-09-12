@@ -322,6 +322,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Цвет маркера позиции на треке.
+        /// </summary>
+        internal static string ColorMarkerPosition_Description {
+            get {
+                return ResourceManager.GetString("ColorMarkerPosition.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Цвет маркера позиции.
+        /// </summary>
+        internal static string ColorMarkerPosition_DisplayName {
+            get {
+                return ResourceManager.GetString("ColorMarkerPosition.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Цвет фона выделенного маркера.
         /// </summary>
         internal static string ColorMarkerSelectedFill_Description {

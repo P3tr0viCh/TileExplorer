@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="AppSettings.Local.cs" />
     <Compile Include="AppSettings.Roaming.cs" />
+    <Compile Include="MapItemMarkerCircle.cs" />
     <Compile Include="PresenterChildForm.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />
     <Compile Include="Enums.cs" />
@@ -137,12 +138,6 @@
     </Compile>
     <Compile Include="FrmList.Designer.cs">
       <DependentUpon>FrmList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmTileInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmTileInfo.Designer.cs">
-      <DependentUpon>FrmTileInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmChartTrackEle.cs">
       <SubType>Form</SubType>
@@ -231,9 +226,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmList.resx">
       <DependentUpon>FrmList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmTileInfo.resx">
-      <DependentUpon>FrmTileInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmTrack.resx">
       <DependentUpon>FrmTrack.cs</DependentUpon>

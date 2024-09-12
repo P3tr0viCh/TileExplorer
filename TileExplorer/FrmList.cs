@@ -22,6 +22,9 @@ namespace TileExplorer
 
         public ChildFormType ChildFormType { get; set; }
 
+        private object data;
+        public object Data => data;
+
         internal readonly PresenterChildForm childFormPresenter;
 
         private int[] columnFormattingIndex;
@@ -37,12 +40,13 @@ namespace TileExplorer
             childFormPresenter = new PresenterChildForm(this);
         }
 
-        public static FrmList ShowFrm(Form owner, ChildFormType childFormType)
+        public static FrmList ShowFrm(Form owner, ChildFormType childFormType, object value = default)
         {
             var frm = new FrmList()
             {
                 Owner = owner,
                 ChildFormType = childFormType,
+                data = value,
             };
 
             DebugWrite.Line($"ListType = {childFormType}");
@@ -71,6 +75,9 @@ namespace TileExplorer
                 case ChildFormType.EquipmentList:
                     bindingSource.DataSource = typeof(Equipment);
                     break;
+                case ChildFormType.TileInfo:
+                    bindingSource.DataSource = typeof(Track);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -85,7 +92,7 @@ namespace TileExplorer
                     toolStripLeft.Visible = true;
 
                     toolStripSeparator1.Visible = true;
-                    tsbtnTrackEleChart.Visible = true;
+                    tsbtnChartTrackEle.Visible = true;
 
                     AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateTrackList);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsTrackList);
@@ -181,6 +188,23 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Equipment.Name)].Visible = false;
 
                     break;
+                case ChildFormType.TileInfo:
+                    AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateTileInfo);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsTileInfo);
+
+                    foreach (DataGridViewColumn column in dataGridView.Columns)
+                    {
+                        column.Visible = false;
+                    }
+
+                    dataGridView.Columns[nameof(Track.DateTimeStart)].Visible = true;
+                    dataGridView.Columns[nameof(Track.DateTimeStart)].DisplayIndex = 0;
+
+                    dataGridView.Columns[nameof(Track.Text)].Visible = true;
+
+                    toolStripLeft.Visible = false;
+
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -222,6 +246,11 @@ namespace TileExplorer
                 case ChildFormType.EquipmentList:
                     AppSettings.Local.Default.FormStateEquipmentList = AppSettings.SaveFormState(this);
                     AppSettings.Local.Default.ColumnsEquipmentList = AppSettings.SaveDataGridColumns(dataGridView);
+
+                    break;
+                case ChildFormType.TileInfo:
+                    AppSettings.Local.Default.FormStateTileInfo = AppSettings.SaveFormState(this);
+                    AppSettings.Local.Default.ColumnsTileInfo = AppSettings.SaveDataGridColumns(dataGridView);
 
                     break;
                 default:
@@ -294,6 +323,11 @@ namespace TileExplorer
                     break;
                 case ChildFormType.EquipmentList:
                     break;
+                case ChildFormType.TileInfo:
+                    dataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle =
+                        DataGridViewCellStyles.DateTime;
+
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -343,6 +377,16 @@ namespace TileExplorer
                         errorMsg = Resources.MsgDatabaseLoadListEquipmentsFail;
 
                         bindingSource.DataSource = await ListLoadAsync<Equipment>();
+
+                        break;
+                    case ChildFormType.TileInfo:
+                        errorMsg = Resources.MsgDatabaseLoadListTileInfoFail;
+
+                        var tile = (Tile)data;
+
+                        Text = string.Format(Resources.StatusTileId, tile.X, tile.Y);
+
+                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Track>(tile);
 
                         break;
                     default:

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using GMap.NET;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -22,6 +23,8 @@ namespace TileExplorer
             Task MarkerChanged(Marker marker);
 
             void ShowChartTrackEle(object sender, Track value);
+
+            void ShowMarkerPosition(object sender, PointLatLng value);
 
             ProgramStatus ProgramStatus { get; }
         }

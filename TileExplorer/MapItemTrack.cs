@@ -11,26 +11,29 @@ namespace TileExplorer
     {
         public MapItemType Type => MapItemType.Track;
 
-        public static Pen DefaultSelectedStroke;
+        private const int DefaultWidth = 2;
+        private const int DefaultWidthSelected = 4;
+
+        public static Pen DefaultSelectedStroke = new Pen(Color.DarkMagenta, DefaultWidthSelected);
 
         [NonSerialized]
         public Pen SelectedStroke = DefaultSelectedStroke;
 
         private readonly MapItem<Models.Track> item;
+        
+        static MapItemTrack()
+        {
+            DefaultStroke.Width = DefaultWidth;
+        }
 
         public MapItemTrack(Models.Track track) : base(track.Text)
         {
             item = new MapItem<Models.Track>(this, track);
 
-            DefaultStroke.Color = Color.FromArgb(AppSettings.Roaming.Default.ColorTrackAlpha, AppSettings.Roaming.Default.ColorTrack);
-            DefaultStroke.Width = AppSettings.Roaming.Default.WidthTrack;
-
-            DefaultSelectedStroke = new Pen(Color.FromArgb(AppSettings.Roaming.Default.ColorTrackSelectedAlpha,
-                AppSettings.Roaming.Default.ColorTrackSelected), AppSettings.Roaming.Default.WidthTrackSelected);
-
             IsHitTestVisible = true;
 
             NotifyModelChanged();
+
             UpdateColors();
         }
 

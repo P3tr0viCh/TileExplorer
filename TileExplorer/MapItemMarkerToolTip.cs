@@ -7,14 +7,6 @@ namespace TileExplorer
     {
         public MapItemMarkerToolTip(MapItemMarker marker) : base(marker)
         {
-            ((SolidBrush)DefaultFill).Color = Color.FromArgb(
-                   AppSettings.Roaming.Default.ColorMarkerTextFillAlpha, AppSettings.Roaming.Default.ColorMarkerTextFill);
-
-            ((SolidBrush)DefaultForeground).Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerTextAlpha, AppSettings.Roaming.Default.ColorMarkerText);
-
-            Font = AppSettings.Roaming.Default.FontMarker;
-
             TextPadding = new Size(4, 4);
 
             Offset = new Point(marker.Offset.X, marker.Offset.Y);
@@ -26,8 +18,11 @@ namespace TileExplorer
 
             checked
             {
-                var rectangle = new Rectangle(Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y - size.Height,
-                    size.Width + TextPadding.Width, size.Height + TextPadding.Height);
+                var rectangle = new Rectangle(
+                    Marker.ToolTipPosition.X,
+                    Marker.ToolTipPosition.Y - size.Height,
+                    size.Width + TextPadding.Width,
+                    size.Height + TextPadding.Height);
 
                 rectangle.Offset(Offset.X, Offset.Y);
 

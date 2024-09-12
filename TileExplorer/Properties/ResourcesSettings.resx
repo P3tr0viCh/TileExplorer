@@ -204,6 +204,12 @@
   <data name="ColorMarkerLineAlpha.DisplayName" xml:space="preserve">
     <value>Прозрачность линий</value>
   </data>
+  <data name="ColorMarkerPosition.Description" xml:space="preserve">
+    <value>Цвет маркера позиции на треке</value>
+  </data>
+  <data name="ColorMarkerPosition.DisplayName" xml:space="preserve">
+    <value>Цвет маркера позиции</value>
+  </data>
   <data name="ColorMarkerSelectedFill.Description" xml:space="preserve">
     <value>Цвет фона выделенного маркера</value>
   </data>

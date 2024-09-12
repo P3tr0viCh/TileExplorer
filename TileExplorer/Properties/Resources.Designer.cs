@@ -353,7 +353,7 @@ namespace TileExplorer.Properties {
         ///Ошибка:
         ///{0}..
         /// </summary>
-        internal static string MsgDatabaseLoadTileInfoFail {
+        internal static string MsgDatabaseLoadListTileInfoFail {
             get {
                 return ResourceManager.GetString("MsgDatabaseLoadTileInfoFail", resourceCulture);
             }

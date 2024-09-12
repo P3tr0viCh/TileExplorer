@@ -73,6 +73,8 @@
             this.chart.TabIndex = 0;
             this.chart.Text = "chart";
             this.chart.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Chart_MouseClick);
+            this.chart.MouseEnter += new System.EventHandler(this.Chart_MouseEnter);
+            this.chart.MouseLeave += new System.EventHandler(this.Chart_MouseLeave);
             this.chart.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Chart_MouseMove);
             // 
             // statusStrip

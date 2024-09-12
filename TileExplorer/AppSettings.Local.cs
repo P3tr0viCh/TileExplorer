@@ -50,6 +50,7 @@ namespace TileExplorer
             public FormState FormStateFilter { get; set; }
             public FormState FormStateSettings { get; set; }
             public FormState FormStateTracksTree { get; set; }
+            public FormState FormStateTileInfo { get; set; }
 
             // ------------------------------------------------------------------------------------------------------------
             public ColumnState[] ColumnsResultYears { get; set; }
@@ -57,6 +58,7 @@ namespace TileExplorer
             public ColumnState[] ColumnsTrackList { get; set; }
             public ColumnState[] ColumnsMarkerList { get; set; }
             public ColumnState[] ColumnsEquipmentList { get; set; }
+            public ColumnState[] ColumnsTileInfo { get; set; }
 
             // ------------------------------------------------------------------------------------------------------------
             public BackupSettings BackupSettings = new BackupSettings();

@@ -100,7 +100,7 @@ namespace TileExplorer
             }, cancellationTokenSource.Token);
         }
 
-        private string MonthTostring(int month)
+        private string MonthToString(int month)
         {
             var date = new DateTime(1981, month, 1);
 
@@ -141,7 +141,7 @@ namespace TileExplorer
 
                 treeNodeYear.Nodes.Add(new TreeNode()
                 {
-                    Text = MonthTostring(item.Month),
+                    Text = MonthToString(item.Month),
                     Tag = item.Month,
                 });
             }

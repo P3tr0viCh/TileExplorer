@@ -19,6 +19,7 @@ namespace TileExplorer
             item = new MapItem<Models.Tile>(this, tile);
 
             NotifyModelChanged();
+
             UpdateColors();
         }
 
@@ -32,6 +33,7 @@ namespace TileExplorer
             Name = string.Format("{0}x{1}", Model.X, Model.Y);
 
             Points.Clear();
+
             Points.AddRange(Utils.Tiles.TilePoints(Model));
         }
 

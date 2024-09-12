@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Utils;
+﻿using GMap.NET;
+using P3tr0viCh.Utils;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -159,6 +160,8 @@ namespace TileExplorer
 
         private bool AllowCursorXMove = true;
 
+        private PointLatLng CursorPoint = default;
+
         private void CursorXPositionChanged()
         {
             var dist = ChartArea.CursorX.Position;
@@ -168,35 +171,57 @@ namespace TileExplorer
                 slDist.Text = string.Empty;
 
                 slEle.Text = string.Empty;
+
+                MainForm.ShowMarkerPosition(this, default);
+
+                return;
             }
-            else
+
+            slDist.Text = string.Format(Resources.StatusDist, dist);
+
+            if (dist == 0)
             {
-                slDist.Text = string.Format(Resources.StatusDist, dist);
+                slEle.Text = string.Format(Resources.StatusEle, ChartSerial.Points.First().YValues.First());
 
-                if (dist == 0)
-                {
-                    slEle.Text = string.Format(Resources.StatusEle, ChartSerial.Points.First().YValues.First());
-
-                    return;
-                }
-
-                var pointPrev = ChartSerial.Points.Select(x => x)
-                                        .Where(x => x.XValue < dist)
-                                        .DefaultIfEmpty(ChartSerial.Points.First()).Last();
-                var pointNext = ChartSerial.Points.Select(x => x)
-                                        .Where(x => x.XValue >= dist)
-                                        .DefaultIfEmpty(ChartSerial.Points.Last()).First();
-
-                var x1 = pointPrev.XValue;
-                var y1 = pointPrev.YValues.First();
-
-                var x2 = pointNext.XValue;
-                var y2 = pointNext.YValues.First();
-
-                var ele = Utils.LinearInterpolate(dist, x1, y1, x2, y2);
-
-                slEle.Text = string.Format(Resources.StatusEle, ele);
+                return;
             }
+
+            var pointPrev = ChartSerial.Points.Select(x => x)
+                                    .Where(x => x.XValue < dist)
+                                    .DefaultIfEmpty(ChartSerial.Points.First()).Last();
+            var pointNext = ChartSerial.Points.Select(x => x)
+                                    .Where(x => x.XValue >= dist)
+                                    .DefaultIfEmpty(ChartSerial.Points.Last()).First();
+
+            var x1 = pointPrev.XValue;
+            var y1 = pointPrev.YValues.First();
+
+            var x2 = pointNext.XValue;
+            var y2 = pointNext.YValues.First();
+
+            var ele = Utils.LinearInterpolate(dist, x1, y1, x2, y2);
+
+            slEle.Text = string.Format(Resources.StatusEle, ele);
+
+            dist *= 1000;
+
+            var distance = 0D;
+
+            CursorPoint = default;
+
+            foreach (var point in Track.TrackPoints)
+            {
+                distance += point.Distance;
+
+                if (distance >= dist)
+                {
+                    CursorPoint = new PointLatLng(point.Lat, point.Lng);
+
+                    break;
+                }
+            }
+
+            MainForm?.ShowMarkerPosition(this, CursorPoint);
         }
 
         private void Chart_MouseMove(object sender, MouseEventArgs e)
@@ -218,8 +243,20 @@ namespace TileExplorer
 
         private void FrmChartTrackEle_FormClosed(object sender, FormClosedEventArgs e)
         {
+            MainForm?.ShowMarkerPosition(this, default);
+
             cancellationTokenSource?.Cancel();
             cancellationTokenSource?.Dispose();
+        }
+
+        private void Chart_MouseLeave(object sender, EventArgs e)
+        {
+            MainForm?.ShowMarkerPosition(this, default);
+        }
+
+        private void Chart_MouseEnter(object sender, EventArgs e)
+        {
+            MainForm?.ShowMarkerPosition(this, CursorPoint);
         }
     }
 }

@@ -13,15 +13,28 @@ namespace TileExplorer
     {
         public MapItemType Type => MapItemType.Marker;
 
-        private const int DEFAULT_SIZE = 20;
+        private const int DefaultSize = 6;
 
-        private const int DEFAULT_IMAGE_SIZE = 6;
+        private const int DefaultWidth = 1;
+        private const int DefaultWidthSelected = 2;
 
-        public static Pen DefaultStroke;
-        public static Pen DefaultSelectedStroke;
+        public static Pen DefaultStroke = new Pen(Color.Green)
+        {
+            Width = DefaultWidth,
+            LineJoin = LineJoin.Round,
+            StartCap = LineCap.RoundAnchor
+        };
 
-        public static SolidBrush DefaultFill;
-        public static SolidBrush DefaultSelectedFill;
+        public static Pen DefaultSelectedStroke = new Pen(Color.Red)
+        {
+            Width = DefaultWidthSelected,
+            LineJoin = LineJoin.Round,
+            StartCap = LineCap.RoundAnchor
+        };
+
+        public static SolidBrush DefaultFill = new SolidBrush(Color.GreenYellow);
+
+        public static SolidBrush DefaultSelectedFill = new SolidBrush(Color.DarkBlue);
 
         [NonSerialized]
         public Pen Stroke = DefaultStroke;
@@ -41,30 +54,12 @@ namespace TileExplorer
         {
             item = new MapItem<Models.Marker>(this, marker);
 
-            Size = new Size(DEFAULT_SIZE, DEFAULT_SIZE);
-            Offset = new Point(-DEFAULT_SIZE / 2, -DEFAULT_SIZE / 2);
-
-            DefaultStroke = new Pen(Color.FromArgb(AppSettings.Roaming.Default.ColorMarkerLineAlpha, AppSettings.Roaming.Default.ColorMarkerLine))
-            {
-                Width = AppSettings.Roaming.Default.WidthMarkerLine,
-                LineJoin = LineJoin.Round,
-                StartCap = LineCap.RoundAnchor
-            };
-
-            DefaultSelectedStroke = new Pen(Color.FromArgb(AppSettings.Roaming.Default.ColorMarkerSelectedLineAlpha, AppSettings.Roaming.Default.ColorMarkerSelectedLine))
-            {
-                Width = AppSettings.Roaming.Default.WidthMarkerLineSelected,
-                LineJoin = LineJoin.Round,
-                StartCap = LineCap.RoundAnchor
-            };
-
-            DefaultFill = new SolidBrush(Color.FromArgb(AppSettings.Roaming.Default.ColorMarkerFillAlpha, AppSettings.Roaming.Default.ColorMarkerFill));
-
-            DefaultSelectedFill = new SolidBrush(Color.FromArgb(AppSettings.Roaming.Default.ColorMarkerSelectedFillAlpha, AppSettings.Roaming.Default.ColorMarkerSelectedFill));
+            Size = new Size(DefaultSize, DefaultSize);
 
             ToolTip = new MapItemMarkerToolTip(this);
 
             NotifyModelChanged();
+
             UpdateColors();
         }
 
@@ -84,18 +79,6 @@ namespace TileExplorer
             ToolTip.Offset.Y = Model.OffsetY;
         }
 
-        public override void OnRender(Graphics g)
-        {
-            Rectangle rectangle = new Rectangle(
-                LocalPosition.X + (DEFAULT_SIZE - DEFAULT_IMAGE_SIZE) / 2,
-                LocalPosition.Y + (DEFAULT_SIZE - DEFAULT_IMAGE_SIZE) / 2,
-                DEFAULT_IMAGE_SIZE, DEFAULT_IMAGE_SIZE);
-
-            g.FillEllipse(Fill, rectangle);
-
-            g.DrawEllipse(Stroke, rectangle);
-        }
-
         public void UpdateColors()
         {
             if (Selected)
@@ -104,7 +87,6 @@ namespace TileExplorer
                 Stroke = DefaultSelectedStroke;
 
                 ToolTip.Stroke = DefaultSelectedStroke;
-
             }
             else
             {
@@ -113,6 +95,18 @@ namespace TileExplorer
 
                 ToolTip.Stroke = DefaultStroke;
             }
+        }
+
+        public override void OnRender(Graphics g)
+        {
+            var rectangle = new Rectangle(
+                LocalPosition.X - Size.Width / 2,
+                LocalPosition.Y - Size.Height / 2,
+                Size.Width, Size.Height);
+
+            g.FillEllipse(Fill, rectangle);
+
+            g.DrawEllipse(Stroke, rectangle);
         }
     }
 }

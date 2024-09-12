@@ -142,7 +142,7 @@ namespace TileExplorer
         private void SaveTileStatusToFile()
         {
             var boudaryTiles = Utils.Tiles.FindTilesBoundary(
-                tilesOverlay.Polygons.Cast<MapItemTile>()
+                overlayTiles.Polygons.Cast<MapItemTile>()
                     .Select(t => t.Model).ToList());
 
 #if SHOW_BOUNDARY_TILES
