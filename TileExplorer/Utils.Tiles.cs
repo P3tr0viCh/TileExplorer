@@ -45,7 +45,7 @@ namespace TileExplorer
 
                 foreach (var tile in tiles)
                 {
-                    if (tile.X == 0 || tile.X == Const.TILE_MAX - 1 || tile.Y == 0 || tile.Y == Const.TILE_MAX - 1) continue;
+                    if (tile.X == 0 || tile.X == Const.TileMax - 1 || tile.Y == 0 || tile.Y == Const.TileMax - 1) continue;
 
                     if (tile.Status == TileStatus.Unknown) continue;
 

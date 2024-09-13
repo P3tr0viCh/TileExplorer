@@ -14,7 +14,7 @@ namespace TileExplorer
             {
                 if (track.TrackPoints.Count < 2) return;
 
-                double distance = 0;
+                var distance = 0D;
 
                 track.TrackPoints.First().ShowOnMap = true;
 

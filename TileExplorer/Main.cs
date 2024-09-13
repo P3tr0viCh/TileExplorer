@@ -39,7 +39,7 @@ namespace TileExplorer
         private readonly PresenterStatusStrip statusStripPresenter;
 
         private readonly ProgramStatus status = new ProgramStatus();
-        public ProgramStatus ProgramStatus { get { return status; } }
+        public ProgramStatus ProgramStatus => status;
 
         public Main()
         {
@@ -238,7 +238,7 @@ namespace TileExplorer
             DebugWrite.Line("useragent: " + GMap.NET.MapProviders.GMapProvider.UserAgent);
 
             gMapControl.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
-            gMapControl.MapProvider.RefererUrl = Const.MAP_REFERER_URL;
+            gMapControl.MapProvider.RefererUrl = Const.MapRefererUrl;
 
             gMapControl.ShowCenter = false;
 
@@ -1143,7 +1143,7 @@ namespace TileExplorer
                 load = DataLoad.Tiles |
                        DataLoad.Tracks |
                        DataLoad.Markers |
-                       DataLoad.Equipments | 
+                       DataLoad.Equipments |
                        DataLoad.TracksTree;
 
             }
@@ -1891,11 +1891,11 @@ namespace TileExplorer
         {
             var zoom = gMapControl.Zoom;
 
-            if (!open && zoom < Const.OSM_EDIT_MIN_ZOOM)
+            if (!open && zoom < Const.OsmEditMinZoom)
             {
                 if (Msg.Question(Resources.QuestionOsmSetEditZoom))
                 {
-                    zoom = Const.OSM_EDIT_MIN_ZOOM;
+                    zoom = Const.OsmEditMinZoom;
                 }
             }
 

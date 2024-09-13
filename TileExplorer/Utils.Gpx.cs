@@ -22,7 +22,7 @@ namespace TileExplorer
                     xml.Formatting = Formatting.Indented;
                     xml.Indentation = 2;
 
-                    var now = DateTime.UtcNow.ToString(Const.DATETIME_FORMAT_GPX);
+                    var now = DateTime.UtcNow.ToString(Const.DateTimeFormatGpx);
 
                     xml.WriteStartDocument(true);
 
