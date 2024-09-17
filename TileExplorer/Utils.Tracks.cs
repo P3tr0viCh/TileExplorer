@@ -41,43 +41,34 @@ namespace TileExplorer
             {
                 var track = new Track();
 
-                try
+                DebugWrite.Line(path);
+
+                track.Gpx.OpenFromFile(path);
+
+                DebugWrite.Line("xml loaded");
+
+                track.TrackPoints = new List<TrackPoint>();
+
+                foreach (var point in track.Gpx.Points)
                 {
-                    DebugWrite.Line(path);
-
-                    track.Gpx.OpenFromFile(path);
-
-                    DebugWrite.Line("xml loaded");
-
-                    track.TrackPoints = new List<TrackPoint>();
-
-                    foreach (var point in track.Gpx.Points)
+                    track.TrackPoints.Add(new TrackPoint()
                     {
-                        track.TrackPoints.Add(new TrackPoint()
-                        {
-                            Num = point.Num,
+                        Num = point.Num,
 
-                            Lat = point.Lat,
-                            Lng = point.Lng,
+                        Lat = point.Lat,
+                        Lng = point.Lng,
 
-                            DateTime = point.DateTime,
+                        DateTime = point.DateTime,
 
-                            Ele = point.Ele,
+                        Ele = point.Ele,
 
-                            Distance = point.Distance,
-                        });
-                    }
-
-                    DebugWrite.Line($"point count: {track.TrackPoints.Count}");
-
-                    UpdateTrackMinDistancePoint(track);
+                        Distance = point.Distance,
+                    });
                 }
-                catch (Exception e)
-                {
-                    DebugWrite.Error(e);
 
-                    Msg.Error(e.Message);
-                }
+                DebugWrite.Line($"point count: {track.TrackPoints.Count}");
+
+                UpdateTrackMinDistancePoint(track);
 
                 DebugWrite.Line("end open file");
 

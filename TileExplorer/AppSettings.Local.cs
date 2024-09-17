@@ -12,6 +12,7 @@ namespace TileExplorer
             public string DatabaseHome { get; set; } = string.Empty;
 
             // ------------------------------------------------------------------------------------------------------------
+            public string DirectoryTracks { get; set; } = string.Empty;
             public string DirectoryMapImage { get; set; } = string.Empty;
             public string DirectoryTileBoundary { get; set; } = string.Empty;
             public string DirectoryTileStatus { get; set; } = string.Empty;

@@ -78,11 +78,12 @@ namespace TileExplorer
                 return false;
             }
         }
+        
         private async Task<bool> SaveDataAsync()
         {
             await Database.Default.MarkerSaveAsync(Marker);
 
-            await MainForm.MarkerChanged(Marker);
+            MainForm.MarkerChanged(Marker);
 
             return true;
         }

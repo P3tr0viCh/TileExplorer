@@ -416,9 +416,12 @@ namespace TileExplorer
                 return Utils.Tiles.CalcTiles(tiles);
             });
 
-            statusStripPresenter.TilesVisited = calcResult.Visited;
-            statusStripPresenter.TilesMaxCluster = calcResult.MaxCluster;
-            statusStripPresenter.TilesMaxSquare = calcResult.MaxSquare;
+            this.InvokeIfNeeded(() =>
+            {
+                statusStripPresenter.TilesVisited = calcResult.Visited;
+                statusStripPresenter.TilesMaxCluster = calcResult.MaxCluster;
+                statusStripPresenter.TilesMaxSquare = calcResult.MaxSquare;
+            });
         }
 
         private async Task LoadTilesAsync()
@@ -644,13 +647,7 @@ namespace TileExplorer
 
         private void ChildFormSetSelected(ChildFormType childFormType, BaseId baseId)
         {
-            foreach (var frm in Application.OpenForms)
-            {
-                if (frm is IChildForm form && form.ChildFormType == childFormType)
-                {
-                    ((IListForm)form).SetSelected(baseId);
-                }
-            }
+            GetChildForms<FrmList>(childFormType).FirstOrDefault()?.SetSelected(baseId);
         }
 
         public IMapItem Selected
@@ -940,7 +937,7 @@ namespace TileExplorer
             SelectMapItem(this, marker);
         }
 
-        public async Task MarkerChanged(Marker marker)
+        public void MarkerChanged(Marker marker)
         {
             var mapItem = FindMapItem(marker);
 
@@ -948,25 +945,21 @@ namespace TileExplorer
             {
                 overlayMarkers.Markers.Remove(markerTemp);
 
-                overlayMarkers.Markers.Add(new MapItemMarker(marker));
-
-                await UpdateDataAsync(DataLoad.Markers);
+                overlayMarkers.Markers.Add(NewMapItemMarker(marker));
             }
             else
             {
                 mapItem.Model = marker;
 
                 mapItem.NotifyModelChanged();
-
-                await UpdateDataAsync(DataLoad.Markers);
-
-                if (ActiveForm != this) gMapControl.Invalidate();
             }
+
+            GetChildForms<FrmList>(ChildFormType.MarkerList).FirstOrDefault()?.UpdateData();
 
             SelectMapItem(this, marker);
         }
 
-        private async Task MarkerDeleteAsync(Marker marker)
+        private void MarkerDelete(Marker marker)
         {
             if (marker == null) return;
 
@@ -977,19 +970,23 @@ namespace TileExplorer
                 name = marker.Lat.ToString() + ":" + marker.Lng.ToString();
             }
 
-            if (Msg.Question(string.Format(Resources.QuestionMarkerDelete, name)))
+            if (!Msg.Question(string.Format(Resources.QuestionMarkerDelete, name))) return;
+
+            Task.Run(async () =>
             {
                 await Database.Default.MarkerDeleteAsync(marker);
 
-                overlayMarkers.Markers.Remove(
-                    overlayMarkers.Markers.Cast<MapItemMarker>()
-                    .Where(t => t.Model.Id == marker.Id).SingleOrDefault()
-                );
+                var mapItem = FindMapItem(marker);
 
-                await UpdateDataAsync(DataLoad.Markers);
+                if (mapItem != null)
+                {
+                    overlayMarkers.Markers.Remove(mapItem as MapItemMarker);
+                }
 
-                if (ActiveForm != this) gMapControl.Invalidate();
-            }
+                Selected = null;
+
+                ChildFormsUpdateData(DataLoad.Markers);
+            });
         }
 
         private void TrackChange(Track track)
@@ -1001,14 +998,12 @@ namespace TileExplorer
             SelectMapItem(this, track);
         }
 
-        public async Task TrackChanged(Track track)
+        public void TrackChanged(Track track)
         {
-            await UpdateDataAsync(DataLoad.Tracks);
-
-            if (ActiveForm != this) gMapControl.Invalidate();
+            UpdateData(DataLoad.Tracks);
         }
 
-        private async Task TrackDeleteAsync(Track track)
+        private void TrackDelete(Track track)
         {
             if (track == null) return;
 
@@ -1019,26 +1014,34 @@ namespace TileExplorer
                 name = track.DateTimeStart.ToString();
             }
 
-            if (Msg.Question(string.Format(Resources.QuestionTrackDelete, name)))
+            if (!Msg.Question(string.Format(Resources.QuestionTrackDelete, name))) return;
+
+            Task.Run(async () =>
             {
                 await Database.Default.TrackDeleteAsync(track);
 
-                overlayTracks.Routes.Remove(
-                    overlayTracks.Routes.Cast<MapItemTrack>()
-                    .Where(t => t.Model.Id == track.Id).SingleOrDefault()
-                );
+                await UpdateDataAsync(DataLoad.Tiles);
 
-                await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
-            }
+                var mapItem = FindMapItem(track);
+
+                if (mapItem != null)
+                {
+                    overlayTracks.Routes.Remove(mapItem as MapItemTrack);
+                }
+
+                Selected = null;
+
+                ChildFormsUpdateData(DataLoad.Tracks | DataLoad.TracksTree);
+            });
         }
 
         private PointLatLng MenuPopupPointLatLng;
 
         private void CmMap_Opening(object sender, CancelEventArgs e)
         {
-            var MenuPopupPoint = gMapControl.PointToClient(MousePosition);
+            var menuPopupPoint = gMapControl.PointToClient(MousePosition);
 
-            MenuPopupPointLatLng = gMapControl.FromLocalToLatLng(MenuPopupPoint.X, MenuPopupPoint.Y);
+            MenuPopupPointLatLng = gMapControl.FromLocalToLatLng(menuPopupPoint.X, menuPopupPoint.Y);
 
             UpdateCopyCoords();
         }
@@ -1055,7 +1058,7 @@ namespace TileExplorer
 
         private void MiMarkerDelete_Click(object sender, EventArgs e)
         {
-            Task.Run(async () => await MarkerDeleteAsync(SelectedMarker.Model));
+            MarkerDelete(SelectedMarker.Model);
         }
 
         private void MiTrackChange_Click(object sender, EventArgs e)
@@ -1065,7 +1068,7 @@ namespace TileExplorer
 
         private void MiTrackDelete_Click(object sender, EventArgs e)
         {
-            Task.Run(async () => await TrackDeleteAsync(SelectedTrack.Model));
+            TrackDelete(SelectedTrack.Model);
         }
 
         private PointLatLng MarkerMovingPrevPosition;
@@ -1145,12 +1148,14 @@ namespace TileExplorer
                        DataLoad.Markers |
                        DataLoad.Equipments |
                        DataLoad.TracksTree;
-
             }
 
             DebugWrite.Line($"Loading data {load}");
 
-            if (load.HasFlag(DataLoad.Tiles)) await LoadTilesAsync();
+            if (load.HasFlag(DataLoad.Tiles))
+            {
+                if (miMainShowTiles.Checked) await LoadTilesAsync();
+            }
 
             if (load.HasFlag(DataLoad.Tracks))
             {
@@ -1169,6 +1174,11 @@ namespace TileExplorer
 
             ProgramStatus.Stop(status);
 
+            ChildFormsUpdateData(load);
+        }
+
+        private void ChildFormsUpdateData(DataLoad load)
+        {
             bool updateData;
 
             foreach (var frm in Application.OpenForms)
@@ -1318,20 +1328,7 @@ namespace TileExplorer
             SaveTileStatusToFile();
         }
 
-        private async Task<Track> OpenTrackFromFileAsync(string path)
-        {
-            return await Task.Run(() => { return Utils.Tracks.OpenTrackFromFile(path); });
-        }
-
-        private async Task<List<Tile>> GetTilesFromTrackAsync(Track track)
-        {
-            return await Task.Run(() =>
-            {
-                return Utils.Tiles.GetTilesFromTrack(track);
-            });
-        }
-
-        private async Task OpenTracksAsync(string[] files)
+        private async Task<bool> OpenTracksAsync(string[] files)
         {
             var status = ProgramStatus.Start(Status.LoadGpx);
 
@@ -1351,7 +1348,7 @@ namespace TileExplorer
 
                 foreach (var file in files)
                 {
-                    track = await OpenTrackFromFileAsync(file);
+                    track = Utils.Tracks.OpenTrackFromFile(file);
 
                     DebugWrite.Line("OpenTrackFromFileAsync done");
 
@@ -1378,8 +1375,6 @@ namespace TileExplorer
                         track.Equipment = equipmentToAll;
 
                         await Database.Default.TrackSaveAsync(track);
-
-                        await TrackChanged(track);
                     }
 
                     if (exitForEach)
@@ -1393,7 +1388,7 @@ namespace TileExplorer
 
                     Selected = mapTrack;
 
-                    trackTiles = await GetTilesFromTrackAsync(track);
+                    trackTiles = Utils.Tiles.GetTilesFromTrack(track);
 
                     DebugWrite.Line("GetTilesFromTrackAsync done");
 
@@ -1438,6 +1433,21 @@ namespace TileExplorer
 
                     DebugWrite.Line("SaveTracksTilesAsync done");
                 }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
+
+                this.InvokeIfNeeded(() =>
+                {
+                    Msg.Error(msg);
+                });
+
+                return false;
             }
             finally
             {
@@ -1445,20 +1455,33 @@ namespace TileExplorer
             }
         }
 
-        private async Task OpenTracksAsync()
+        private void OpenTracks()
         {
             openFileDialog.FileName = string.Empty;
 
+            openFileDialog.InitialDirectory = AppSettings.Local.Default.DirectoryTracks;
+
             if (openFileDialog.ShowDialog(this) != DialogResult.OK) return;
 
-            await OpenTracksAsync(openFileDialog.FileNames);
+            AppSettings.Local.Default.DirectoryTracks = Directory.GetParent(openFileDialog.FileName).FullName;
 
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
+            Task.Run(() =>
+            {
+                this.InvokeIfNeeded(async () =>
+                {
+                    if (await OpenTracksAsync(openFileDialog.FileNames))
+                    {
+                        await UpdateDataAsync(DataLoad.Tiles);
+
+                        ChildFormsUpdateData(DataLoad.Tracks | DataLoad.TracksTree);
+                    }
+                });
+            });
         }
 
         private void MiMainDataOpenTrack_Click(object sender, EventArgs e)
         {
-            _ = OpenTracksAsync();
+            OpenTracks();
         }
 
         private void ShowChildForm(ChildFormType childFormType, bool show)
@@ -1572,15 +1595,15 @@ namespace TileExplorer
             }
         }
 
-        private async Task EquipmentChangeAsync(Equipment equipment)
+        private void EquipmentChange(Equipment equipment)
         {
             if (FrmEquipment.ShowDlg(this, equipment))
             {
-                await UpdateDataAsync(DataLoad.Equipments);
+                UpdateData(DataLoad.Equipments);
             }
         }
 
-        private async Task EquipmentDeleteAsync(Equipment equipment)
+        private void EquipmentDelete(Equipment equipment)
         {
             if (equipment == null) return;
 
@@ -1588,13 +1611,16 @@ namespace TileExplorer
 
             if (Msg.Question(string.Format(Resources.QuestionEquipmentDelete, name)))
             {
-                await Database.Default.EquipmentDeleteAsync(equipment);
+                Task.Run(async () =>
+                {
+                    await Database.Default.EquipmentDeleteAsync(equipment);
 
-                await UpdateDataAsync(DataLoad.Equipments);
+                    await UpdateDataAsync(DataLoad.Equipments);
+                });
             }
         }
 
-        public async Task ListItemAdd(object sender, BaseId value)
+        public void ListItemAdd(object sender, BaseId value)
         {
             if (value is Marker)
             {
@@ -1604,18 +1630,18 @@ namespace TileExplorer
 
             if (value is Track)
             {
-                await OpenTracksAsync();
+                OpenTracks();
                 return;
             }
 
             if (value is Equipment)
             {
-                await EquipmentChangeAsync(value as Equipment);
+                EquipmentChange(value as Equipment);
                 return;
             }
         }
 
-        public async Task ListItemChange(object sender, BaseId value)
+        public void ListItemChange(object sender, BaseId value)
         {
             if (value is Marker)
             {
@@ -1631,28 +1657,28 @@ namespace TileExplorer
 
             if (value is Equipment)
             {
-                await EquipmentChangeAsync(value as Equipment);
+                EquipmentChange(value as Equipment);
                 return;
             }
         }
 
-        public async Task ListItemDelete(object sender, BaseId value)
+        public void ListItemDelete(object sender, BaseId value)
         {
             if (value is Track)
             {
-                await TrackDeleteAsync(value as Track);
+                TrackDelete(value as Track);
                 return;
             }
 
             if (value is Marker)
             {
-                await MarkerDeleteAsync(value as Marker);
+                MarkerDelete(value as Marker);
                 return;
             }
 
             if (value is Equipment)
             {
-                await EquipmentDeleteAsync(value as Equipment);
+                EquipmentDelete(value as Equipment);
                 return;
             }
         }

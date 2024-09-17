@@ -15,12 +15,12 @@ namespace TileExplorer
 
             void SelectMapItem(object sender, BaseId value);
 
-            Task ListItemAdd(object sender, BaseId value);
-            Task ListItemChange(object sender, BaseId value);
-            Task ListItemDelete(object sender, BaseId value);
+            void ListItemAdd(object sender, BaseId value);
+            void ListItemChange(object sender, BaseId value);
+            void ListItemDelete(object sender, BaseId value);
 
-            Task TrackChanged(Track track);
-            Task MarkerChanged(Marker marker);
+            void TrackChanged(Track track);
+            void MarkerChanged(Marker marker);
 
             void ShowChartTrackEle(object sender, Track value);
 

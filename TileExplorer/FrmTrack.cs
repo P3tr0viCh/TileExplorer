@@ -107,7 +107,7 @@ namespace TileExplorer
 
         private bool CheckData()
         {
-            if (!string.IsNullOrWhiteSpace(tbEleAscent.Text) && !Misc.FloatCheck(tbEleAscent.Text))
+            if (!tbEleAscent.Text.IsEmpty() && !Misc.FloatCheck(tbEleAscent.Text))
             {
                 tbEleAscent.Focus();
                 tbEleAscent.SelectAll();
@@ -148,7 +148,7 @@ namespace TileExplorer
             {
                 await Database.Default.TrackSaveAsync(Track);
 
-                await MainForm.TrackChanged(Track);
+                MainForm.TrackChanged(Track);
 
                 return true;
             }
@@ -158,12 +158,15 @@ namespace TileExplorer
 
                 var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
 
-                Msg.Error(msg);
+                this.InvokeIfNeeded(() =>
+                {
+                    Msg.Error(msg);
+                });
 
                 return false;
             }
         }
-        
+
         private bool SaveData()
         {
             try
