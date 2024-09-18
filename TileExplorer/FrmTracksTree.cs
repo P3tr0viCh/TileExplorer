@@ -15,7 +15,7 @@ namespace TileExplorer
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        public ChildFormType ChildFormType => ChildFormType.TracksTree;
+        public ChildFormType FormType => ChildFormType.TracksTree;
 
         internal readonly PresenterChildForm childFormPresenter;
 

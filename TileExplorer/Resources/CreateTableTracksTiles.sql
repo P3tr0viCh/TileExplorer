@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS tracks_tiles (
+CREATE TABLE tracks_tiles (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	trackid INTEGER, tileid INTEGER,
 	FOREIGN KEY (trackid) REFERENCES tracks (id)

@@ -19,7 +19,7 @@ namespace TileExplorer
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        public ChildFormType ChildFormType => ChildFormType.ChartTrackEle;
+        public ChildFormType FormType => ChildFormType.ChartTrackEle;
 
         internal readonly PresenterChildForm childFormPresenter;
 

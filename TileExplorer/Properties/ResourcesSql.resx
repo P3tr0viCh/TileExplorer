@@ -151,6 +151,9 @@
   <data name="CreateTableTracksTiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateTableTracksTiles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="CreateTriggerEquipmentsAD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateTriggerEquipmentsAD.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;koi8-r</value>
+  </data>
   <data name="CreateTriggerTracksTilesAD" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateTriggerTracksTilesAD.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>

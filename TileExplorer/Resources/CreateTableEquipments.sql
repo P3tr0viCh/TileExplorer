@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS equipments (
+CREATE TABLE equipments (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	text TEXT, brand TEXT, model TEXT
 );

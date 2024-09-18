@@ -42,6 +42,16 @@ namespace TileExplorer
             [Table("markers")]
             public class Marker : BaseId
             {
+                public Marker()
+                {
+                }
+
+                public Marker(PointLatLng point)
+                {
+                    Lat = point.Lat;
+                    Lng = point.Lng;
+                }
+
                 [DisplayName("Широта")]
                 public double Lat { get; set; }
                 [DisplayName("Долгота")]
@@ -375,6 +385,11 @@ namespace TileExplorer
                     {
                         if (Text.IsEmpty())
                         {
+                            if (Brand.IsEmpty() && Model.IsEmpty())
+                            {
+                                return string.Empty;
+                            }
+
                             if (Brand.IsEmpty())
                             {
                                 return Model;

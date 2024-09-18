@@ -3,7 +3,6 @@ using System;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
 namespace TileExplorer
@@ -44,10 +43,17 @@ namespace TileExplorer
                 Equipment = equipment
             })
             {
-                return frm.ShowDialog(owner) == DialogResult.OK;
+                var result = frm.ShowDialog(owner);
+
+                if (result == DialogResult.OK)
+                {
+                    equipment.Assign(frm.Equipment);
+                }
+
+                return result == DialogResult.OK;
             }
         }
-        
+
         private bool CheckData()
         {
             tbText.Text = tbText.Text.Trim();
@@ -79,9 +85,7 @@ namespace TileExplorer
 
         private bool SaveData()
         {
-            _ = Database.Default.EquipmentSaveAsync(Equipment);
-
-            return true;
+            return Database.Actions.EquipmentSaveAsync(Equipment).Result;
         }
 
         private bool ApplyData()

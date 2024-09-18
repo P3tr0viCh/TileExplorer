@@ -33,18 +33,21 @@ namespace TileExplorer
         {
             IMainForm MainForm { get; }
 
-            ChildFormType ChildFormType { get; }
+            ChildFormType FormType { get; }
 
             void UpdateSettings();
         }
 
-        public interface IUpdateDataForm
+        public interface IUpdateDataForm : IChildForm
         {
             void UpdateData();
         }
 
         public interface IListForm
         {
+            void ListItemChange(BaseId value);
+            void ListItemDelete(BaseId value);
+
             void SetSelected(BaseId value);
         }
 

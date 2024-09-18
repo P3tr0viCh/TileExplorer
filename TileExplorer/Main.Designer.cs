@@ -127,11 +127,11 @@
             this.miMapTileDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.cmTrack = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.miTrackShowChartTrackEle = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapChange = new System.Windows.Forms.Timer(this.components);
-            this.miTrackShowChartTrackEle = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -378,7 +378,7 @@
             this.miMainBackupSave.Name = "miMainBackupSave";
             this.miMainBackupSave.Size = new System.Drawing.Size(133, 22);
             this.miMainBackupSave.Text = "Сохранить";
-            this.miMainBackupSave.Click += new System.EventHandler(this.MiMainDataBackupSave_ClickAsync);
+            this.miMainBackupSave.Click += new System.EventHandler(this.MiMainDataBackupSave_Click);
             // 
             // toolStripSeparator1
             // 
@@ -672,7 +672,7 @@
             this.miMainCheckUpdates.Name = "miMainCheckUpdates";
             this.miMainCheckUpdates.Size = new System.Drawing.Size(204, 22);
             this.miMainCheckUpdates.Text = "Проверить обновления";
-            this.miMainCheckUpdates.Click += new System.EventHandler(this.MiMainCheckUpdates_ClickAsync);
+            this.miMainCheckUpdates.Click += new System.EventHandler(this.MiMainCheckUpdates_Click);
             // 
             // toolStripSeparator17
             // 
@@ -849,7 +849,7 @@
             this.miMapTileAdd,
             this.miMapTileDelete});
             this.cmMap.Name = "cmMap";
-            this.cmMap.Size = new System.Drawing.Size(210, 176);
+            this.cmMap.Size = new System.Drawing.Size(210, 198);
             this.cmMap.Opening += new System.ComponentModel.CancelEventHandler(this.CmMap_Opening);
             // 
             // miMapMarkerAdd
@@ -881,14 +881,14 @@
             this.miMapOsmOpen.Name = "miMapOsmOpen";
             this.miMapOsmOpen.Size = new System.Drawing.Size(209, 22);
             this.miMapOsmOpen.Text = "Открыть в ОСМ";
-            this.miMapOsmOpen.Click += new System.EventHandler(this.MiMainOsmOpen_Click);
+            this.miMapOsmOpen.Click += new System.EventHandler(this.MiMapOsmOpen_Click);
             // 
             // miMapOsmEdit
             // 
             this.miMapOsmEdit.Name = "miMapOsmEdit";
             this.miMapOsmEdit.Size = new System.Drawing.Size(209, 22);
             this.miMapOsmEdit.Text = "Редактировать в ОСМ";
-            this.miMapOsmEdit.Click += new System.EventHandler(this.MiMainOsmEdit_Click);
+            this.miMapOsmEdit.Click += new System.EventHandler(this.MiMapOsmEdit_Click);
             // 
             // toolStripSeparator16
             // 
@@ -981,19 +981,31 @@
             this.miTrackChange,
             this.miTrackDelete});
             this.cmTrack.Name = "cmTrack";
-            this.cmTrack.Size = new System.Drawing.Size(181, 98);
+            this.cmTrack.Size = new System.Drawing.Size(161, 76);
+            // 
+            // miTrackShowChartTrackEle
+            // 
+            this.miTrackShowChartTrackEle.Name = "miTrackShowChartTrackEle";
+            this.miTrackShowChartTrackEle.Size = new System.Drawing.Size(160, 22);
+            this.miTrackShowChartTrackEle.Text = "График высоты";
+            this.miTrackShowChartTrackEle.Click += new System.EventHandler(this.MiTrackShowChartTrackEle_Click);
+            // 
+            // toolStripSeparator19
+            // 
+            this.toolStripSeparator19.Name = "toolStripSeparator19";
+            this.toolStripSeparator19.Size = new System.Drawing.Size(157, 6);
             // 
             // miTrackChange
             // 
             this.miTrackChange.Name = "miTrackChange";
-            this.miTrackChange.Size = new System.Drawing.Size(180, 22);
+            this.miTrackChange.Size = new System.Drawing.Size(160, 22);
             this.miTrackChange.Text = "Изменить...";
             this.miTrackChange.Click += new System.EventHandler(this.MiTrackChange_Click);
             // 
             // miTrackDelete
             // 
             this.miTrackDelete.Name = "miTrackDelete";
-            this.miTrackDelete.Size = new System.Drawing.Size(180, 22);
+            this.miTrackDelete.Size = new System.Drawing.Size(160, 22);
             this.miTrackDelete.Text = "Удалить";
             this.miTrackDelete.Click += new System.EventHandler(this.MiTrackDelete_Click);
             // 
@@ -1001,18 +1013,6 @@
             // 
             this.timerMapChange.Interval = 222;
             this.timerMapChange.Tick += new System.EventHandler(this.TimerMapChange_Tick);
-            // 
-            // miTrackShowChartTrackEle
-            // 
-            this.miTrackShowChartTrackEle.Name = "miTrackShowChartTrackEle";
-            this.miTrackShowChartTrackEle.Size = new System.Drawing.Size(180, 22);
-            this.miTrackShowChartTrackEle.Text = "График высоты";
-            this.miTrackShowChartTrackEle.Click += new System.EventHandler(this.MiTrackShowChartTrackEle_Click);
-            // 
-            // toolStripSeparator19
-            // 
-            this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(177, 6);
             // 
             // Main
             // 

@@ -155,7 +155,8 @@ namespace TileExplorer.Properties {
         ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS tracks (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///	text TEXT, datetimestart TEXT, datetimefinish TEXT,
-        ///	distance REAL, equipmentid INTEGER
+        ///	duration INTEGER, durationinmove INTEGER,
+        ///	distance REAL, eleascent REAL, equipmentid INTEGER
         ///);.
         /// </summary>
         internal static string CreateTableTracks {
@@ -201,7 +202,20 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE TRIGGER IF NOT EXISTS tracks_tiles_ad
+        ///   Looks up a localized string similar to CREATE TRIGGER equipments_ad
+        ///AFTER DELETE ON equipments
+        ///BEGIN
+        ///	UPDATE tracks SET equipmentid=0 WHERE equipmentid=OLD.id;
+        ///END;.
+        /// </summary>
+        internal static string CreateTriggerEquipmentsAD {
+            get {
+                return ResourceManager.GetString("CreateTriggerEquipmentsAD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CREATE TRIGGER tracks_tiles_ad
         ///AFTER DELETE ON tracks_tiles
         ///WHEN
         ///	(SELECT COUNT(*) FROM tracks_tiles WHERE tileid=OLD.tileid) = 0
@@ -261,22 +275,18 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT (CASE WHEN year = 32000 THEN NULL ELSE year END) AS year, count, distancesum, durationsum
+        ///   Looks up a localized string similar to SELECT (CASE WHEN year = 32000 THEN NULL ELSE year END) AS year, count,
+        ///    distancesum, durationsum,
+        ///    distancestep0, distancestep1, distancestep2
         ///FROM
         ///(SELECT 
         ///    CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year,
         ///    COUNT(*) AS count,
         ///    SUM(distance) / 1000.0 AS distancesum, 
-        ///	SUM(JULIANDAY(datetimefinish) - JULIANDAY(datetimestart)) as durationsum
-        ///FROM
-        ///    tracks
-        ///GROUP BY year
-        ///	UNION
-        ///SELECT 
-        ///    32000 AS year,
-        ///    COUNT(*) AS count,
-        ///    SUM(distance) / 1000.0 AS distancesum,
-        ///	SUM(JULIANDAY(datetimefinish) - JULIANDAY(datetimestar [rest of string was truncated]&quot;;.
+        ///	SUM(JULIANDAY(datetimefinish) - JULIANDAY(datetimestart)) AS durationsum,
+        ///	SUM(IIF(distance &lt; 50000, 1, 0)) AS distancestep0,
+        ///	SUM(IIF(distance &gt;= 50000 AND distance &lt; 100000, 1, 0)) AS distancestep1,
+        ///	SUM(IIF [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectResultYears {
             get {
@@ -350,7 +360,11 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT id, text, dt AS datetimestart, datetimefinish, distance,
+        ///   Looks up a localized string similar to SELECT id, text, dt AS datetimestart, datetimefinish,
+        ///	duration, durationinmove,
+        ///	distance,
+        ///	distance / durationinmove AS averagespeed,
+        ///	eleascent,
         ///	equipmentid, equipmenttext, equipmentbrand, equipmentmodel,
         ///	SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount
         ///FROM (
@@ -362,9 +376,7 @@ namespace TileExplorer.Properties {
         ///			WHERE tileid = tid AND datetimestart &lt; dt
         ///		) AS e
         ///	FROM (
-        ///		SELECT tracks.id AS id, tracks.text AS text,
-        ///			datetimestart AS dt, datetimefinish,
-        ///			distance, tileid AS tid,        /// [rest of string was truncated]&quot;;.
+        ///		SELECT tracks.id AS id, tra [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectTracks {
             get {
@@ -407,7 +419,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT datetimestart, CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year, CAST(STRFTIME(&apos;%m&apos;, datetimestart) AS INTEGER) AS month
+        ///   Looks up a localized string similar to SELECT CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year, CAST(STRFTIME(&apos;%m&apos;, datetimestart) AS INTEGER) AS month
         ///FROM tracks
         ///GROUP by year, month;.
         /// </summary>

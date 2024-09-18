@@ -1,4 +1,4 @@
-CREATE TRIGGER IF NOT EXISTS tracks_tiles_ad
+CREATE TRIGGER tracks_tiles_ad
 AFTER DELETE ON tracks_tiles
 WHEN
 	(SELECT COUNT(*) FROM tracks_tiles WHERE tileid=OLD.tileid) = 0

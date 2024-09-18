@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -52,12 +51,10 @@ namespace TileExplorer
 
         private void CreateDatabase()
         {
-            if (!File.Exists(FileName))
-            {
-                SQLiteConnection.CreateFile(FileName);
-#if DEBUG
-            }
-#endif
+            if (File.Exists(FileName)) return;
+
+            SQLiteConnection.CreateFile(FileName);
+
             using (var connection = GetConnection())
             {
                 /* tables */
@@ -75,11 +72,9 @@ namespace TileExplorer
                 connection.Execute(ResourcesSql.CreateIndexTracksTilesTrackId);
 
                 /* triggers */
+                connection.Execute(ResourcesSql.CreateTriggerEquipmentsAD);
                 connection.Execute(ResourcesSql.CreateTriggerTracksTilesAD);
             }
-#if !DEBUG
-            }
-#endif
         }
 
         public async Task<TracksInfo> LoadTracksInfoAsync(Filter filter)
@@ -283,34 +278,7 @@ namespace TileExplorer
                     {
                         sql = Filter.Default.ToSql();
 
-                        var ord = nameof(Track.DateTimeStart);
-
-                        if (orderBy != null)
-                        {
-                            dynamic o = orderBy;
-
-                            string sortColumn = o.sortColumn;
-                            SortOrder sortOrder = o.sortOrder;
-
-                            if (sortColumn != string.Empty)
-                            {
-                                if (sortColumn == nameof(Track.EquipmentName))
-                                {
-                                    ord = nameof(Track.EquipmentId);
-                                }
-                                else
-                                {
-                                    ord = sortColumn;
-                                }
-                            }
-
-                            if (sortOrder == SortOrder.Descending)
-                            {
-                                ord += " DESC";
-                            }
-                        }
-
-                        sql = string.Format(ResourcesSql.SelectTracks, sql, ord);
+                        sql = string.Format(ResourcesSql.SelectTracks, sql);
                     }
                     else
                     {

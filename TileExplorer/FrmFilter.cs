@@ -12,7 +12,7 @@ namespace TileExplorer
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        public ChildFormType ChildFormType => ChildFormType.Filter;
+        public ChildFormType FormType => ChildFormType.Filter;
 
         public FrmFilter()
         {

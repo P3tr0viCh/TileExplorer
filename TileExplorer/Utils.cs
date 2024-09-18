@@ -4,9 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
+using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
@@ -71,6 +74,27 @@ namespace TileExplorer
             var b = y1 - a * x1;
             
             return a * x + b;
+        }
+
+        public static ICollection<T> GetChildForms<T>(ChildFormType? type) 
+        {
+            var forms = new List<T>();
+
+            foreach (var frm in Application.OpenForms)
+            {
+                if (frm is IChildForm childFrm && frm is T childFrmT &&
+                    (type == null || childFrm.FormType == type))
+                {
+                    forms.Add(childFrmT);
+                }
+            }
+
+            return forms;
+        }
+
+        public static FrmList GetFrmList(ChildFormType type)
+        {
+            return GetChildForms<FrmList>(type).FirstOrDefault();
         }
     }
 }

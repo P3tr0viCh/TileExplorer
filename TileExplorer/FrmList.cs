@@ -20,7 +20,7 @@ namespace TileExplorer
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        public ChildFormType ChildFormType { get; set; }
+        public ChildFormType FormType { get; set; }
 
         private object data;
         public object Data => data;
@@ -28,10 +28,6 @@ namespace TileExplorer
         internal readonly PresenterChildForm childFormPresenter;
 
         private int[] columnFormattingIndex;
-
-        private string sortColumn = string.Empty;
-        private int sortColumnIndex = -1;
-        private SortOrder sortOrder = SortOrder.None;
 
         public FrmList()
         {
@@ -45,7 +41,7 @@ namespace TileExplorer
             var frm = new FrmList()
             {
                 Owner = owner,
-                ChildFormType = childFormType,
+                FormType = childFormType,
                 data = value,
             };
 
@@ -58,7 +54,7 @@ namespace TileExplorer
 
         private void FrmListNew_Load(object sender, EventArgs e)
         {
-            switch (ChildFormType)
+            switch (FormType)
             {
                 case ChildFormType.TrackList:
                     bindingSource.DataSource = typeof(Track);
@@ -84,7 +80,7 @@ namespace TileExplorer
 
             dataGridView.DataSource = bindingSource;
 
-            switch (ChildFormType)
+            switch (FormType)
             {
                 case ChildFormType.TrackList:
                     Text = Resources.TitleListTracks;
@@ -125,7 +121,7 @@ namespace TileExplorer
 
                     sortColumn = nameof(Track.DateTimeStart);
                     sortColumnIndex = dataGridView.Columns[sortColumn].Index;
-                    sortOrder = SortOrder.Descending;
+                    sortOrderDescending = true;
 
                     break;
                 case ChildFormType.MarkerList:
@@ -141,6 +137,10 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Marker.IsTextVisible)].Visible = false;
                     dataGridView.Columns[nameof(Marker.OffsetX)].Visible = false;
                     dataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;
+
+                    sortColumn = nameof(Marker.Text);
+                    sortColumnIndex = dataGridView.Columns[sortColumn].Index;
+                    sortOrderDescending = true;
 
                     break;
                 case ChildFormType.ResultYears:
@@ -221,7 +221,7 @@ namespace TileExplorer
 
         private void FrmListNew_FormClosing(object sender, FormClosingEventArgs e)
         {
-            switch (ChildFormType)
+            switch (FormType)
             {
                 case ChildFormType.TrackList:
                     AppSettings.Local.Default.FormStateTrackList = AppSettings.SaveFormState(this);
@@ -262,7 +262,7 @@ namespace TileExplorer
 
         public void UpdateSettings()
         {
-            switch (ChildFormType)
+            switch (FormType)
             {
                 case ChildFormType.TrackList:
                     dataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle =
@@ -343,16 +343,18 @@ namespace TileExplorer
 
             var errorMsg = string.Empty;
 
+            Selected = null;
+
             try
             {
                 //  await Task.Delay(3000, cancellationTokenSource.Token);
 
-                switch (ChildFormType)
+                switch (FormType)
                 {
                     case ChildFormType.TrackList:
                         errorMsg = Resources.MsgDatabaseLoadListTrackFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<Track>(new { sortColumn, sortOrder });
+                        bindingSource.DataSource = await ListLoadAsync<Track>();
 
                         break;
                     case ChildFormType.MarkerList:
@@ -392,6 +394,8 @@ namespace TileExplorer
                     default:
                         throw new NotImplementedException();
                 }
+
+                Sort();
             }
             catch (TaskCanceledException e)
             {
@@ -425,13 +429,13 @@ namespace TileExplorer
             }, cancellationTokenSource.Token);
         }
 
-        private async Task<List<T>> ListLoadAsync<T>(object orderBy = null)
+        private async Task<List<T>> ListLoadAsync<T>()
         {
             DebugWrite.Line("start");
 
             try
             {
-                return await Database.Default.ListLoadAsync<T>(null, orderBy);
+                return await Database.Default.ListLoadAsync<T>();
             }
             finally
             {
@@ -441,7 +445,9 @@ namespace TileExplorer
 
         public BaseId Find(BaseId value)
         {
-            return bindingSource.List.OfType<BaseId>().ToList().Find(i => i.Id == value.Id);
+            if (value == null) return null;
+
+            return bindingSource.Cast<BaseId>().Where(item => item.Id == value.Id).FirstOrDefault();
         }
 
         public BaseId Selected
@@ -463,11 +469,14 @@ namespace TileExplorer
 
         private void BindingSource_PositionChanged(object sender, EventArgs e)
         {
-            switch (ChildFormType)
+            switch (FormType)
             {
                 case ChildFormType.TrackList:
                 case ChildFormType.MarkerList:
-                    MainForm.SelectMapItem(this, Selected);
+                    if (MainForm.ProgramStatus.IsIdle())
+                    {
+                        MainForm.SelectMapItem(this, Selected);
+                    }
                     break;
             }
         }
@@ -483,7 +492,7 @@ namespace TileExplorer
         {
             BaseId value = null;
 
-            switch (ChildFormType)
+            switch (FormType)
             {
                 case ChildFormType.TrackList:
                     value = new Track();
@@ -559,7 +568,7 @@ namespace TileExplorer
 
         private void FrmList_Activated(object sender, EventArgs e)
         {
-            switch (ChildFormType)
+            switch (FormType)
             {
                 case ChildFormType.TrackList:
                 case ChildFormType.MarkerList:
@@ -572,7 +581,7 @@ namespace TileExplorer
         {
             if (e.Button != MouseButtons.Left) return;
 
-            switch (ChildFormType)
+            switch (FormType)
             {
                 case ChildFormType.TrackList:
                     if (e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationAsString)].Index)
@@ -593,12 +602,12 @@ namespace TileExplorer
 
                     if (sortColumnIndex == e.ColumnIndex)
                     {
-                        sortOrder = sortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+                        sortOrderDescending = !sortOrderDescending;
                     }
 
                     sortColumnIndex = e.ColumnIndex;
 
-                    UpdateData();
+                    Sort();
 
                     break;
             }
@@ -611,10 +620,11 @@ namespace TileExplorer
                 return;
             }
 
-            switch (ChildFormType)
+            switch (FormType)
             {
                 case ChildFormType.TrackList:
-                    dataGridView.Columns[sortColumnIndex].HeaderCell.SortGlyphDirection = sortOrder;
+                    dataGridView.Columns[sortColumnIndex].HeaderCell.SortGlyphDirection =
+                        sortOrderDescending ? SortOrder.Descending : SortOrder.Ascending;
 
                     break;
             }
@@ -635,6 +645,40 @@ namespace TileExplorer
         {
             cancellationTokenSource?.Cancel();
             cancellationTokenSource?.Dispose();
+        }
+
+        public void ListItemChange(BaseId value)
+        {
+            var item = Find(value);
+
+            if (item == null)
+            {
+                bindingSource.Add(value);
+            }
+            else
+            {
+                var index = bindingSource.IndexOf(item);
+
+                bindingSource.List[index] = value;
+
+                bindingSource.ResetItem(index);
+            }
+
+            Sort();
+        }
+
+        public void ListItemDelete(BaseId value)
+        {
+            var item = Find(value);
+
+            if (item == null) return;
+
+            if (item == Selected)
+            {
+                Selected = null;
+            }
+
+            bindingSource.Remove(item);
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using GMap.NET;
+using GMap.NET.WindowsForms;
 using P3tr0viCh.Utils;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Xml;
+using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -201,6 +204,34 @@ namespace TileExplorer
                 }
 
                 DebugWrite.Line("end write osm");
+            }
+
+            private static void StartUrl(bool open, int zoom, PointLatLng point)
+            {
+                if (!open && zoom < Const.OsmEditMinZoom)
+                {
+                    if (Msg.Question(Resources.QuestionOsmSetEditZoom))
+                    {
+                        zoom = Const.OsmEditMinZoom;
+                    }
+                }
+
+                var url = string.Format(open ? Resources.OsmUrlOpen : Resources.OsmUrlEdit,
+                    zoom,
+                    point.Lat.ToString(CultureInfo.InvariantCulture),
+                    point.Lng.ToString(CultureInfo.InvariantCulture));
+
+                Process.Start(url);
+            }
+
+            public static void StartUrlOpen(int zoom, PointLatLng point)
+            {
+                StartUrl(true, zoom, point);
+            }
+
+            public static void StartUrlEdit(int zoom, PointLatLng point)
+            {
+                StartUrl(false, zoom, point);
             }
         }
     }

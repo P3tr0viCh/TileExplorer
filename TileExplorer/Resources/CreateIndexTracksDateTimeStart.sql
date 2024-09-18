@@ -1,2 +1,2 @@
-CREATE INDEX IF NOT EXISTS tracks_datetimestart_idx
+CREATE INDEX tracks_datetimestart_idx
 ON tracks(datetimestart ASC);
