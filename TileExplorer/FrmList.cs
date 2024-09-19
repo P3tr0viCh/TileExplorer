@@ -54,29 +54,33 @@ namespace TileExplorer
 
         private void FrmListNew_Load(object sender, EventArgs e)
         {
+            Type type;
+
             switch (FormType)
             {
                 case ChildFormType.TrackList:
-                    bindingSource.DataSource = typeof(Track);
+                    type = typeof(Track);
                     break;
                 case ChildFormType.MarkerList:
-                    bindingSource.DataSource = typeof(Marker);
+                    type = typeof(Marker);
                     break;
                 case ChildFormType.ResultYears:
-                    bindingSource.DataSource = typeof(ResultYears);
+                    type = typeof(ResultYears);
                     break;
                 case ChildFormType.ResultEquipments:
-                    bindingSource.DataSource = typeof(ResultEquipments);
+                    type = typeof(ResultEquipments);
                     break;
                 case ChildFormType.EquipmentList:
-                    bindingSource.DataSource = typeof(Equipment);
+                    type = typeof(Equipment);
                     break;
                 case ChildFormType.TileInfo:
-                    bindingSource.DataSource = typeof(Track);
+                    type = typeof(Track);
                     break;
                 default:
                     throw new NotImplementedException();
             }
+
+            bindingSource.DataSource = type;
 
             dataGridView.DataSource = bindingSource;
 
@@ -345,40 +349,44 @@ namespace TileExplorer
 
             Selected = null;
 
+            var close = false;
+
             try
             {
                 //  await Task.Delay(3000, cancellationTokenSource.Token);
+
+                object list;
 
                 switch (FormType)
                 {
                     case ChildFormType.TrackList:
                         errorMsg = Resources.MsgDatabaseLoadListTrackFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<Track>();
+                        list = await Database.Actions.ListLoadAsync<Track>();
 
                         break;
                     case ChildFormType.MarkerList:
                         errorMsg = Resources.MsgDatabaseLoadListMarkersFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<Marker>();
+                        list = await Database.Actions.ListLoadAsync<Marker>();
 
                         break;
                     case ChildFormType.ResultYears:
                         errorMsg = Resources.MsgDatabaseLoadListResultYearsFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<ResultYears>();
+                        list = await Database.Actions.ListLoadAsync<ResultYears>();
 
                         break;
                     case ChildFormType.ResultEquipments:
                         errorMsg = Resources.MsgDatabaseLoadListResultEquipmentsFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<ResultEquipments>();
+                        list = await Database.Actions.ListLoadAsync<ResultEquipments>();
 
                         break;
                     case ChildFormType.EquipmentList:
                         errorMsg = Resources.MsgDatabaseLoadListEquipmentsFail;
 
-                        bindingSource.DataSource = await ListLoadAsync<Equipment>();
+                        list = await Database.Actions.ListLoadAsync<Equipment>();
 
                         break;
                     case ChildFormType.TileInfo:
@@ -388,14 +396,24 @@ namespace TileExplorer
 
                         Text = string.Format(Resources.StatusTileId, tile.X, tile.Y);
 
-                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Track>(tile);
+                        list = await Database.Actions.ListLoadAsync<Track>(tile);
+
+                        if (list != null && ((List<Track>)list).Count == 0)
+                        {
+                            close = true;
+                        }
 
                         break;
                     default:
                         throw new NotImplementedException();
                 }
 
-                Sort();
+                if (list != null)
+                {
+                    bindingSource.DataSource = list;
+
+                    Sort();
+                }
             }
             catch (TaskCanceledException e)
             {
@@ -412,6 +430,11 @@ namespace TileExplorer
                 MainForm.ProgramStatus.Stop(status);
             }
 
+            if (close)
+            {
+                Close();
+            }
+
             DebugWrite.Line("end");
         }
 
@@ -424,23 +447,8 @@ namespace TileExplorer
             cancellationTokenSource = new CancellationTokenSource();
 
             Task.Run(() =>
-            {
-                ((Form)MainForm).InvokeIfNeeded(async () => await UpdateDataAsync());
-            }, cancellationTokenSource.Token);
-        }
-
-        private async Task<List<T>> ListLoadAsync<T>()
-        {
-            DebugWrite.Line("start");
-
-            try
-            {
-                return await Database.Default.ListLoadAsync<T>();
-            }
-            finally
-            {
-                DebugWrite.Line("end");
-            }
+                ((Form)MainForm).InvokeIfNeeded(async () => await UpdateDataAsync()),
+                cancellationTokenSource.Token);
         }
 
         public BaseId Find(BaseId value)
@@ -473,6 +481,7 @@ namespace TileExplorer
             {
                 case ChildFormType.TrackList:
                 case ChildFormType.MarkerList:
+                case ChildFormType.TileInfo:
                     if (MainForm.ProgramStatus.IsIdle())
                     {
                         MainForm.SelectMapItem(this, Selected);
@@ -570,6 +579,7 @@ namespace TileExplorer
         {
             switch (FormType)
             {
+                case ChildFormType.TileInfo:
                 case ChildFormType.TrackList:
                 case ChildFormType.MarkerList:
                     MainForm.SelectMapItem(this, Selected);

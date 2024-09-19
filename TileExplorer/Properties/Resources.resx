@@ -326,7 +326,7 @@
   <data name="TextMapZoomRulerKM" xml:space="preserve">
     <value>км</value>
   </data>
-  <data name="MsgDatabaseLoadTileInfoFail" xml:space="preserve">
+  <data name="MsgDatabaseLoadListTileInfoFail" xml:space="preserve">
     <value>Не удалось загрузить информацию о плитке.
 Ошибка:
 {0}.</value>
@@ -341,5 +341,10 @@
   </data>
   <data name="StatusEle" xml:space="preserve">
     <value>Высота:  {0:F0}</value>
+  </data>
+  <data name="MsgDatabaseLoadTilesFail" xml:space="preserve">
+    <value>Не удалось загрузить плитки.
+Ошибка:
+{0}.</value>
   </data>
 </root>

@@ -10,11 +10,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -32,7 +32,10 @@ namespace TileExplorer
         private readonly GMapOverlay overlayMarkers = new GMapOverlay("markers");
         private readonly GMapOverlay overlayPosition = new GMapOverlay("position");
 
-        private readonly MapItemMarkerCircle markerPosition = new MapItemMarkerCircle(default);
+        private readonly MapItemMarkerCircle markerPosition = new MapItemMarkerCircle(default)
+        {
+            IsVisible = false
+        };
 
         private readonly MapZoomRuler mapZoomRuler;
 
@@ -75,14 +78,8 @@ namespace TileExplorer
 
         private bool AbnormalExit
         {
-            get
-            {
-                return Tag != null && (bool)Tag;
-            }
-            set
-            {
-                Tag = value;
-            }
+            get => Tag != null && (bool)Tag;
+            set => Tag = value;
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -177,9 +174,55 @@ namespace TileExplorer
 
         private void UpdateData(DataLoad load = default)
         {
-            Task.Run(() =>
-                this.InvokeIfNeeded(async () => await UpdateDataAsync(load))
-            );
+            var status = ProgramStatus.Start(Status.LoadData);
+
+            try
+            {
+                Selected = null;
+
+                if (load == default)
+                {
+                    load = DataLoad.Tiles |
+                           DataLoad.Tracks |
+                           DataLoad.Markers |
+                           DataLoad.TracksTree;
+                }
+
+                DebugWrite.Line($"Loading data {load}");
+
+                if (load.HasFlag(DataLoad.Tiles))
+                {
+                    if (miMainShowTiles.Checked)
+                    {
+                        LoadTiles();
+                    }
+                }
+
+                if (load.HasFlag(DataLoad.Tracks))
+                {
+                    LoadTracksInfo();
+
+                    if (miMainShowTracks.Checked)
+                    {
+                        LoadTracks();
+                    }
+                }
+
+                if (load.HasFlag(DataLoad.Markers))
+                {
+                    if (miMainShowMarkers.Checked)
+                    {
+                        LoadMarkers();
+                    }
+                }
+
+            }
+            finally
+            {
+                ProgramStatus.Stop(status);
+            }
+
+            ChildFormsUpdateData(load);
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -226,6 +269,13 @@ namespace TileExplorer
             AppSettings.Local.Default.Filter.Years = Database.Filter.Default.Years;
 
             AppSettings.LocalSave();
+        }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            LoadTracksStop();
+            LoadMarkersStop();
+            LoadTracksInfoStop();
         }
 
         private void GMapLoad()
@@ -403,69 +453,6 @@ namespace TileExplorer
         }
 #endif
 
-        private async Task CalcTilesAsync(List<Tile> tiles)
-        {
-            foreach (var tile in tiles)
-            {
-                tile.Status = TileStatus.Visited;
-            }
-
-            var calcResult = await Task.Run(() =>
-            {
-                return Utils.Tiles.CalcTiles(tiles);
-            });
-
-            this.InvokeIfNeeded(() =>
-            {
-                statusStripPresenter.TilesVisited = calcResult.Visited;
-                statusStripPresenter.TilesMaxCluster = calcResult.MaxCluster;
-                statusStripPresenter.TilesMaxSquare = calcResult.MaxSquare;
-            });
-        }
-
-        private async Task LoadTilesAsync()
-        {
-            DebugWrite.Line("start");
-
-            overlayTiles.Clear();
-
-            var tiles = await Database.Default.ListLoadAsync<Tile>();
-
-            await CalcTilesAsync(tiles);
-
-            foreach (var tile in tiles)
-            {
-                overlayTiles.Polygons.Add(new MapItemTile(tile));
-
-#if DEBUG && CHECK_TILES
-                if (tile.Status > TileStatus.Visited)
-                {
-                    markersOverlay.Markers.Add(new MapMarker(new MarkerModel()
-                    {
-                        Lat = Osm.TileYToLat(tile.Y, Const.TILE_ZOOM),
-                        Lng = Osm.TileXToLng(tile.X, Const.TILE_ZOOM),
-                        Text = tile.ClusterId.ToString(),
-                        IsTextVisible = true
-                    }));
-                }
-#endif
-            }
-
-            DebugWrite.Line("end");
-        }
-
-        private async Task LoadTracksInfoAsync()
-        {
-            DebugWrite.Line("start");
-
-            var tracksInfo = await Database.Default.LoadTracksInfoAsync(Database.Filter.Default);
-
-            statusStripPresenter.TracksCount = tracksInfo.Count;
-            statusStripPresenter.TracksDistance = tracksInfo.Distance / 1000.0;
-
-            DebugWrite.Line("end");
-        }
-
         private FormWindowState savedWindowState;
 
         private bool fullScreen;
@@ -524,101 +511,7 @@ namespace TileExplorer
             FrmAbout.Show(new FrmAbout.Options() { Link = Resources.GitHubLink });
         }
 
-        private void UpdateSelectedTrackTiles(Track track)
-        {
-            var status = ProgramStatus.Start(Status.LoadData);
-
-            try
-            {
-                foreach (var tile in overlayTiles.Polygons.Cast<MapItemTile>())
-                {
-                    tile.Selected = false;
-                }
-
-                gMapControl.Invalidate();
-
-                if (track == null) return;
-
-                var tiles = Task.Run(() =>
-                {
-                    return Database.Default.ListLoadAsync<Tile>(track);
-                }).Result;
-
-                foreach (var tile in from item in overlayTiles.Polygons.Cast<MapItemTile>()
-                                     from tile in tiles
-                                     where item.Model.X == tile.X && item.Model.Y == tile.Y
-                                     select item)
-                {
-                    tile.Selected = true;
-                }
-
-                if (ActiveForm != this) gMapControl.Invalidate();
-            }
-            finally
-            {
-                ProgramStatus.Stop(status);
-            }
-        }
-
         private bool markerMoving;
-
-        private IMapItem selected = null;
-
-        public IMapItem Selected
-        {
-            get
-            {
-                return selected;
-            }
-            set
-            {
-                if (selected == null)
-                {
-                    SelectedTrackTiles = null;
-                }
-
-                if (selected == value) return;
-
-                if (selected != null)
-                {
-                    selected.Selected = false;
-                }
-
-                selected = value;
-
-                if (selected == null)
-                {
-                    gMapControl.Invalidate();
-                    return;
-                }
-
-                selected.Selected = true;
-
-                switch (selected.Type)
-                {
-                    case MapItemType.Marker:
-                        SelectedTrackTiles = null;
-
-                        Utils.GetFrmList(ChildFormType.MarkerList)?.SetSelected(selected.Model);
-
-                        break;
-                    case MapItemType.Track:
-                        SelectedTrackTiles = selected.Model as Track;
-
-                        Utils.GetFrmList(ChildFormType.TrackList)?.SetSelected(selected.Model);
-
-                        break;
-                }
-            }
-        }
-
-        public Track SelectedTrackTiles
-        {
-            set
-            {
-                UpdateSelectedTrackTiles(value);
-            }
-        }
 
         private IEnumerable<IMapItem> MouseOverMapItems()
         {
@@ -725,14 +618,20 @@ namespace TileExplorer
         {
             switch (load)
             {
+                case DataLoad.Tiles:
+                    if (!tilesLoaded)
+                    {
+                        UpdateData(DataLoad.Tiles);
+                    }
+                    break;
                 case DataLoad.Tracks:
-                    if (overlayTracks.Routes.Count == 0)
+                    if (!tracksLoaded)
                     {
                         UpdateData(DataLoad.Tracks);
                     }
                     break;
                 case DataLoad.Markers:
-                    if (overlayMarkers.Markers.Count == 0)
+                    if (!markersLoaded)
                     {
                         UpdateData(DataLoad.Markers);
                     }
@@ -757,6 +656,8 @@ namespace TileExplorer
         private void MiMainShowTiles_Click(object sender, EventArgs e)
         {
             overlayTiles.IsVisibile = miMainShowTiles.Checked;
+
+            CheckAndLoadData(DataLoad.Tiles);
         }
 
         private void HomeGoto()
@@ -885,53 +786,6 @@ namespace TileExplorer
             }
         }
 
-        private async Task UpdateDataAsync(DataLoad load = default)
-        {
-            var status = ProgramStatus.Start(Status.LoadData);
-
-            Selected = null;
-
-            if (load == default)
-            {
-                load = DataLoad.Tiles |
-                       DataLoad.Tracks |
-                       DataLoad.Markers |
-                       DataLoad.TracksTree;
-            }
-
-            DebugWrite.Line($"Loading data {load}");
-
-            if (load.HasFlag(DataLoad.Tiles))
-            {
-                if (miMainShowTiles.Checked)
-                {
-                    await LoadTilesAsync();
-                }
-            }
-
-            if (load.HasFlag(DataLoad.Tracks))
-            {
-                await LoadTracksInfoAsync();
-
-                if (miMainShowTracks.Checked)
-                {
-                    await LoadTracksAsync();
-                }
-            }
-
-            if (load.HasFlag(DataLoad.Markers))
-            {
-                if (miMainShowMarkers.Checked)
-                {
-                    await LoadMarkersAsync();
-                }
-            }
-
-            ProgramStatus.Stop(status);
-
-            ChildFormsUpdateData(load);
-        }
-
         private void ChildFormsUpdateData(DataLoad load)
         {
             bool updateData;
@@ -975,7 +829,7 @@ namespace TileExplorer
             }
         }
 
-        private async Task UpdateUpdateTrackMinDistancePointAsync()
+        private async Task UpdateTrackMinDistancePointAsync()
         {
             var status = ProgramStatus.Start(Status.SaveData);
 
@@ -1020,7 +874,7 @@ namespace TileExplorer
                 {
                     await Database.Default.TileSaveAsync(tile);
 
-                    await UpdateDataAsync(DataLoad.Tiles);
+                    UpdateData(DataLoad.Tiles);
                 }
                 else
                 {
@@ -1056,7 +910,7 @@ namespace TileExplorer
 
                 await Database.Default.TileDeleteAsync(tile);
 
-                await UpdateDataAsync(DataLoad.Tiles);
+                UpdateData(DataLoad.Tiles);
             }
             finally
             {
@@ -1182,25 +1036,7 @@ namespace TileExplorer
                 }
             }
 
-            return items.Cast<IMapItem>().Where(i => i.Model.Id == value.Id).FirstOrDefault();
-        }
-
-        public void SelectMapItem(object sender, BaseId value)
-        {
-            var item = FindMapItem(value);
-
-            if (item != null)
-            {
-                Selected = item;
-
-                if (ActiveForm != this) gMapControl.Invalidate();
-            }
-            else
-            {
-                Selected = null;
-
-                SelectedTrackTiles = value is Track ? value as Track : null;
-            }
+            return items.Cast<IMapItem>().FirstOrDefault(i => i.Model.Id == value.Id);
         }
 
         public void ListItemAdd(object sender, BaseId value)
@@ -1413,11 +1249,11 @@ namespace TileExplorer
                 {
                     if (Msg.Question(Resources.QuestionUpdateTrackMinDistancePoint))
                     {
-                        await UpdateUpdateTrackMinDistancePointAsync();
+                        await UpdateTrackMinDistancePointAsync();
                     }
                 }
 
-                await UpdateDataAsync();
+                UpdateData();
             }
         }
 
@@ -1532,7 +1368,10 @@ namespace TileExplorer
         {
             var tile = new Tile(position);
 
-            tile.Id = await Database.Default.GetTileIdByXYAsync(tile);
+            if (!await Database.Actions.GetTileIdByXYAsync(tile))
+            {
+                return;
+            }
 
             if (tile.Id <= Sql.NewId)
             {
@@ -1728,7 +1567,7 @@ namespace TileExplorer
         {
             markerPosition.Position = value;
 
-            overlayPosition.IsVisibile = value != default;
+            markerPosition.IsVisible = value != default;
         }
 
         private void MiTrackShowChartTrackEle_Click(object sender, EventArgs e)

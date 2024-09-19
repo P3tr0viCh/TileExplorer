@@ -127,6 +127,12 @@
     <Compile Include="Main.Markers.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Main.Selection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Tiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Main.Tracks.cs">
       <SubType>Form</SubType>
     </Compile>

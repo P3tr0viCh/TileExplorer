@@ -1,6 +1,6 @@
 ﻿using P3tr0viCh.Utils;
+using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 
@@ -16,12 +16,14 @@ namespace TileExplorer
         {
             var selected = Selected;
 
+            object list;
+
             switch (FormType)
             {
                 case ChildFormType.TrackList:
-                    var tracks = bindingSource.Cast<Track>().ToList();
+                    list = bindingSource.Cast<Track>().ToList();
 
-                    tracks.Sort((Track x, Track y) =>
+                    ((List<Track>)list).Sort((Track x, Track y) =>
                     {
                         int compare = 0;
 
@@ -107,26 +109,24 @@ namespace TileExplorer
                         return compare;
                     });
 
-                    bindingSource.DataSource = tracks;
-
                     break;
                 case ChildFormType.MarkerList:
-                    var markers = bindingSource.Cast<Marker>().ToList();
+                    list = bindingSource.Cast<Marker>().ToList();
 
-                    markers.Sort((Marker x, Marker y) => x.Text.CompareTo(y.Text));
-
-                    bindingSource.DataSource = markers;
+                    ((List<Marker>)list).Sort((Marker x, Marker y) => x.Text.CompareTo(y.Text));
 
                     break;
                 case ChildFormType.EquipmentList:
-                    var equipments = bindingSource.Cast<Equipment>().ToList();
+                    list = bindingSource.Cast<Equipment>().ToList();
 
-                    equipments.Sort((Equipment x, Equipment y) => x.Name.CompareTo(y.Name));
-
-                    bindingSource.DataSource = equipments;
+                    ((List<Equipment>)list).Sort((Equipment x, Equipment y) => x.Name.CompareTo(y.Name));
 
                     break;
+                default:
+                    return;
             }
+
+            bindingSource.DataSource = list;
 
             Selected = selected;
         }

@@ -3,6 +3,7 @@ using GMap.NET.WindowsForms;
 using P3tr0viCh.Utils;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
@@ -13,6 +14,8 @@ namespace TileExplorer
 {
     public partial class Main
     {
+        private bool markersLoaded = false;
+
         private MapItemMarker MapItemMarkerNewInstance(Marker marker)
         {
             var item = new MapItemMarker(marker);
@@ -22,32 +25,60 @@ namespace TileExplorer
             return item;
         }
 
+        private CancellationTokenSource ctsMarkers;
+
         private async Task LoadMarkersAsync()
         {
             DebugWrite.Line("start");
 
-            overlayMarkers.Clear();
-
-            var markers = await Database.Default.ListLoadAsync<Marker>();
-
-            foreach (var marker in markers)
+            try
             {
-                overlayMarkers.Markers.Add(MapItemMarkerNewInstance(marker));
-            }
+                markersLoaded = false;
 
-            DebugWrite.Line("end");
+                overlayMarkers.Clear();
+
+                var markers = await Database.Default.ListLoadAsync<Marker>();
+
+                foreach (var marker in markers)
+                {
+                    // await Task.Delay(3000, ctsMarkers.Token);
+
+                    if (ctsMarkers.IsCancellationRequested) return;
+
+                    overlayMarkers.Markers.Add(MapItemMarkerNewInstance(marker));
+                }
+
+                markersLoaded = true;
+            }
+            catch (TaskCanceledException e)
+            {
+                DebugWrite.Error(e);
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(Resources.MsgDatabaseLoadListMarkersFail, e.Message);
+            }
+            finally
+            {
+                DebugWrite.Line("end");
+            }
         }
 
-        public MapItemMarker SelectedMarker
+        private void LoadMarkersStop()
         {
-            get
-            {
-                if (Selected == null) return null;
+            ctsMarkers?.Cancel();
+            ctsMarkers?.Dispose();
+        }
 
-                if (Selected.Type != MapItemType.Marker) return null;
+        private void LoadMarkers()
+        {
+            LoadMarkersStop();
 
-                return (MapItemMarker)selected;
-            }
+            ctsMarkers = new CancellationTokenSource();
+
+            Task.Run(() => this.InvokeIfNeeded(async () => await LoadMarkersAsync()), ctsMarkers.Token);
         }
 
         private readonly GMapMarker markerNewPosition = new MapItemMarkerCross(default);

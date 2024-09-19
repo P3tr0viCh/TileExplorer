@@ -1,33 +1,55 @@
-﻿using P3tr0viCh.Utils;
-using static TileExplorer.Database.Models;
-using System.Threading.Tasks;
-using static TileExplorer.Enums;
-using TileExplorer.Properties;
-using static TileExplorer.Interfaces;
-using System.Linq;
-using System.Windows.Forms;
-using System.IO;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
-using System.Collections.Generic;
+﻿using GMap.NET.WindowsForms;
+using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using TileExplorer.Properties;
+using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
+using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
     public partial class Main
     {
+        private bool tracksLoaded = false;
+
+        private IMapItem OverlayAddTrack(GMapOverlay overlay, Track track)
+        {
+            var item = new MapItemTrack(track);
+
+            overlay.Routes.Add(item);
+
+            return item;
+        }
+
+        private CancellationTokenSource ctsTracks;
+
         private async Task LoadTracksAsync()
         {
             DebugWrite.Line("start");
 
-            overlayTracks.Clear();
-
-            var tracks = await Database.Default.ListLoadAsync<Track>();
-
-            foreach (var track in tracks)
+            try
             {
-                track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
+                tracksLoaded = false;
 
-                overlayTracks.Routes.Add(new MapItemTrack(track));
+                overlayTracks.Clear();
+
+                var tracks = await Database.Default.ListLoadAsync<Track>();
+
+                foreach (var track in tracks)
+                {
+                    // await Task.Delay(1000, ctsTracks.Token);
+
+                    if (ctsTracks.IsCancellationRequested) return;
+
+                    track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
+
+                    OverlayAddTrack(overlayTracks, track);
 
 #if DEBUG && SHOW_TRACK_KM
                 double lat1 = 0, lng1 = 0, lat2 = 0, lng2 = 0;
@@ -57,21 +79,39 @@ namespace TileExplorer
                     lng1 = lng2;
                 }
 #endif
-            }
+                }
 
-            DebugWrite.Line("end");
+                tracksLoaded = true;
+            }
+            catch (TaskCanceledException e)
+            {
+                DebugWrite.Error(e);
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
+            }
+            finally
+            {
+                DebugWrite.Line("end");
+            }
         }
 
-        public MapItemTrack SelectedTrack
+        private void LoadTracksStop()
         {
-            get
-            {
-                if (Selected == null) return null;
+            ctsTracks?.Cancel();
+            ctsTracks?.Dispose();
+        }
 
-                if (Selected.Type != MapItemType.Track) return null;
+        private void LoadTracks()
+        {
+            LoadTracksStop();
 
-                return (MapItemTrack)selected;
-            }
+            ctsTracks = new CancellationTokenSource();
+
+            Task.Run(() => this.InvokeIfNeeded(async () => await LoadTracksAsync()), ctsTracks.Token);
         }
 
         private void TrackChange(Track track)
@@ -86,6 +126,8 @@ namespace TileExplorer
         public void TrackChanged(Track track)
         {
             Utils.GetFrmList(ChildFormType.TrackList)?.ListItemChange(track);
+
+            Utils.GetFrmList(ChildFormType.TileInfo)?.ListItemChange(track);
 
             SelectMapItem(this, track);
         }
@@ -121,6 +163,7 @@ namespace TileExplorer
                             ((IListForm)frm).ListItemDelete(track);
 
                             break;
+                        case ChildFormType.TileInfo:
                         case ChildFormType.TracksTree:
                         case ChildFormType.ResultYears:
                         case ChildFormType.ResultEquipments:
@@ -265,7 +308,6 @@ namespace TileExplorer
             }
         }
 
-
         private void OpenTracks()
         {
             openFileDialog.FileName = string.Empty;
@@ -280,7 +322,7 @@ namespace TileExplorer
                 {
                     if (await OpenTracksAsync(openFileDialog.FileNames))
                     {
-                        await UpdateDataAsync(DataLoad.Tiles);
+                        UpdateData(DataLoad.Tiles);
 
                         foreach (var frm in Utils.GetChildForms<IUpdateDataForm>(null))
                         {
@@ -296,6 +338,48 @@ namespace TileExplorer
                         }
                     }
                 }));
+        }
+
+
+        private CancellationTokenSource ctsTracksInfo;
+
+        private async Task LoadTracksInfoAsync()
+        {
+            DebugWrite.Line("start");
+
+            try
+            {
+                var tracksInfo = await Database.Default.LoadTracksInfoAsync(Database.Filter.Default);
+
+                this.InvokeIfNeeded(() =>
+                {
+                    statusStripPresenter.TracksCount = tracksInfo.Count;
+                    statusStripPresenter.TracksDistance = tracksInfo.Distance / 1000.0;
+                });
+            }
+            catch (TaskCanceledException e)
+            {
+                DebugWrite.Error(e);
+            }
+            finally
+            {
+                DebugWrite.Line("end");
+            }
+        }
+
+        private void LoadTracksInfoStop()
+        {
+            ctsTracksInfo?.Cancel();
+            ctsTracksInfo?.Dispose();
+        }
+
+        private void LoadTracksInfo()
+        {
+            LoadMarkersStop();
+
+            ctsTracksInfo = new CancellationTokenSource();
+
+            Task.Run(() => this.InvokeIfNeeded(async () => await LoadTracksInfoAsync()), ctsTracksInfo.Token);
         }
     }
 }

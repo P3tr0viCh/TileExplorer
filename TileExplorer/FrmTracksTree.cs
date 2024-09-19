@@ -39,7 +39,7 @@ namespace TileExplorer
             return frm;
         }
 
-        private void FrmTracksTree_Load(object sender, System.EventArgs e)
+        private void FrmTracksTree_Load(object sender, EventArgs e)
         {
             AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateTracksTree);
 
@@ -70,15 +70,12 @@ namespace TileExplorer
 
             try
             {
-                var list = await Database.Default.ListLoadAsync<TracksTree>();
+                var list = await Database.Actions.ListLoadAsync<TracksTree>();
 
-                CreateTracksTree(list);
-            }
-            catch (Exception e)
-            {
-                DebugWrite.Error(e);
-
-                Msg.Error(Resources.MsgDatabaseLoadTracksTreeFail, e.Message);
+                if (list != null)
+                {
+                    CreateTracksTree(list);
+                }
             }
             finally
             {

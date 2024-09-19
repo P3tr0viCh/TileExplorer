@@ -1,7 +1,9 @@
 ﻿using P3tr0viCh.Utils;
-using static TileExplorer.Database.Models;
-using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
@@ -96,6 +98,46 @@ namespace TileExplorer
                     Msg.Error(e.Message);
 
                     return false;
+                }
+            }
+
+            public static async Task<bool> GetTileIdByXYAsync(Tile tile)
+            {
+                try
+                {
+                    tile.Id = await Default.GetTileIdByXYAsync(tile);
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    DebugWrite.Error(e);
+
+                    Msg.Error(e.Message);
+
+                    return false;
+                }
+            }
+
+            public static async Task<List<T>> ListLoadAsync<T>(object filter = null)
+            {
+                DebugWrite.Line("start");
+
+                try
+                {
+                    return await Default.ListLoadAsync<T>(filter);
+                }
+                catch (Exception e)
+                {
+                    DebugWrite.Error(e);
+
+                    Msg.Error(e.Message);
+
+                    return null;
+                }
+                finally
+                {
+                    DebugWrite.Line("end");
                 }
             }
         }

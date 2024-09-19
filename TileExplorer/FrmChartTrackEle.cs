@@ -256,6 +256,8 @@ namespace TileExplorer
 
         private void Chart_MouseEnter(object sender, EventArgs e)
         {
+            MainForm?.SelectMapItem(this, Track);
+
             MainForm?.ShowMarkerPosition(this, CursorPoint);
         }
     }

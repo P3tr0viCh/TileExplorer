@@ -241,7 +241,7 @@ namespace TileExplorer
             }
         }
 
-        private void GetQuery<T>(out string sql, out object param, in object filter, in object orderBy = null)
+        private void GetQuery<T>(out string sql, out object param, in object filter)
         {
             param = null;
 
@@ -328,11 +328,11 @@ namespace TileExplorer
 #endif
         }
 
-        public async Task<List<T>> ListLoadAsync<T>(object filter = null, object orderBy = null)
+        public async Task<List<T>> ListLoadAsync<T>(object filter = null)
         {
             DebugWrite.Line(typeof(T).Name);
 
-            GetQuery<T>(out string sql, out object param, filter, orderBy);
+            GetQuery<T>(out string sql, out object param, filter);
 
             //await Task.Delay(3000);
 

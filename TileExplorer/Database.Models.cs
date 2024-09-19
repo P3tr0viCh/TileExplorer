@@ -16,7 +16,12 @@ namespace TileExplorer
             private const int DEFAULT_OFFSET_X = 20;
             private const int DEFAULT_OFFSET_Y = -10;
 
-            public class BaseId
+            public interface IBaseId
+            {
+                long Id { get; set; }
+            }
+
+            public class BaseId : IBaseId
             {
                 [Key]
                 public long Id { get; set; } = 0;
