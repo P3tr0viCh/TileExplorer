@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -16,6 +17,16 @@ namespace TileExplorer
     {
         private bool markersLoaded = false;
 
+        private readonly MapItemMarkerCircle markerPosition = new MapItemMarkerCircle(default)
+        {
+            IsVisible = false
+        };
+
+        private readonly GMapMarker markerNewPosition = new MapItemMarkerCross(default)
+        {
+            IsVisible = false
+        };
+
         private MapItemMarker MapItemMarkerNewInstance(Marker marker)
         {
             var item = new MapItemMarker(marker);
@@ -25,11 +36,13 @@ namespace TileExplorer
             return item;
         }
 
-        private CancellationTokenSource ctsMarkers;
+        private readonly WrapperCancellationTokenSource ctsMarkers = new WrapperCancellationTokenSource();
 
         private async Task LoadMarkersAsync()
         {
             DebugWrite.Line("start");
+
+            var status = ProgramStatus.Start(Status.LoadData);
 
             try
             {
@@ -47,7 +60,7 @@ namespace TileExplorer
 
                     overlayMarkers.Markers.Add(MapItemMarkerNewInstance(marker));
                 }
-
+                
                 markersLoaded = true;
             }
             catch (TaskCanceledException e)
@@ -58,34 +71,31 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                Msg.Error(Resources.MsgDatabaseLoadListMarkersFail, e.Message);
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    Msg.Error(Resources.MsgDatabaseLoadListMarkersFail, e.Message);
+                });
             }
             finally
             {
+                ctsMarkers.Finally();
+
+                ProgramStatus.Stop(status);
+
                 DebugWrite.Line("end");
             }
         }
 
-        private void LoadMarkersStop()
-        {
-            ctsMarkers?.Cancel();
-            ctsMarkers?.Dispose();
-        }
-
         private void LoadMarkers()
         {
-            LoadMarkersStop();
+            ctsMarkers.Start();
 
-            ctsMarkers = new CancellationTokenSource();
-
-            Task.Run(() => this.InvokeIfNeeded(async () => await LoadMarkersAsync()), ctsMarkers.Token);
+            Task.Run(async () => await LoadMarkersAsync(), ctsMarkers.Token);
         }
-
-        private readonly GMapMarker markerNewPosition = new MapItemMarkerCross(default);
 
         private void MarkerAdd(Marker marker)
         {
-            bool prevMarkersVisible = overlayMarkers.IsVisibile;
+            var prevMarkersVisible = overlayMarkers.IsVisibile;
 
             overlayMarkers.IsVisibile = true;
 
@@ -94,12 +104,11 @@ namespace TileExplorer
 #endif
 
             markerNewPosition.Position = new PointLatLng(marker.Lat, marker.Lng);
-
-            overlayMarkers.Markers.Add(markerNewPosition);
+            markerNewPosition.IsVisible = true;
 
             FrmMarker.ShowDlg(this, marker);
 
-            overlayMarkers.Markers.Remove(markerNewPosition);
+            markerNewPosition.IsVisible = false;
 
             overlayMarkers.IsVisibile = prevMarkersVisible;
         }
@@ -119,7 +128,7 @@ namespace TileExplorer
 
             if (mapItem == null)
             {
-                overlayMarkers.Markers.Remove(markerNewPosition);
+                markerNewPosition.IsVisible = false;
 
                 overlayMarkers.Markers.Add(MapItemMarkerNewInstance(marker));
             }
@@ -148,16 +157,15 @@ namespace TileExplorer
 
             if (!Msg.Question(string.Format(Resources.QuestionMarkerDelete, name))) return;
 
-            if (Database.Actions.MarkerDeleteAsync(marker).Result)
-            {
-                overlayMarkers.Markers.Remove(
-                    overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?
-                        .Cast<MapItemMarker>().FirstOrDefault());
+            if (!Database.Actions.MarkerDeleteAsync(marker).Result) return;
 
-                Utils.GetFrmList(ChildFormType.MarkerList)?.ListItemDelete(marker);
+            overlayMarkers.Markers.Remove(
+                overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?
+                    .Cast<MapItemMarker>().FirstOrDefault());
 
-                Selected = null;
-            }
+            Utils.GetFrmList(ChildFormType.MarkerList)?.ListItemDelete(marker);
+
+            Selected = null;
         }
     }
 }

@@ -87,7 +87,7 @@ namespace TileExplorer
 
             public int WidthTrack { get; set; } = 2;
 
-            public int WidthTrackSelected { get; set; } = 4;
+            public int WidthTrackSelected { get; set; } = 2;
 
             public int TrackMinDistancePoint { get; set; } = 100;
 

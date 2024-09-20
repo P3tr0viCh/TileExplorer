@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
@@ -337,7 +338,7 @@ namespace TileExplorer
             }
         }
 
-        private CancellationTokenSource cancellationTokenSource;
+        private readonly WrapperCancellationTokenSource ctsList = new WrapperCancellationTokenSource();
 
         private async Task UpdateDataAsync()
         {
@@ -346,10 +347,6 @@ namespace TileExplorer
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
 
             var errorMsg = string.Empty;
-
-            Selected = null;
-
-            var close = false;
 
             try
             {
@@ -394,14 +391,12 @@ namespace TileExplorer
 
                         var tile = (Tile)data;
 
-                        Text = string.Format(Resources.StatusTileId, tile.X, tile.Y);
+                        BeginInvoke((MethodInvoker)delegate
+                        {
+                            Text = string.Format(Resources.StatusTileId, tile.X, tile.Y);
+                        });
 
                         list = await Database.Actions.ListLoadAsync<Track>(tile);
-
-                        if (list != null && ((List<Track>)list).Count == 0)
-                        {
-                            close = true;
-                        }
 
                         break;
                     default:
@@ -410,9 +405,12 @@ namespace TileExplorer
 
                 if (list != null)
                 {
-                    bindingSource.DataSource = list;
+                    BeginInvoke((MethodInvoker)delegate
+                    {
+                        bindingSource.DataSource = list;
 
-                    Sort();
+                        Sort();
+                    });
                 }
             }
             catch (TaskCanceledException e)
@@ -423,16 +421,16 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                Msg.Error(errorMsg, e.Message);
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    Msg.Error(errorMsg, e.Message);
+                });
             }
             finally
             {
-                MainForm.ProgramStatus.Stop(status);
-            }
+                ctsList.Finally();
 
-            if (close)
-            {
-                Close();
+                MainForm.ProgramStatus.Stop(status);
             }
 
             DebugWrite.Line("end");
@@ -440,15 +438,9 @@ namespace TileExplorer
 
         public void UpdateData()
         {
-            cancellationTokenSource?.Cancel();
+            ctsList.Start();
 
-            cancellationTokenSource?.Dispose();
-
-            cancellationTokenSource = new CancellationTokenSource();
-
-            Task.Run(() =>
-                ((Form)MainForm).InvokeIfNeeded(async () => await UpdateDataAsync()),
-                cancellationTokenSource.Token);
+            Task.Run(async () => await UpdateDataAsync(), ctsList.Token);
         }
 
         public BaseId Find(BaseId value)
@@ -482,7 +474,7 @@ namespace TileExplorer
                 case ChildFormType.TrackList:
                 case ChildFormType.MarkerList:
                 case ChildFormType.TileInfo:
-                    if (MainForm.ProgramStatus.IsIdle())
+                    if (MainForm.ProgramStatus.IsIdle)
                     {
                         MainForm.SelectMapItem(this, Selected);
                     }
@@ -653,8 +645,7 @@ namespace TileExplorer
 
         private void FrmList_FormClosed(object sender, FormClosedEventArgs e)
         {
-            cancellationTokenSource?.Cancel();
-            cancellationTokenSource?.Dispose();
+            ctsList.Cancel();
         }
 
         public void ListItemChange(BaseId value)
@@ -689,6 +680,17 @@ namespace TileExplorer
             }
 
             bindingSource.Remove(item);
+
+            switch (FormType)
+            {
+                case ChildFormType.TileInfo:
+                    if (bindingSource.Count == 0)
+                    {
+                        Close();
+                    }
+
+                    break;
+            }
         }
     }
 }

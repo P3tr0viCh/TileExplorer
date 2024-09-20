@@ -62,7 +62,7 @@ namespace TileExplorer
         {
         }
 
-        private CancellationTokenSource cancellationTokenSource;
+        private readonly WrapperCancellationTokenSource ctsTracsTree = new WrapperCancellationTokenSource();
 
         private async Task UpdateDataAsync()
         {
@@ -79,22 +79,17 @@ namespace TileExplorer
             }
             finally
             {
+                ctsTracsTree.Finally();
+
                 MainForm.ProgramStatus.Stop(status);
             }
         }
 
         public void UpdateData()
         {
-            cancellationTokenSource?.Cancel();
+            ctsTracsTree.Start();
 
-            cancellationTokenSource?.Dispose();
-
-            cancellationTokenSource = new CancellationTokenSource();
-
-            Task.Run(() =>
-            {
-                this.InvokeIfNeeded(async () => await UpdateDataAsync());
-            }, cancellationTokenSource.Token);
+            Task.Run(() => this.InvokeIfNeeded(async () => await UpdateDataAsync()), ctsTracsTree.Token);
         }
 
         private string MonthToString(int month)
@@ -189,8 +184,7 @@ namespace TileExplorer
 
         private void FrmTracksTree_FormClosed(object sender, FormClosedEventArgs e)
         {
-            cancellationTokenSource?.Cancel();
-            cancellationTokenSource?.Dispose();
+            ctsTracsTree.Cancel();
         }
     }
 }

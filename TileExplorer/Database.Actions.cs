@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -88,24 +87,6 @@ namespace TileExplorer
                 try
                 {
                     await Default.EquipmentDeleteAsync(equipment);
-
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    DebugWrite.Error(e);
-
-                    Msg.Error(e.Message);
-
-                    return false;
-                }
-            }
-
-            public static async Task<bool> GetTileIdByXYAsync(Tile tile)
-            {
-                try
-                {
-                    tile.Id = await Default.GetTileIdByXYAsync(tile);
 
                     return true;
                 }

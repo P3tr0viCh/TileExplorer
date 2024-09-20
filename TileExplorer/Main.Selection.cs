@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Utils;
+﻿using GMap.NET.WindowsForms;
+using P3tr0viCh.Utils;
 using System.Linq;
 using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
@@ -53,6 +54,13 @@ namespace TileExplorer
 
                 if (selected != null)
                 {
+                    switch (selected.Type)
+                    {
+                        case MapItemType.Track:
+                            selected.IsVisible = miMainShowTracks.Checked;
+                            break;
+                    }
+
                     selected.Selected = false;
                 }
 
@@ -71,15 +79,34 @@ namespace TileExplorer
                     case MapItemType.Marker:
                         SelectedTrackTiles = null;
 
+                        overlayMarkers.Markers.Remove((GMapMarker)selected);
+                        overlayMarkers.Markers.Add((GMapMarker)selected);
+
                         Utils.GetFrmList(ChildFormType.MarkerList)?.SetSelected(selected.Model);
 
                         break;
                     case MapItemType.Track:
+                        selected.IsVisible = true;
+
+                        overlayTracks.Routes.Remove((GMapRoute)selected);
+                        overlayTracks.Routes.Add((GMapRoute)selected);
+
                         SelectedTrackTiles = selected.Model as Track;
 
-                        Utils.GetFrmList(ChildFormType.TrackList)?.SetSelected(selected.Model);
-
-                        Utils.GetFrmList(ChildFormType.TileInfo)?.SetSelected(selected.Model);
+                        Utils.GetChildForms<FrmList>(null).ForEach(frm =>
+                        {
+                            switch (frm.FormType)
+                            {
+                                case ChildFormType.TrackList:
+                                    frm.SetSelected(selected.Model);
+                                    
+                                    break;
+                                case ChildFormType.TileInfo:
+                                    
+                                    frm.SetSelected(selected.Model);
+                                    break;
+                            }
+                        });
 
                         break;
                 }
@@ -97,13 +124,13 @@ namespace TileExplorer
 
             if (track == null) return;
 
-            var tiles = Task.Run(() =>
+            if (track.TrackTiles == null)
             {
-                return Database.Default.ListLoadAsync<Tile>(track);
-            }).Result;
+                Utils.Tiles.CalcTrackTiles(track);
+            }
 
             foreach (var tile in from item in overlayTiles.Polygons.Cast<MapItemTile>()
-                                 from tile in tiles
+                                 from tile in track.TrackTiles
                                  where item.Model.X == tile.X && item.Model.Y == tile.Y
                                  select item)
             {
@@ -133,7 +160,7 @@ namespace TileExplorer
 
                         if (track.TrackPoints == null) return null;
 
-                        return OverlayAddTrack(overlayTracks, track);
+                        return OverlayAddTrack(track);
                     }).Result;
                 }
             }

@@ -206,7 +206,7 @@ namespace TileExplorer
         [LocalizedAttribute.Category("Category.DesignTracks", Resource)]
         [LocalizedAttribute.DisplayName("WidthTrackSelected.DisplayName", Resource)]
         [LocalizedAttribute.Description("WidthTrackSelected.Description", Resource)]
-        public int WidthTrackSelected { get => Roaming.Default.WidthTrack; set => Roaming.Default.WidthTrack = value; }
+        public int WidthTrackSelected { get => Roaming.Default.WidthTrackSelected; set => Roaming.Default.WidthTrackSelected = value; }
 
         [LocalizedAttribute.Category("Category.DesignTracks", Resource)]
         [LocalizedAttribute.DisplayName("TrackMinDistancePoint.DisplayName", Resource)]

@@ -146,10 +146,10 @@ namespace TileExplorer
 
                 using (var transaction = connection.BeginTransaction())
                 {
-                    foreach (var tile in tiles)
+                    tiles.ForEach(async tile =>
                     {
                         tile.Id = await connection.InsertAsync(tile, transaction);
-                    }
+                    });
 
                     transaction.Commit();
                 }
@@ -364,6 +364,53 @@ namespace TileExplorer
             }
 
             DebugWrite.Line("end");
+        }
+
+        public async Task TrackNewSaveAsync(Track track)
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    var trackId = await connection.InsertAsync(track, transaction);
+
+                    track.TrackPoints.ForEach(trackPoint =>
+                        trackPoint.TrackId = track.Id
+                    );
+
+                    await connection.InsertAsync(track.TrackPoints, transaction);
+
+                    int id;
+
+                    track.TrackTiles.ForEach(async tile =>
+                    {
+                        id = await Default.GetTileIdByXYAsync(tile);
+
+                        if (id == Sql.NewId)
+                        {
+                            tile.Id = await connection.InsertAsync(tile, transaction);
+                        }
+                        else
+                        {
+                            tile.Id = id;
+                        }
+                    });
+
+                    track.TrackTiles.ForEach(async tile =>
+                    {
+                        await connection.InsertAsync(new TracksTiles()
+                        {
+                            TrackId = track.Id,
+                            TileId = tile.Id,
+                        }, 
+                        transaction);
+                    });
+
+                    transaction.Commit();
+                }
+            }
         }
     }
 }

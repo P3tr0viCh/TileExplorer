@@ -80,7 +80,7 @@ namespace TileExplorer
                 AppSettings.Roaming.Default.ColorChartTrackEleSerial);
         }
 
-        private CancellationTokenSource cancellationTokenSource;
+        private readonly WrapperCancellationTokenSource ctsChartTrackEle = new WrapperCancellationTokenSource();
 
         public async Task UpdateDataAsync()
         {
@@ -88,9 +88,12 @@ namespace TileExplorer
 
             try
             {
-                ChartSerial.Points.Clear();
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    ChartSerial.Points.Clear();
 
-                ChartArea.CursorX.Position = double.NaN;
+                    ChartArea.CursorX.Position = double.NaN;
+                });
 
                 //await Task.Delay(3000, cancellationTokenSource.Token);
 
@@ -117,14 +120,20 @@ namespace TileExplorer
                         maxEleDistance = distance;
                     }
 
-                    ChartSerial.Points.AddXY(distance, point.Ele);
+                    BeginInvoke((MethodInvoker)delegate
+                    {
+                        ChartSerial.Points.AddXY(distance, point.Ele);
+                    });
                 }
 
-                ChartArea.AxisY.Minimum = Math.Floor(minEle / 50.0) * 50.0;
-                ChartArea.AxisY.Maximum = Math.Floor(maxEle / 50.0) * 50.0 + 50.0;
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    ChartArea.AxisY.Minimum = Math.Floor(minEle / 50.0) * 50.0;
+                    ChartArea.AxisY.Maximum = Math.Floor(maxEle / 50.0) * 50.0 + 50.0;
 
-                ChartArea.AxisX.Minimum = 0;
-                ChartArea.AxisX.Maximum = Track.Distance / 1000;
+                    ChartArea.AxisX.Minimum = 0;
+                    ChartArea.AxisX.Maximum = Track.Distance / 1000;
+                });
             }
             catch (TaskCanceledException e)
             {
@@ -134,11 +143,19 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                Msg.Error(Resources.MsgDatabaseLoadTrackEleChartFail, e.Message);
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    Msg.Error(Resources.MsgDatabaseLoadChartTrackEleFail, e.Message);
+                });
             }
             finally
             {
-                CursorXPositionChanged();
+                ctsChartTrackEle.Finally();
+
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    CursorXPositionChanged();
+                });
 
                 MainForm.ProgramStatus.Stop(status);
             }
@@ -146,16 +163,9 @@ namespace TileExplorer
 
         public void UpdateData()
         {
-            cancellationTokenSource?.Cancel();
+            ctsChartTrackEle.Start();
 
-            cancellationTokenSource?.Dispose();
-
-            cancellationTokenSource = new CancellationTokenSource();
-
-            Task.Run(() =>
-            {
-                this.InvokeIfNeeded(async () => await UpdateDataAsync());
-            }, cancellationTokenSource.Token);
+            Task.Run(async () => await UpdateDataAsync(), ctsChartTrackEle.Token);
         }
 
         private bool AllowCursorXMove = true;
@@ -245,8 +255,7 @@ namespace TileExplorer
         {
             MainForm?.ShowMarkerPosition(this, default);
 
-            cancellationTokenSource?.Cancel();
-            cancellationTokenSource?.Dispose();
+            ctsChartTrackEle.Cancel();
         }
 
         private void Chart_MouseLeave(object sender, EventArgs e)

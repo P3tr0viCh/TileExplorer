@@ -1,5 +1,4 @@
 ﻿using GMap.NET;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -58,6 +57,8 @@ namespace TileExplorer
             BaseId Model { get; set; }
 
             bool Selected { get; set; }
+
+            bool IsVisible { get; set; }
 
             void UpdateColors();
             void NotifyModelChanged();

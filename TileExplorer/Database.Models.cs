@@ -199,6 +199,10 @@ namespace TileExplorer
                 [Computed]
                 public List<TrackPoint> TrackPoints { get; set; } = null;
 
+                [Write(false)]
+                [Computed]
+                public List<Tile> TrackTiles { get; set; } = null;
+
                 [DisplayName("Плитки +")]
                 [Write(false)]
                 public int NewTilesCount { get; set; } = 0;

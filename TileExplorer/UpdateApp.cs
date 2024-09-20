@@ -36,7 +36,7 @@ namespace TileExplorer
                 return true;
             }
 
-            return AppUpdate.Status.IsIdle();
+            return AppUpdate.Status.IsIdle;
         }
 
         private string GetProgramStartFileName()

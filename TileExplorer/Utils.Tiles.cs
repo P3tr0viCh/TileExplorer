@@ -1,5 +1,7 @@
 ﻿using GMap.NET;
+using P3tr0viCh.Utils;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -129,24 +131,24 @@ namespace TileExplorer
                 return result;
             }
 
-            public static List<Tile> GetTilesFromTrack(Track track)
+            public static void CalcTrackTiles(Track track)
             {
-                var tiles = new List<Tile>();
+                track.TrackTiles = new List<Tile>();
 
                 int x, y;
 
-                foreach (var point in track.TrackPoints)
+                track.TrackPoints.ForEach(point =>
                 {
                     x = Osm.LngToTileX(point.Lng);
                     y = Osm.LatToTileY(point.Lat);
 
-                    if (tiles.FindIndex(tile => tile.X == x && tile.Y == y) == -1)
+                    if (track.TrackTiles.FindIndex(tile => tile.X == x && tile.Y == y) == -1)
                     {
-                        tiles.Add(new Tile(x, y));
+                        track.TrackTiles.Add(new Tile(x, y));
                     }
-                }
+                });
 
-                return tiles;
+                DebugWrite.Line($"{track.TrackTiles.Count()}");
             }
 
             public static List<PointLatLng> TilePoints(Tile tile)

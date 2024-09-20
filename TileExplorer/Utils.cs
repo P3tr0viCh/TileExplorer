@@ -76,7 +76,7 @@ namespace TileExplorer
             return a * x + b;
         }
 
-        public static ICollection<T> GetChildForms<T>(ChildFormType? type) 
+        public static List<T> GetChildForms<T>(ChildFormType? type) 
         {
             var forms = new List<T>();
 

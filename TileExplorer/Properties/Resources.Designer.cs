@@ -294,6 +294,17 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить результаты трека.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgDatabaseLoadChartTrackEleFail {
+            get {
+                return ResourceManager.GetString("MsgDatabaseLoadChartTrackEleFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Не удалось загрузить список снаряжения.
         ///Ошибка:
         ///{0}..
@@ -367,17 +378,6 @@ namespace TileExplorer.Properties {
         internal static string MsgDatabaseLoadTilesFail {
             get {
                 return ResourceManager.GetString("MsgDatabaseLoadTilesFail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Не удалось загрузить результаты трека.
-        ///Ошибка:
-        ///{0}..
-        /// </summary>
-        internal static string MsgDatabaseLoadTrackEleChartFail {
-            get {
-                return ResourceManager.GetString("MsgDatabaseLoadTrackEleChartFail", resourceCulture);
             }
         }
         

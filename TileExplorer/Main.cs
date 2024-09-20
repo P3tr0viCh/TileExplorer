@@ -14,7 +14,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -30,25 +29,19 @@ namespace TileExplorer
         private readonly GMapOverlay overlayTiles = new GMapOverlay("tiles");
         private readonly GMapOverlay overlayTracks = new GMapOverlay("tracks");
         private readonly GMapOverlay overlayMarkers = new GMapOverlay("markers");
-        private readonly GMapOverlay overlayPosition = new GMapOverlay("position");
-
-        private readonly MapItemMarkerCircle markerPosition = new MapItemMarkerCircle(default)
-        {
-            IsVisible = false
-        };
+        private readonly GMapOverlay overlayPositions = new GMapOverlay("position");
 
         private readonly MapZoomRuler mapZoomRuler;
 
         private readonly PresenterStatusStrip statusStripPresenter;
 
-        private readonly ProgramStatus status = new ProgramStatus();
-        public ProgramStatus ProgramStatus => status;
+        public ProgramStatus ProgramStatus { get; } = new ProgramStatus();
 
         public Main()
         {
             InitializeComponent();
 
-            statusStripPresenter = new PresenterStatusStrip(this);
+            statusStripPresenter = new PresenterStatusStrip(this, this);
 
             mapZoomRuler = new MapZoomRuler(gMapControl);
 
@@ -126,8 +119,6 @@ namespace TileExplorer
             gMapControl.GrayScaleMode = miMainGrayScale.Checked;
 
             overlayGrid.IsVisibile = miMainShowGrid.Checked;
-            overlayTracks.IsVisibile = miMainShowTracks.Checked;
-            overlayMarkers.IsVisibile = miMainShowMarkers.Checked;
 
             miMainLeftPanel.Checked = AppSettings.Local.Default.VisibleLeftPanel;
             toolStripContainer.LeftToolStripPanelVisible = miMainLeftPanel.Checked;
@@ -172,54 +163,54 @@ namespace TileExplorer
             UpdateData();
         }
 
+        private IMapItem savedSelected;
+
         private void UpdateData(DataLoad load = default)
         {
-            var status = ProgramStatus.Start(Status.LoadData);
-
-            try
+            if (load == default)
             {
-                Selected = null;
-
-                if (load == default)
-                {
-                    load = DataLoad.Tiles |
-                           DataLoad.Tracks |
-                           DataLoad.Markers |
-                           DataLoad.TracksTree;
-                }
-
-                DebugWrite.Line($"Loading data {load}");
-
-                if (load.HasFlag(DataLoad.Tiles))
-                {
-                    if (miMainShowTiles.Checked)
-                    {
-                        LoadTiles();
-                    }
-                }
-
-                if (load.HasFlag(DataLoad.Tracks))
-                {
-                    LoadTracksInfo();
-
-                    if (miMainShowTracks.Checked)
-                    {
-                        LoadTracks();
-                    }
-                }
-
-                if (load.HasFlag(DataLoad.Markers))
-                {
-                    if (miMainShowMarkers.Checked)
-                    {
-                        LoadMarkers();
-                    }
-                }
-
+                load = DataLoad.Tiles |
+                       DataLoad.Tracks |
+                       DataLoad.Markers |
+                       DataLoad.TracksTree;
             }
-            finally
+
+            DebugWrite.Line($"Loading data {load}");
+
+            savedSelected = Selected;
+
+            Selected = null;
+
+            if (load.HasFlag(DataLoad.Tiles))
             {
-                ProgramStatus.Stop(status);
+                tilesLoaded = false;
+
+                if (miMainShowTiles.Checked)
+                {
+                    LoadTiles();
+                }
+            }
+
+            if (load.HasFlag(DataLoad.Tracks))
+            {
+                LoadTracksInfo();
+
+                tracksLoaded = false;
+
+                if (miMainShowTracks.Checked)
+                {
+                    LoadTracks();
+                }
+            }
+
+            if (load.HasFlag(DataLoad.Markers))
+            {
+                markersLoaded = false;
+
+                if (miMainShowMarkers.Checked)
+                {
+                    LoadMarkers();
+                }
             }
 
             ChildFormsUpdateData(load);
@@ -273,9 +264,10 @@ namespace TileExplorer
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
-            LoadTracksStop();
-            LoadMarkersStop();
-            LoadTracksInfoStop();
+            ctsTiles.Cancel();
+            ctsTracks.Cancel();
+            ctsMarkers.Cancel();
+            ctsTracksInfo.Cancel();
         }
 
         private void GMapLoad()
@@ -307,9 +299,10 @@ namespace TileExplorer
             gMapControl.Overlays.Add(overlayTracks);
             gMapControl.Overlays.Add(overlayMarkers);
 
-            gMapControl.Overlays.Add(overlayPosition);
+            gMapControl.Overlays.Add(overlayPositions);
 
-            overlayPosition.Markers.Add(markerPosition);
+            overlayPositions.Markers.Add(markerPosition);
+            overlayPositions.Markers.Add(markerNewPosition);
 
             statusStripPresenter.Zoom = gMapControl.Zoom;
             statusStripPresenter.Position = gMapControl.Position;
@@ -361,7 +354,15 @@ namespace TileExplorer
 
         private void ProgramStatus_StatusChanged(object sender, Status status)
         {
-            this.InvokeIfNeeded(() => statusStripPresenter.Status = status.Description());
+            statusStripPresenter.Status = status.Description();
+
+            if (ProgramStatus.IsIdle)
+            {
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    Selected = FindMapItem(savedSelected?.Model);
+                });
+            }
         }
 
         private void UpdateApp_StatusChanged(object sender, UpdateStatus status)
@@ -614,50 +615,67 @@ namespace TileExplorer
             }
         }
 
-        private void CheckAndLoadData(DataLoad load)
+        private void CheckAndLoadData(DataLoad load, bool visible)
         {
             switch (load)
             {
                 case DataLoad.Tiles:
+                    foreach (var polygon in overlayTiles.Polygons)
+                    {
+                        polygon.IsVisible = visible;
+                    }
+
                     if (!tilesLoaded)
                     {
                         UpdateData(DataLoad.Tiles);
                     }
+
                     break;
                 case DataLoad.Tracks:
+                    foreach (var track in overlayTracks.Routes)
+                    {
+                        track.IsVisible = visible;
+                    }
+
+                    if (SelectedTrack != null)
+                    {
+                        SelectedTrack.IsVisible = true;
+                    }
+
                     if (!tracksLoaded)
                     {
                         UpdateData(DataLoad.Tracks);
                     }
+
                     break;
                 case DataLoad.Markers:
+                    foreach (var marker in overlayMarkers.Markers)
+                    {
+                        marker.IsVisible = visible;
+                    }
+
                     if (!markersLoaded)
                     {
                         UpdateData(DataLoad.Markers);
                     }
+
                     break;
             }
         }
 
+        private void MiMainShowTiles_Click(object sender, EventArgs e)
+        {
+            CheckAndLoadData(DataLoad.Tiles, miMainShowTiles.Checked);
+        }
+
         private void MiMainShowMarkers_Click(object sender, EventArgs e)
         {
-            overlayMarkers.IsVisibile = miMainShowMarkers.Checked;
-
-            CheckAndLoadData(DataLoad.Markers);
+            CheckAndLoadData(DataLoad.Markers, miMainShowMarkers.Checked);
         }
 
         private void MiMainShowTracks_Click(object sender, EventArgs e)
         {
-            overlayTracks.IsVisibile = miMainShowTracks.Checked;
-
-            CheckAndLoadData(DataLoad.Tracks);
-        }
-
-        private void MiMainShowTiles_Click(object sender, EventArgs e)
-        {
-            overlayTiles.IsVisibile = miMainShowTiles.Checked;
-
-            CheckAndLoadData(DataLoad.Tiles);
+            CheckAndLoadData(DataLoad.Tracks, miMainShowTracks.Checked);
         }
 
         private void HomeGoto()
@@ -1364,14 +1382,32 @@ namespace TileExplorer
             Utils.Osm.StartUrlEdit((int)gMapControl.Zoom, MenuPopupPointLatLng);
         }
 
-        private async Task ShowTileInfoAsync(PointLatLng position)
+        private void ShowTileInfo()
         {
-            var tile = new Tile(position);
-
-            if (!await Database.Actions.GetTileIdByXYAsync(tile))
+            var tile = Task.Run(async () =>
             {
-                return;
-            }
+                var result = new Tile(MenuPopupPointLatLng);
+
+                try
+                {
+                    result.Id = await Database.Default.GetTileIdByXYAsync(result);
+                }
+                catch (Exception e)
+                {
+                    DebugWrite.Error(e);
+
+                    BeginInvoke((MethodInvoker)delegate
+                    {
+                        Msg.Error(Resources.MsgDatabaseLoadListTileInfoFail, e.Message);
+                    });
+
+                    return null;
+                }
+
+                return result;
+            }).Result;
+
+            if (tile == null) return;
 
             if (tile.Id <= Sql.NewId)
             {
@@ -1390,13 +1426,6 @@ namespace TileExplorer
             }
 
             FrmList.ShowFrm(this, ChildFormType.TileInfo, tile);
-        }
-
-        private void ShowTileInfo()
-        {
-            Task.Run(() =>
-                this.InvokeIfNeeded(async () => await ShowTileInfoAsync(MenuPopupPointLatLng))
-            );
         }
 
         private void MiMapShowTileInfo_Click(object sender, EventArgs e)

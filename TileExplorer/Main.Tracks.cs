@@ -1,10 +1,8 @@
-﻿using GMap.NET.WindowsForms;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -18,20 +16,22 @@ namespace TileExplorer
     {
         private bool tracksLoaded = false;
 
-        private IMapItem OverlayAddTrack(GMapOverlay overlay, Track track)
+        private IMapItem OverlayAddTrack(Track track)
         {
             var item = new MapItemTrack(track);
 
-            overlay.Routes.Add(item);
+            overlayTracks.Routes.Add(item);
 
             return item;
         }
 
-        private CancellationTokenSource ctsTracks;
+        private readonly WrapperCancellationTokenSource ctsTracks = new WrapperCancellationTokenSource();
 
         private async Task LoadTracksAsync()
         {
             DebugWrite.Line("start");
+
+            var status = ProgramStatus.Start(Status.LoadData);
 
             try
             {
@@ -49,7 +49,7 @@ namespace TileExplorer
 
                     track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
 
-                    OverlayAddTrack(overlayTracks, track);
+                    OverlayAddTrack(track);
 
 #if DEBUG && SHOW_TRACK_KM
                 double lat1 = 0, lng1 = 0, lat2 = 0, lng2 = 0;
@@ -91,27 +91,26 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
+                });
             }
             finally
             {
+                ctsTracks.Finally();
+
+                ProgramStatus.Stop(status);
+
                 DebugWrite.Line("end");
             }
         }
 
-        private void LoadTracksStop()
-        {
-            ctsTracks?.Cancel();
-            ctsTracks?.Dispose();
-        }
-
         private void LoadTracks()
         {
-            LoadTracksStop();
+            ctsTracks.Start();
 
-            ctsTracks = new CancellationTokenSource();
-
-            Task.Run(() => this.InvokeIfNeeded(async () => await LoadTracksAsync()), ctsTracks.Token);
+            Task.Run(async () => await LoadTracksAsync(), ctsTracks.Token);
         }
 
         private void TrackChange(Track track)
@@ -159,11 +158,11 @@ namespace TileExplorer
                 {
                     switch (((IChildForm)frm).FormType)
                     {
+                        case ChildFormType.TileInfo:
                         case ChildFormType.TrackList:
                             ((IListForm)frm).ListItemDelete(track);
 
                             break;
-                        case ChildFormType.TileInfo:
                         case ChildFormType.TracksTree:
                         case ChildFormType.ResultYears:
                         case ChildFormType.ResultEquipments:
@@ -188,106 +187,49 @@ namespace TileExplorer
 
             Track track;
 
-            List<Tile> trackTiles;
-
             try
             {
-                var showDlg = true;
+                /*                var showDlg = true;
 
-                var canToAll = files.Count() > 1;
+                                var canToAll = files.Count() > 1;
 
-                Equipment equipmentToAll = null;
+                                Equipment equipmentToAll = null;
 
-                var exitForEach = false;
+                                var exitForEach = false;*/
 
                 foreach (var file in files)
                 {
-                    track = Utils.Tracks.OpenTrackFromFile(file);
+                    track = await Task.Run(() => Utils.Tracks.OpenTrackFromFile(file));
 
-                    DebugWrite.Line("OpenTrackFromFileAsync done");
+                    DebugWrite.Line("OpenTrackFromFile done");
 
-                    if (showDlg)
-                    {
-                        switch (FrmTrack.ShowDlg(this, track, canToAll))
-                        {
-                            case DialogResult.Cancel:
-                                continue;
-                            case DialogResult.Abort:
-                                exitForEach = true;
+                    /*                    if (showDlg)
+                                        {
+                                            switch (FrmTrack.ShowDlg(this, track, canToAll))
+                                            {
+                                                case DialogResult.Cancel:
+                                                    continue;
+                                                case DialogResult.Abort:
+                                                    exitForEach = true;
 
-                                break;
-                            case DialogResult.Yes:
-                                showDlg = false;
+                                                    break;
+                                                case DialogResult.Yes:
+                                                    showDlg = false;
 
-                                equipmentToAll = track.Equipment;
+                                                    equipmentToAll = track.Equipment;
 
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        track.Equipment = equipmentToAll;
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            track.Equipment = equipmentToAll;*/
 
-                        await Database.Default.TrackSaveAsync(track);
-                    }
+                    Utils.Tiles.CalcTrackTiles(track);
 
-                    if (exitForEach)
-                    {
-                        break;
-                    }
+                    await Database.Default.TrackNewSaveAsync(track);
 
-                    var mapTrack = new MapItemTrack(track);
-
-                    overlayTracks.Routes.Add(mapTrack);
-
-                    Selected = mapTrack;
-
-                    trackTiles = Utils.Tiles.GetTilesFromTrack(track);
-
-                    DebugWrite.Line("GetTilesFromTrackAsync done");
-
-                    var saveTiles = new List<Tile>();
-
-                    int id;
-
-                    foreach (var trackTile in trackTiles)
-                    {
-                        id = await Database.Default.GetTileIdByXYAsync(trackTile);
-
-                        if (id == 0)
-                        {
-                            saveTiles.Add(trackTile);
-                        }
-                        else
-                        {
-                            trackTile.Id = id;
-                        }
-                    }
-
-                    DebugWrite.Line("saveTiles count: " + saveTiles.Count);
-
-                    await Database.Default.TilesSaveAsync(saveTiles);
-
-                    DebugWrite.Line("SaveTilesAsync done");
-
-                    var tracksTiles = new List<TracksTiles>();
-
-                    foreach (var tile in trackTiles)
-                    {
-                        tracksTiles.Add(new TracksTiles()
-                        {
-                            TrackId = track.Id,
-                            TileId = tile.Id,
-                        });
-                    }
-
-                    DebugWrite.Line("tracksTiles count: " + tracksTiles.Count);
-
-                    await Database.Default.TracksTilesSaveAsync(tracksTiles);
-
-                    DebugWrite.Line("SaveTracksTilesAsync done");
-
-                    Utils.GetFrmList(ChildFormType.TrackList)?.ListItemChange(track);
+                    OverlayAddTrack(track);
                 }
 
                 return true;
@@ -296,9 +238,10 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
-
-                Msg.Error(msg);
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    Msg.Error(e.Message);
+                });
 
                 return false;
             }
@@ -318,30 +261,36 @@ namespace TileExplorer
 
             AppSettings.Local.Default.DirectoryTracks = Directory.GetParent(openFileDialog.FileName).FullName;
 
-            Task.Run(() => this.InvokeIfNeeded(async () =>
+            Selected = null;
+
+            if (!Task.Run(async () =>
+            {
+                return await OpenTracksAsync(openFileDialog.FileNames);
+            }).Result) return;
+
+            foreach (var track in overlayTracks.Routes)
+            {
+                track.IsVisible = miMainShowTracks.Checked;
+            }
+
+            UpdateData(DataLoad.Tiles);
+
+            Utils.GetChildForms<IUpdateDataForm>(null).ForEach(frm =>
+            {
+                switch (frm.FormType)
                 {
-                    if (await OpenTracksAsync(openFileDialog.FileNames))
-                    {
-                        UpdateData(DataLoad.Tiles);
+                    case ChildFormType.TrackList:
+                    case ChildFormType.TracksTree:
+                    case ChildFormType.ResultYears:
+                    case ChildFormType.ResultEquipments:
+                        frm.UpdateData();
 
-                        foreach (var frm in Utils.GetChildForms<IUpdateDataForm>(null))
-                        {
-                            switch (frm.FormType)
-                            {
-                                case ChildFormType.TracksTree:
-                                case ChildFormType.ResultYears:
-                                case ChildFormType.ResultEquipments:
-                                    frm.UpdateData();
-
-                                    break;
-                            }
-                        }
-                    }
-                }));
+                        break;
+                }
+            });
         }
 
-
-        private CancellationTokenSource ctsTracksInfo;
+        private readonly WrapperCancellationTokenSource ctsTracksInfo = new WrapperCancellationTokenSource();
 
         private async Task LoadTracksInfoAsync()
         {
@@ -351,11 +300,8 @@ namespace TileExplorer
             {
                 var tracksInfo = await Database.Default.LoadTracksInfoAsync(Database.Filter.Default);
 
-                this.InvokeIfNeeded(() =>
-                {
-                    statusStripPresenter.TracksCount = tracksInfo.Count;
-                    statusStripPresenter.TracksDistance = tracksInfo.Distance / 1000.0;
-                });
+                statusStripPresenter.TracksCount = tracksInfo.Count;
+                statusStripPresenter.TracksDistance = tracksInfo.Distance / 1000.0;
             }
             catch (TaskCanceledException e)
             {
@@ -363,23 +309,17 @@ namespace TileExplorer
             }
             finally
             {
+                ctsTracksInfo.Finally();
+
                 DebugWrite.Line("end");
             }
         }
 
-        private void LoadTracksInfoStop()
-        {
-            ctsTracksInfo?.Cancel();
-            ctsTracksInfo?.Dispose();
-        }
-
         private void LoadTracksInfo()
         {
-            LoadMarkersStop();
+            ctsTracksInfo.Start();
 
-            ctsTracksInfo = new CancellationTokenSource();
-
-            Task.Run(() => this.InvokeIfNeeded(async () => await LoadTracksInfoAsync()), ctsTracksInfo.Token);
+            Task.Run(async () => await LoadTracksInfoAsync(), ctsTracksInfo.Token);
         }
     }
 }

@@ -74,7 +74,7 @@ namespace TileExplorer
 
             try
             {
-                return Task.Run(() => LoadDataAsync()).Result;
+                return Task.Run(async () => await LoadDataAsync()).Result;
             }
             finally
             {
@@ -169,20 +169,7 @@ namespace TileExplorer
 
         private bool SaveData()
         {
-            try
-            {
-                return SaveDataAsync().Result;
-            }
-            catch (Exception e)
-            {
-                DebugWrite.Error(e);
-
-                var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
-
-                Msg.Error(msg);
-
-                return false;
-            }
+            return Task.Run(async () => await SaveDataAsync()).Result;
         }
 
         private bool ApplyData()

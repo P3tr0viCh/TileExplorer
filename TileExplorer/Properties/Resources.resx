@@ -331,7 +331,7 @@
 Ошибка:
 {0}.</value>
   </data>
-  <data name="MsgDatabaseLoadTrackEleChartFail" xml:space="preserve">
+  <data name="MsgDatabaseLoadChartTrackEleFail" xml:space="preserve">
     <value>Не удалось загрузить результаты трека.
 Ошибка:
 {0}.</value>

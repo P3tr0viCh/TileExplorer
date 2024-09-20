@@ -9,22 +9,30 @@ namespace TileExplorer
     {
         private void EquipmentAdd(Equipment equipment)
         {
-            if (FrmEquipment.ShowDlg(this, equipment))
-            {
-                Utils.GetFrmList(ChildFormType.EquipmentList)?.ListItemChange(equipment);
-            }
+            if (!FrmEquipment.ShowDlg(this, equipment)) return;
+
+            Utils.GetFrmList(ChildFormType.EquipmentList)?.ListItemChange(equipment);
         }
 
         private void EquipmentChange(Equipment equipment)
         {
-            if (FrmEquipment.ShowDlg(this, equipment))
+            if (!FrmEquipment.ShowDlg(this, equipment)) return;
+
+            Utils.GetChildForms<FrmList>(null).ForEach(frm =>
             {
-                Utils.GetFrmList(ChildFormType.EquipmentList)?.ListItemChange(equipment);
-
-                Utils.GetFrmList(ChildFormType.TrackList)?.UpdateData();
-
-                Utils.GetFrmList(ChildFormType.ResultEquipments)?.UpdateData();
-            }
+                switch (frm.FormType)
+                {
+                    case ChildFormType.EquipmentList:
+                        frm.ListItemChange(equipment);
+                        break;
+                    case ChildFormType.TrackList:
+                        frm.UpdateData();
+                        break;
+                    case ChildFormType.ResultEquipments:
+                        frm.UpdateData();
+                        break;
+                }
+            });
         }
 
         private void EquipmentDelete(Equipment equipment)
@@ -33,14 +41,23 @@ namespace TileExplorer
 
             if (!Msg.Question(string.Format(Resources.QuestionEquipmentDelete, name))) return;
 
-            if (Database.Actions.EquipmentDeleteAsync(equipment).Result)
+            if (!Database.Actions.EquipmentDeleteAsync(equipment).Result) return;
+
+            Utils.GetChildForms<FrmList>(null).ForEach(frm =>
             {
-                Utils.GetFrmList(ChildFormType.EquipmentList)?.ListItemDelete(equipment);
-
-                Utils.GetFrmList(ChildFormType.TrackList)?.UpdateData();
-
-                Utils.GetFrmList(ChildFormType.ResultEquipments)?.UpdateData();
-            }
+                switch (frm.FormType)
+                {
+                    case ChildFormType.EquipmentList:
+                        frm.ListItemDelete(equipment);
+                        break;
+                    case ChildFormType.TrackList:
+                        frm.UpdateData();
+                        break;
+                    case ChildFormType.ResultEquipments:
+                        frm.UpdateData();
+                        break;
+                }
+            });
         }
     }
 }

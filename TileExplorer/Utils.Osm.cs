@@ -1,5 +1,5 @@
 ﻿using GMap.NET;
-using GMap.NET.WindowsForms;
+using GMap.NET.Internals;
 using P3tr0viCh.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -57,7 +57,7 @@ namespace TileExplorer
                 public int NodeId2;
             }
 
-            public static void SaveTilesToFile(string fileName, List<Tile> tiles)
+            public static void SaveTilesToFile(string fileName, List<Database.Models.Tile> tiles)
             {
                 if (tiles.Count == 0) return;
 
@@ -84,11 +84,11 @@ namespace TileExplorer
 
                     var tileOsmNodesId = new List<int>();
 
-                    foreach (var tile in tiles)
+                    tiles.ForEach(tile =>
                     {
                         tileOsmNodesId.Clear();
 
-                        foreach (var point in Tiles.TilePoints(tile))
+                        Tiles.TilePoints(tile).ForEach(point =>
                         {
                             osmNode = osmNodes.Find(n => n.Point.Equals(point));
 
@@ -104,7 +104,7 @@ namespace TileExplorer
                             }
 
                             tileOsmNodesId.Add(osmNode.Id);
-                        }
+                        });
 
                         osmWay = new OsmWay()
                         {
@@ -149,11 +149,11 @@ namespace TileExplorer
                         {
                             osmWays.Add(osmWay);
                         }
-                    }
+                    });
 
                     // write nodes
 
-                    foreach (var node in osmNodes)
+                    osmNodes.ForEach(node =>
                     {
                         xml.WriteStartElement("node");
                         {
@@ -164,11 +164,11 @@ namespace TileExplorer
                             xml.WriteAttributeString("lon", node.Point.Lng.ToString(CultureInfo.InvariantCulture));
                         }
                         xml.WriteEndElement();
-                    }
+                    });
 
                     // write ways
 
-                    foreach (var way in osmWays)
+                    osmWays.ForEach(way =>
                     {
                         xml.WriteStartElement("way");
                         {
@@ -194,7 +194,7 @@ namespace TileExplorer
                             }
                         }
                         xml.WriteEndElement();
-                    }
+                    });
 
                     xml.WriteEndElement();
 

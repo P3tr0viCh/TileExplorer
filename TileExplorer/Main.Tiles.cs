@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -13,31 +14,24 @@ namespace TileExplorer
     {
         private bool tilesLoaded = false;
 
-        private CancellationTokenSource ctsTiles;
+        private readonly WrapperCancellationTokenSource ctsTiles = new WrapperCancellationTokenSource();
 
-        private async Task CalcTilesAsync(List<Tile> tiles)
+        private void CalcTiles(List<Tile> tiles)
         {
-            foreach (var tile in tiles)
-            {
-                tile.Status = TileStatus.Visited;
-            }
+            tiles.ForEach(tile => tile.Status = TileStatus.Visited);
 
-            var calcResult = await Task.Run(() =>
-            {
-                return Utils.Tiles.CalcTiles(tiles);
-            }, ctsTiles.Token);
+            var calcResult = Utils.Tiles.CalcTiles(tiles);
 
-            this.InvokeIfNeeded(() =>
-            {
-                statusStripPresenter.TilesVisited = calcResult.Visited;
-                statusStripPresenter.TilesMaxCluster = calcResult.MaxCluster;
-                statusStripPresenter.TilesMaxSquare = calcResult.MaxSquare;
-            });
+            statusStripPresenter.TilesVisited = calcResult.Visited;
+            statusStripPresenter.TilesMaxCluster = calcResult.MaxCluster;
+            statusStripPresenter.TilesMaxSquare = calcResult.MaxSquare;
         }
 
         private async Task LoadTilesAsync()
         {
             DebugWrite.Line("start");
+
+            var status = ProgramStatus.Start(Status.LoadData);
 
             try
             {
@@ -47,9 +41,9 @@ namespace TileExplorer
 
                 var tiles = await Database.Default.ListLoadAsync<Tile>();
 
-                await CalcTilesAsync(tiles);
+                CalcTiles(tiles);
 
-                foreach (var tile in tiles)
+                tiles.ForEach(tile =>
                 {
                     if (ctsTiles.IsCancellationRequested) return;
 
@@ -67,7 +61,7 @@ namespace TileExplorer
                     }));
                 }
 #endif
-                }
+                });
 
                 tilesLoaded = true;
             }
@@ -79,27 +73,26 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                Msg.Error(Resources.MsgDatabaseLoadTilesFail, e.Message);
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    Msg.Error(Resources.MsgDatabaseLoadTilesFail, e.Message);
+                });
             }
             finally
             {
+                ctsTiles.Finally();
+
+                ProgramStatus.Stop(status);
+
                 DebugWrite.Line("end");
             }
         }
 
-        private void LoadTilesStop()
-        {
-            ctsTiles?.Cancel();
-            ctsTiles?.Dispose();
-        }
-
         private void LoadTiles()
         {
-            LoadTilesStop();
+            ctsTiles.Start();
 
-            ctsTiles = new CancellationTokenSource();
-
-            Task.Run(() => this.InvokeIfNeeded(async () => await LoadTilesAsync()), ctsTiles.Token);
+            Task.Run(async () => await LoadTilesAsync(), ctsTiles.Token);
         }
     }
 }
