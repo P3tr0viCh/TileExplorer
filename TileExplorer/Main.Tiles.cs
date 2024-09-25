@@ -31,6 +31,8 @@ namespace TileExplorer
         {
             DebugWrite.Line("start");
 
+            ctsTiles.Start();
+
             var status = ProgramStatus.Start(Status.LoadData);
 
             try
@@ -73,10 +75,7 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    Msg.Error(Resources.MsgDatabaseLoadTilesFail, e.Message);
-                });
+                Msg.Error(Resources.MsgDatabaseLoadTilesFail, e.Message);
             }
             finally
             {
@@ -86,13 +85,6 @@ namespace TileExplorer
 
                 DebugWrite.Line("end");
             }
-        }
-
-        private void LoadTiles()
-        {
-            ctsTiles.Start();
-
-            Task.Run(async () => await LoadTilesAsync(), ctsTiles.Token);
         }
     }
 }

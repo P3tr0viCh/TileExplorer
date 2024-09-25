@@ -1,4 +1,5 @@
-﻿using GMap.NET.WindowsForms;
+﻿using GMap.NET;
+using GMap.NET.WindowsForms;
 using System;
 using System.Drawing;
 using static TileExplorer.Database;
@@ -20,7 +21,7 @@ namespace TileExplorer
         public Pen SelectedStroke = DefaultSelectedStroke;
 
         private readonly MapItem<Models.Track> item;
-        
+
         static MapItemTrack()
         {
             DefaultStroke.Width = DefaultWidth;
@@ -48,9 +49,7 @@ namespace TileExplorer
 
             Points.Clear();
 
-            if (Model.TrackPoints == null) return;
-
-            Model.TrackPoints.ForEach(p => { Points.Add(Utils.TrackPointToPointLatLng(p)); });
+            Model.TrackPoints?.ForEach(p => { Points.Add(new PointLatLng(p.Lat, p.Lng)); });
         }
 
         public void UpdateColors()

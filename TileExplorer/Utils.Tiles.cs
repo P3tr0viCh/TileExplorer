@@ -3,6 +3,7 @@ using P3tr0viCh.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 
@@ -129,26 +130,6 @@ namespace TileExplorer
                 }
 
                 return result;
-            }
-
-            public static void CalcTrackTiles(Track track)
-            {
-                track.TrackTiles = new List<Tile>();
-
-                int x, y;
-
-                track.TrackPoints.ForEach(point =>
-                {
-                    x = Osm.LngToTileX(point.Lng);
-                    y = Osm.LatToTileY(point.Lat);
-
-                    if (track.TrackTiles.FindIndex(tile => tile.X == x && tile.Y == y) == -1)
-                    {
-                        track.TrackTiles.Add(new Tile(x, y));
-                    }
-                });
-
-                DebugWrite.Line($"{track.TrackTiles.Count()}");
             }
 
             public static List<PointLatLng> TilePoints(Tile tile)

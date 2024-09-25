@@ -1,5 +1,7 @@
-﻿using P3tr0viCh.Utils;
+﻿using Newtonsoft.Json.Linq;
+using P3tr0viCh.Utils;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -74,24 +76,7 @@ namespace TileExplorer
 
             try
             {
-                return Task.Run(async () => await LoadDataAsync()).Result;
-            }
-            finally
-            {
-                DebugWrite.Line("end");
-
-                MainForm.ProgramStatus.Stop(status);
-            }
-        }
-
-        private async Task<bool> LoadDataAsync()
-        {
-            try
-            {
-                equipmentBindingSource.DataSource =
-                    await Database.Default.ListLoadAsync<Equipment>();
-
-                Utils.ComboBoxInsertItem(equipmentBindingSource, 0, new Equipment());
+                Task.Run(async () => { await LoadDataAsync(); }).GetAwaiter().GetResult();
 
                 return true;
             }
@@ -103,6 +88,13 @@ namespace TileExplorer
 
                 return false;
             }
+        }
+
+        private async Task LoadDataAsync()
+        {
+            equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
+
+            equipmentBindingSource.Insert(0, new Equipment());
         }
 
         private bool CheckData()
@@ -148,7 +140,7 @@ namespace TileExplorer
             {
                 await Database.Default.TrackSaveAsync(Track);
 
-                MainForm.TrackChanged(Track);
+                await MainForm.TrackChangedAsync(Track);
 
                 return true;
             }
@@ -156,43 +148,33 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
-
-                this.InvokeIfNeeded(() =>
-                {
-                    Msg.Error(msg);
-                });
+                Msg.Error(e.Message);
 
                 return false;
             }
         }
 
-        private bool SaveData()
+        private async Task<bool> ApplyDataAsync()
         {
-            return Task.Run(async () => await SaveDataAsync()).Result;
+            return CheckData() && UpdateData() && await SaveDataAsync();
         }
 
-        private bool ApplyData()
+        private async void BtnOk_Click(object sender, EventArgs e)
         {
-            return CheckData() && UpdateData() && SaveData();
-        }
-
-        private void BtnOk_Click(object sender, EventArgs e)
-        {
-            if (ApplyData())
+            if (await ApplyDataAsync())
             {
                 DialogResult = DialogResult.OK;
             }
         }
 
-        private void BtnOKToALL_Click(object sender, EventArgs e)
+        private async void BtnOKToALL_Click(object sender, EventArgs e)
         {
             if (!Msg.Question(Resources.QuestionTracksOKToAll))
             {
                 return;
             }
 
-            if (ApplyData())
+            if (await ApplyDataAsync())
             {
                 DialogResult = DialogResult.Yes;
             }

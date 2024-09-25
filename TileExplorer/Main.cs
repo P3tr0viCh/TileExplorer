@@ -41,7 +41,7 @@ namespace TileExplorer
         {
             InitializeComponent();
 
-            statusStripPresenter = new PresenterStatusStrip(this, this);
+            statusStripPresenter = new PresenterStatusStrip(this);
 
             mapZoomRuler = new MapZoomRuler(gMapControl);
 
@@ -62,11 +62,9 @@ namespace TileExplorer
             DebugWrite.Line("Settings Roaming: " + AppSettings.Roaming.FilePath, "Main");
         }
 
-        private void Filter_OnChanged()
+        private async void Filter_OnChanged()
         {
-            var load = DataLoad.Tiles | DataLoad.Tracks;
-
-            UpdateData(load);
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
         }
 
         private bool AbnormalExit
@@ -75,7 +73,7 @@ namespace TileExplorer
             set => Tag = value;
         }
 
-        private void Main_Load(object sender, EventArgs e)
+        private async void Main_Load(object sender, EventArgs e)
         {
             AppSettings.Load();
 
@@ -160,12 +158,10 @@ namespace TileExplorer
 
             ProgramStatus.Stop(starting);
 
-            UpdateData();
+            await UpdateDataAsync();
         }
 
-        private IMapItem savedSelected;
-
-        private void UpdateData(DataLoad load = default)
+        public async Task UpdateDataAsync(DataLoad load = default)
         {
             if (load == default)
             {
@@ -177,7 +173,7 @@ namespace TileExplorer
 
             DebugWrite.Line($"Loading data {load}");
 
-            savedSelected = Selected;
+            var savedSelected = Selected;
 
             Selected = null;
 
@@ -187,19 +183,19 @@ namespace TileExplorer
 
                 if (miMainShowTiles.Checked)
                 {
-                    LoadTiles();
+                    await LoadTilesAsync();
                 }
             }
 
             if (load.HasFlag(DataLoad.Tracks))
             {
-                LoadTracksInfo();
+                await LoadTracksInfoAsync();
 
                 tracksLoaded = false;
 
                 if (miMainShowTracks.Checked)
                 {
-                    LoadTracks();
+                    await LoadTracksAsync();
                 }
             }
 
@@ -209,11 +205,13 @@ namespace TileExplorer
 
                 if (miMainShowMarkers.Checked)
                 {
-                    LoadMarkers();
+                    await LoadMarkersAsync();
                 }
             }
 
-            ChildFormsUpdateData(load);
+            ChildFormsUpdateDataAsync(load);
+
+            Selected = FindMapItem(savedSelected?.Model);
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -354,43 +352,12 @@ namespace TileExplorer
 
         private void ProgramStatus_StatusChanged(object sender, Status status)
         {
-            statusStripPresenter.Status = status.Description();
-
-            if (ProgramStatus.IsIdle)
-            {
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    Selected = FindMapItem(savedSelected?.Model);
-                });
-            }
+            statusStripPresenter.Status = status;
         }
 
         private void UpdateApp_StatusChanged(object sender, UpdateStatus status)
         {
-            DebugWrite.Line(status.ToString());
-
-            switch (status)
-            {
-                case UpdateStatus.CheckLatest:
-                    statusStripPresenter.UpdateStatus = Resources.AppUpdateInfoStatusCheckLatest;
-
-                    break;
-                case UpdateStatus.Download:
-                    statusStripPresenter.UpdateStatus = Resources.AppUpdateInfoStatusDownload;
-
-                    break;
-                case UpdateStatus.ArchiveExtract:
-                    statusStripPresenter.UpdateStatus = Resources.AppUpdateInfoStatusExtract;
-
-                    break;
-                case UpdateStatus.Check:
-                case UpdateStatus.CheckLocal:
-                case UpdateStatus.Update:
-                case UpdateStatus.Idle:
-                default:
-                    statusStripPresenter.UpdateStatus = string.Empty;
-                    break;
-            }
+            statusStripPresenter.UpdateStatus = status;
         }
 
         public ToolStripStatusLabel GetLabel(StatusLabel label)
@@ -516,20 +483,44 @@ namespace TileExplorer
 
         private IEnumerable<IMapItem> MouseOverMapItems()
         {
-            if (gMapControl.IsMouseOverMarker)
+            IEnumerable<IMapItem> list = overlayMarkers.Markers.Cast<MapItemMarker>().Where(m => m.IsMouseOver);
+
+            if (list?.Count() == 0)
             {
-                return overlayMarkers.Markers.Cast<MapItemMarker>().Where(m => m.IsMouseOver);
+                list = overlayTracks.Routes.Cast<MapItemTrack>().Where(m => m.IsMouseOver);
+
+                if (list?.Count() == 0) return null;
             }
 
-            if (gMapControl.IsMouseOverRoute)
-            {
-                return overlayTracks.Routes.Cast<MapItemTrack>().Where(m => m.IsMouseOver);
-            }
-
-            return null;
+            return list.OrderBy(i => ((IModelText)i.Model).Text);
         }
 
-        private void GMapControl_MouseClick(object sender, MouseEventArgs e)
+
+        private void ContextMenuShow(ContextMenuStrip menu, Point pos)
+        {
+            menu.Show(gMapControl, pos);
+        }
+
+        private void CreateMenuSelectedItems(IEnumerable<IMapItem> mapItems)
+        {
+            cmSelectedItems.Items.Clear();
+
+            foreach (var mapItem in mapItems)
+            {
+                var item = cmSelectedItems.Items.Add(((IModelText)mapItem.Model).Text);
+
+                item.Tag = mapItem;
+
+                item.Click += MenuSelectedItemsItem_Click;
+            }
+        }
+
+        private void MenuSelectedItemsItem_Click(object sender, EventArgs e)
+        {
+            Selected = (IMapItem)((ToolStripMenuItem)sender).Tag;
+        }
+
+        private async void GMapControl_MouseClick(object sender, MouseEventArgs e)
         {
             if (markerMoving)
             {
@@ -537,9 +528,9 @@ namespace TileExplorer
 
                 if (SelectedMarker != null)
                 {
-                    if (Database.Actions.MarkerSaveAsync(SelectedMarker.Model).Result)
+                    if (await Database.Actions.MarkerSaveAsync(SelectedMarker.Model))
                     {
-                        MarkerChanged(SelectedMarker.Model);
+                        await MarkerChangedAsync(SelectedMarker.Model);
                     }
                 }
 
@@ -548,45 +539,99 @@ namespace TileExplorer
 
             var items = MouseOverMapItems();
 
-            var item = items?.FirstOrDefault();
+            DebugWrite.Line($"items count = {items?.Count()}");
 
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    if (item != null)
+                    if (items == null)
                     {
-                        Selected = item.Selected ? null : item;
+                        break;
                     }
 
-                    break;
-                case MouseButtons.Right:
-                    Selected = item ?? null;
+                    var item = items?.FirstOrDefault();
 
-                    ContextMenuStrip contextMenu;
-
-                    if (gMapControl.IsMouseOverMarker)
+                    if (Selected == null)
                     {
-                        contextMenu = cmMarker;
+                        Selected = item;
+                        break;
+                    }
+
+                    if (items.Count() == 1)
+                    {
+                        Selected = item.Selected ? null : item;
+
+                        break;
+                    }
+
+                    var list = items.ToList();
+
+                    var pos = list.FindIndex(i => i.Model == Selected.Model);
+
+                    DebugWrite.Line($"pos = {pos}");
+
+                    if (pos == -1)
+                    {
+                        Selected = item;
+
+                        break;
+                    }
+
+                    if (pos == list.Count - 1)
+                    {
+                        pos = 0;
                     }
                     else
                     {
-                        if (gMapControl.IsMouseOverRoute)
+                        pos++;
+                    }
+
+                    DebugWrite.Line($"next = {pos}");
+
+                    Selected = list[pos];
+
+                    break;
+                case MouseButtons.Right:
+                    if (items == null)
+                    {
+                        ContextMenuShow(cmMap, e.Location);
+
+                        break;
+                    }
+
+                    if (items.Count() == 1)
+                    {
+                        Selected = items?.FirstOrDefault() ?? null;
+
+                        if (Selected == null)
                         {
-                            contextMenu = cmTrack;
+                            break;
+                        }
+
+                        if (Selected is MapItemMarker)
+                        {
+                            ContextMenuShow(cmMarker, e.Location);
                         }
                         else
                         {
-                            contextMenu = cmMap;
+                            if (Selected is MapItemTrack)
+                            {
+                                ContextMenuShow(cmTrack, e.Location);
+                            }
                         }
+
+                        break;
                     }
 
-                    contextMenu.Show(gMapControl, e.Location);
+                    CreateMenuSelectedItems(items);
+
+                    ContextMenuShow(cmSelectedItems, e.Location);
 
                     break;
             }
         }
 
-        private void GMapControl_MouseDoubleClick(object sender, MouseEventArgs e)
+        private async void GMapControl_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             var items = MouseOverMapItems();
 
@@ -605,7 +650,7 @@ namespace TileExplorer
                     switch (Selected.Type)
                     {
                         case MapItemType.Marker:
-                            MarkerChange(SelectedMarker.Model);
+                            await MarkerChangeAsync(SelectedMarker.Model);
                             break;
                         case MapItemType.Track:
                             OpenChartTrackEle(SelectedTrack.Model);
@@ -615,7 +660,7 @@ namespace TileExplorer
             }
         }
 
-        private void CheckAndLoadData(DataLoad load, bool visible)
+        private async Task CheckAndLoadDataAsync(DataLoad load, bool visible)
         {
             switch (load)
             {
@@ -627,7 +672,7 @@ namespace TileExplorer
 
                     if (!tilesLoaded)
                     {
-                        UpdateData(DataLoad.Tiles);
+                        await LoadTilesAsync();
                     }
 
                     break;
@@ -644,7 +689,7 @@ namespace TileExplorer
 
                     if (!tracksLoaded)
                     {
-                        UpdateData(DataLoad.Tracks);
+                        await LoadTracksAsync();
                     }
 
                     break;
@@ -656,26 +701,26 @@ namespace TileExplorer
 
                     if (!markersLoaded)
                     {
-                        UpdateData(DataLoad.Markers);
+                        await LoadMarkersAsync();
                     }
 
                     break;
             }
         }
 
-        private void MiMainShowTiles_Click(object sender, EventArgs e)
+        private async void MiMainShowTiles_Click(object sender, EventArgs e)
         {
-            CheckAndLoadData(DataLoad.Tiles, miMainShowTiles.Checked);
+            await CheckAndLoadDataAsync(DataLoad.Tiles, miMainShowTiles.Checked);
         }
 
-        private void MiMainShowMarkers_Click(object sender, EventArgs e)
+        private async void MiMainShowMarkers_Click(object sender, EventArgs e)
         {
-            CheckAndLoadData(DataLoad.Markers, miMainShowMarkers.Checked);
+            await CheckAndLoadDataAsync(DataLoad.Markers, miMainShowMarkers.Checked);
         }
 
-        private void MiMainShowTracks_Click(object sender, EventArgs e)
+        private async void MiMainShowTracks_Click(object sender, EventArgs e)
         {
-            CheckAndLoadData(DataLoad.Tracks, miMainShowTracks.Checked);
+            await CheckAndLoadDataAsync(DataLoad.Tracks, miMainShowTracks.Checked);
         }
 
         private void HomeGoto()
@@ -720,24 +765,24 @@ namespace TileExplorer
             MarkerAdd(new Marker(MenuPopupPointLatLng));
         }
 
-        private void MiMarkerChange_Click(object sender, EventArgs e)
+        private async void MiMarkerChange_Click(object sender, EventArgs e)
         {
-            MarkerChange(SelectedMarker.Model);
+            await MarkerChangeAsync(SelectedMarker.Model);
         }
 
-        private void MiMarkerDelete_Click(object sender, EventArgs e)
+        private async void MiMarkerDelete_Click(object sender, EventArgs e)
         {
-            MarkerDelete(SelectedMarker.Model);
+            await MarkerDeleteAsync(SelectedMarker.Model);
         }
 
-        private void MiTrackChange_Click(object sender, EventArgs e)
+        private async void MiTrackChange_Click(object sender, EventArgs e)
         {
-            TrackChange(SelectedTrack.Model);
+            await TrackChangeAsync(SelectedTrack.Model);
         }
 
-        private void MiTrackDelete_Click(object sender, EventArgs e)
+        private async void MiTrackDelete_Click(object sender, EventArgs e)
         {
-            TrackDelete(SelectedTrack.Model);
+            await TrackDeleteAsync(SelectedTrack.Model);
         }
 
         private PointLatLng MarkerMovingPrevPosition;
@@ -804,11 +849,11 @@ namespace TileExplorer
             }
         }
 
-        private void ChildFormsUpdateData(DataLoad load)
+        private void ChildFormsUpdateDataAsync(DataLoad load)
         {
             bool updateData;
 
-            foreach (var frm in Utils.GetChildForms<IUpdateDataForm>(null))
+            Utils.GetChildForms<IUpdateDataForm>().ForEach(async frm =>
             {
                 switch (frm.FormType)
                 {
@@ -842,41 +887,14 @@ namespace TileExplorer
 
                 if (updateData)
                 {
-                    frm.UpdateData();
+                    await frm.UpdateDataAsync();
                 }
-            }
+            });
         }
 
-        private async Task UpdateTrackMinDistancePointAsync()
+        private async void MiMainDataUpdate_Click(object sender, EventArgs e)
         {
-            var status = ProgramStatus.Start(Status.SaveData);
-
-            try
-            {
-                DebugWrite.Line("start");
-
-                var tracks = await Database.Default.ListLoadAsync<Track>(new { onlyTrack = true });
-
-                foreach (var track in tracks)
-                {
-                    track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track, full = true });
-
-                    Utils.Tracks.UpdateTrackMinDistancePoint(track);
-
-                    await Database.Default.UpdateTrackMinDistancePointAsync(track);
-                }
-
-                DebugWrite.Line("end");
-            }
-            finally
-            {
-                ProgramStatus.Stop(status);
-            }
-        }
-
-        private void MiMainDataUpdate_Click(object sender, EventArgs e)
-        {
-            UpdateData();
+            await UpdateDataAsync();
         }
 
 #if DEBUG
@@ -892,7 +910,7 @@ namespace TileExplorer
                 {
                     await Database.Default.TileSaveAsync(tile);
 
-                    UpdateData(DataLoad.Tiles);
+                    await UpdateDataAsync(DataLoad.Tiles);
                 }
                 else
                 {
@@ -928,7 +946,7 @@ namespace TileExplorer
 
                 await Database.Default.TileDeleteAsync(tile);
 
-                UpdateData(DataLoad.Tiles);
+                await UpdateDataAsync(DataLoad.Tiles);
             }
             finally
             {
@@ -959,9 +977,9 @@ namespace TileExplorer
             SaveTileStatusToFile();
         }
 
-        private void MiMainDataOpenTrack_Click(object sender, EventArgs e)
+        private async void MiMainDataOpenTrack_Click(object sender, EventArgs e)
         {
-            OpenTracks();
+            await OpenTracksAsync();
         }
 
         private void ShowChildForm(ChildFormType childFormType, bool show)
@@ -995,10 +1013,7 @@ namespace TileExplorer
             }
             else
             {
-                foreach (var frm in Utils.GetChildForms<Form>(childFormType))
-                {
-                    frm.Close();
-                }
+                Utils.GetChildForms<Form>(childFormType).ForEach(frm => frm.Close());
             }
         }
 
@@ -1057,7 +1072,7 @@ namespace TileExplorer
             return items.Cast<IMapItem>().FirstOrDefault(i => i.Model.Id == value.Id);
         }
 
-        public void ListItemAdd(object sender, BaseId value)
+        public async void ListItemAdd(object sender, BaseId value)
         {
             if (value is Marker marker)
             {
@@ -1071,28 +1086,30 @@ namespace TileExplorer
 
             if (value is Track)
             {
-                OpenTracks();
+                await OpenTracksAsync();
+
                 return;
             }
 
             if (value is Equipment equipment)
             {
                 EquipmentAdd(equipment);
+
                 return;
             }
         }
 
-        public void ListItemChange(object sender, BaseId value)
+        public async Task ListItemChangeAsync(object sender, BaseId value)
         {
             if (value is Marker marker)
             {
-                MarkerChange(marker);
+                await MarkerChangeAsync(marker);
                 return;
             }
 
             if (value is Track track)
             {
-                TrackChange(track);
+                await TrackChangeAsync(track);
                 return;
             }
 
@@ -1103,23 +1120,23 @@ namespace TileExplorer
             }
         }
 
-        public void ListItemDelete(object sender, BaseId value)
+        public async Task ListItemDeleteAsync(object sender, BaseId value)
         {
             if (value is Marker marker)
             {
-                MarkerDelete(marker);
+                await MarkerDeleteAsync(marker);
                 return;
             }
 
             if (value is Track track)
             {
-                TrackDelete(track);
+                await TrackDeleteAsync(track);
                 return;
             }
 
             if (value is Equipment equipment)
             {
-                EquipmentDelete(equipment);
+                await EquipmentDeleteAsync(equipment);
                 return;
             }
         }
@@ -1271,13 +1288,13 @@ namespace TileExplorer
                     }
                 }
 
-                UpdateData();
+                await UpdateDataAsync();
             }
         }
 
-        private void MiMainSettings_Click(object sender, EventArgs e)
+        private async void MiMainSettings_Click(object sender, EventArgs e)
         {
-            _ = ShowSettingsAsync();
+            await ShowSettingsAsync();
         }
 
         private void TsbtnTrackList_Click(object sender, EventArgs e)
@@ -1416,14 +1433,14 @@ namespace TileExplorer
                 return;
             }
 
-            foreach (var form in Utils.GetChildForms<FrmList>(ChildFormType.TileInfo))
+            Utils.GetChildForms<FrmList>(ChildFormType.TileInfo).ForEach(frm =>
             {
-                if (((Tile)form.Data).Id == tile.Id)
+                if (((Tile)frm.Data).Id == tile.Id)
                 {
-                    form.BringToFront();
+                    frm.BringToFront();
                     return;
                 }
-            }
+            });
 
             FrmList.ShowFrm(this, ChildFormType.TileInfo, tile);
         }
@@ -1508,16 +1525,9 @@ namespace TileExplorer
             }
         }
 
-        private void CheckUpdate()
+        private async void MiMainCheckUpdates_Click(object sender, EventArgs e)
         {
-            Task.Run(() =>
-                this.InvokeIfNeeded(async () => await CheckUpdateAsync())
-            );
-        }
-
-        private void MiMainCheckUpdates_Click(object sender, EventArgs e)
-        {
-            CheckUpdate();
+            await CheckUpdateAsync();
         }
 
         private async Task BackupSaveAsync()
@@ -1536,36 +1546,43 @@ namespace TileExplorer
 
             var status = ProgramStatus.Start(Status.BackupSave);
 
+            bool result;
+            string resultMessage;
+
             try
             {
                 var backup = new Backup();
 
                 await backup.SaveAsync();
 
-                Msg.Info(Resources.BackupSaveOk, AppSettings.Local.Default.BackupSettings.Directory);
+                result = true;
+                resultMessage = string.Format(Resources.BackupSaveOk, backup.Directory);
             }
             catch (Exception e)
             {
                 DebugWrite.Error(e);
 
-                Msg.Error(Resources.BackupSaveFail, e.Message);
+                result = false;
+                resultMessage = string.Format(Resources.BackupSaveFail, e.Message);
             }
             finally
             {
                 ProgramStatus.Stop(status);
             }
+
+            if (result)
+            {
+                Msg.Info(resultMessage);
+            }
+            else
+            {
+                Msg.Error(resultMessage);
+            }
         }
 
-        private void BackupSave()
+        private async void MiMainDataBackupSave_Click(object sender, EventArgs e)
         {
-            Task.Run(() =>
-                this.InvokeIfNeeded(async () => await BackupSaveAsync())
-            );
-        }
-
-        private void MiMainDataBackupSave_Click(object sender, EventArgs e)
-        {
-            BackupSave();
+            await BackupSaveAsync();
         }
 
         private void GMapControl_Paint(object sender, PaintEventArgs e)
@@ -1575,14 +1592,14 @@ namespace TileExplorer
 
         private void OpenChartTrackEle(Track value)
         {
-            foreach (var frm in Utils.GetChildForms<FrmChartTrackEle>(ChildFormType.ChartTrackEle))
+            Utils.GetChildForms<FrmChartTrackEle>(ChildFormType.ChartTrackEle).ForEach(frm =>
             {
                 if (frm.Track.Id == value.Id)
                 {
                     frm.BringToFront();
                     return;
                 }
-            }
+            });
 
             FrmChartTrackEle.ShowFrm(this, value);
         }

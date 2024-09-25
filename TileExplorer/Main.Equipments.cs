@@ -1,4 +1,5 @@
 ﻿using P3tr0viCh.Utils;
+using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -18,7 +19,7 @@ namespace TileExplorer
         {
             if (!FrmEquipment.ShowDlg(this, equipment)) return;
 
-            Utils.GetChildForms<FrmList>(null).ForEach(frm =>
+            Utils.GetChildForms<FrmList>().ForEach(async frm =>
             {
                 switch (frm.FormType)
                 {
@@ -26,35 +27,35 @@ namespace TileExplorer
                         frm.ListItemChange(equipment);
                         break;
                     case ChildFormType.TrackList:
-                        frm.UpdateData();
+                        await frm.UpdateDataAsync();
                         break;
                     case ChildFormType.ResultEquipments:
-                        frm.UpdateData();
+                        await frm.UpdateDataAsync();
                         break;
                 }
             });
         }
 
-        private void EquipmentDelete(Equipment equipment)
+        private async Task EquipmentDeleteAsync(Equipment equipment)
         {
             var name = equipment.Name;
 
             if (!Msg.Question(string.Format(Resources.QuestionEquipmentDelete, name))) return;
 
-            if (!Database.Actions.EquipmentDeleteAsync(equipment).Result) return;
+            if (!await Database.Actions.EquipmentDeleteAsync(equipment)) return;
 
-            Utils.GetChildForms<FrmList>(null).ForEach(frm =>
+            Utils.GetChildForms<FrmList>().ForEach(async frm =>
             {
                 switch (frm.FormType)
                 {
                     case ChildFormType.EquipmentList:
                         frm.ListItemDelete(equipment);
+
                         break;
                     case ChildFormType.TrackList:
-                        frm.UpdateData();
-                        break;
                     case ChildFormType.ResultEquipments:
-                        frm.UpdateData();
+                        await frm.UpdateDataAsync();
+
                         break;
                 }
             });

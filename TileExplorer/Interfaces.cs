@@ -1,4 +1,5 @@
 ﻿using GMap.NET;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -12,14 +13,14 @@ namespace TileExplorer
             void ChildFormOpened(object sender);
             void ChildFormClosed(object sender);
 
-            void SelectMapItem(object sender, BaseId value);
+            Task SelectMapItemAsync(object sender, BaseId value);
 
             void ListItemAdd(object sender, BaseId value);
-            void ListItemChange(object sender, BaseId value);
-            void ListItemDelete(object sender, BaseId value);
+            Task ListItemChangeAsync(object sender, BaseId value);
+            Task ListItemDeleteAsync(object sender, BaseId value);
 
-            void TrackChanged(Track track);
-            void MarkerChanged(Marker marker);
+            Task TrackChangedAsync(Track track);
+            Task MarkerChangedAsync(Marker marker);
 
             void ShowChartTrackEle(object sender, Track value);
 
@@ -39,7 +40,7 @@ namespace TileExplorer
 
         public interface IUpdateDataForm : IChildForm
         {
-            void UpdateData();
+            Task UpdateDataAsync();
         }
 
         public interface IListForm

@@ -1,5 +1,6 @@
 ﻿using P3tr0viCh.Utils;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Interfaces;
@@ -78,11 +79,11 @@ namespace TileExplorer
             }
         }
 
-        private bool SaveData()
+        private async Task<bool> SaveDataAsync()
         {
-            if (Database.Actions.MarkerSaveAsync(Marker).Result)
+            if (await Database.Actions.MarkerSaveAsync(Marker))
             {
-                MainForm.MarkerChanged(Marker);
+                await MainForm.MarkerChangedAsync(Marker);
 
                 return true;
             }
@@ -90,22 +91,22 @@ namespace TileExplorer
             return false;
         }
 
-        private bool ApplyData()
+        private async Task<bool> ApplyDataAsync()
         {
-            return UpdateData() && SaveData();
+            return UpdateData() && await SaveDataAsync();
         }
 
-        private void BtnOk_Click(object sender, EventArgs e)
+        private async void BtnOk_Click(object sender, EventArgs e)
         {
-            if (ApplyData())
+            if (await ApplyDataAsync())
             {
                 DialogResult = DialogResult.OK;
             }
         }
 
-        private void BtnApply_Click(object sender, EventArgs e)
+        private async void BtnApply_Click(object sender, EventArgs e)
         {
-            ApplyData();
+            await ApplyDataAsync();
         }
     }
 }

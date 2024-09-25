@@ -4,7 +4,6 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -54,13 +53,13 @@ namespace TileExplorer
             return frm;
         }
 
-        private void FrmTrackEleChart_Load(object sender, EventArgs e)
+        private async void FrmTrackEleChart_Load(object sender, EventArgs e)
         {
             CursorXPositionChanged();
 
             UpdateSettings();
 
-            UpdateData();
+            await UpdateDataAsync();
         }
 
         public void UpdateSettings()
@@ -84,18 +83,17 @@ namespace TileExplorer
 
         public async Task UpdateDataAsync()
         {
+            ctsChartTrackEle.Start();
+
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
 
             try
             {
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    ChartSerial.Points.Clear();
+                ChartSerial.Points.Clear();
 
-                    ChartArea.CursorX.Position = double.NaN;
-                });
+                ChartArea.CursorX.Position = double.NaN;
 
-                //await Task.Delay(3000, cancellationTokenSource.Token);
+                // await Task.Delay(3000, ctsChartTrackEle.Token);
 
                 Track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track = Track, full = true });
 
@@ -120,20 +118,14 @@ namespace TileExplorer
                         maxEleDistance = distance;
                     }
 
-                    BeginInvoke((MethodInvoker)delegate
-                    {
-                        ChartSerial.Points.AddXY(distance, point.Ele);
-                    });
+                    ChartSerial.Points.AddXY(distance, point.Ele);
                 }
 
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    ChartArea.AxisY.Minimum = Math.Floor(minEle / 50.0) * 50.0;
-                    ChartArea.AxisY.Maximum = Math.Floor(maxEle / 50.0) * 50.0 + 50.0;
+                ChartArea.AxisY.Minimum = Math.Floor(minEle / 50.0) * 50.0;
+                ChartArea.AxisY.Maximum = Math.Floor(maxEle / 50.0) * 50.0 + 50.0;
 
-                    ChartArea.AxisX.Minimum = 0;
-                    ChartArea.AxisX.Maximum = Track.Distance / 1000;
-                });
+                ChartArea.AxisX.Minimum = 0;
+                ChartArea.AxisX.Maximum = Track.Distance / 1000;
             }
             catch (TaskCanceledException e)
             {
@@ -143,29 +135,16 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    Msg.Error(Resources.MsgDatabaseLoadChartTrackEleFail, e.Message);
-                });
+                Msg.Error(Resources.MsgDatabaseLoadChartTrackEleFail, e.Message);
             }
             finally
             {
                 ctsChartTrackEle.Finally();
 
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    CursorXPositionChanged();
-                });
+                CursorXPositionChanged();
 
                 MainForm.ProgramStatus.Stop(status);
             }
-        }
-
-        public void UpdateData()
-        {
-            ctsChartTrackEle.Start();
-
-            Task.Run(async () => await UpdateDataAsync(), ctsChartTrackEle.Token);
         }
 
         private bool AllowCursorXMove = true;
@@ -265,7 +244,7 @@ namespace TileExplorer
 
         private void Chart_MouseEnter(object sender, EventArgs e)
         {
-            MainForm?.SelectMapItem(this, Track);
+            MainForm?.SelectMapItemAsync(this, Track);
 
             MainForm?.ShowMarkerPosition(this, CursorPoint);
         }

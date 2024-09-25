@@ -142,8 +142,7 @@ namespace TileExplorer
         private void SaveTileStatusToFile()
         {
             var boudaryTiles = Utils.Tiles.FindTilesBoundary(
-                overlayTiles.Polygons.Cast<MapItemTile>()
-                    .Select(t => t.Model).ToList());
+                overlayTiles.Polygons.Cast<MapItemTile>().Select(t => t.Model).ToList());
 
 #if SHOW_BOUNDARY_TILES
             foreach (var tile in boudaryTiles)
@@ -160,7 +159,7 @@ namespace TileExplorer
                 saveFileDialog.FileName = AppSettings.Roaming.Default.TileStatusFileWptType;
 
                 if (!ShowSaveFileDialog(SaveFileDialogType.Gpx, AppSettings.Local.Default.DirectoryTileStatus)) return;
-                
+
                 AppSettings.Local.Default.DirectoryTileStatus = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                 Utils.Gpx.SaveTileStatusToFile(saveFileDialog.FileName, boudaryTiles);

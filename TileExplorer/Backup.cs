@@ -7,7 +7,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using static TileExplorer.Backup;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -39,6 +38,8 @@ namespace TileExplorer
         }
 
         private BackupSettings Settings => AppSettings.Local.Default.BackupSettings;
+
+        public string Directory { get; private set; } = string.Empty;
 
         private string GetDirectory()
         {
@@ -188,7 +189,7 @@ namespace TileExplorer
             DebugWrite.Line("end");
         }
 
-        private async Task SaveMarkers()
+        private async Task SaveMarkersAsync()
         {
             if (Settings.Markers == default)
             {
@@ -207,7 +208,7 @@ namespace TileExplorer
             }
         }
 
-        private async Task SaveEquipmentsAsExcelXml()
+        private async Task SaveEquipmentsAsExcelXmlAsync()
         {
             DebugWrite.Line("start");
 
@@ -258,21 +259,21 @@ namespace TileExplorer
             DebugWrite.Line("end");
         }
 
-        private async Task SaveEquipments()
+        private async Task SaveEquipmentsAsync()
         {
             if (Settings.Equipments == default)
             {
                 return;
             }
 
-            await SaveEquipmentsAsExcelXml();
+            await SaveEquipmentsAsExcelXmlAsync();
         }
 
-        private async Task SaveSettings()
+        private async Task SaveSettingsAsync()
         {
             DebugWrite.Line("start");
 
-            await Task.Run(() =>
+            await Task.Factory.StartNew(() =>
             {
                 if (Settings.LocalSettings)
                 {
@@ -296,11 +297,13 @@ namespace TileExplorer
 
         public async Task SaveAsync()
         {
-            Utils.DirectoryCreate(GetDirectory());
+            Directory = GetDirectory();
 
-            await SaveMarkers();
-            await SaveEquipments();
-            await SaveSettings();
+            Utils.DirectoryCreate(Directory);
+
+            await SaveMarkersAsync();
+            await SaveEquipmentsAsync();
+            await SaveSettingsAsync();
         }
     }
 }

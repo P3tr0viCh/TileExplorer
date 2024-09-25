@@ -1,6 +1,5 @@
 ﻿using P3tr0viCh.Utils;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
 
@@ -97,28 +96,6 @@ namespace TileExplorer
                     Msg.Error(e.Message);
 
                     return false;
-                }
-            }
-
-            public static async Task<List<T>> ListLoadAsync<T>(object filter = null)
-            {
-                DebugWrite.Line("start");
-
-                try
-                {
-                    return await Default.ListLoadAsync<T>(filter);
-                }
-                catch (Exception e)
-                {
-                    DebugWrite.Error(e);
-
-                    Msg.Error(e.Message);
-
-                    return null;
-                }
-                finally
-                {
-                    DebugWrite.Line("end");
                 }
             }
         }

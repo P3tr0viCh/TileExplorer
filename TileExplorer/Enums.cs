@@ -23,17 +23,18 @@ namespace TileExplorer
             BackupSave,
         }
 
+        [Flags]
         public enum ChildFormType
         {
-            Filter,
-            TrackList,
-            MarkerList,
-            EquipmentList,
-            ResultYears,
-            ResultEquipments,
-            TileInfo,
-            TracksTree,
-            ChartTrackEle,
+            Filter = 1,
+            TrackList = 2,
+            MarkerList = 4,
+            EquipmentList = 8,
+            ResultYears = 16,
+            ResultEquipments = 32,
+            TileInfo = 64,
+            TracksTree = 128,
+            ChartTrackEle = 256,
         }
 
         [Flags]

@@ -39,7 +39,7 @@ namespace TileExplorer
             return frm;
         }
 
-        private void FrmTracksTree_Load(object sender, EventArgs e)
+        private async void FrmTracksTree_Load(object sender, EventArgs e)
         {
             AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateTracksTree);
 
@@ -47,7 +47,7 @@ namespace TileExplorer
 
             if (MainForm.ProgramStatus.Current != Status.Starting)
             {
-                UpdateData();
+                await UpdateDataAsync();
             }
         }
 
@@ -64,18 +64,29 @@ namespace TileExplorer
 
         private readonly WrapperCancellationTokenSource ctsTracsTree = new WrapperCancellationTokenSource();
 
-        private async Task UpdateDataAsync()
+        public async Task UpdateDataAsync()
         {
+            ctsTracsTree.Start();
+
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
 
             try
             {
-                var list = await Database.Actions.ListLoadAsync<TracksTree>();
+                var list = await Database.Default.ListLoadAsync<TracksTree>();
 
-                if (list != null)
-                {
-                    CreateTracksTree(list);
-                }
+                // await Task.Delay(3000, ctsTracsTree.Token);
+
+                CreateTracksTree(list);
+            }
+            catch (TaskCanceledException e)
+            {
+                DebugWrite.Error(e);
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(e.Message);
             }
             finally
             {
@@ -83,13 +94,6 @@ namespace TileExplorer
 
                 MainForm.ProgramStatus.Stop(status);
             }
-        }
-
-        public void UpdateData()
-        {
-            ctsTracsTree.Start();
-
-            Task.Run(() => this.InvokeIfNeeded(async () => await UpdateDataAsync()), ctsTracsTree.Token);
         }
 
         private string MonthToString(int month)

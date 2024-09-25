@@ -1,6 +1,6 @@
 ﻿using GMap.NET;
+using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Utils;
-using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
@@ -9,13 +9,10 @@ namespace TileExplorer
 {
     internal class PresenterStatusStrip
     {
-        private readonly Control control;
-
         private readonly IStatusStripView view;
 
-        public PresenterStatusStrip(Control control, IStatusStripView view)
+        public PresenterStatusStrip(IStatusStripView view)
         {
-            this.control = control;
             this.view = view;
 
             Zoom = 0;
@@ -23,8 +20,8 @@ namespace TileExplorer
             Position = PointLatLng.Empty;
             MousePosition = new PointLatLng(0, 0);
 
-            Status = string.Empty;
-            UpdateStatus = string.Empty;
+            Status = Status.Idle;
+            UpdateStatus = UpdateStatus.Idle;
 
             TracksCount = 0;
             TracksDistance = 0;
@@ -38,8 +35,7 @@ namespace TileExplorer
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.Zoom).Text = string.Format(Resources.StatusZoom, value));
+                view.GetLabel(StatusLabel.Zoom).Text = string.Format(Resources.StatusZoom, value);
             }
         }
 
@@ -47,9 +43,8 @@ namespace TileExplorer
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.TileId).Text = string.Format(Resources.StatusTileId,
-                        Utils.Osm.LngToTileX(value), Utils.Osm.LatToTileY(value)));
+                view.GetLabel(StatusLabel.TileId).Text = string.Format(Resources.StatusTileId,
+                    Utils.Osm.LngToTileX(value), Utils.Osm.LatToTileY(value));
             }
         }
 
@@ -57,9 +52,8 @@ namespace TileExplorer
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.Position).Text =
-                        string.Format(Resources.StatusPosition, value.Lat, value.Lng));
+                view.GetLabel(StatusLabel.Position).Text =
+                    string.Format(Resources.StatusPosition, value.Lat, value.Lng);
             }
         }
 
@@ -67,36 +61,46 @@ namespace TileExplorer
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.MousePosition).Text =
-                        string.Format(Resources.StatusMousePosition, value.Lat, value.Lng));
+                view.GetLabel(StatusLabel.MousePosition).Text =
+                    string.Format(Resources.StatusMousePosition, value.Lat, value.Lng);
             }
         }
 
-        public string Status
+        public Status Status
         {
             set
             {
-                if (control.InvokeRequired)
-                {
-                    control.BeginInvoke((MethodInvoker)delegate
-                    {
-                        view.GetLabel(StatusLabel.Status).Text = value;
-                    });
-                }
-                else
-                {
-                    view.GetLabel(StatusLabel.Status).Text = value;
-                }
+                view.GetLabel(StatusLabel.Status).Text = value.Description();
             }
         }
 
-        public string UpdateStatus
+        public UpdateStatus UpdateStatus
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.UpdateStatus).Text = value);
+                switch (value)
+                {
+                    case UpdateStatus.CheckLatest:
+                        view.GetLabel(StatusLabel.UpdateStatus).Text = Resources.AppUpdateInfoStatusCheckLatest;
+
+                        break;
+                    case UpdateStatus.Download:
+                        view.GetLabel(StatusLabel.UpdateStatus).Text  = Resources.AppUpdateInfoStatusDownload;
+
+                        break;
+                    case UpdateStatus.ArchiveExtract:
+                        view.GetLabel(StatusLabel.UpdateStatus).Text  = Resources.AppUpdateInfoStatusExtract;
+
+                        break;
+                    case UpdateStatus.Check:
+                    case UpdateStatus.CheckLocal:
+                    case UpdateStatus.Update:
+                    case UpdateStatus.Idle:
+                    default:
+                        view.GetLabel(StatusLabel.UpdateStatus).Text  = string.Empty;
+
+                        break;
+                }
             }
         }
 
@@ -104,8 +108,7 @@ namespace TileExplorer
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.TracksCount).Text = string.Format(Resources.StatusTracksCount, value));
+                view.GetLabel(StatusLabel.TracksCount).Text = string.Format(Resources.StatusTracksCount, value);
             }
         }
 
@@ -113,8 +116,7 @@ namespace TileExplorer
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.TracksDistance).Text = string.Format(Resources.StatusTracksDistance, value));
+                view.GetLabel(StatusLabel.TracksDistance).Text = string.Format(Resources.StatusTracksDistance, value);
             }
         }
 
@@ -122,8 +124,7 @@ namespace TileExplorer
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.TilesVisited).Text = string.Format(Resources.StatusTilesVisited, value));
+                view.GetLabel(StatusLabel.TilesVisited).Text = string.Format(Resources.StatusTilesVisited, value);
             }
         }
 
@@ -131,8 +132,7 @@ namespace TileExplorer
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.TilesMaxCluster).Text = string.Format(Resources.StatusTilesMaxCluster, value));
+                view.GetLabel(StatusLabel.TilesMaxCluster).Text = string.Format(Resources.StatusTilesMaxCluster, value);
             }
         }
 
@@ -140,8 +140,7 @@ namespace TileExplorer
         {
             set
             {
-                control.InvokeIfNeeded(() =>
-                    view.GetLabel(StatusLabel.TilesMaxSquare).Text = string.Format(Resources.StatusTilesMaxSquare, value));
+                view.GetLabel(StatusLabel.TilesMaxSquare).Text = string.Format(Resources.StatusTilesMaxSquare, value);
             }
         }
     }

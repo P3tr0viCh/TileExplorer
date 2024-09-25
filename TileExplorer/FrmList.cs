@@ -4,13 +4,10 @@
 
 using P3tr0viCh.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
@@ -53,7 +50,7 @@ namespace TileExplorer
             return frm;
         }
 
-        private void FrmListNew_Load(object sender, EventArgs e)
+        private async void FrmListNew_Load(object sender, EventArgs e)
         {
             Type type;
 
@@ -220,7 +217,7 @@ namespace TileExplorer
 
             if (MainForm.ProgramStatus.Current != Status.Starting)
             {
-                UpdateData();
+                await UpdateDataAsync();
             }
         }
 
@@ -340,9 +337,11 @@ namespace TileExplorer
 
         private readonly WrapperCancellationTokenSource ctsList = new WrapperCancellationTokenSource();
 
-        private async Task UpdateDataAsync()
+        public async Task UpdateDataAsync()
         {
             DebugWrite.Line("start");
+
+            ctsList.Start();
 
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
 
@@ -350,40 +349,38 @@ namespace TileExplorer
 
             try
             {
-                //  await Task.Delay(3000, cancellationTokenSource.Token);
-
-                object list;
+                // await Task.Delay(3000, ctsList.Token);
 
                 switch (FormType)
                 {
                     case ChildFormType.TrackList:
                         errorMsg = Resources.MsgDatabaseLoadListTrackFail;
 
-                        list = await Database.Actions.ListLoadAsync<Track>();
+                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Track>();
 
                         break;
                     case ChildFormType.MarkerList:
                         errorMsg = Resources.MsgDatabaseLoadListMarkersFail;
 
-                        list = await Database.Actions.ListLoadAsync<Marker>();
+                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Marker>();
 
                         break;
                     case ChildFormType.ResultYears:
                         errorMsg = Resources.MsgDatabaseLoadListResultYearsFail;
 
-                        list = await Database.Actions.ListLoadAsync<ResultYears>();
+                        bindingSource.DataSource = await Database.Default.ListLoadAsync<ResultYears>();
 
                         break;
                     case ChildFormType.ResultEquipments:
                         errorMsg = Resources.MsgDatabaseLoadListResultEquipmentsFail;
 
-                        list = await Database.Actions.ListLoadAsync<ResultEquipments>();
+                        bindingSource.DataSource = await Database.Default.ListLoadAsync<ResultEquipments>();
 
                         break;
                     case ChildFormType.EquipmentList:
                         errorMsg = Resources.MsgDatabaseLoadListEquipmentsFail;
 
-                        list = await Database.Actions.ListLoadAsync<Equipment>();
+                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
 
                         break;
                     case ChildFormType.TileInfo:
@@ -391,27 +388,16 @@ namespace TileExplorer
 
                         var tile = (Tile)data;
 
-                        BeginInvoke((MethodInvoker)delegate
-                        {
-                            Text = string.Format(Resources.StatusTileId, tile.X, tile.Y);
-                        });
+                        Text = string.Format(Resources.StatusTileId, tile.X, tile.Y);
 
-                        list = await Database.Actions.ListLoadAsync<Track>(tile);
+                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Track>(tile);
 
                         break;
                     default:
                         throw new NotImplementedException();
                 }
 
-                if (list != null)
-                {
-                    BeginInvoke((MethodInvoker)delegate
-                    {
-                        bindingSource.DataSource = list;
-
-                        Sort();
-                    });
-                }
+                Sort();
             }
             catch (TaskCanceledException e)
             {
@@ -421,10 +407,7 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    Msg.Error(errorMsg, e.Message);
-                });
+                Msg.Error(errorMsg, e.Message);
             }
             finally
             {
@@ -434,13 +417,6 @@ namespace TileExplorer
             }
 
             DebugWrite.Line("end");
-        }
-
-        public void UpdateData()
-        {
-            ctsList.Start();
-
-            Task.Run(async () => await UpdateDataAsync(), ctsList.Token);
         }
 
         public BaseId Find(BaseId value)
@@ -476,7 +452,7 @@ namespace TileExplorer
                 case ChildFormType.TileInfo:
                     if (MainForm.ProgramStatus.IsIdle)
                     {
-                        MainForm.SelectMapItem(this, Selected);
+                        MainForm.SelectMapItemAsync(this, Selected);
                     }
                     break;
             }
@@ -486,7 +462,7 @@ namespace TileExplorer
         {
             if (e.RowIndex < 0) return;
 
-            MainForm.ListItemChange(this, Selected);
+            MainForm.ListItemChangeAsync(this, Selected);
         }
 
         private void TsbtnAdd_Click(object sender, EventArgs e)
@@ -511,12 +487,12 @@ namespace TileExplorer
 
         private void TsbtnChange_Click(object sender, EventArgs e)
         {
-            MainForm.ListItemChange(this, Selected);
+            MainForm.ListItemChangeAsync(this, Selected);
         }
 
-        private void TsbtnDelete_Click(object sender, EventArgs e)
+        private async void TsbtnDelete_Click(object sender, EventArgs e)
         {
-            MainForm.ListItemDelete(this, Selected);
+            await MainForm.ListItemDeleteAsync(this, Selected);
         }
 
         private void ShowTrackEleChart()
@@ -574,7 +550,7 @@ namespace TileExplorer
                 case ChildFormType.TileInfo:
                 case ChildFormType.TrackList:
                 case ChildFormType.MarkerList:
-                    MainForm.SelectMapItem(this, Selected);
+                    MainForm.SelectMapItemAsync(this, Selected);
                     break;
             }
         }

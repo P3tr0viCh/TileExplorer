@@ -21,6 +21,11 @@ namespace TileExplorer
                 long Id { get; set; }
             }
 
+            public interface IModelText
+            {
+                string Text { get; set; }
+            }
+
             public class BaseId : IBaseId
             {
                 [Key]
@@ -45,7 +50,7 @@ namespace TileExplorer
             }
 
             [Table("markers")]
-            public class Marker : BaseId
+            public class Marker : BaseId, IModelText
             {
                 public Marker()
                 {
@@ -122,7 +127,7 @@ namespace TileExplorer
             }
 
             [Table("tracks")]
-            public class Track : BaseId
+            public class Track : BaseId, IModelText
             {
                 private readonly Gpx.Track gpx = new Gpx.Track();
 

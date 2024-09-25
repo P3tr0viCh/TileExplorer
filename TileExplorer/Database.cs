@@ -366,7 +366,7 @@ namespace TileExplorer
             DebugWrite.Line("end");
         }
 
-        public async Task TrackNewSaveAsync(Track track)
+        public async Task TrackSaveNewAsync(Track track)
         {
             using (var connection = GetConnection())
             {
@@ -383,6 +383,8 @@ namespace TileExplorer
                     await connection.InsertAsync(track.TrackPoints, transaction);
 
                     int id;
+
+                    await Utils.Tracks.CalcTrackTilesAsync(track);
 
                     track.TrackTiles.ForEach(async tile =>
                     {

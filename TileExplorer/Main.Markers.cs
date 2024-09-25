@@ -42,6 +42,8 @@ namespace TileExplorer
         {
             DebugWrite.Line("start");
 
+            ctsMarkers.Start();
+
             var status = ProgramStatus.Start(Status.LoadData);
 
             try
@@ -60,7 +62,7 @@ namespace TileExplorer
 
                     overlayMarkers.Markers.Add(MapItemMarkerNewInstance(marker));
                 }
-                
+
                 markersLoaded = true;
             }
             catch (TaskCanceledException e)
@@ -71,10 +73,7 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    Msg.Error(Resources.MsgDatabaseLoadListMarkersFail, e.Message);
-                });
+                Msg.Error(Resources.MsgDatabaseLoadListMarkersFail, e.Message);
             }
             finally
             {
@@ -84,13 +83,6 @@ namespace TileExplorer
 
                 DebugWrite.Line("end");
             }
-        }
-
-        private void LoadMarkers()
-        {
-            ctsMarkers.Start();
-
-            Task.Run(async () => await LoadMarkersAsync(), ctsMarkers.Token);
         }
 
         private void MarkerAdd(Marker marker)
@@ -113,16 +105,16 @@ namespace TileExplorer
             overlayMarkers.IsVisibile = prevMarkersVisible;
         }
 
-        private void MarkerChange(Marker marker)
+        private async Task MarkerChangeAsync(Marker marker)
         {
             if (marker == null) return;
 
             FrmMarker.ShowDlg(this, marker);
 
-            SelectMapItem(this, marker);
+            await SelectMapItemAsync(this, marker);
         }
 
-        public void MarkerChanged(Marker marker)
+        public async Task MarkerChangedAsync(Marker marker)
         {
             var mapItem = FindMapItem(marker);
 
@@ -137,14 +129,16 @@ namespace TileExplorer
                 mapItem.Model = marker;
 
                 mapItem.NotifyModelChanged();
+
+                gMapControl.Invalidate();
             }
 
             Utils.GetFrmList(ChildFormType.MarkerList)?.ListItemChange(marker);
 
-            SelectMapItem(this, marker);
+            await SelectMapItemAsync(this, marker);
         }
 
-        private void MarkerDelete(Marker marker)
+        private async Task MarkerDeleteAsync(Marker marker)
         {
             if (marker == null) return;
 
@@ -157,7 +151,7 @@ namespace TileExplorer
 
             if (!Msg.Question(string.Format(Resources.QuestionMarkerDelete, name))) return;
 
-            if (!Database.Actions.MarkerDeleteAsync(marker).Result) return;
+            if (!await Database.Actions.MarkerDeleteAsync(marker)) return;
 
             overlayMarkers.Markers.Remove(
                 overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?

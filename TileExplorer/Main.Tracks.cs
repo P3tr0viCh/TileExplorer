@@ -31,6 +31,8 @@ namespace TileExplorer
         {
             DebugWrite.Line("start");
 
+            ctsTracks.Start();
+
             var status = ProgramStatus.Start(Status.LoadData);
 
             try
@@ -91,10 +93,7 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
-                });
+                Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
             }
             finally
             {
@@ -106,32 +105,26 @@ namespace TileExplorer
             }
         }
 
-        private void LoadTracks()
-        {
-            ctsTracks.Start();
-
-            Task.Run(async () => await LoadTracksAsync(), ctsTracks.Token);
-        }
-
-        private void TrackChange(Track track)
+        private async Task TrackChangeAsync(Track track)
         {
             if (track == null) return;
 
             FrmTrack.ShowDlg(this, track);
 
-            SelectMapItem(this, track);
+            await SelectMapItemAsync(this, track);
         }
 
-        public void TrackChanged(Track track)
+        public async Task TrackChangedAsync(Track track)
         {
-            Utils.GetFrmList(ChildFormType.TrackList)?.ListItemChange(track);
+            Utils.GetChildForms<FrmList>(ChildFormType.TileInfo | ChildFormType.TrackList).ForEach(frm =>
+            {
+                frm.ListItemChange(track);
+            });
 
-            Utils.GetFrmList(ChildFormType.TileInfo)?.ListItemChange(track);
-
-            SelectMapItem(this, track);
+            await SelectMapItemAsync(this, track);
         }
 
-        private void TrackDelete(Track track)
+        private async Task TrackDeleteAsync(Track track)
         {
             if (track == null) return;
 
@@ -144,7 +137,7 @@ namespace TileExplorer
 
             if (!Msg.Question(string.Format(Resources.QuestionTrackDelete, name))) return;
 
-            if (Database.Actions.TrackDeleteAsync(track).Result)
+            if (await Database.Actions.TrackDeleteAsync(track))
             {
                 Selected = null;
 
@@ -152,9 +145,9 @@ namespace TileExplorer
                   overlayTracks.Routes.Cast<IMapItem>().Where(i => i.Model.Id == track.Id)?
                       .Cast<MapItemTrack>().FirstOrDefault());
 
-                UpdateData(DataLoad.Tiles);
+                await UpdateDataAsync(DataLoad.Tiles);
 
-                foreach (var frm in Utils.GetChildForms<Form>(null))
+                Utils.GetChildForms<Form>().ForEach(async frm =>
                 {
                     switch (((IChildForm)frm).FormType)
                     {
@@ -166,7 +159,7 @@ namespace TileExplorer
                         case ChildFormType.TracksTree:
                         case ChildFormType.ResultYears:
                         case ChildFormType.ResultEquipments:
-                            ((IUpdateDataForm)frm).UpdateData();
+                            await ((IUpdateDataForm)frm).UpdateDataAsync();
 
                             break;
                         case ChildFormType.ChartTrackEle:
@@ -177,11 +170,44 @@ namespace TileExplorer
 
                             break;
                     }
-                }
+                });
             }
         }
 
-        private async Task<bool> OpenTracksAsync(string[] files)
+        private async Task UpdateTrackMinDistancePointAsync()
+        {
+            var status = ProgramStatus.Start(Status.SaveData);
+
+            try
+            {
+                DebugWrite.Line("start");
+
+                var tracks = await Database.Default.ListLoadAsync<Track>(new { onlyTrack = true });
+
+                foreach (var track in tracks)
+                {
+                    track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track, full = true });
+
+                    await Utils.Tracks.UpdateTrackMinDistancePointAsync(track);
+
+                    await Database.Default.UpdateTrackMinDistancePointAsync(track);
+                }
+
+                DebugWrite.Line("end");
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(e.Message);
+            }
+            finally
+            {
+                ProgramStatus.Stop(status);
+            }
+        }
+
+        private async Task<bool> InternalOpenTracksAsync(string[] files)
         {
             var status = ProgramStatus.Start(Status.LoadGpx);
 
@@ -199,9 +225,11 @@ namespace TileExplorer
 
                 foreach (var file in files)
                 {
-                    track = await Task.Run(() => Utils.Tracks.OpenTrackFromFile(file));
+                    track = await Utils.Tracks.OpenTrackFromFileAsync(file);
 
                     DebugWrite.Line("OpenTrackFromFile done");
+
+                    // await Task.Delay(1000);
 
                     /*                    if (showDlg)
                                         {
@@ -225,9 +253,9 @@ namespace TileExplorer
                                         {
                                             track.Equipment = equipmentToAll;*/
 
-                    Utils.Tiles.CalcTrackTiles(track);
+                    await Database.Default.TrackSaveNewAsync(track);
 
-                    await Database.Default.TrackNewSaveAsync(track);
+                    DebugWrite.Line("TrackSaveNewAsync done");
 
                     OverlayAddTrack(track);
                 }
@@ -238,10 +266,7 @@ namespace TileExplorer
             {
                 DebugWrite.Error(e);
 
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    Msg.Error(e.Message);
-                });
+                Msg.Error(e.Message);
 
                 return false;
             }
@@ -251,7 +276,7 @@ namespace TileExplorer
             }
         }
 
-        private void OpenTracks()
+        private async Task OpenTracksAsync()
         {
             openFileDialog.FileName = string.Empty;
 
@@ -263,30 +288,24 @@ namespace TileExplorer
 
             Selected = null;
 
-            if (!Task.Run(async () =>
-            {
-                return await OpenTracksAsync(openFileDialog.FileNames);
-            }).Result) return;
+            var result = await InternalOpenTracksAsync(openFileDialog.FileNames);
+
+            if (!result) return;
 
             foreach (var track in overlayTracks.Routes)
             {
                 track.IsVisible = miMainShowTracks.Checked;
             }
 
-            UpdateData(DataLoad.Tiles);
+            await UpdateDataAsync(DataLoad.Tiles);
 
-            Utils.GetChildForms<IUpdateDataForm>(null).ForEach(frm =>
+            Utils.GetChildForms<IUpdateDataForm>(
+                ChildFormType.TrackList |
+                ChildFormType.TracksTree |
+                ChildFormType.ResultYears |
+                ChildFormType.ResultEquipments).ForEach(async frm =>
             {
-                switch (frm.FormType)
-                {
-                    case ChildFormType.TrackList:
-                    case ChildFormType.TracksTree:
-                    case ChildFormType.ResultYears:
-                    case ChildFormType.ResultEquipments:
-                        frm.UpdateData();
-
-                        break;
-                }
+                await frm.UpdateDataAsync();
             });
         }
 
@@ -295,6 +314,8 @@ namespace TileExplorer
         private async Task LoadTracksInfoAsync()
         {
             DebugWrite.Line("start");
+
+            ctsTracksInfo.Start();
 
             try
             {
@@ -313,13 +334,6 @@ namespace TileExplorer
 
                 DebugWrite.Line("end");
             }
-        }
-
-        private void LoadTracksInfo()
-        {
-            ctsTracksInfo.Start();
-
-            Task.Run(async () => await LoadTracksInfoAsync(), ctsTracksInfo.Token);
         }
     }
 }

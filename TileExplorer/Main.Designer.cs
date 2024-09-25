@@ -132,6 +132,8 @@
             this.miTrackChange = new System.Windows.Forms.ToolStripMenuItem();
             this.miTrackDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMapChange = new System.Windows.Forms.Timer(this.components);
+            this.cmSelectedItems = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.xxxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -143,6 +145,7 @@
             this.cmMarker.SuspendLayout();
             this.cmMap.SuspendLayout();
             this.cmTrack.SuspendLayout();
+            this.cmSelectedItems.SuspendLayout();
             this.SuspendLayout();
             // 
             // gMapControl
@@ -433,7 +436,7 @@
             this.miMainShowTracks.CheckOnClick = true;
             this.miMainShowTracks.Name = "miMainShowTracks";
             this.miMainShowTracks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.miMainShowTracks.Size = new System.Drawing.Size(171, 22);
+            this.miMainShowTracks.Size = new System.Drawing.Size(180, 22);
             this.miMainShowTracks.Text = "Треки";
             this.miMainShowTracks.Click += new System.EventHandler(this.MiMainShowTracks_Click);
             // 
@@ -1014,6 +1017,19 @@
             this.timerMapChange.Interval = 222;
             this.timerMapChange.Tick += new System.EventHandler(this.TimerMapChange_Tick);
             // 
+            // cmSelectedItems
+            // 
+            this.cmSelectedItems.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xxxToolStripMenuItem});
+            this.cmSelectedItems.Name = "cmSelectedItems";
+            this.cmSelectedItems.Size = new System.Drawing.Size(93, 26);
+            // 
+            // xxxToolStripMenuItem
+            // 
+            this.xxxToolStripMenuItem.Name = "xxxToolStripMenuItem";
+            this.xxxToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.xxxToolStripMenuItem.Text = "xxx";
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1048,6 +1064,7 @@
             this.cmMarker.ResumeLayout(false);
             this.cmMap.ResumeLayout(false);
             this.cmTrack.ResumeLayout(false);
+            this.cmSelectedItems.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1156,6 +1173,8 @@
         private System.Windows.Forms.ToolStripMenuItem miMainBackupSave;
         private System.Windows.Forms.ToolStripMenuItem miTrackShowChartTrackEle;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
+        private System.Windows.Forms.ContextMenuStrip cmSelectedItems;
+        private System.Windows.Forms.ToolStripMenuItem xxxToolStripMenuItem;
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using GMap.NET.WindowsForms;
 using P3tr0viCh.Utils;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
@@ -93,19 +94,9 @@ namespace TileExplorer
 
                         SelectedTrackTiles = selected.Model as Track;
 
-                        Utils.GetChildForms<FrmList>(null).ForEach(frm =>
+                        Utils.GetChildForms<FrmList>(ChildFormType.TrackList | ChildFormType.TileInfo).ForEach(frm =>
                         {
-                            switch (frm.FormType)
-                            {
-                                case ChildFormType.TrackList:
-                                    frm.SetSelected(selected.Model);
-                                    
-                                    break;
-                                case ChildFormType.TileInfo:
-                                    
-                                    frm.SetSelected(selected.Model);
-                                    break;
-                            }
+                            frm.SetSelected(selected.Model);
                         });
 
                         break;
@@ -113,7 +104,7 @@ namespace TileExplorer
             }
         }
 
-        private void UpdateSelectedTrackTiles(Track track)
+        private async void UpdateSelectedTrackTiles(Track track)
         {
             foreach (var tile in overlayTiles.Polygons.Cast<MapItemTile>())
             {
@@ -126,7 +117,7 @@ namespace TileExplorer
 
             if (track.TrackTiles == null)
             {
-                Utils.Tiles.CalcTrackTiles(track);
+                await Utils.Tracks.CalcTrackTilesAsync(track);
             }
 
             foreach (var tile in from item in overlayTiles.Polygons.Cast<MapItemTile>()
@@ -146,7 +137,7 @@ namespace TileExplorer
             }
         }
 
-        public void SelectMapItem(object sender, BaseId value)
+        public async Task SelectMapItemAsync(object sender, BaseId value)
         {
             var item = FindMapItem(value);
 
@@ -154,14 +145,16 @@ namespace TileExplorer
             {
                 if (value is Track track)
                 {
-                    item = Task.Run(async () =>
+                    try
                     {
-                        track.TrackPoints = await Database.Actions.ListLoadAsync<TrackPoint>(track);
+                        track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
 
-                        if (track.TrackPoints == null) return null;
-
-                        return OverlayAddTrack(track);
-                    }).Result;
+                        item = OverlayAddTrack(track);
+                    }
+                    catch (Exception e)
+                    {
+                        DebugWrite.Error(e);
+                    }
                 }
             }
 
