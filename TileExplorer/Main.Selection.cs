@@ -46,11 +46,6 @@ namespace TileExplorer
             }
             set
             {
-                if (selected == null)
-                {
-                    SelectedTrackTiles = null;
-                }
-
                 if (selected == value) return;
 
                 if (selected != null)
@@ -69,7 +64,7 @@ namespace TileExplorer
 
                 if (selected == null)
                 {
-                    gMapControl.Invalidate();
+                    SelectedTrackTiles = null;
                     return;
                 }
 
@@ -87,10 +82,10 @@ namespace TileExplorer
 
                         break;
                     case MapItemType.Track:
-                        selected.IsVisible = true;
-
                         overlayTracks.Routes.Remove((GMapRoute)selected);
                         overlayTracks.Routes.Add((GMapRoute)selected);
+
+                        selected.IsVisible = true;
 
                         SelectedTrackTiles = selected.Model as Track;
 

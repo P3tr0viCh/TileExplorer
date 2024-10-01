@@ -833,8 +833,6 @@ namespace TileExplorer
                 }
                 else
                 {
-                    SelectedTrackTiles = null;
-
                     if (Selected != null)
                     {
                         Selected = null;
