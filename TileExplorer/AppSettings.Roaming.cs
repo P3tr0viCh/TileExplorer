@@ -89,8 +89,6 @@ namespace TileExplorer
 
             public int WidthTrackSelected { get; set; } = 2;
 
-            public int TrackMinDistancePoint { get; set; } = 100;
-
             // ------------------------------------------------------------------------------------------------------------
             public string FormatDate { get; set; } = "yyyy.MM.dd";
 

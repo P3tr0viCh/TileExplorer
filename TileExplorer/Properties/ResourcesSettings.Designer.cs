@@ -106,6 +106,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Каталоги.
+        /// </summary>
+        internal static string Category_Directories {
+            get {
+                return ResourceManager.GetString("Category.Directories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Формат.
         /// </summary>
         internal static string Category_Format {
@@ -826,20 +835,56 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Расположение файла базы данных. Пустое значение – \AppData\Roaming\TileExplorer\.
+        ///   Looks up a localized string similar to Расположение файла базы данных. Пустое значение — \AppData\Roaming\TileExplorer\.
         /// </summary>
-        internal static string DatabaseHome_Description {
+        internal static string DirectoryDatabase_Description {
             get {
-                return ResourceManager.GetString("DatabaseHome.Description", resourceCulture);
+                return ResourceManager.GetString("DirectoryDatabase.Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Расположение базы данных.
+        ///   Looks up a localized string similar to База данных.
         /// </summary>
-        internal static string DatabaseHome_DisplayName {
+        internal static string DirectoryDatabase_DisplayName {
             get {
-                return ResourceManager.GetString("DatabaseHome.DisplayName", resourceCulture);
+                return ResourceManager.GetString("DirectoryDatabase.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Каталог с общими для всех компьютеров настройками.
+        /// </summary>
+        internal static string DirectoryRoaming_Description {
+            get {
+                return ResourceManager.GetString("DirectoryRoaming.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Общие настройки.
+        /// </summary>
+        internal static string DirectoryRoaming_DisplayName {
+            get {
+                return ResourceManager.GetString("DirectoryRoaming.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Расположение каталога с треками. Пустое значение — поиск новых треков отключен..
+        /// </summary>
+        internal static string DirectoryTracks_Description {
+            get {
+                return ResourceManager.GetString("DirectoryTracks.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Треки.
+        /// </summary>
+        internal static string DirectoryTracks_DisplayName {
+            get {
+                return ResourceManager.GetString("DirectoryTracks.DisplayName", resourceCulture);
             }
         }
         
@@ -1128,24 +1173,6 @@ namespace TileExplorer.Properties {
         internal static string TileStatusFileWptType_DisplayName {
             get {
                 return ResourceManager.GetString("TileStatusFileWptType.DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Минимальное расстояние между точками трека в метрах для отображения на карте.
-        /// </summary>
-        internal static string TrackMinDistancePoint_Description {
-            get {
-                return ResourceManager.GetString("TrackMinDistancePoint.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Расстояние между точками.
-        /// </summary>
-        internal static string TrackMinDistancePoint_DisplayName {
-            get {
-                return ResourceManager.GetString("TrackMinDistancePoint.DisplayName", resourceCulture);
             }
         }
         

@@ -9,13 +9,15 @@ namespace TileExplorer
         {
             public readonly Database.Filter Filter = new Database.Filter();
 
-            public string DatabaseHome { get; set; } = string.Empty;
+            public string DirectoryDatabase { get; set; } = string.Empty;
 
             // ------------------------------------------------------------------------------------------------------------
+            public string DirectoryLastTracks { get; set; } = string.Empty;
+            public string DirectoryLastMapImage { get; set; } = string.Empty;
+            public string DirectoryLastTileBoundary { get; set; } = string.Empty;
+            public string DirectoryLastTileStatus { get; set; } = string.Empty;
             public string DirectoryTracks { get; set; } = string.Empty;
-            public string DirectoryMapImage { get; set; } = string.Empty;
-            public string DirectoryTileBoundary { get; set; } = string.Empty;
-            public string DirectoryTileStatus { get; set; } = string.Empty;
+            public string DirectoryRoaming { get; set; } = string.Empty;
 
             // ------------------------------------------------------------------------------------------------------------
             public double HomeLat { get; set; } = 51.196369;

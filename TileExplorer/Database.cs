@@ -45,8 +45,7 @@ namespace TileExplorer
 
         private SQLiteConnection GetConnection()
         {
-            return new SQLiteConnection(
-                string.Format(ResourcesSql.ConnectionString, FileName));
+            return new SQLiteConnection(string.Format(ResourcesSql.ConnectionString, FileName));
         }
 
         private void CreateDatabase()
@@ -81,8 +80,7 @@ namespace TileExplorer
         {
             using (var connection = GetConnection())
             {
-                var sql = string.Format(ResourcesSql.SelectTracksInfo,
-                    filter.ToSql());
+                var sql = string.Format(ResourcesSql.SelectTracksInfo, filter.ToSql());
 
 #if SHOW_SQL
                 DebugWrite.Line(sql);
@@ -344,28 +342,6 @@ namespace TileExplorer
             }
         }
 
-        public async Task UpdateTrackMinDistancePointAsync(Track track)
-        {
-            DebugWrite.Line("start");
-
-            using (var connection = GetConnection())
-            {
-                await connection.OpenAsync();
-
-                using (var transaction = connection.BeginTransaction())
-                {
-                    foreach (var point in track.TrackPoints)
-                    {
-                        await connection.UpdateAsync(point, transaction);
-                    }
-
-                    transaction.Commit();
-                }
-            }
-
-            DebugWrite.Line("end");
-        }
-
         public async Task TrackSaveNewAsync(Track track)
         {
             using (var connection = GetConnection())
@@ -406,7 +382,7 @@ namespace TileExplorer
                         {
                             TrackId = track.Id,
                             TileId = tile.Id,
-                        }, 
+                        },
                         transaction);
                     });
 

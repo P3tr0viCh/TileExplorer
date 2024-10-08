@@ -21,11 +21,23 @@ namespace TileExplorer
 
                 AppSettings.LoadFormState(frm, AppSettings.Local.Default.FormStateSettings);
 
+                var prevDirectoryRoaming = AppSettings.Local.Default.DirectoryRoaming;
+
                 frm.propertyGrid.SelectedObject = new AppSettings();
 
                 if (frm.ShowDialog(owner) == DialogResult.OK)
                 {
                     AppSettings.Local.Default.FormStateSettings = AppSettings.SaveFormState(frm);
+
+                    AppSettings.UpdateDirectoryRoaming();
+
+                    if (AppSettings.Local.Default.DirectoryRoaming != prevDirectoryRoaming)
+                    {
+                        if (File.Exists(AppSettings.Roaming.FilePath))
+                        {
+                            AppSettings.RoamingLoad();
+                        }
+                    }
 
                     AppSettings.Save();
 
@@ -55,9 +67,30 @@ namespace TileExplorer
 
         private bool CheckData()
         {
-            if (!CheckDirectory(AppSettings.Local.Default.DatabaseHome))
+            if (!CheckDirectory(AppSettings.Local.Default.DirectoryDatabase))
             {
                 return false;
+            }
+
+            if (!CheckDirectory(AppSettings.Local.Default.DirectoryTracks))
+            {
+                return false;
+            }
+
+            if (!CheckDirectory(AppSettings.Local.Default.DirectoryRoaming))
+            {
+                return false;
+            }
+
+            if (!AppSettings.Local.Default.DirectoryRoaming.IsEmpty())
+            {
+                if (Utils.NormalizePath(AppSettings.Local.Default.DirectoryRoaming).Equals(
+                    Utils.NormalizePath(AppSettings.Local.Directory)))
+                {
+                    Msg.Error(string.Format(Resources.ErrorDirectoryWrongLocation, AppSettings.Local.Default.DirectoryRoaming));
+
+                    return false;
+                }
             }
 
             return true;

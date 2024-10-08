@@ -44,25 +44,9 @@ namespace TileExplorer
             statusStripPresenter = new PresenterStatusStrip(this);
 
             mapZoomRuler = new MapZoomRuler(gMapControl);
-
-#if DEBUG
-            AppSettings.Local.Directory = Files.ExecutableDirectory();
-            AppSettings.Local.FileName = Path.Combine(AppSettings.Local.Directory,
-                 Path.ChangeExtension(Files.ExecutableName(), ".Local.config"));
-
-            AppSettings.Roaming.Directory = Files.ExecutableDirectory();
-            AppSettings.Roaming.FileName = Path.Combine(AppSettings.Roaming.Directory,
-                Path.ChangeExtension(Files.ExecutableName(), ".Roaming.config"));
-#else
-            AppSettings.Local.Directory = Files.AppDataLocalDirectory();
-            AppSettings.Roaming.Directory = Files.AppDataRoamingDirectory();
-#endif
-
-            DebugWrite.Line("Settings Local: " + AppSettings.Local.FilePath, "Main");
-            DebugWrite.Line("Settings Roaming: " + AppSettings.Roaming.FilePath, "Main");
         }
 
-        private async void Filter_OnChanged()
+        private async void Filter_OnChangedAsync()
         {
             await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
         }
@@ -75,6 +59,14 @@ namespace TileExplorer
 
         private async void Main_Load(object sender, EventArgs e)
         {
+#if DEBUG
+            AppSettings.Local.Directory = Path.Combine(Files.ExecutableDirectory(), "local");
+
+            Utils.DirectoryCreate(AppSettings.Local.Directory);
+#else
+            AppSettings.Local.Directory = Files.AppDataLocalDirectory();
+#endif
+
             AppSettings.Load();
 
             GMapLoad();
@@ -92,11 +84,19 @@ namespace TileExplorer
             Database.Filter.Default.DateTo = AppSettings.Local.Default.Filter.DateTo;
             Database.Filter.Default.Years = AppSettings.Local.Default.Filter.Years;
 
-            Database.Filter.Default.OnChanged += Filter_OnChanged;
+            Database.Filter.Default.OnChanged += Filter_OnChangedAsync;
 
             ProgramStatus.StatusChanged += ProgramStatus_StatusChanged;
 
             UpdateApp.Default.StatusChanged += UpdateApp_StatusChanged;
+
+#if DEBUG 
+            miMapTileAdd.Click += new EventHandler(MiMapTileAdd_Click);
+            miMapTileDelete.Click += new EventHandler(MiMapTileDelete_Click);
+            
+            miMapTileAdd.Visible = true;
+            miMapTileDelete.Visible = true;
+#endif
 
             AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateMain);
 
@@ -104,10 +104,6 @@ namespace TileExplorer
             DummyTiles();
 #endif
 
-#if !DEBUG
-            miMapTileAdd.Visible = false;
-            miMapTileDelete.Visible = false;
-#endif
             miMainShowGrid.Checked = AppSettings.Local.Default.VisibleGrid;
             miMainShowTiles.Checked = AppSettings.Local.Default.VisibleTiles;
             miMainShowTracks.Checked = AppSettings.Local.Default.VisibleTracks;
@@ -159,6 +155,8 @@ namespace TileExplorer
             ProgramStatus.Stop(starting);
 
             await UpdateDataAsync();
+
+            await CheckDirectoryTracksAsync(false);
         }
 
         public async Task UpdateDataAsync(DataLoad load = default)
@@ -209,7 +207,7 @@ namespace TileExplorer
                 }
             }
 
-            ChildFormsUpdateDataAsync(load);
+            ChildFormsUpdateData(load);
 
             Selected = FindMapItem(savedSelected?.Model);
         }
@@ -266,6 +264,7 @@ namespace TileExplorer
             ctsTracks.Cancel();
             ctsMarkers.Cancel();
             ctsTracksInfo.Cancel();
+            ctsCheckDirectoryTracks.Cancel();
         }
 
         private void GMapLoad()
@@ -847,7 +846,7 @@ namespace TileExplorer
             }
         }
 
-        private void ChildFormsUpdateDataAsync(DataLoad load)
+        private void ChildFormsUpdateData(DataLoad load)
         {
             bool updateData;
 
@@ -896,7 +895,7 @@ namespace TileExplorer
         }
 
 #if DEBUG
-        private async void AddTileAsync()
+        private async Task AddTileAsync()
         {
             var status = ProgramStatus.Start(Status.SaveData);
 
@@ -920,17 +919,13 @@ namespace TileExplorer
                 ProgramStatus.Stop(status);
             }
         }
-#endif
 
-        private void MiMapTileAdd_Click(object sender, EventArgs e)
+        private async void MiMapTileAdd_Click(object sender, EventArgs e)
         {
-#if DEBUG
-            AddTileAsync();
-#endif
+            await AddTileAsync();
         }
 
-#if DEBUG
-        private async void DeleteTileAsync()
+        private async Task DeleteTileAsync()
         {
             var status = ProgramStatus.Start(Status.SaveData);
 
@@ -951,14 +946,12 @@ namespace TileExplorer
                 ProgramStatus.Stop(status);
             }
         }
-#endif
 
-        private void MiMapTileDelete_Click(object sender, EventArgs e)
+        private async void MiMapTileDelete_Click(object sender, EventArgs e)
         {
-#if DEBUG
-            DeleteTileAsync();
-#endif
+            await DeleteTileAsync();
         }
+#endif
 
         private void MiMainSaveToImage_Click(object sender, EventArgs e)
         {
@@ -977,7 +970,7 @@ namespace TileExplorer
 
         private async void MiMainDataOpenTrack_Click(object sender, EventArgs e)
         {
-            await OpenTracksAsync();
+            await OpenTracksAsync(null);
         }
 
         private void ShowChildForm(ChildFormType childFormType, bool show)
@@ -1084,7 +1077,7 @@ namespace TileExplorer
 
             if (value is Track)
             {
-                await OpenTracksAsync();
+                await OpenTracksAsync(null);
 
                 return;
             }
@@ -1177,26 +1170,26 @@ namespace TileExplorer
 
         private bool SetDatabaseFileName()
         {
-            var databaseHome = AppSettings.Local.Default.DatabaseHome;
+            var directiryDatabase = AppSettings.Local.Default.DirectoryDatabase;
 
-            var defaultDatabaseHome =
+            var defaultDirectoryDatabase =
 #if DEBUG
                 Files.ExecutableDirectory();
 #else
                 Files.AppDataRoamingDirectory();
 #endif
-            if (databaseHome.IsEmpty())
+            if (directiryDatabase.IsEmpty())
             {
-                databaseHome = defaultDatabaseHome;
+                directiryDatabase = defaultDirectoryDatabase;
             }
 
-            if (!Directory.Exists(databaseHome))
+            if (!Directory.Exists(directiryDatabase))
             {
-                DebugWrite.Error("database directory not exists: " + databaseHome);
+                DebugWrite.Error("database directory not exists: " + directiryDatabase);
 
-                if (Msg.Question(Resources.ErrorDatabaseDirectoryNotExists, databaseHome, defaultDatabaseHome))
+                if (Msg.Question(Resources.ErrorDatabaseDirectoryNotExists, directiryDatabase, defaultDirectoryDatabase))
                 {
-                    AppSettings.Local.Default.DatabaseHome = string.Empty;
+                    AppSettings.Local.Default.DirectoryDatabase = string.Empty;
 
                     return SetDatabaseFileName();
                 }
@@ -1204,7 +1197,7 @@ namespace TileExplorer
                 return false;
             }
 
-            var databaseFileName = Path.Combine(databaseHome, Files.DatabaseFileName());
+            var databaseFileName = Path.Combine(directiryDatabase, Files.DatabaseFileName());
 
             DebugWrite.Line("database: " + databaseFileName);
 
@@ -1257,8 +1250,6 @@ namespace TileExplorer
 
         private async Task ShowSettingsAsync()
         {
-            var TrackMinDistancePoint = AppSettings.Roaming.Default.TrackMinDistancePoint;
-
             if (FrmSettings.ShowDlg(this))
             {
                 if (!SetDatabaseFileName())
@@ -1275,14 +1266,6 @@ namespace TileExplorer
                     if (frm is IChildForm form)
                     {
                         form.UpdateSettings();
-                    }
-                }
-
-                if (TrackMinDistancePoint != AppSettings.Roaming.Default.TrackMinDistancePoint)
-                {
-                    if (Msg.Question(Resources.QuestionUpdateTrackMinDistancePoint))
-                    {
-                        await UpdateTrackMinDistancePointAsync();
                     }
                 }
 
@@ -1617,6 +1600,11 @@ namespace TileExplorer
         private void MiTrackShowChartTrackEle_Click(object sender, EventArgs e)
         {
             OpenChartTrackEle(SelectedTrack.Model);
+        }
+
+        private async void MiMainDataCheckDirectoryTracks_Click(object sender, EventArgs e)
+        {
+            await CheckDirectoryTracksAsync(true);
         }
     }
 }

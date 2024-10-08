@@ -203,6 +203,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Каталог с треками не указан..
+        /// </summary>
+        internal static string ErrorDirectoryTracksEmpty {
+            get {
+                return ResourceManager.GetString("ErrorDirectoryTracksEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Каталог «{0}» не может располагаться в указанном месте..
+        /// </summary>
+        internal static string ErrorDirectoryWrongLocation {
+            get {
+                return ResourceManager.GetString("ErrorDirectoryWrongLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Необходимо ввести число..
         /// </summary>
         internal static string ErrorNeedDigit {
@@ -290,6 +308,16 @@ namespace TileExplorer.Properties {
         internal static string GitHubLink {
             get {
                 return ResourceManager.GetString("GitHubLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Во время поиска новых треков произошла ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgCheckDirectoryTracksFail {
+            get {
+                return ResourceManager.GetString("MsgCheckDirectoryTracksFail", resourceCulture);
             }
         }
         
@@ -393,6 +421,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Новые треки в каталоге не найдены..
+        /// </summary>
+        internal static string MsgDirectoryTracksNoNewFiles {
+            get {
+                return ResourceManager.GetString("MsgDirectoryTracksNoNewFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Плитка не открыта..
         /// </summary>
         internal static string MsgTileNotVisited {
@@ -456,6 +493,43 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Обнаружен новый трек:
+        ///{0}
+        ///
+        ///Добавить в базу?.
+        /// </summary>
+        internal static string QuestionNewTrackFinded1 {
+            get {
+                return ResourceManager.GetString("QuestionNewTrackFinded1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Обнаружены новые треки:
+        ///{0}
+        ///
+        ///Добавить в базу?.
+        /// </summary>
+        internal static string QuestionNewTrackFinded2 {
+            get {
+                return ResourceManager.GetString("QuestionNewTrackFinded2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Обнаружены новые треки:
+        ///{0}
+        ///и ещё {1}.
+        ///
+        ///Добавить в базу?.
+        /// </summary>
+        internal static string QuestionNewTrackFinded3 {
+            get {
+                return ResourceManager.GetString("QuestionNewTrackFinded3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Приблизить для редактирования?.
         /// </summary>
         internal static string QuestionOsmSetEditZoom {
@@ -488,15 +562,6 @@ namespace TileExplorer.Properties {
         internal static string QuestionTracksOKToAll {
             get {
                 return ResourceManager.GetString("QuestionTracksOKToAll", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Расстояние между точками трека для отображения изменилось. Обновить имеющиеся в базе треки?.
-        /// </summary>
-        internal static string QuestionUpdateTrackMinDistancePoint {
-            get {
-                return ResourceManager.GetString("QuestionUpdateTrackMinDistancePoint", resourceCulture);
             }
         }
         

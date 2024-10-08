@@ -87,9 +87,9 @@ namespace TileExplorer
         {
             try
             {
-                if (!ShowSaveFileDialog(SaveFileDialogType.Png, AppSettings.Local.Default.DirectoryMapImage)) return;
+                if (!ShowSaveFileDialog(SaveFileDialogType.Png, AppSettings.Local.Default.DirectoryLastMapImage)) return;
 
-                AppSettings.Local.Default.DirectoryMapImage = Directory.GetParent(saveFileDialog.FileName).FullName;
+                AppSettings.Local.Default.DirectoryLastMapImage = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                 SaveToImage(saveFileDialog.FileName);
             }
@@ -120,9 +120,9 @@ namespace TileExplorer
 
                 try
                 {
-                    if (!ShowSaveFileDialog(SaveFileDialogType.Osm, AppSettings.Local.Default.DirectoryTileBoundary)) return;
+                    if (!ShowSaveFileDialog(SaveFileDialogType.Osm, AppSettings.Local.Default.DirectoryLastTileBoundary)) return;
 
-                    AppSettings.Local.Default.DirectoryTileBoundary = Directory.GetParent(saveFileDialog.FileName).FullName;
+                    AppSettings.Local.Default.DirectoryLastTileBoundary = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                     Utils.Osm.SaveTilesToFile(saveFileDialog.FileName, tiles);
                 }
@@ -158,9 +158,9 @@ namespace TileExplorer
             {
                 saveFileDialog.FileName = AppSettings.Roaming.Default.TileStatusFileWptType;
 
-                if (!ShowSaveFileDialog(SaveFileDialogType.Gpx, AppSettings.Local.Default.DirectoryTileStatus)) return;
+                if (!ShowSaveFileDialog(SaveFileDialogType.Gpx, AppSettings.Local.Default.DirectoryLastTileStatus)) return;
 
-                AppSettings.Local.Default.DirectoryTileStatus = Directory.GetParent(saveFileDialog.FileName).FullName;
+                AppSettings.Local.Default.DirectoryLastTileStatus = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                 Utils.Gpx.SaveTileStatusToFile(saveFileDialog.FileName, boudaryTiles);
             }

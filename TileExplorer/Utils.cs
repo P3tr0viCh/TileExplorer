@@ -1,10 +1,9 @@
-﻿using GMap.NET;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
@@ -31,6 +30,13 @@ namespace TileExplorer
             DebugWrite.Line($"{sourceFileName} > {destFileName}");
 
             File.Copy(sourceFileName, destFileName, true);
+        }
+        
+        public static string NormalizePath(string path)
+        {
+            return Path.GetFullPath(new Uri(path).LocalPath)
+                       .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                       .ToUpperInvariant();
         }
 
         public static double LinearInterpolate(double x, double x1, double y1, double x2, double y2)

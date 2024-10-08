@@ -1,6 +1,5 @@
 ﻿using P3tr0viCh.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -174,39 +173,6 @@ namespace TileExplorer
             }
         }
 
-        private async Task UpdateTrackMinDistancePointAsync()
-        {
-            var status = ProgramStatus.Start(Status.SaveData);
-
-            try
-            {
-                DebugWrite.Line("start");
-
-                var tracks = await Database.Default.ListLoadAsync<Track>(new { onlyTrack = true });
-
-                foreach (var track in tracks)
-                {
-                    track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track, full = true });
-
-                    await Utils.Tracks.UpdateTrackMinDistancePointAsync(track);
-
-                    await Database.Default.UpdateTrackMinDistancePointAsync(track);
-                }
-
-                DebugWrite.Line("end");
-            }
-            catch (Exception e)
-            {
-                DebugWrite.Error(e);
-
-                Msg.Error(e.Message);
-            }
-            finally
-            {
-                ProgramStatus.Stop(status);
-            }
-        }
-
         private async Task<bool> InternalOpenTracksAsync(string[] files)
         {
             var status = ProgramStatus.Start(Status.LoadGpx);
@@ -276,19 +242,24 @@ namespace TileExplorer
             }
         }
 
-        private async Task OpenTracksAsync()
+        private async Task OpenTracksAsync(string[] files)
         {
-            openFileDialog.FileName = string.Empty;
-
-            openFileDialog.InitialDirectory = AppSettings.Local.Default.DirectoryTracks;
-
-            if (openFileDialog.ShowDialog(this) != DialogResult.OK) return;
-
-            AppSettings.Local.Default.DirectoryTracks = Directory.GetParent(openFileDialog.FileName).FullName;
-
             Selected = null;
 
-            var result = await InternalOpenTracksAsync(openFileDialog.FileNames);
+            if (files == null || files.Length == 0)
+            {
+                openFileDialog.FileName = string.Empty;
+
+                openFileDialog.InitialDirectory = AppSettings.Local.Default.DirectoryLastTracks;
+
+                if (openFileDialog.ShowDialog(this) != DialogResult.OK) return;
+
+                AppSettings.Local.Default.DirectoryLastTracks = Directory.GetParent(openFileDialog.FileName).FullName;
+
+                files = openFileDialog.FileNames;
+            }
+
+            var result = await InternalOpenTracksAsync(files);
 
             if (!result) return;
 

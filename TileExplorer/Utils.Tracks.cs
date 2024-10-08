@@ -22,7 +22,7 @@ namespace TileExplorer
 
                     for (var i = 1; i < track.TrackPoints.Count - 1; i++)
                     {
-                        if (distance >= AppSettings.Roaming.Default.TrackMinDistancePoint)
+                        if (distance >= Const.TrackMinDistancePoint)
                         {
                             distance = 0;
 

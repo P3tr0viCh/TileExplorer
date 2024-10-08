@@ -263,9 +263,6 @@
   <data name="QuestionTracksOKToAll" xml:space="preserve">
     <value>Использовать снаряжение для всех треков?</value>
   </data>
-  <data name="QuestionUpdateTrackMinDistancePoint" xml:space="preserve">
-    <value>Расстояние между точками трека для отображения изменилось. Обновить имеющиеся в базе треки?</value>
-  </data>
   <data name="StatusMousePosition" xml:space="preserve">
     <value>Курсор: {0:F6}, {1:F6}</value>
   </data>
@@ -346,5 +343,37 @@
     <value>Не удалось загрузить плитки.
 Ошибка:
 {0}.</value>
+  </data>
+  <data name="MsgCheckDirectoryTracksFail" xml:space="preserve">
+    <value>Во время поиска новых треков произошла ошибка:
+{0}.</value>
+  </data>
+  <data name="QuestionNewTrackFinded1" xml:space="preserve">
+    <value>Обнаружен новый трек:
+{0}
+
+Добавить в базу?</value>
+  </data>
+  <data name="QuestionNewTrackFinded2" xml:space="preserve">
+    <value>Обнаружены новые треки:
+{0}
+
+Добавить в базу?</value>
+  </data>
+  <data name="QuestionNewTrackFinded3" xml:space="preserve">
+    <value>Обнаружены новые треки:
+{0}
+и ещё {1}.
+
+Добавить в базу?</value>
+  </data>
+  <data name="ErrorDirectoryTracksEmpty" xml:space="preserve">
+    <value>Каталог с треками не указан.</value>
+  </data>
+  <data name="MsgDirectoryTracksNoNewFiles" xml:space="preserve">
+    <value>Новые треки в каталоге не найдены.</value>
+  </data>
+  <data name="ErrorDirectoryWrongLocation" xml:space="preserve">
+    <value>Каталог «{0}» не может располагаться в указанном месте.</value>
   </data>
 </root>

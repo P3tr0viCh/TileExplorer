@@ -1,9 +1,9 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Drawing.Design;
+using System.IO;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using static TileExplorer.Enums;
@@ -14,11 +14,23 @@ namespace TileExplorer
     {
         private const string Resource = "Properties.ResourcesSettings";
 
-        [LocalizedAttribute.Category("Category.Common", Resource)]
-        [LocalizedAttribute.DisplayName("DatabaseHome.DisplayName", Resource)]
-        [LocalizedAttribute.Description("DatabaseHome.Description", Resource)]
+        [LocalizedAttribute.Category("Category.Directories", Resource)]
+        [LocalizedAttribute.DisplayName("DirectoryDatabase.DisplayName", Resource)]
+        [LocalizedAttribute.Description("DirectoryDatabase.Description", Resource)]
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
-        public string DatabaseHome { get => Local.Default.DatabaseHome; set => Local.Default.DatabaseHome = value; }
+        public string DirectoryDatabase { get => Local.Default.DirectoryDatabase; set => Local.Default.DirectoryDatabase = value; }
+
+        [LocalizedAttribute.Category("Category.Directories", Resource)]
+        [LocalizedAttribute.DisplayName("DirectoryTracks.DisplayName", Resource)]
+        [LocalizedAttribute.Description("DirectoryTracks.Description", Resource)]
+        [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
+        public string DirectoryTracks { get => Local.Default.DirectoryTracks; set => Local.Default.DirectoryTracks = value; }
+
+        [LocalizedAttribute.Category("Category.Directories", Resource)]
+        [LocalizedAttribute.DisplayName("DirectoryRoaming.DisplayName", Resource)]
+        [LocalizedAttribute.Description("DirectoryRoaming.Description", Resource)]
+        [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
+        public string DirectoryRoaming { get => Local.Default.DirectoryRoaming; set => Local.Default.DirectoryRoaming = value; }
 
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedAttribute.Category("Category.DesignMarkers", Resource)]
@@ -208,11 +220,6 @@ namespace TileExplorer
         [LocalizedAttribute.Description("WidthTrackSelected.Description", Resource)]
         public int WidthTrackSelected { get => Roaming.Default.WidthTrackSelected; set => Roaming.Default.WidthTrackSelected = value; }
 
-        [LocalizedAttribute.Category("Category.DesignTracks", Resource)]
-        [LocalizedAttribute.DisplayName("TrackMinDistancePoint.DisplayName", Resource)]
-        [LocalizedAttribute.Description("TrackMinDistancePoint.Description", Resource)]
-        public int TrackMinDistancePoint { get => Roaming.Default.TrackMinDistancePoint; set => Roaming.Default.TrackMinDistancePoint = value; }
-
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedAttribute.Category("Category.Format", Resource)]
         [LocalizedAttribute.DisplayName("FormatDate.DisplayName", Resource)]
@@ -359,8 +366,29 @@ namespace TileExplorer
             return LocalSave() && RoamingSave();
         }
 
+        private static string GetDirectory(string directory, string defDirectory)
+        {
+            if (Directory.Exists(directory)) return directory;
+
+            return defDirectory;
+        }
+
+        public static void UpdateDirectoryRoaming()
+        {
+            Roaming.Directory = GetDirectory(Local.Default.DirectoryRoaming,
+#if DEBUG
+                Path.Combine(Files.ExecutableDirectory(), "roaming"));
+
+            Utils.DirectoryCreate(Roaming.Directory);
+#else
+                Files.AppDataRoamingDirectory());
+#endif
+        }
+
         public static bool LocalLoad()
         {
+            DebugWrite.Line($"Settings Local: {Local.FilePath}");
+
             if (!Local.Load())
             {
                 LastError = Local.LastError;
@@ -370,11 +398,15 @@ namespace TileExplorer
                 return false;
             }
 
+            UpdateDirectoryRoaming();
+
             return true;
         }
 
         public static bool RoamingLoad()
         {
+            DebugWrite.Line($"Settings Roaming: {Roaming.FilePath}");
+
             if (!Roaming.Load())
             {
                 LastError = Roaming.LastError;

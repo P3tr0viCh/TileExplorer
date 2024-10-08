@@ -72,6 +72,7 @@
             this.miMainGrayScale = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainData = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainDataOpenTrack = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainDataCheckDirectoryTracks = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataResults = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainDataResultYears = new System.Windows.Forms.ToolStripMenuItem();
@@ -436,7 +437,7 @@
             this.miMainShowTracks.CheckOnClick = true;
             this.miMainShowTracks.Name = "miMainShowTracks";
             this.miMainShowTracks.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.miMainShowTracks.Size = new System.Drawing.Size(180, 22);
+            this.miMainShowTracks.Size = new System.Drawing.Size(171, 22);
             this.miMainShowTracks.Text = "Треки";
             this.miMainShowTracks.Click += new System.EventHandler(this.MiMainShowTracks_Click);
             // 
@@ -505,6 +506,7 @@
             // 
             this.miMainData.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miMainDataOpenTrack,
+            this.miMainDataCheckDirectoryTracks,
             this.toolStripSeparator6,
             this.miMainDataResults,
             this.toolStripSeparator9,
@@ -525,14 +527,23 @@
             // 
             this.miMainDataOpenTrack.Name = "miMainDataOpenTrack";
             this.miMainDataOpenTrack.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.miMainDataOpenTrack.Size = new System.Drawing.Size(247, 22);
-            this.miMainDataOpenTrack.Text = "Добавить трек...";
+            this.miMainDataOpenTrack.Size = new System.Drawing.Size(262, 22);
+            this.miMainDataOpenTrack.Text = "Добавить трек";
             this.miMainDataOpenTrack.Click += new System.EventHandler(this.MiMainDataOpenTrack_Click);
+            // 
+            // miMainDataCheckDirectoryTracks
+            // 
+            this.miMainDataCheckDirectoryTracks.Name = "miMainDataCheckDirectoryTracks";
+            this.miMainDataCheckDirectoryTracks.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.O)));
+            this.miMainDataCheckDirectoryTracks.Size = new System.Drawing.Size(262, 22);
+            this.miMainDataCheckDirectoryTracks.Text = "Поиск новых треков";
+            this.miMainDataCheckDirectoryTracks.Click += new System.EventHandler(this.MiMainDataCheckDirectoryTracks_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(244, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(259, 6);
             // 
             // miMainDataResults
             // 
@@ -540,7 +551,7 @@
             this.miMainDataResultYears,
             this.miMainDataResultEquipments});
             this.miMainDataResults.Name = "miMainDataResults";
-            this.miMainDataResults.Size = new System.Drawing.Size(247, 22);
+            this.miMainDataResults.Size = new System.Drawing.Size(262, 22);
             this.miMainDataResults.Text = "Итоги";
             // 
             // miMainDataResultYears
@@ -560,14 +571,14 @@
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(244, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(259, 6);
             // 
             // miMainDataTrackList
             // 
             this.miMainDataTrackList.Name = "miMainDataTrackList";
             this.miMainDataTrackList.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.T)));
-            this.miMainDataTrackList.Size = new System.Drawing.Size(247, 22);
+            this.miMainDataTrackList.Size = new System.Drawing.Size(262, 22);
             this.miMainDataTrackList.Text = "Треки";
             this.miMainDataTrackList.Click += new System.EventHandler(this.MiMainDataTrackList_Click);
             // 
@@ -576,34 +587,34 @@
             this.miMainDataMarkerList.Name = "miMainDataMarkerList";
             this.miMainDataMarkerList.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.M)));
-            this.miMainDataMarkerList.Size = new System.Drawing.Size(247, 22);
+            this.miMainDataMarkerList.Size = new System.Drawing.Size(262, 22);
             this.miMainDataMarkerList.Text = "Маркеры";
             this.miMainDataMarkerList.Click += new System.EventHandler(this.MiMainDataMarkerList_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(244, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(259, 6);
             // 
             // miMainDataEquipmentList
             // 
             this.miMainDataEquipmentList.Name = "miMainDataEquipmentList";
             this.miMainDataEquipmentList.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.E)));
-            this.miMainDataEquipmentList.Size = new System.Drawing.Size(247, 22);
+            this.miMainDataEquipmentList.Size = new System.Drawing.Size(262, 22);
             this.miMainDataEquipmentList.Text = "Снаряжение";
             this.miMainDataEquipmentList.Click += new System.EventHandler(this.MiMainDataEquipmentList_Click);
             // 
             // toolStripSeparator14
             // 
             this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(244, 6);
+            this.toolStripSeparator14.Size = new System.Drawing.Size(259, 6);
             // 
             // miMainDataFilter
             // 
             this.miMainDataFilter.Name = "miMainDataFilter";
             this.miMainDataFilter.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.miMainDataFilter.Size = new System.Drawing.Size(247, 22);
+            this.miMainDataFilter.Size = new System.Drawing.Size(262, 22);
             this.miMainDataFilter.Text = "Фильтр";
             this.miMainDataFilter.Click += new System.EventHandler(this.MiMainDataFilter_Click);
             // 
@@ -612,20 +623,20 @@
             this.miMainDataTracksTree.Name = "miMainDataTracksTree";
             this.miMainDataTracksTree.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.F)));
-            this.miMainDataTracksTree.Size = new System.Drawing.Size(247, 22);
+            this.miMainDataTracksTree.Size = new System.Drawing.Size(262, 22);
             this.miMainDataTracksTree.Text = "Треки по месяцам";
             this.miMainDataTracksTree.Click += new System.EventHandler(this.MiMainDataTracksTree_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(244, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(259, 6);
             // 
             // miMainDataUpdate
             // 
             this.miMainDataUpdate.Name = "miMainDataUpdate";
             this.miMainDataUpdate.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.miMainDataUpdate.Size = new System.Drawing.Size(247, 22);
+            this.miMainDataUpdate.Size = new System.Drawing.Size(262, 22);
             this.miMainDataUpdate.Text = "Обновить";
             this.miMainDataUpdate.Click += new System.EventHandler(this.MiMainDataUpdate_Click);
             // 
@@ -960,14 +971,14 @@
             this.miMapTileAdd.Name = "miMapTileAdd";
             this.miMapTileAdd.Size = new System.Drawing.Size(209, 22);
             this.miMapTileAdd.Text = "add tile";
-            this.miMapTileAdd.Click += new System.EventHandler(this.MiMapTileAdd_Click);
+            this.miMapTileAdd.Visible = false;
             // 
             // miMapTileDelete
             // 
             this.miMapTileDelete.Name = "miMapTileDelete";
             this.miMapTileDelete.Size = new System.Drawing.Size(209, 22);
             this.miMapTileDelete.Text = "delete tile";
-            this.miMapTileDelete.Click += new System.EventHandler(this.MiMapTileDelete_Click);
+            this.miMapTileDelete.Visible = false;
             // 
             // openFileDialog
             // 
@@ -1175,6 +1186,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
         private System.Windows.Forms.ContextMenuStrip cmSelectedItems;
         private System.Windows.Forms.ToolStripMenuItem xxxToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem miMainDataCheckDirectoryTracks;
     }
 }
 
