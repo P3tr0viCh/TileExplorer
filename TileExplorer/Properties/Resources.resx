@@ -371,7 +371,7 @@
     <value>Каталог с треками не указан.</value>
   </data>
   <data name="MsgDirectoryTracksNoNewFiles" xml:space="preserve">
-    <value>Новые треки в каталоге не найдены.</value>
+    <value>Новые треки в каталоге «{0}» не найдены.</value>
   </data>
   <data name="ErrorDirectoryWrongLocation" xml:space="preserve">
     <value>Каталог «{0}» не может располагаться в указанном месте.</value>

@@ -421,7 +421,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Новые треки в каталоге не найдены..
+        ///   Looks up a localized string similar to Новые треки в каталоге «{0}» не найдены..
         /// </summary>
         internal static string MsgDirectoryTracksNoNewFiles {
             get {

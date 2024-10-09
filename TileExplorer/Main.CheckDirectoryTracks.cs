@@ -83,6 +83,8 @@ namespace TileExplorer
 
             foreach (var file in files)
             {
+                if (ctsCheckDirectoryTracks.IsCancellationRequested) return; 
+                
                 if (GpxFiles.Default.Files.Contains(file)) continue;
 
                 newFiles.Add(file);
@@ -195,6 +197,8 @@ namespace TileExplorer
                 {
                     ProgramStatus.Stop(status);
                 }
+                
+                if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
                 if (newFiles.Count == 0)
                 {
@@ -202,11 +206,13 @@ namespace TileExplorer
 
                     if (showMessage)
                     {
-                        Msg.Info(Resources.MsgDirectoryTracksNoNewFiles);
+                        Msg.Info(Resources.MsgDirectoryTracksNoNewFiles, directoryTracks);
                     }
 
                     return;
                 }
+                
+                if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
                 if (!QuestionAddTracks(newFiles))
                 {
@@ -214,6 +220,8 @@ namespace TileExplorer
 
                     return;
                 }
+                
+                if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
                 await OpenTracksAsync(newFiles.ToArray());
             }
