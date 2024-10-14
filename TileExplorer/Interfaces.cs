@@ -64,10 +64,5 @@ namespace TileExplorer
             void UpdateColors();
             void NotifyModelChanged();
         }
-
-        public interface IStatusStripView
-        {
-            ToolStripStatusLabel GetLabel(StatusLabel label);
-        }
     }
 }

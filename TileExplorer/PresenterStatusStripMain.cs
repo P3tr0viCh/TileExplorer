@@ -1,17 +1,40 @@
 ﻿using GMap.NET;
 using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Utils;
+using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    internal class PresenterStatusStrip
+    internal class PresenterStatusStripMain
     {
+        public enum StatusLabel
+        {
+            Zoom,
+            TileId,
+            Position,
+            MousePosition,
+
+            Status,
+            UpdateStatus,
+
+            TracksCount,
+            TracksDistance,
+
+            TilesVisited,
+            TilesMaxCluster,
+            TilesMaxSquare,
+        }
+
+        public interface IStatusStripView
+        {
+            ToolStripStatusLabel GetLabel(StatusLabel label);
+        }
+
         private readonly IStatusStripView view;
 
-        public PresenterStatusStrip(IStatusStripView view)
+        public PresenterStatusStripMain(IStatusStripView view)
         {
             this.view = view;
 

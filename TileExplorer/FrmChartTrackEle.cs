@@ -14,13 +14,15 @@ using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTrackEle : Form, IChildForm, IUpdateDataForm
+    public partial class FrmChartTrackEle : Form, IChildForm, IUpdateDataForm, PresenterStatusStripChartTrackEle.IStatusStripView
     {
         public IMainForm MainForm => Owner as IMainForm;
 
         public ChildFormType FormType => ChildFormType.ChartTrackEle;
 
         internal readonly PresenterChildForm childFormPresenter;
+
+        private readonly PresenterStatusStripChartTrackEle statusStripPresenter;
 
         public Track Track { get; private set; } = null;
 
@@ -32,6 +34,8 @@ namespace TileExplorer
             InitializeComponent();
 
             childFormPresenter = new PresenterChildForm(this);
+
+            statusStripPresenter = new PresenterStatusStripChartTrackEle(this);
         }
 
         public static FrmChartTrackEle ShowFrm(Form owner, Track track)
@@ -55,6 +59,8 @@ namespace TileExplorer
 
         private async void FrmTrackEleChart_Load(object sender, EventArgs e)
         {
+            ChartArea.AxisX.ScaleView.Zoomable = false;
+
             CursorXPositionChanged();
 
             UpdateSettings();
@@ -77,6 +83,19 @@ namespace TileExplorer
 
             ChartSerial.Color = Color.FromArgb(AppSettings.Roaming.Default.ColorChartTrackEleSerialAlpha,
                 AppSettings.Roaming.Default.ColorChartTrackEleSerial);
+        }
+
+        ToolStripStatusLabel PresenterStatusStripChartTrackEle.IStatusStripView.GetLabel(PresenterStatusStripChartTrackEle.StatusLabel label)
+        {
+            switch (label)
+            {
+                case PresenterStatusStripChartTrackEle.StatusLabel.Ele: return slEle;
+                case PresenterStatusStripChartTrackEle.StatusLabel.Distance: return slDistance;
+                case PresenterStatusStripChartTrackEle.StatusLabel.DateTime: return slDateTime;
+                case PresenterStatusStripChartTrackEle.StatusLabel.DateTimeSpan: return slDateTimeSpan;
+                case PresenterStatusStripChartTrackEle.StatusLabel.IsSelection: return slIsSelection;
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
 
         private readonly WrapperCancellationTokenSource ctsChartTrackEle = new WrapperCancellationTokenSource();
@@ -126,6 +145,8 @@ namespace TileExplorer
 
                 ChartArea.AxisX.Minimum = 0;
                 ChartArea.AxisX.Maximum = Track.Distance / 1000;
+
+                ChartArea.CursorX.Position = 0;
             }
             catch (TaskCanceledException e)
             {
@@ -153,62 +174,99 @@ namespace TileExplorer
 
         private void CursorXPositionChanged()
         {
-            var dist = ChartArea.CursorX.Position;
+            var distanceFromStart = ChartArea.CursorX.Position;
 
-            if (dist is double.NaN || ChartSerial.Points.Count == 0)
+            if (distanceFromStart is double.NaN || ChartSerial.Points.Count == 0)
             {
-                slDist.Text = string.Empty;
-
-                slEle.Text = string.Empty;
+                statusStripPresenter.Ele = 0;
+                statusStripPresenter.Distance = 0;
+                statusStripPresenter.DateTime = default;
+                statusStripPresenter.DateTimeSpan = default;
 
                 MainForm.ShowMarkerPosition(this, default);
 
                 return;
             }
 
-            slDist.Text = string.Format(Resources.StatusDist, dist);
+            CursorPoint = default;
 
-            if (dist == 0)
+            var point = default(TrackPoint);
+
+            if (distanceFromStart == 0)
             {
-                slEle.Text = string.Format(Resources.StatusEle, ChartSerial.Points.First().YValues.First());
+                point = Track.TrackPoints.First();
+
+                statusStripPresenter.Ele = point.Ele;
+                statusStripPresenter.Distance = 0;
+                statusStripPresenter.DateTime = point.DateTime;
+                statusStripPresenter.DateTimeSpan = default;
+
+                CursorPoint = new PointLatLng(point.Lat, point.Lng);
+
+                MainForm?.ShowMarkerPosition(this, CursorPoint);
+
+                return;
+            }
+
+            if (Utils.DoubleEquals(distanceFromStart * 1000, Track.Distance, 0.0001))
+            {
+                point = Track.TrackPoints.Last();
+
+                statusStripPresenter.Ele = point.Ele;
+                statusStripPresenter.Distance = Track.Distance;
+                statusStripPresenter.DateTime = point.DateTime;
+                statusStripPresenter.DateTimeSpan = Track.DateTimeFinish - Track.DateTimeStart;
+
+                CursorPoint = new PointLatLng(point.Lat, point.Lng);
+
+                MainForm?.ShowMarkerPosition(this, CursorPoint);
 
                 return;
             }
 
             var pointPrev = ChartSerial.Points.Select(x => x)
-                                    .Where(x => x.XValue < dist)
+                                    .Where(x => x.XValue < distanceFromStart)
                                     .DefaultIfEmpty(ChartSerial.Points.First()).Last();
             var pointNext = ChartSerial.Points.Select(x => x)
-                                    .Where(x => x.XValue >= dist)
+                                    .Where(x => x.XValue >= distanceFromStart)
                                     .DefaultIfEmpty(ChartSerial.Points.Last()).First();
 
-            var x1 = pointPrev.XValue;
-            var y1 = pointPrev.YValues.First();
+            var dist1 = pointPrev.XValue;
+            var ele1 = pointPrev.YValues.First();
 
-            var x2 = pointNext.XValue;
-            var y2 = pointNext.YValues.First();
+            var dist2 = pointNext.XValue;
+            var ele2 = pointNext.YValues.First();
 
-            var ele = Utils.LinearInterpolate(dist, x1, y1, x2, y2);
-
-            slEle.Text = string.Format(Resources.StatusEle, ele);
-
-            dist *= 1000;
+            var ele = Utils.LinearInterpolate(distanceFromStart, dist1, ele1, dist2, ele2);
 
             var distance = 0D;
+            var dateTime = default(DateTime);
+            var dateTimeSpan = default(TimeSpan);
 
             CursorPoint = default;
 
-            foreach (var point in Track.TrackPoints)
-            {
-                distance += point.Distance;
+            distanceFromStart *= 1000;
 
-                if (distance >= dist)
+            foreach (var trackPoint in Track.TrackPoints)
+            {
+                distance += trackPoint.Distance;
+
+                if (distance >= distanceFromStart)
                 {
-                    CursorPoint = new PointLatLng(point.Lat, point.Lng);
+                    CursorPoint = new PointLatLng(trackPoint.Lat, trackPoint.Lng);
+
+                    dateTime = trackPoint.DateTime;
+
+                    dateTimeSpan = dateTime - Track.DateTimeStart;
 
                     break;
                 }
             }
+
+            statusStripPresenter.Ele = ele;
+            statusStripPresenter.Distance = distance;
+            statusStripPresenter.DateTime = dateTime;
+            statusStripPresenter.DateTimeSpan = dateTimeSpan;
 
             MainForm?.ShowMarkerPosition(this, CursorPoint);
         }
@@ -225,6 +283,12 @@ namespace TileExplorer
 
         private void Chart_MouseClick(object sender, MouseEventArgs e)
         {
+            if (ChartArea.CursorX.SelectionStart != ChartArea.CursorX.SelectionEnd)
+            {
+                AllowCursorXMove = true;
+                return;
+            }
+
             AllowCursorXMove = !AllowCursorXMove;
 
             CursorXPositionChanged();
@@ -247,6 +311,20 @@ namespace TileExplorer
             MainForm?.SelectMapItemAsync(this, Track);
 
             MainForm?.ShowMarkerPosition(this, CursorPoint);
+        }
+
+        private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)
+        {
+            var isSelection = e.NewSelectionStart != e.NewSelectionEnd;
+
+            statusStripPresenter.IsSelection = isSelection;
+
+            if (!isSelection)
+            {
+                return;
+            }
+
+            //TODO
         }
     }
 }

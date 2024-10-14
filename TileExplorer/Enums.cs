@@ -79,23 +79,5 @@ namespace TileExplorer
             [Description("Квадрат")]
             Square
         }
-
-        public enum StatusLabel
-        {
-            Zoom,
-            TileId,
-            Position,
-            MousePosition,
-
-            Status,
-            UpdateStatus,
-
-            TracksCount,
-            TracksDistance,
-
-            TilesVisited,
-            TilesMaxCluster,
-            TilesMaxSquare,
-        }
     }
 }

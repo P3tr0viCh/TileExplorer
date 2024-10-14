@@ -31,7 +31,7 @@ namespace TileExplorer
 
             File.Copy(sourceFileName, destFileName, true);
         }
-        
+
         public static string NormalizePath(string path)
         {
             return Path.GetFullPath(new Uri(path).LocalPath)
@@ -41,11 +41,23 @@ namespace TileExplorer
 
         public static double LinearInterpolate(double x, double x1, double y1, double x2, double y2)
         {
+            if (x1 == x2 && y1 == y2)
+            {
+                return y1;
+            }
+
             var a = (y2 - y1) / (x2 - x1);
 
             var b = y1 - a * x1;
 
             return a * x + b;
+        }
+
+        public static bool DoubleEquals(double x, double y, double tolerance)
+        {
+            var diff = Math.Abs(x - y);
+            return diff <= tolerance ||
+                   diff <= Math.Max(Math.Abs(x), Math.Abs(y)) * tolerance;
         }
 
         public static List<T> GetChildForms<T>(ChildFormType type = default)

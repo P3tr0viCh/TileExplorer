@@ -568,9 +568,9 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Дистанция:  {0:F2}.
         /// </summary>
-        internal static string StatusDist {
+        internal static string StatusDistance {
             get {
-                return ResourceManager.GetString("StatusDist", resourceCulture);
+                return ResourceManager.GetString("StatusDistance", resourceCulture);
             }
         }
         
@@ -580,6 +580,15 @@ namespace TileExplorer.Properties {
         internal static string StatusEle {
             get {
                 return ResourceManager.GetString("StatusEle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Выделение.
+        /// </summary>
+        internal static string StatusIsSelection {
+            get {
+                return ResourceManager.GetString("StatusIsSelection", resourceCulture);
             }
         }
         

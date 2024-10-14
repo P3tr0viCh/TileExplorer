@@ -333,7 +333,7 @@
 Ошибка:
 {0}.</value>
   </data>
-  <data name="StatusDist" xml:space="preserve">
+  <data name="StatusDistance" xml:space="preserve">
     <value>Дистанция:  {0:F2}</value>
   </data>
   <data name="StatusEle" xml:space="preserve">
@@ -375,5 +375,8 @@
   </data>
   <data name="ErrorDirectoryWrongLocation" xml:space="preserve">
     <value>Каталог «{0}» не может располагаться в указанном месте.</value>
+  </data>
+  <data name="StatusIsSelection" xml:space="preserve">
+    <value>Выделение</value>
   </data>
 </root>

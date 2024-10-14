@@ -23,7 +23,7 @@ using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public partial class Main : Form, IStatusStripView, IMainForm
+    public partial class Main : Form, PresenterStatusStripMain.IStatusStripView, IMainForm
     {
         private readonly GMapOverlay overlayGrid = new GMapOverlay("grid");
         private readonly GMapOverlay overlayTiles = new GMapOverlay("tiles");
@@ -33,7 +33,7 @@ namespace TileExplorer
 
         private readonly MapZoomRuler mapZoomRuler;
 
-        private readonly PresenterStatusStrip statusStripPresenter;
+        private readonly PresenterStatusStripMain statusStripPresenter;
 
         public ProgramStatus ProgramStatus { get; } = new ProgramStatus();
 
@@ -41,7 +41,7 @@ namespace TileExplorer
         {
             InitializeComponent();
 
-            statusStripPresenter = new PresenterStatusStrip(this);
+            statusStripPresenter = new PresenterStatusStripMain(this);
 
             mapZoomRuler = new MapZoomRuler(gMapControl);
         }
@@ -93,7 +93,7 @@ namespace TileExplorer
 #if DEBUG 
             miMapTileAdd.Click += new EventHandler(MiMapTileAdd_Click);
             miMapTileDelete.Click += new EventHandler(MiMapTileDelete_Click);
-            
+
             miMapTileAdd.Visible = true;
             miMapTileDelete.Visible = true;
 #endif
@@ -359,21 +359,21 @@ namespace TileExplorer
             statusStripPresenter.UpdateStatus = status;
         }
 
-        public ToolStripStatusLabel GetLabel(StatusLabel label)
+        ToolStripStatusLabel PresenterStatusStripMain.IStatusStripView.GetLabel(PresenterStatusStripMain.StatusLabel label)
         {
             switch (label)
             {
-                case StatusLabel.Zoom: return slZoom;
-                case StatusLabel.TileId: return slTileId;
-                case StatusLabel.Position: return slPosition;
-                case StatusLabel.MousePosition: return slMousePosition;
-                case StatusLabel.Status: return slStatus;
-                case StatusLabel.UpdateStatus: return slUpdateStatus;
-                case StatusLabel.TracksCount: return slTracksCount;
-                case StatusLabel.TracksDistance: return slTracksDistance;
-                case StatusLabel.TilesVisited: return slTilesVisited;
-                case StatusLabel.TilesMaxCluster: return slTilesMaxCluster;
-                case StatusLabel.TilesMaxSquare: return slTilesMaxSquare;
+                case PresenterStatusStripMain.StatusLabel.Zoom: return slZoom;
+                case PresenterStatusStripMain.StatusLabel.TileId: return slTileId;
+                case PresenterStatusStripMain.StatusLabel.Position: return slPosition;
+                case PresenterStatusStripMain.StatusLabel.MousePosition: return slMousePosition;
+                case PresenterStatusStripMain.StatusLabel.Status: return slStatus;
+                case PresenterStatusStripMain.StatusLabel.UpdateStatus: return slUpdateStatus;
+                case PresenterStatusStripMain.StatusLabel.TracksCount: return slTracksCount;
+                case PresenterStatusStripMain.StatusLabel.TracksDistance: return slTracksDistance;
+                case PresenterStatusStripMain.StatusLabel.TilesVisited: return slTilesVisited;
+                case PresenterStatusStripMain.StatusLabel.TilesMaxCluster: return slTilesMaxCluster;
+                case PresenterStatusStripMain.StatusLabel.TilesMaxSquare: return slTilesMaxSquare;
                 default: throw new ArgumentOutOfRangeException();
             }
         }

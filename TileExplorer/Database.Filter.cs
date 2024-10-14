@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
 using System;
 using System.Linq;
 
@@ -11,13 +10,7 @@ namespace TileExplorer
         {
             private static readonly Filter defaultInstance = new Filter();
 
-            public static Filter Default
-            {
-                get
-                {
-                    return defaultInstance;
-                }
-            }
+            public static Filter Default => defaultInstance;
 
             public delegate void Changed();
 
@@ -28,7 +21,7 @@ namespace TileExplorer
                 None,
                 Day,
                 Period,
-                Years
+                Years,
             }
 
             private FilterType type = FilterType.None;

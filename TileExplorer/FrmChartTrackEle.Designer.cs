@@ -33,8 +33,11 @@
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.slDist = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slDistance = new System.Windows.Forms.ToolStripStatusLabel();
             this.slEle = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slDateTime = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slDateTimeSpan = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slIsSelection = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -52,6 +55,7 @@
             chartArea1.AxisY.TitleFont = new System.Drawing.Font("Segoe UI", 10F);
             chartArea1.CursorX.Interval = 0D;
             chartArea1.CursorX.IsUserEnabled = true;
+            chartArea1.CursorX.IsUserSelectionEnabled = true;
             chartArea1.CursorX.LineColor = System.Drawing.Color.RosyBrown;
             chartArea1.CursorY.Interval = 0D;
             chartArea1.Name = "AreaTrackEle";
@@ -72,6 +76,7 @@
             this.chart.Size = new System.Drawing.Size(584, 219);
             this.chart.TabIndex = 0;
             this.chart.Text = "chart";
+            this.chart.SelectionRangeChanging += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.Chart_SelectionRangeChanging);
             this.chart.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Chart_MouseClick);
             this.chart.MouseEnter += new System.EventHandler(this.Chart_MouseEnter);
             this.chart.MouseLeave += new System.EventHandler(this.Chart_MouseLeave);
@@ -80,25 +85,46 @@
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.slDist,
-            this.slEle});
+            this.slDistance,
+            this.slEle,
+            this.slDateTime,
+            this.slDateTimeSpan,
+            this.slIsSelection});
             this.statusStrip.Location = new System.Drawing.Point(0, 219);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(584, 22);
             this.statusStrip.TabIndex = 1;
             this.statusStrip.Text = "statusStrip1";
             // 
-            // slDist
+            // slDistance
             // 
-            this.slDist.Name = "slDist";
-            this.slDist.Size = new System.Drawing.Size(45, 17);
-            this.slDist.Text = "Dist: 42";
+            this.slDistance.Name = "slDistance";
+            this.slDistance.Size = new System.Drawing.Size(45, 17);
+            this.slDistance.Text = "Dist: 42";
             // 
             // slEle
             // 
             this.slEle.Name = "slEle";
             this.slEle.Size = new System.Drawing.Size(49, 17);
             this.slEle.Text = " Ele: 666";
+            // 
+            // slDateTime
+            // 
+            this.slDateTime.Name = "slDateTime";
+            this.slDateTime.Size = new System.Drawing.Size(50, 17);
+            this.slDateTime.Text = "DT: 1981";
+            // 
+            // slDateTimeSpan
+            // 
+            this.slDateTimeSpan.Name = "slDateTimeSpan";
+            this.slDateTimeSpan.Size = new System.Drawing.Size(51, 17);
+            this.slDateTimeSpan.Text = "DT: span";
+            // 
+            // slIsSelection
+            // 
+            this.slIsSelection.Name = "slIsSelection";
+            this.slIsSelection.Size = new System.Drawing.Size(55, 17);
+            this.slIsSelection.Text = "Selection";
             // 
             // FrmChartTrackEle
             // 
@@ -132,7 +158,10 @@
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chart;
         private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel slDist;
+        private System.Windows.Forms.ToolStripStatusLabel slDistance;
         private System.Windows.Forms.ToolStripStatusLabel slEle;
+        private System.Windows.Forms.ToolStripStatusLabel slDateTime;
+        private System.Windows.Forms.ToolStripStatusLabel slDateTimeSpan;
+        private System.Windows.Forms.ToolStripStatusLabel slIsSelection;
     }
 }
