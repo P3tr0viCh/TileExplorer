@@ -1,1 +1,1 @@
-SELECT * FROM tiles;
+SELECT * FROM tiles ORDER BY x, y;

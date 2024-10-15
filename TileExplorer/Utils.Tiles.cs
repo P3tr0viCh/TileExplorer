@@ -1,9 +1,6 @@
 ﻿using GMap.NET;
-using P3tr0viCh.Utils;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 
@@ -60,7 +57,7 @@ namespace TileExplorer
                     tile.Status = TileStatus.Cluster;
                 }
 
-                int clusterId = 0;
+                var clusterId = 0;
 
                 foreach (var tile in tiles)
                 {
@@ -70,7 +67,7 @@ namespace TileExplorer
                     }
                 }
 
-                int[] clusterCapacity = new int[clusterId];
+                var clusterCapacity = new int[clusterId];
 
                 foreach (var tile in tiles)
                 {
@@ -79,9 +76,9 @@ namespace TileExplorer
                     clusterCapacity[tile.ClusterId]++;
                 }
 
-                int maxClusterId = -1;
+                var maxClusterId = -1;
 
-                for (int i = 0; i < clusterCapacity.Length; i++)
+                for (var i = 0; i < clusterCapacity.Length; i++)
                 {
                     if (clusterCapacity[i] > result.MaxCluster)
                     {
@@ -101,10 +98,10 @@ namespace TileExplorer
                     }
                 }
 
-                int maxSquare;
+                var maxSquare = 0;
 
-                int maxSquareX = 0;
-                int maxSquareY = 0;
+                var maxSquareX = 0;
+                var maxSquareY = 0;
 
                 foreach (var tile in tiles)
                 {
@@ -153,14 +150,14 @@ namespace TileExplorer
 
                 square++;
 
-                for (int i = x; i < x + square + 1; i++)
+                for (var i = x; i < x + square + 1; i++)
                 {
                     if (GetTileStatus(tiles, i, y + square) == TileStatus.Unknown)
                     {
                         return square;
                     }
                 }
-                for (int i = y; i < y + square + 1; i++)
+                for (var i = y; i < y + square + 1; i++)
                 {
                     if (GetTileStatus(tiles, x + square, i) == TileStatus.Unknown)
                     {

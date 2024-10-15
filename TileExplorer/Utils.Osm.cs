@@ -1,5 +1,4 @@
 ﻿using GMap.NET;
-using GMap.NET.Internals;
 using P3tr0viCh.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +6,6 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using TileExplorer.Properties;
-using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
