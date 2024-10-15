@@ -132,38 +132,18 @@ namespace TileExplorer
                 private readonly Gpx.Track gpx = new Gpx.Track();
 
                 [Write(false)]
-                public Gpx.Track Gpx
-                {
-                    get => gpx;
-                    set => gpx.Assign(value);
-                }
+                public Gpx.Track Gpx { get => gpx; set => gpx.Assign(value); }
 
                 [DisplayName("Название")]
-                public string Text
-                {
-                    get => gpx.Text;
-                    set => gpx.Text = value;
-                }
+                public string Text { get => gpx.Text; set => gpx.Text = value; }
 
                 [DisplayName("Начало")]
-                public DateTime DateTimeStart
-                {
-                    get => gpx.DateTimeStart;
-                    set => gpx.DateTimeStart = value;
-                }
+                public DateTime DateTimeStart { get => gpx.DateTimeStart; set => gpx.DateTimeStart = value; }
                 [DisplayName("Окончание")]
-                public DateTime DateTimeFinish
-                {
-                    get => gpx.DateTimeFinish;
-                    set => gpx.DateTimeFinish = value;
-                }
+                public DateTime DateTimeFinish { get => gpx.DateTimeFinish; set => gpx.DateTimeFinish = value; }
 
                 [DisplayName("Время")]
-                public long Duration
-                {
-                    get => gpx.Duration;
-                    set => gpx.Duration = value;
-                }
+                public long Duration { get => gpx.Duration; set => gpx.Duration = value; }
 
                 [DisplayName("Время")]
                 [Write(false)]
@@ -171,11 +151,7 @@ namespace TileExplorer
                 public string DurationAsString => TimeSpan.FromSeconds(Duration).ToHoursMinutesString();
 
                 [DisplayName("Время в движении")]
-                public long DurationInMove
-                {
-                    get => gpx.DurationInMove;
-                    set => gpx.DurationInMove = value;
-                }
+                public long DurationInMove { get => gpx.DurationInMove; set => gpx.DurationInMove = value; }
 
                 [DisplayName("Время в движении")]
                 [Write(false)]
@@ -183,22 +159,14 @@ namespace TileExplorer
                 public string DurationInMoveAsString => TimeSpan.FromSeconds(DurationInMove).ToHoursMinutesString();
 
                 [DisplayName("Расстояние")]
-                public double Distance
-                {
-                    get => gpx.Distance;
-                    set => gpx.Distance = value;
-                }
+                public double Distance { get => gpx.Distance; set => gpx.Distance = value; }
 
                 [DisplayName("Скорость")]
                 [Write(false)]
                 public float AverageSpeed { get; set; }
 
                 [DisplayName("Подъём")]
-                public float EleAscent
-                {
-                    get => gpx.EleAscent;
-                    set => gpx.EleAscent = value;
-                }
+                public float EleAscent { get => gpx.EleAscent; set => gpx.EleAscent = value; }
 
                 [Write(false)]
                 [Computed]
@@ -251,19 +219,7 @@ namespace TileExplorer
                 {
                     base.Clear();
 
-                    Text = string.Empty;
-
-                    DateTimeStart = default;
-                    DateTimeFinish = default;
-
-                    Duration = 0;
-                    DurationInMove = 0;
-
-                    Distance = 0;
-
-                    EleAscent = 0;
-
-                    TrackPoints = null;
+                    gpx.Clear();
 
                     NewTilesCount = 0;
 
@@ -304,18 +260,23 @@ namespace TileExplorer
             [Table("tracks_points")]
             public class TrackPoint : BaseId
             {
+                private readonly Gpx.Point point = new Gpx.Point();
+
+                [Write(false)]
+                public Gpx.Point Point { get => point; set => point.Assign(value); }
+
                 public long TrackId { get; set; } = 0;
 
-                public int Num { get; set; }
+                public int Num { get => point.Num; set => point.Num = value; }
 
-                public DateTime DateTime { get; set; }
+                public DateTime DateTime { get => point.DateTime; set => point.DateTime = value; }
 
-                public double Lat { get; set; }
-                public double Lng { get; set; }
+                public double Lat { get => point.Lat; set => point.Lat = value; }
+                public double Lng { get => point.Lng; set => point.Lng = value; }
 
-                public float Ele { get; set; }
+                public float Ele { get => point.Ele; set => point.Ele = value; }
 
-                public double Distance { get; set; }
+                public double Distance { get => point.Distance; set => point.Distance = value; }
 
                 public bool ShowOnMap { get; set; }
             }

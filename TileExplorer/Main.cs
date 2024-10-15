@@ -23,7 +23,7 @@ using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public partial class Main : Form, PresenterStatusStripMain.IStatusStripView, IMainForm
+    public partial class Main : Form, PresenterStatusStripMain.IPresenterStatusStripMain, IMainForm
     {
         private readonly GMapOverlay overlayGrid = new GMapOverlay("grid");
         private readonly GMapOverlay overlayTiles = new GMapOverlay("tiles");
@@ -359,7 +359,7 @@ namespace TileExplorer
             statusStripPresenter.UpdateStatus = status;
         }
 
-        ToolStripStatusLabel PresenterStatusStripMain.IStatusStripView.GetLabel(PresenterStatusStripMain.StatusLabel label)
+        ToolStripStatusLabel PresenterStatusStripMain.IPresenterStatusStripMain.GetLabel(PresenterStatusStripMain.StatusLabel label)
         {
             switch (label)
             {

@@ -379,4 +379,10 @@
   <data name="StatusIsSelection" xml:space="preserve">
     <value>Выделение</value>
   </data>
+  <data name="StatusEleAscent" xml:space="preserve">
+    <value>Подъём:  {0:F0}</value>
+  </data>
+  <data name="TextChartTrackEleAxisX" xml:space="preserve">
+    <value>{0:0,} км</value>
+  </data>
 </root>

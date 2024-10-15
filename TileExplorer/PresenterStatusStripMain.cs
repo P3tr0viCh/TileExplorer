@@ -27,14 +27,14 @@ namespace TileExplorer
             TilesMaxSquare,
         }
 
-        public interface IStatusStripView
+        public interface IPresenterStatusStripMain
         {
             ToolStripStatusLabel GetLabel(StatusLabel label);
         }
 
-        private readonly IStatusStripView view;
+        private readonly IPresenterStatusStripMain view;
 
-        public PresenterStatusStripMain(IStatusStripView view)
+        public PresenterStatusStripMain(IPresenterStatusStripMain view)
         {
             this.view = view;
 

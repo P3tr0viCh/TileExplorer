@@ -13,16 +13,18 @@ namespace TileExplorer
             DateTime,
             DateTimeSpan,
             IsSelection,
+            SelectedDistance,
+            SelectedEleAscent,
         }
 
-        public interface IStatusStripView
+        public interface IPresenterStatusStripChartTrackEle
         {
             ToolStripStatusLabel GetLabel(StatusLabel label);
         }
 
-        private readonly IStatusStripView view;
+        private readonly IPresenterStatusStripChartTrackEle view;
 
-        public PresenterStatusStripChartTrackEle(IStatusStripView view)
+        public PresenterStatusStripChartTrackEle(IPresenterStatusStripChartTrackEle view)
         {
             this.view = view;
 
@@ -31,6 +33,9 @@ namespace TileExplorer
             DateTime = default;
 
             IsSelection = false;
+
+            SelectedEleAscent = 0;
+            SelectedDistance = 0;
         }
 
         public double Ele
@@ -77,6 +82,25 @@ namespace TileExplorer
             set
             {
                 view.GetLabel(StatusLabel.IsSelection).Text = value ? Resources.StatusIsSelection : string.Empty;
+
+                view.GetLabel(StatusLabel.SelectedDistance).Visible = value;
+                view.GetLabel(StatusLabel.SelectedEleAscent).Visible = value;
+            }
+        }
+
+        public double SelectedEleAscent
+        {
+            set
+            {
+                view.GetLabel(StatusLabel.SelectedEleAscent).Text = string.Format(Resources.StatusEleAscent, value);
+            }
+        }
+
+        public double SelectedDistance
+        {
+            set
+            {
+                view.GetLabel(StatusLabel.SelectedDistance).Text = string.Format(Resources.StatusDistance, value / 1000);
             }
         }
     }

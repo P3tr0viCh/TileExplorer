@@ -1,6 +1,7 @@
 ﻿using GMap.NET;
 using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -14,7 +15,7 @@ using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTrackEle : Form, IChildForm, IUpdateDataForm, PresenterStatusStripChartTrackEle.IStatusStripView
+    public partial class FrmChartTrackEle : Form, IChildForm, IUpdateDataForm, PresenterStatusStripChartTrackEle.IPresenterStatusStripChartTrackEle
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -61,6 +62,8 @@ namespace TileExplorer
         {
             ChartArea.AxisX.ScaleView.Zoomable = false;
 
+            ChartArea.AxisX.LabelStyle.Format = Resources.TextChartTrackEleAxisX;
+
             CursorXPositionChanged();
 
             UpdateSettings();
@@ -85,7 +88,7 @@ namespace TileExplorer
                 AppSettings.Roaming.Default.ColorChartTrackEleSerial);
         }
 
-        ToolStripStatusLabel PresenterStatusStripChartTrackEle.IStatusStripView.GetLabel(PresenterStatusStripChartTrackEle.StatusLabel label)
+        ToolStripStatusLabel PresenterStatusStripChartTrackEle.IPresenterStatusStripChartTrackEle.GetLabel(PresenterStatusStripChartTrackEle.StatusLabel label)
         {
             switch (label)
             {
@@ -94,6 +97,8 @@ namespace TileExplorer
                 case PresenterStatusStripChartTrackEle.StatusLabel.DateTime: return slDateTime;
                 case PresenterStatusStripChartTrackEle.StatusLabel.DateTimeSpan: return slDateTimeSpan;
                 case PresenterStatusStripChartTrackEle.StatusLabel.IsSelection: return slIsSelection;
+                case PresenterStatusStripChartTrackEle.StatusLabel.SelectedEleAscent: return slSelectedEle;
+                case PresenterStatusStripChartTrackEle.StatusLabel.SelectedDistance: return slSelectedDistance;
                 default: throw new ArgumentOutOfRangeException();
             }
         }
@@ -125,7 +130,7 @@ namespace TileExplorer
 
                 foreach (var point in Track.TrackPoints)
                 {
-                    distance += point.Distance / 1000;
+                    distance += point.Distance;
 
                     if (point.Ele < minEle)
                     {
@@ -144,7 +149,7 @@ namespace TileExplorer
                 ChartArea.AxisY.Maximum = Math.Floor(maxEle / 50.0) * 50.0 + 50.0;
 
                 ChartArea.AxisX.Minimum = 0;
-                ChartArea.AxisX.Maximum = Track.Distance / 1000;
+                ChartArea.AxisX.Maximum = Track.Distance;
 
                 ChartArea.CursorX.Position = 0;
             }
@@ -208,7 +213,7 @@ namespace TileExplorer
                 return;
             }
 
-            if (Utils.DoubleEquals(distanceFromStart * 1000, Track.Distance, 0.0001))
+            if (Utils.DoubleEquals(distanceFromStart, Track.Distance, 0.1))
             {
                 point = Track.TrackPoints.Last();
 
@@ -244,8 +249,6 @@ namespace TileExplorer
             var dateTimeSpan = default(TimeSpan);
 
             CursorPoint = default;
-
-            distanceFromStart *= 1000;
 
             foreach (var trackPoint in Track.TrackPoints)
             {
@@ -324,7 +327,48 @@ namespace TileExplorer
                 return;
             }
 
-            //TODO
+            var selected = new Gpx.Track
+            {
+                Points = new List<Gpx.Point>()
+            };
+
+            var distanceFromStart = 0D;
+
+            var distanceSelectedStart = e.NewSelectionStart;
+            var distanceSelectedEnd = e.NewSelectionEnd;
+
+            if (distanceSelectedStart > distanceSelectedEnd)
+            {
+                (distanceSelectedStart, distanceSelectedEnd) = (distanceSelectedEnd, distanceSelectedStart);
+            }
+
+            foreach (var trackPoint in Track.TrackPoints)
+            {
+                distanceFromStart += trackPoint.Distance;
+
+                if (distanceFromStart < distanceSelectedStart)
+                {
+                    continue;
+                }
+
+                if (distanceFromStart > distanceSelectedEnd)
+                {
+                    break;
+                }
+
+                selected.Points.Add(trackPoint.Point);
+            }
+
+            if (selected.Points.Count < 2)
+            {
+                statusStripPresenter.IsSelection = false;
+                return;
+            }
+
+            selected.NotifyPointsChanged();
+
+            statusStripPresenter.SelectedEleAscent = selected.EleAscent;
+            statusStripPresenter.SelectedDistance = selected.Distance;
         }
     }
 }

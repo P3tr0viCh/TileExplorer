@@ -584,6 +584,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Подъём:  {0:F0}.
+        /// </summary>
+        internal static string StatusEleAscent {
+            get {
+                return ResourceManager.GetString("StatusEleAscent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Выделение.
         /// </summary>
         internal static string StatusIsSelection {
@@ -670,6 +679,15 @@ namespace TileExplorer.Properties {
         internal static string StatusZoom {
             get {
                 return ResourceManager.GetString("StatusZoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:0,} км.
+        /// </summary>
+        internal static string TextChartTrackEleAxisX {
+            get {
+                return ResourceManager.GetString("TextChartTrackEleAxisX", resourceCulture);
             }
         }
         
