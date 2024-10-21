@@ -21,7 +21,7 @@ namespace TileExplorer
         public ChildFormType FormType { get; set; }
 
         private object data;
-        public object Data => data;
+        public object Value => data;
 
         internal readonly PresenterChildForm childFormPresenter;
 

@@ -187,6 +187,8 @@ namespace TileExplorer
 
             if (load.HasFlag(DataLoad.Tracks))
             {
+                await LoadYearsAsync();
+
                 await LoadTracksInfoAsync();
 
                 tracksLoaded = false;
@@ -876,6 +878,10 @@ namespace TileExplorer
                         updateData = load.HasFlag(DataLoad.TracksTree);
 
                         break;
+                    case ChildFormType.ChartTracksByMonth:
+                        updateData = load.HasFlag(DataLoad.Tracks);
+
+                        break;
                     default:
                         updateData = false;
 
@@ -1414,14 +1420,14 @@ namespace TileExplorer
                 return;
             }
 
-            Utils.GetChildForms<FrmList>(ChildFormType.TileInfo).ForEach(frm =>
+            foreach (var frm in Utils.GetChildForms<FrmList>(ChildFormType.TileInfo))
             {
-                if (((Tile)frm.Data).Id == tile.Id)
+                if (((Tile)frm.Value).Id == tile.Id)
                 {
                     frm.BringToFront();
                     return;
                 }
-            });
+            };
 
             FrmList.ShowFrm(this, ChildFormType.TileInfo, tile);
         }
@@ -1573,14 +1579,14 @@ namespace TileExplorer
 
         private void OpenChartTrackEle(Track value)
         {
-            Utils.GetChildForms<FrmChartTrackEle>(ChildFormType.ChartTrackEle).ForEach(frm =>
+            foreach (var frm in Utils.GetChildForms<FrmChartTrackEle>(ChildFormType.ChartTrackEle))
             {
                 if (frm.Track.Id == value.Id)
                 {
                     frm.BringToFront();
                     return;
                 }
-            });
+            };
 
             FrmChartTrackEle.ShowFrm(this, value);
         }
@@ -1605,6 +1611,30 @@ namespace TileExplorer
         private async void MiMainDataCheckDirectoryTracks_Click(object sender, EventArgs e)
         {
             await CheckDirectoryTracksAsync(true);
+        }
+
+        private void TsbtnChartTracks_Click(object sender, EventArgs e)
+        {
+            miMainDataChartTracks.PerformClick();
+        }
+
+        private void OpenChartTracksByMonth(int year, int month)
+        {
+            foreach (var frm in Utils.GetChildForms<FrmChartTracksByMonth>(ChildFormType.ChartTracksByMonth))
+            {
+                if (frm.Year == year && frm.Month == month)
+                {
+                    frm.BringToFront();
+                    return;
+                }
+            };
+
+            FrmChartTracksByMonth.ShowFrm(this, year, month);
+        }
+
+        private void MiMainDataChartTracks_Click(object sender, EventArgs e)
+        {
+            OpenChartTracksByMonth(2020, 5);
         }
     }
 }

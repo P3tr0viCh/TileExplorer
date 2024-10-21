@@ -385,4 +385,19 @@
   <data name="TextChartTrackEleAxisX" xml:space="preserve">
     <value>{0:0,} км</value>
   </data>
+  <data name="TextChartTracksByMonthAxisX" xml:space="preserve">
+    <value>d
+ddd</value>
+  </data>
+  <data name="TitleTracksByMonth" xml:space="preserve">
+    <value>Треки за месяц</value>
+  </data>
+  <data name="MsgDatabaseLoadChartTracksByMonthFail" xml:space="preserve">
+    <value>Не удалось загрузить треки за месяц.
+Ошибка:
+{0}.</value>
+  </data>
+  <data name="TextChartTracksByMonthAxisY" xml:space="preserve">
+    <value>{0:0,} км</value>
+  </data>
 </root>

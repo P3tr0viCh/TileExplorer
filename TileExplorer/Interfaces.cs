@@ -1,4 +1,5 @@
 ﻿using GMap.NET;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database.Models;
@@ -27,6 +28,8 @@ namespace TileExplorer
             void ShowMarkerPosition(object sender, PointLatLng value);
 
             ProgramStatus ProgramStatus { get; }
+
+            List<int> Years { get; }
         }
 
         public interface IChildForm

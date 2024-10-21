@@ -417,6 +417,22 @@ namespace TileExplorer
                 [DisplayName("Месяц")]
                 public int Month { get; set; }
             }
+
+            [Table("tracks")]
+            public class TracksDistanceByMonth : BaseId
+            {
+                [DisplayName("Год")]
+                public int Year { get; set; }
+
+                [DisplayName("Месяц")]
+                public int Month { get; set; }
+
+                [DisplayName("День")]
+                public int Day { get; set; }
+
+                [DisplayName("Расстояние")]
+                public double Distance { get; set; }
+            }
         }
     }
 }

@@ -70,7 +70,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE INDEX IF NOT EXISTS tracks_datetimestart_idx
+        ///   Looks up a localized string similar to CREATE INDEX tracks_datetimestart_idx
         ///ON tracks(datetimestart ASC);.
         /// </summary>
         internal static string CreateIndexTracksDateTimeStart {
@@ -80,7 +80,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE INDEX IF NOT EXISTS tracks_points_trackid_idx
+        ///   Looks up a localized string similar to CREATE INDEX tracks_points_trackid_idx
         ///ON tracks_points (trackid);.
         /// </summary>
         internal static string CreateIndexTracksPointsTrackId {
@@ -90,7 +90,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE INDEX IF NOT EXISTS tracks_tiles_tileid_idx
+        ///   Looks up a localized string similar to CREATE INDEX tracks_tiles_tileid_idx
         ///ON tracks_tiles(tileid);.
         /// </summary>
         internal static string CreateIndexTracksTilesTileId {
@@ -100,7 +100,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE INDEX IF NOT EXISTS tracks_tiles_trackid_idx
+        ///   Looks up a localized string similar to CREATE INDEX tracks_tiles_trackid_idx
         ///ON tracks_tiles(trackid);.
         /// </summary>
         internal static string CreateIndexTracksTilesTrackId {
@@ -110,7 +110,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS equipments (
+        ///   Looks up a localized string similar to CREATE TABLE equipments (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///	text TEXT, brand TEXT, model TEXT
         ///);.
@@ -122,7 +122,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS markers (
+        ///   Looks up a localized string similar to CREATE TABLE markers (
         ///    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///    lat REAL NOT NULL,
         ///    lng REAL NOT NULL,
@@ -139,7 +139,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS tiles (
+        ///   Looks up a localized string similar to CREATE TABLE tiles (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///	x INTEGER NOT NULL, y INTEGER NOT NULL,
         ///	UNIQUE(x, y)
@@ -152,7 +152,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS tracks (
+        ///   Looks up a localized string similar to CREATE TABLE tracks (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///	text TEXT, datetimestart TEXT, datetimefinish TEXT,
         ///	duration INTEGER, durationinmove INTEGER,
@@ -166,7 +166,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS tracks_points (
+        ///   Looks up a localized string similar to CREATE TABLE tracks_points (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///	trackid INTEGER,
         ///	num INTEGER,
@@ -187,7 +187,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS tracks_tiles (
+        ///   Looks up a localized string similar to CREATE TABLE tracks_tiles (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///	trackid INTEGER, tileid INTEGER,
         ///	FOREIGN KEY (trackid) REFERENCES tracks (id)
@@ -304,7 +304,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM tiles;.
+        ///   Looks up a localized string similar to SELECT * FROM tiles ORDER BY x, y;.
         /// </summary>
         internal static string SelectTiles {
             get {
@@ -399,6 +399,23 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///	CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year,
+        ///	CAST(STRFTIME(&apos;%m&apos;, datetimestart) AS INTEGER) AS month,
+        ///	CAST(STRFTIME(&apos;%d&apos;, datetimestart) AS INTEGER) AS day,
+        ///	SUM(distance)
+        ///FROM tracks
+        ///WHERE year = :year AND month = :month 
+        ///GROUP by year, month, day
+        ///ORDER BY year, month, day;.
+        /// </summary>
+        internal static string SelectTracksDistanceByMonth {
+            get {
+                return ResourceManager.GetString("SelectTracksDistanceByMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT count(*) AS count, sum(distance) AS distance
         ///FROM tracks
         ///{0};.
@@ -426,6 +443,18 @@ namespace TileExplorer.Properties {
         internal static string SelectTracksTree {
             get {
                 return ResourceManager.GetString("SelectTracksTree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year
+        ///FROM tracks
+        ///GROUP by year
+        ///ORDER BY year;.
+        /// </summary>
+        internal static string SelectYears {
+            get {
+                return ResourceManager.GetString("SelectYears", resourceCulture);
             }
         }
     }

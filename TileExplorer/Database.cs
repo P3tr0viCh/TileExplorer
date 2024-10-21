@@ -19,13 +19,7 @@ namespace TileExplorer
     {
         private static readonly Database defaultInstance = new Database();
 
-        public static Database Default
-        {
-            get
-            {
-                return defaultInstance;
-            }
-        }
+        public static Database Default => defaultInstance;
 
         private string fileName;
 
@@ -317,6 +311,12 @@ namespace TileExplorer
                 case nameof(TracksTree):
                     sql = ResourcesSql.SelectTracksTree;
                     break;
+                case nameof(TracksDistanceByMonth):
+                    sql = ResourcesSql.SelectTracksDistanceByMonth;
+
+                    param = filter;
+
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -388,6 +388,20 @@ namespace TileExplorer
 
                     transaction.Commit();
                 }
+            }
+        }
+
+        public async Task<List<int>> LoadYearsAsync()
+        {
+            DebugWrite.Line("years");
+
+            var sql = ResourcesSql.SelectYears;
+
+            using (var connection = GetConnection())
+            {
+                var list = await connection.QueryAsync<int>(sql);
+
+                return (List<int>)list;
             }
         }
     }

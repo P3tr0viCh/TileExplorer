@@ -145,8 +145,8 @@ namespace TileExplorer
                     ChartSerial.Points.AddXY(distance, point.Ele);
                 }
 
-                ChartArea.AxisY.Minimum = Math.Floor(minEle / 50.0) * 50.0;
-                ChartArea.AxisY.Maximum = Math.Floor(maxEle / 50.0) * 50.0 + 50.0;
+                ChartArea.AxisY.Minimum = Utils.DoubleFloorToEpsilon(minEle, ChartArea.AxisY.Interval);
+                ChartArea.AxisY.Maximum = Utils.DoubleFloorToEpsilon(maxEle, ChartArea.AxisY.Interval) + ChartArea.AxisY.Interval;
 
                 ChartArea.AxisX.Minimum = 0;
                 ChartArea.AxisX.Maximum = Track.Distance;

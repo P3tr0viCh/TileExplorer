@@ -333,6 +333,17 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить треки за месяц.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgDatabaseLoadChartTracksByMonthFail {
+            get {
+                return ResourceManager.GetString("MsgDatabaseLoadChartTracksByMonthFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Не удалось загрузить список снаряжения.
         ///Ошибка:
         ///{0}..
@@ -692,6 +703,25 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to d
+        ///ddd.
+        /// </summary>
+        internal static string TextChartTracksByMonthAxisX {
+            get {
+                return ResourceManager.GetString("TextChartTracksByMonthAxisX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:0,} км.
+        /// </summary>
+        internal static string TextChartTracksByMonthAxisY {
+            get {
+                return ResourceManager.GetString("TextChartTracksByMonthAxisY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to км.
         /// </summary>
         internal static string TextMapZoomRulerKM {
@@ -778,6 +808,15 @@ namespace TileExplorer.Properties {
         internal static string TitleListTracks {
             get {
                 return ResourceManager.GetString("TitleListTracks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Треки за месяц.
+        /// </summary>
+        internal static string TitleTracksByMonth {
+            get {
+                return ResourceManager.GetString("TitleTracksByMonth", resourceCulture);
             }
         }
         

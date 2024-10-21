@@ -104,6 +104,8 @@
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbtnFilter = new System.Windows.Forms.ToolStripButton();
             this.tsbtnTracksTree = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbtnChartTracks = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.cmMarker = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miMarkerChange = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,6 +137,8 @@
             this.timerMapChange = new System.Windows.Forms.Timer(this.components);
             this.cmSelectedItems = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xxxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.miMainDataChartTracks = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -517,6 +521,8 @@
             this.toolStripSeparator14,
             this.miMainDataFilter,
             this.miMainDataTracksTree,
+            this.toolStripSeparator21,
+            this.miMainDataChartTracks,
             this.toolStripSeparator4,
             this.miMainDataUpdate});
             this.miMainData.Name = "miMainData";
@@ -729,6 +735,7 @@
             // toolStrip
             // 
             this.toolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -738,10 +745,12 @@
             this.tsbtnResults,
             this.toolStripSeparator10,
             this.tsbtnFilter,
-            this.tsbtnTracksTree});
+            this.tsbtnTracksTree,
+            this.toolStripSeparator20,
+            this.tsbtnChartTracks});
             this.toolStrip.Location = new System.Drawing.Point(0, 4);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(41, 185);
+            this.toolStrip.Size = new System.Drawing.Size(41, 222);
             this.toolStrip.TabIndex = 1;
             // 
             // tsbtnTrackList
@@ -816,6 +825,22 @@
             this.tsbtnTracksTree.Text = "ТМ";
             this.tsbtnTracksTree.ToolTipText = "Треки по месяцам";
             this.tsbtnTracksTree.Click += new System.EventHandler(this.TsbtnTracksTree_Click);
+            // 
+            // toolStripSeparator20
+            // 
+            this.toolStripSeparator20.Name = "toolStripSeparator20";
+            this.toolStripSeparator20.Size = new System.Drawing.Size(39, 6);
+            // 
+            // tsbtnChartTracks
+            // 
+            this.tsbtnChartTracks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbtnChartTracks.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnChartTracks.Image")));
+            this.tsbtnChartTracks.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbtnChartTracks.Name = "tsbtnChartTracks";
+            this.tsbtnChartTracks.Size = new System.Drawing.Size(39, 28);
+            this.tsbtnChartTracks.Text = "toolStripButton1";
+            this.tsbtnChartTracks.ToolTipText = "График треков";
+            this.tsbtnChartTracks.Click += new System.EventHandler(this.TsbtnChartTracks_Click);
             // 
             // cmMarker
             // 
@@ -1041,6 +1066,18 @@
             this.xxxToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.xxxToolStripMenuItem.Text = "xxx";
             // 
+            // miMainDataChartTracks
+            // 
+            this.miMainDataChartTracks.Name = "miMainDataChartTracks";
+            this.miMainDataChartTracks.Size = new System.Drawing.Size(262, 22);
+            this.miMainDataChartTracks.Text = "График треков";
+            this.miMainDataChartTracks.Click += new System.EventHandler(this.MiMainDataChartTracks_Click);
+            // 
+            // toolStripSeparator21
+            // 
+            this.toolStripSeparator21.Name = "toolStripSeparator21";
+            this.toolStripSeparator21.Size = new System.Drawing.Size(259, 6);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1187,6 +1224,10 @@
         private System.Windows.Forms.ContextMenuStrip cmSelectedItems;
         private System.Windows.Forms.ToolStripMenuItem xxxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem miMainDataCheckDirectoryTracks;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;
+        private System.Windows.Forms.ToolStripButton tsbtnChartTracks;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator21;
+        private System.Windows.Forms.ToolStripMenuItem miMainDataChartTracks;
     }
 }
 

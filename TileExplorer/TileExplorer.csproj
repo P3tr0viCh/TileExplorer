@@ -118,6 +118,12 @@
     <Compile Include="AppSettings.Local.cs" />
     <Compile Include="AppSettings.Roaming.cs" />
     <Compile Include="Database.Actions.cs" />
+    <Compile Include="FrmChartTracksByMonth.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmChartTracksByMonth.Designer.cs">
+      <DependentUpon>FrmChartTracksByMonth.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmList.Sort.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -244,6 +250,9 @@
     <EmbeddedResource Include="FrmBackup.resx">
       <DependentUpon>FrmBackup.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmChartTracksByMonth.resx">
+      <DependentUpon>FrmChartTracksByMonth.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmEquipment.resx">
       <DependentUpon>FrmEquipment.cs</DependentUpon>
     </EmbeddedResource>
@@ -318,6 +327,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\CreateTriggerEquipmentsAD.sql" />
+    <None Include="Resources\SelectYears.sql" />
+    <None Include="Resources\SelectTracksDistanceByMonth.sql" />
     <Content Include="TileExplorer.ico" />
     <None Include="Resources\SelectTracksTree.sql" />
     <None Include="Resources\SelectTracksOnly.sql" />

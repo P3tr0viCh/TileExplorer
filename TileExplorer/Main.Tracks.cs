@@ -1,5 +1,6 @@
 ﻿using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace TileExplorer
     public partial class Main
     {
         private bool tracksLoaded = false;
+
+        public List<int> Years { get; private set; }
 
         private IMapItem OverlayAddTrack(Track track)
         {
@@ -224,6 +227,8 @@ namespace TileExplorer
                     DebugWrite.Line("TrackSaveNewAsync done");
 
                     OverlayAddTrack(track);
+
+                    AddYear(track.DateTimeStart.Year);
                 }
 
                 return true;
@@ -302,6 +307,63 @@ namespace TileExplorer
             finally
             {
                 ctsTracksInfo.Finally();
+
+                DebugWrite.Line("end");
+            }
+        }
+
+        private readonly WrapperCancellationTokenSource ctsYears = new WrapperCancellationTokenSource();
+
+        private void AddYear(int year)
+        {
+            if (Years == null)
+            {
+                Years = new List<int> { year };
+            }
+            else
+            {
+                if (!Years.Contains(year))
+                {
+                    Years.Add(year);
+
+                    Years.Sort();
+                }
+            }
+
+            DebugWrite.Line(string.Join(", ", Years));
+        }
+
+        private async Task LoadYearsAsync()
+        {
+            DebugWrite.Line("start");
+
+            Years?.Clear();
+
+            ctsYears.Start();
+
+            var status = ProgramStatus.Start(Status.LoadData);
+
+            try
+            {
+                Years = await Database.Default.LoadYearsAsync();
+
+                DebugWrite.Line(string.Join(", ", Years));
+            }
+            catch (TaskCanceledException e)
+            {
+                DebugWrite.Error(e);
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(Resources.MsgDatabaseLoadListTrackFail, e.Message);
+            }
+            finally
+            {
+                ctsYears.Finally();
+
+                ProgramStatus.Stop(status);
 
                 DebugWrite.Line("end");
             }

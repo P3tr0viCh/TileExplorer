@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
@@ -58,6 +59,11 @@ namespace TileExplorer
             var diff = Math.Abs(x - y);
             return diff <= tolerance ||
                    diff <= Math.Max(Math.Abs(x), Math.Abs(y)) * tolerance;
+        }
+
+        public static double DoubleFloorToEpsilon(double value, double epsilon)
+        {
+            return Math.Floor(value / epsilon) * epsilon;
         }
 
         public static List<T> GetChildForms<T>(ChildFormType type = default)
