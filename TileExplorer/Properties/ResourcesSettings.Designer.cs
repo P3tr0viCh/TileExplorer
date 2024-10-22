@@ -61,11 +61,11 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to График высоты.
+        ///   Looks up a localized string similar to Графики.
         /// </summary>
-        internal static string Category_ChartTrackEle {
+        internal static string Category_Chart {
             get {
-                return ResourceManager.GetString("Category.ChartTrackEle", resourceCulture);
+                return ResourceManager.GetString("Category.Chart", resourceCulture);
             }
         }
         
@@ -151,110 +151,119 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Цвет осей.
+        ///   Looks up a localized string similar to Цвет сетки.
         /// </summary>
-        internal static string ColorChartTrackEleAxis_Description {
+        internal static string ColorChart_DisplayName {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleAxis.Description", resourceCulture);
+                return ResourceManager.GetString("ColorChart.DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Цвет осей.
         /// </summary>
-        internal static string ColorChartTrackEleAxis_DisplayName {
+        internal static string ColorChartAxis_Description {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleAxis.DisplayName", resourceCulture);
+                return ResourceManager.GetString("ColorChartAxis.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Цвет осей.
+        /// </summary>
+        internal static string ColorChartAxis_DisplayName {
+            get {
+                return ResourceManager.GetString("ColorChartAxis.DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Цвет линии отметки.
         /// </summary>
-        internal static string ColorChartTrackEleCursor_Description {
+        internal static string ColorChartCursor_Description {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleCursor.Description", resourceCulture);
+                return ResourceManager.GetString("ColorChartCursor.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Цвет линии отметки.
         /// </summary>
-        internal static string ColorChartTrackEleCursor_DisplayName {
+        internal static string ColorChartCursor_DisplayName {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleCursor.DisplayName", resourceCulture);
+                return ResourceManager.GetString("ColorChartCursor.DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Цвет сетки.
         /// </summary>
-        internal static string ColorChartTrackEleGrid_Description {
+        internal static string ColorChartGrid_Description {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleGrid.Description", resourceCulture);
+                return ResourceManager.GetString("ColorChartGrid.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Цвет сетки.
         /// </summary>
-        internal static string ColorChartTrackEleGrid_DisplayName {
+        internal static string ColorChartGrid_DisplayName {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleGrid.DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Цвет графика высоты.
-        /// </summary>
-        internal static string ColorChartTrackEleSerial_Description {
-            get {
-                return ResourceManager.GetString("ColorChartTrackEleSerial.Description", resourceCulture);
+                return ResourceManager.GetString("ColorChartGrid.DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Цвет графика.
         /// </summary>
-        internal static string ColorChartTrackEleSerial_DisplayName {
+        internal static string ColorChartSerial_Description {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleSerial.DisplayName", resourceCulture);
+                return ResourceManager.GetString("ColorChartSerial.Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Прозрачность графика высоты.
+        ///   Looks up a localized string similar to Цвет графика.
         /// </summary>
-        internal static string ColorChartTrackEleSerialAlpha_Description {
+        internal static string ColorChartSerial_DisplayName {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleSerialAlpha.Description", resourceCulture);
+                return ResourceManager.GetString("ColorChartSerial.DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Прозрачность графика.
         /// </summary>
-        internal static string ColorChartTrackEleSerialAlpha_DisplayName {
+        internal static string ColorChartSerialAlpha_Description {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleSerialAlpha.DisplayName", resourceCulture);
+                return ResourceManager.GetString("ColorChartSerialAlpha.Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Цвет значений высоты и дистанции.
+        ///   Looks up a localized string similar to Прозрачность графика.
         /// </summary>
-        internal static string ColorChartTrackEleText_Description {
+        internal static string ColorChartSerialAlpha_DisplayName {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleText.Description", resourceCulture);
+                return ResourceManager.GetString("ColorChartSerialAlpha.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Цвет значений.
+        /// </summary>
+        internal static string ColorChartText_Description {
+            get {
+                return ResourceManager.GetString("ColorChartText.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Цвет текста.
         /// </summary>
-        internal static string ColorChartTrackEleText_DisplayName {
+        internal static string ColorChartText_DisplayName {
             get {
-                return ResourceManager.GetString("ColorChartTrackEleText.DisplayName", resourceCulture);
+                return ResourceManager.GetString("ColorChartText.DisplayName", resourceCulture);
             }
         }
         

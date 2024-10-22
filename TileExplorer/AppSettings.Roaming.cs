@@ -123,17 +123,17 @@ namespace TileExplorer
             public Color TileStatusFileOsmandIconColor { get; set; } = Color.Red;
 
             // ------------------------------------------------------------------------------------------------------------
-            public Color ColorChartTrackEleSerial { get; set; } = Color.FromArgb(217, 217, 217);
+            public Color ColorChartSerial { get; set; } = Color.FromArgb(217, 217, 217);
 
-            public byte ColorChartTrackEleSerialAlpha { get; set; } = 192;
+            public byte ColorChartSerialAlpha { get; set; } = 192;
 
-            public Color ColorChartTrackEleCursor { get; set; } = Color.Black;
+            public Color ColorChartCursor { get; set; } = Color.Black;
 
-            public Color ColorChartTrackEleAxis { get; set; } = Color.FromArgb(170, 170, 170);
+            public Color ColorChartAxis { get; set; } = Color.FromArgb(170, 170, 170);
 
-            public Color ColorChartTrackEleGrid { get; set; } = Color.FromArgb(217, 217, 217);
+            public Color ColorChartGrid { get; set; } = Color.FromArgb(217, 217, 217);
 
-            public Color ColorChartTrackEleText { get; set; } = Color.FromArgb(80, 80, 80);
+            public Color ColorChartText { get; set; } = Color.FromArgb(80, 80, 80);
         }
     }
 }

@@ -63,6 +63,7 @@ namespace TileExplorer
             ChartArea.AxisX.ScaleView.Zoomable = false;
 
             ChartArea.AxisX.LabelStyle.Format = Resources.TextChartTrackEleAxisX;
+            ChartArea.AxisY.LabelStyle.Format = Resources.TextChartTrackEleAxisY;
 
             CursorXPositionChanged();
 
@@ -73,19 +74,22 @@ namespace TileExplorer
 
         public void UpdateSettings()
         {
-            ChartArea.AxisX.LineColor = AppSettings.Roaming.Default.ColorChartTrackEleAxis;
-            ChartArea.AxisY.LineColor = AppSettings.Roaming.Default.ColorChartTrackEleAxis;
+            ChartArea.AxisX.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
+            ChartArea.AxisY.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
 
-            ChartArea.AxisX.MajorGrid.LineColor = AppSettings.Roaming.Default.ColorChartTrackEleGrid;
-            ChartArea.AxisY.MajorGrid.LineColor = AppSettings.Roaming.Default.ColorChartTrackEleGrid;
+            ChartArea.AxisX.MajorGrid.LineColor = AppSettings.Roaming.Default.ColorChartGrid;
+            ChartArea.AxisY.MajorGrid.LineColor = AppSettings.Roaming.Default.ColorChartGrid;
 
-            ChartArea.AxisX.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartTrackEleText;
-            ChartArea.AxisY.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartTrackEleText;
+            ChartArea.AxisX.MajorTickMark.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
+            ChartArea.AxisY.MajorTickMark.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
 
-            ChartArea.CursorX.LineColor = AppSettings.Roaming.Default.ColorChartTrackEleCursor;
+            ChartArea.AxisX.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartText;
+            ChartArea.AxisY.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartText;
 
-            ChartSerial.Color = Color.FromArgb(AppSettings.Roaming.Default.ColorChartTrackEleSerialAlpha,
-                AppSettings.Roaming.Default.ColorChartTrackEleSerial);
+            ChartArea.CursorX.LineColor = AppSettings.Roaming.Default.ColorChartCursor;
+
+            ChartSerial.Color = Color.FromArgb(AppSettings.Roaming.Default.ColorChartSerialAlpha,
+                AppSettings.Roaming.Default.ColorChartSerial);
         }
 
         ToolStripStatusLabel PresenterStatusStripChartTrackEle.IPresenterStatusStripChartTrackEle.GetLabel(PresenterStatusStripChartTrackEle.StatusLabel label)

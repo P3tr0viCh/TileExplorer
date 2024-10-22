@@ -171,6 +171,14 @@ namespace TileExplorer
                             }
 
                             break;
+                        case ChildFormType.ChartTracksByMonth:
+                            if (((FrmChartTracksByMonth)frm).Year == track.DateTimeStart.Year &&
+                                ((FrmChartTracksByMonth)frm).Month == track.DateTimeStart.Month)
+                            {
+                                await ((IUpdateDataForm)frm).UpdateDataAsync();
+                            }
+
+                            break;
                     }
                 });
             }
@@ -279,7 +287,8 @@ namespace TileExplorer
                 ChildFormType.TrackList |
                 ChildFormType.TracksTree |
                 ChildFormType.ResultYears |
-                ChildFormType.ResultEquipments).ForEach(async frm =>
+                ChildFormType.ResultEquipments |
+                ChildFormType.ChartTracksByMonth).ForEach(async frm =>
             {
                 await frm.UpdateDataAsync();
             });

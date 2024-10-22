@@ -703,6 +703,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} м.
+        /// </summary>
+        internal static string TextChartTrackEleAxisY {
+            get {
+                return ResourceManager.GetString("TextChartTrackEleAxisY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to d
         ///ddd.
         /// </summary>
@@ -713,11 +722,20 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0:0,} км.
+        ///   Looks up a localized string similar to {0:F0} км.
         /// </summary>
         internal static string TextChartTracksByMonthAxisY {
             get {
                 return ResourceManager.GetString("TextChartTracksByMonthAxisY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:F2}.
+        /// </summary>
+        internal static string TextChartTracksByMonthYLabel {
+            get {
+                return ResourceManager.GetString("TextChartTracksByMonthYLabel", resourceCulture);
             }
         }
         

@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Category.ChartTrackEle" xml:space="preserve">
-    <value>График высоты</value>
+  <data name="Category.Chart" xml:space="preserve">
+    <value>Графики</value>
   </data>
   <data name="Category.Common" xml:space="preserve">
     <value>Общее</value>
@@ -147,40 +147,43 @@
   <data name="Category.TileStatusOsmand" xml:space="preserve">
     <value>Файл статуса плиток: Османд</value>
   </data>
-  <data name="ColorChartTrackEleAxis.Description" xml:space="preserve">
-    <value>Цвет осей</value>
-  </data>
-  <data name="ColorChartTrackEleAxis.DisplayName" xml:space="preserve">
-    <value>Цвет осей</value>
-  </data>
-  <data name="ColorChartTrackEleCursor.Description" xml:space="preserve">
-    <value>Цвет линии отметки</value>
-  </data>
-  <data name="ColorChartTrackEleCursor.DisplayName" xml:space="preserve">
-    <value>Цвет линии отметки</value>
-  </data>
-  <data name="ColorChartTrackEleGrid.Description" xml:space="preserve">
+  <data name="ColorChart.DisplayName" xml:space="preserve">
     <value>Цвет сетки</value>
   </data>
-  <data name="ColorChartTrackEleGrid.DisplayName" xml:space="preserve">
+  <data name="ColorChartAxis.Description" xml:space="preserve">
+    <value>Цвет осей</value>
+  </data>
+  <data name="ColorChartAxis.DisplayName" xml:space="preserve">
+    <value>Цвет осей</value>
+  </data>
+  <data name="ColorChartCursor.Description" xml:space="preserve">
+    <value>Цвет линии отметки</value>
+  </data>
+  <data name="ColorChartCursor.DisplayName" xml:space="preserve">
+    <value>Цвет линии отметки</value>
+  </data>
+  <data name="ColorChartGrid.Description" xml:space="preserve">
     <value>Цвет сетки</value>
   </data>
-  <data name="ColorChartTrackEleSerial.Description" xml:space="preserve">
-    <value>Цвет графика высоты</value>
+  <data name="ColorChartGrid.DisplayName" xml:space="preserve">
+    <value>Цвет сетки</value>
   </data>
-  <data name="ColorChartTrackEleSerial.DisplayName" xml:space="preserve">
+  <data name="ColorChartSerial.Description" xml:space="preserve">
     <value>Цвет графика</value>
   </data>
-  <data name="ColorChartTrackEleSerialAlpha.Description" xml:space="preserve">
-    <value>Прозрачность графика высоты</value>
+  <data name="ColorChartSerial.DisplayName" xml:space="preserve">
+    <value>Цвет графика</value>
   </data>
-  <data name="ColorChartTrackEleSerialAlpha.DisplayName" xml:space="preserve">
+  <data name="ColorChartSerialAlpha.Description" xml:space="preserve">
     <value>Прозрачность графика</value>
   </data>
-  <data name="ColorChartTrackEleText.Description" xml:space="preserve">
-    <value>Цвет значений высоты и дистанции</value>
+  <data name="ColorChartSerialAlpha.DisplayName" xml:space="preserve">
+    <value>Прозрачность графика</value>
   </data>
-  <data name="ColorChartTrackEleText.DisplayName" xml:space="preserve">
+  <data name="ColorChartText.Description" xml:space="preserve">
+    <value>Цвет значений</value>
+  </data>
+  <data name="ColorChartText.DisplayName" xml:space="preserve">
     <value>Цвет текста</value>
   </data>
   <data name="ColorMarkerFill.Description" xml:space="preserve">

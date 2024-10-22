@@ -398,6 +398,12 @@ ddd</value>
 {0}.</value>
   </data>
   <data name="TextChartTracksByMonthAxisY" xml:space="preserve">
-    <value>{0:0,} км</value>
+    <value>{0:F0} км</value>
+  </data>
+  <data name="TextChartTracksByMonthYLabel" xml:space="preserve">
+    <value>{0:F2}</value>
+  </data>
+  <data name="TextChartTrackEleAxisY" xml:space="preserve">
+    <value>{0} м</value>
   </data>
 </root>

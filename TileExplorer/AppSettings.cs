@@ -299,35 +299,35 @@ namespace TileExplorer
         public Color TileStatusFileOsmandIconColor { get => Roaming.Default.TileStatusFileOsmandIconColor; set => Roaming.Default.TileStatusFileOsmandIconColor = value; }
 
         // ------------------------------------------------------------------------------------------------------------
-        [LocalizedAttribute.Category("Category.ChartTrackEle", Resource)]
-        [LocalizedAttribute.DisplayName("ColorChartTrackEleSerial.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartTrackEleSerial.Description", Resource)]
-        public Color ColorChartTrackEleSerial { get => Roaming.Default.ColorChartTrackEleSerial; set => Roaming.Default.ColorChartTrackEleSerial = value; }
+        [LocalizedAttribute.Category("Category.Chart", Resource)]
+        [LocalizedAttribute.DisplayName("ColorChartSerial.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorChartSerial.Description", Resource)]
+        public Color ColorChartSerial { get => Roaming.Default.ColorChartSerial; set => Roaming.Default.ColorChartSerial = value; }
 
-        [LocalizedAttribute.Category("Category.ChartTrackEle", Resource)]
-        [LocalizedAttribute.DisplayName("ColorChartTrackEleSerialAlpha.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartTrackEleSerialAlpha.Description", Resource)]
-        public byte ColorChartTrackEleSerialAlpha { get => Roaming.Default.ColorChartTrackEleSerialAlpha; set => Roaming.Default.ColorChartTrackEleSerialAlpha = value; }
+        [LocalizedAttribute.Category("Category.Chart", Resource)]
+        [LocalizedAttribute.DisplayName("ColorChartSerialAlpha.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorChartSerialAlpha.Description", Resource)]
+        public byte ColorChartSerialAlpha { get => Roaming.Default.ColorChartSerialAlpha; set => Roaming.Default.ColorChartSerialAlpha = value; }
 
-        [LocalizedAttribute.Category("Category.ChartTrackEle", Resource)]
-        [LocalizedAttribute.DisplayName("ColorChartTrackEleCursor.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartTrackEleCursor.Description", Resource)]
-        public Color ColorChartTrackEleCursor { get => Roaming.Default.ColorChartTrackEleCursor; set => Roaming.Default.ColorChartTrackEleCursor = value; }
+        [LocalizedAttribute.Category("Category.Chart", Resource)]
+        [LocalizedAttribute.DisplayName("ColorChartCursor.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorChartCursor.Description", Resource)]
+        public Color ColorChartCursor { get => Roaming.Default.ColorChartCursor; set => Roaming.Default.ColorChartCursor = value; }
 
-        [LocalizedAttribute.Category("Category.ChartTrackEle", Resource)]
-        [LocalizedAttribute.DisplayName("ColorChartTrackEleAxis.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartTrackEleAxis.Description", Resource)]
-        public Color ColorChartTrackEleAxis { get => Roaming.Default.ColorChartTrackEleAxis; set => Roaming.Default.ColorChartTrackEleAxis = value; }
+        [LocalizedAttribute.Category("Category.Chart", Resource)]
+        [LocalizedAttribute.DisplayName("ColorChartAxis.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorChartAxis.Description", Resource)]
+        public Color ColorChartAxis { get => Roaming.Default.ColorChartAxis; set => Roaming.Default.ColorChartAxis = value; }
 
-        [LocalizedAttribute.Category("Category.ChartTrackEle", Resource)]
-        [LocalizedAttribute.DisplayName("ColorChartTrackEleGrid.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartTrackEleGrid.Description", Resource)]
-        public Color ColorChartTrackEleGrid { get => Roaming.Default.ColorChartTrackEleGrid; set => Roaming.Default.ColorChartTrackEleGrid = value; }
+        [LocalizedAttribute.Category("Category.Chart", Resource)]
+        [LocalizedAttribute.DisplayName("ColorChartGrid.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorChartGrid.Description", Resource)]
+        public Color ColorChartGrid { get => Roaming.Default.ColorChartGrid; set => Roaming.Default.ColorChartGrid = value; }
 
-        [LocalizedAttribute.Category("Category.ChartTrackEle", Resource)]
-        [LocalizedAttribute.DisplayName("ColorChartTrackEleText.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartTrackEleText.Description", Resource)]
-        public Color ColorChartTrackEleText { get => Roaming.Default.ColorChartTrackEleText; set => Roaming.Default.ColorChartTrackEleText = value; }
+        [LocalizedAttribute.Category("Category.Chart", Resource)]
+        [LocalizedAttribute.DisplayName("ColorChartText.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorChartText.Description", Resource)]
+        public Color ColorChartText { get => Roaming.Default.ColorChartText; set => Roaming.Default.ColorChartText = value; }
 
         // ------------------------------------------------------------------------------------------------------------
         public static Exception LastError { get; private set; } = null;
