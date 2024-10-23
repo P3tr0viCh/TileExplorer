@@ -37,7 +37,8 @@ namespace TileExplorer
             TileInfo = 64,
             TracksTree = 128,
             ChartTrackEle = 256,
-            ChartTracksByMonth = 512,
+            ChartTracksByYear = 512,
+            ChartTracksByMonth = 1024,
         }
 
         [Flags]

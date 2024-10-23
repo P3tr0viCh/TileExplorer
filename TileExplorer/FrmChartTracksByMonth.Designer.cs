@@ -122,7 +122,7 @@
             this.cboxYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxYear.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cboxYear.Name = "cboxYear";
-            this.cboxYear.Size = new System.Drawing.Size(121, 27);
+            this.cboxYear.Size = new System.Drawing.Size(120, 27);
             this.cboxYear.SelectedIndexChanged += new System.EventHandler(this.CboxYear_SelectedIndexChanged);
             // 
             // cboxMonth
@@ -130,7 +130,7 @@
             this.cboxMonth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxMonth.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cboxMonth.Name = "cboxMonth";
-            this.cboxMonth.Size = new System.Drawing.Size(121, 27);
+            this.cboxMonth.Size = new System.Drawing.Size(120, 27);
             this.cboxMonth.SelectedIndexChanged += new System.EventHandler(this.CboxMonth_SelectedIndexChanged);
             // 
             // FrmChartTracksByMonth
@@ -146,8 +146,10 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(400, 200);
             this.Name = "FrmChartTracksByMonth";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "FrmChartTracksByMonth";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmChartTracksByMonth_FormClosed);
             this.Load += new System.EventHandler(this.FrmChartTracksByMonth_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.toolStrip.ResumeLayout(false);

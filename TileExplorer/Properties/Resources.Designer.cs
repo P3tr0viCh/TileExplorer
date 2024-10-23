@@ -344,6 +344,17 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить треки за год.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgDatabaseLoadChartTracksByYearFail {
+            get {
+                return ResourceManager.GetString("MsgDatabaseLoadChartTracksByYearFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Не удалось загрузить список снаряжения.
         ///Ошибка:
         ///{0}..
@@ -835,6 +846,15 @@ namespace TileExplorer.Properties {
         internal static string TitleTracksByMonth {
             get {
                 return ResourceManager.GetString("TitleTracksByMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Треки за год.
+        /// </summary>
+        internal static string TitleTracksByYear {
+            get {
+                return ResourceManager.GetString("TitleTracksByYear", resourceCulture);
             }
         }
         

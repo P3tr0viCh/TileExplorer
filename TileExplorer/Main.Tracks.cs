@@ -118,7 +118,7 @@ namespace TileExplorer
 
         public async Task TrackChangedAsync(Track track)
         {
-            Utils.GetChildForms<FrmList>(ChildFormType.TileInfo | ChildFormType.TrackList).ForEach(frm =>
+            Utils.Forms.GetChildForms<FrmList>(ChildFormType.TileInfo | ChildFormType.TrackList).ForEach(frm =>
             {
                 frm.ListItemChange(track);
             });
@@ -148,8 +148,7 @@ namespace TileExplorer
                       .Cast<MapItemTrack>().FirstOrDefault());
 
                 await UpdateDataAsync(DataLoad.Tiles);
-
-                Utils.GetChildForms<Form>().ForEach(async frm =>
+                Utils.Forms.GetChildForms<Form>().ForEach(async frm =>
                 {
                     switch (((IChildForm)frm).FormType)
                     {
@@ -282,8 +281,7 @@ namespace TileExplorer
             }
 
             await UpdateDataAsync(DataLoad.Tiles);
-
-            Utils.GetChildForms<IUpdateDataForm>(
+            Utils.Forms.GetChildForms<IUpdateDataForm>(
                 ChildFormType.TrackList |
                 ChildFormType.TracksTree |
                 ChildFormType.ResultYears |

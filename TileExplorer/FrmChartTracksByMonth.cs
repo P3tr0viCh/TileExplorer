@@ -3,7 +3,6 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -83,7 +82,7 @@ namespace TileExplorer
         {
             for (var month = 1; month <= 12; month++)
             {
-                cboxMonth.Items.Add(new DateTime(Year, month, 1).ToString("MMMM"));
+                cboxMonth.Items.Add(Utils.GetMonthName(Year, month));
             }
         }
 
@@ -239,6 +238,11 @@ namespace TileExplorer
             Month = cboxMonth.SelectedIndex + 1;
 
             await UpdateDataAsync();
+        }
+
+        private void FrmChartTracksByMonth_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            ctsChartTracksByMonth.Cancel();
         }
     }
 }

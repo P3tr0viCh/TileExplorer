@@ -1,10 +1,10 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
@@ -66,25 +66,9 @@ namespace TileExplorer
             return Math.Floor(value / epsilon) * epsilon;
         }
 
-        public static List<T> GetChildForms<T>(ChildFormType type = default)
+        public static string GetMonthName(int year, int month)
         {
-            var forms = new List<T>();
-
-            foreach (var frm in Application.OpenForms)
-            {
-                if (frm is IChildForm childFrm && frm is T childFrmT &&
-                    (type == default || type.HasFlag(childFrm.FormType)))
-                {
-                    forms.Add(childFrmT);
-                }
-            }
-
-            return forms;
-        }
-
-        public static FrmList GetFrmList(ChildFormType type)
-        {
-            return GetChildForms<FrmList>(type).FirstOrDefault();
+            return new DateTime(year, month, 1).ToString("MMMM");
         }
     }
 }

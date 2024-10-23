@@ -11,15 +11,13 @@ namespace TileExplorer
         private void EquipmentAdd(Equipment equipment)
         {
             if (!FrmEquipment.ShowDlg(this, equipment)) return;
-
-            Utils.GetFrmList(ChildFormType.EquipmentList)?.ListItemChange(equipment);
+            Utils.Forms.GetFrmList(ChildFormType.EquipmentList)?.ListItemChange(equipment);
         }
 
         private void EquipmentChange(Equipment equipment)
         {
             if (!FrmEquipment.ShowDlg(this, equipment)) return;
-
-            Utils.GetChildForms<FrmList>().ForEach(async frm =>
+            Utils.Forms.GetChildForms<FrmList>().ForEach(async frm =>
             {
                 switch (frm.FormType)
                 {
@@ -43,8 +41,7 @@ namespace TileExplorer
             if (!Msg.Question(string.Format(Resources.QuestionEquipmentDelete, name))) return;
 
             if (!await Database.Actions.EquipmentDeleteAsync(equipment)) return;
-
-            Utils.GetChildForms<FrmList>().ForEach(async frm =>
+            Utils.Forms.GetChildForms<FrmList>().ForEach(async frm =>
             {
                 switch (frm.FormType)
                 {

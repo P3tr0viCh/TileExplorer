@@ -406,4 +406,12 @@ ddd</value>
   <data name="TextChartTrackEleAxisY" xml:space="preserve">
     <value>{0} м</value>
   </data>
+  <data name="TitleTracksByYear" xml:space="preserve">
+    <value>Треки за год</value>
+  </data>
+  <data name="MsgDatabaseLoadChartTracksByYearFail" xml:space="preserve">
+    <value>Не удалось загрузить треки за год.
+Ошибка:
+{0}.</value>
+  </data>
 </root>
