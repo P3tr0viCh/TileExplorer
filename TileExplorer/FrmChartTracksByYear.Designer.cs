@@ -61,12 +61,12 @@
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miOpenChartTracksByMonth});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStrip.Size = new System.Drawing.Size(167, 26);
             // 
             // miOpenChartTracksByMonth
             // 
             this.miOpenChartTracksByMonth.Name = "miOpenChartTracksByMonth";
-            this.miOpenChartTracksByMonth.Size = new System.Drawing.Size(180, 22);
+            this.miOpenChartTracksByMonth.Size = new System.Drawing.Size(166, 22);
             this.miOpenChartTracksByMonth.Text = "График за месяц";
             this.miOpenChartTracksByMonth.Click += new System.EventHandler(this.MiOpenChartTracksByMonth_Click);
             // 

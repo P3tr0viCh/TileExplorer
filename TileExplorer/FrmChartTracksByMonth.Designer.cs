@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29646D, 20000D);
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29647D, 0D);
@@ -75,8 +74,6 @@
             chartArea1.Name = "ChartArea";
             this.chart.ChartAreas.Add(chartArea1);
             this.chart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chart.Legends.Add(legend1);
             this.chart.Location = new System.Drawing.Point(0, 27);
             this.chart.Name = "chart";
             this.chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.SemiTransparent;
@@ -86,7 +83,6 @@
             series1.IsValueShownAsLabel = true;
             series1.IsVisibleInLegend = false;
             series1.LabelForeColor = System.Drawing.Color.IndianRed;
-            series1.Legend = "Legend1";
             series1.Name = "TracksByMonth";
             dataPoint1.IsValueShownAsLabel = false;
             dataPoint1.LabelForeColor = System.Drawing.Color.Black;

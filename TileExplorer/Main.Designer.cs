@@ -85,6 +85,8 @@
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainDataTracksTree = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
+            this.miMainDataChartTracks = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainView = new System.Windows.Forms.ToolStripMenuItem();
@@ -137,8 +139,6 @@
             this.timerMapChange = new System.Windows.Forms.Timer(this.components);
             this.cmSelectedItems = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xxxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMainDataChartTracks = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -633,6 +633,18 @@
             this.miMainDataTracksTree.Text = "Треки по месяцам";
             this.miMainDataTracksTree.Click += new System.EventHandler(this.MiMainDataTracksTree_Click);
             // 
+            // toolStripSeparator21
+            // 
+            this.toolStripSeparator21.Name = "toolStripSeparator21";
+            this.toolStripSeparator21.Size = new System.Drawing.Size(259, 6);
+            // 
+            // miMainDataChartTracks
+            // 
+            this.miMainDataChartTracks.Name = "miMainDataChartTracks";
+            this.miMainDataChartTracks.Size = new System.Drawing.Size(262, 22);
+            this.miMainDataChartTracks.Text = "График треков";
+            this.miMainDataChartTracks.Click += new System.EventHandler(this.MiMainDataChartTracks_Click);
+            // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
@@ -1065,18 +1077,6 @@
             this.xxxToolStripMenuItem.Name = "xxxToolStripMenuItem";
             this.xxxToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.xxxToolStripMenuItem.Text = "xxx";
-            // 
-            // miMainDataChartTracks
-            // 
-            this.miMainDataChartTracks.Name = "miMainDataChartTracks";
-            this.miMainDataChartTracks.Size = new System.Drawing.Size(262, 22);
-            this.miMainDataChartTracks.Text = "График треков";
-            this.miMainDataChartTracks.Click += new System.EventHandler(this.MiMainDataChartTracks_Click);
-            // 
-            // toolStripSeparator21
-            // 
-            this.toolStripSeparator21.Name = "toolStripSeparator21";
-            this.toolStripSeparator21.Size = new System.Drawing.Size(259, 6);
             // 
             // Main
             // 

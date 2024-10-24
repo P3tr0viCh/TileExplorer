@@ -170,6 +170,13 @@ namespace TileExplorer
                             }
 
                             break;
+                        case ChildFormType.ChartTracksByYear:
+                            if (((FrmChartTracksByYear)frm).Year == track.DateTimeStart.Year)
+                            {
+                                await ((IUpdateDataForm)frm).UpdateDataAsync();
+                            }
+
+                            break;
                         case ChildFormType.ChartTracksByMonth:
                             if (((FrmChartTracksByMonth)frm).Year == track.DateTimeStart.Year &&
                                 ((FrmChartTracksByMonth)frm).Month == track.DateTimeStart.Month)
@@ -281,11 +288,13 @@ namespace TileExplorer
             }
 
             await UpdateDataAsync(DataLoad.Tiles);
+
             Utils.Forms.GetChildForms<IUpdateDataForm>(
                 ChildFormType.TrackList |
                 ChildFormType.TracksTree |
                 ChildFormType.ResultYears |
                 ChildFormType.ResultEquipments |
+                ChildFormType.ChartTracksByYear |
                 ChildFormType.ChartTracksByMonth).ForEach(async frm =>
             {
                 await frm.UpdateDataAsync();

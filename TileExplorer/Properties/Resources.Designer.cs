@@ -751,6 +751,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}: {1:F0} км.
+        /// </summary>
+        internal static string TextChartTracksByYearCounts {
+            get {
+                return ResourceManager.GetString("TextChartTracksByYearCounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to км.
         /// </summary>
         internal static string TextMapZoomRulerKM {

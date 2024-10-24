@@ -1,5 +1,4 @@
-﻿using GMap.NET.WindowsForms;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -22,8 +21,13 @@ namespace TileExplorer
 
         internal readonly PresenterChildForm childFormPresenter;
 
+        private readonly (int row, int col)[] grid = { (0, 0), (0, 1), (0, 2), (0, 3),
+                                                       (1, 0), (1, 1), (1, 2), (1, 3),
+                                                       (2, 0), (2, 1), (2, 2), (2, 3) };
+
         private Chart[] Charts { get; set; } = new Chart[12];
-        private Title[] ChartTitles { get; set; } = new Title[12];
+        private Title[] ChartTitleMonths { get; set; } = new Title[12];
+        private Title[] ChartTitleCounts { get; set; } = new Title[12];
         private ChartArea[] ChartAreas { get; set; } = new ChartArea[12];
         private Series[] ChartSerial { get; set; } = new Series[12];
 
@@ -77,12 +81,13 @@ namespace TileExplorer
             {
                 Charts[i] = new Chart();
                 ChartAreas[i] = new ChartArea();
-                ChartTitles[i] = new Title();
+                ChartTitleMonths[i] = new Title();
+                ChartTitleCounts[i] = new Title();
                 ChartSerial[i] = new Series();
 
                 month = i + 1;
 
-                ((System.ComponentModel.ISupportInitialize)Charts[i]).BeginInit();
+                ((ISupportInitialize)Charts[i]).BeginInit();
 
                 ChartAreas[i].AxisX.ScaleView.Zoomable = false;
                 ChartAreas[i].AxisX.LabelStyle.Font = new Font("Segoe UI", 10F);
@@ -101,15 +106,24 @@ namespace TileExplorer
                 ChartAreas[i].AxisX.MajorTickMark.Enabled = false;
                 ChartAreas[i].AxisY.MajorTickMark.Enabled = false;
 
-                ChartTitles[i].Text = Utils.GetMonthName(Year, month);
-                ChartTitles[i].Font = new Font("Segoe UI", 10F);
-                ChartTitles[i].Alignment = ContentAlignment.TopLeft;
+                ChartTitleMonths[i].Text = Utils.GetMonthName(Year, month);
+                ChartTitleMonths[i].Font = new Font("Segoe UI", 10F);
+                ChartTitleMonths[i].Alignment = ContentAlignment.TopLeft;
+                ChartTitleMonths[i].Position.Auto = false;
+                ChartTitleMonths[i].Position.X = 4;
+                ChartTitleMonths[i].Position.Y = 4;
 
-                ChartSerial[i]["PixelPointWidth"] = "4";
+                ChartTitleCounts[i].Text = string.Empty;
+                ChartTitleCounts[i].Font = new Font("Segoe UI", 10F);
+                ChartTitleCounts[i].Alignment = ContentAlignment.TopRight;
+                ChartTitleCounts[i].Position.Auto = false;
+                ChartTitleCounts[i].Position.X = 96;
+                ChartTitleCounts[i].Position.Y = 4;
 
                 Charts[i].ChartAreas.Add(ChartAreas[i]);
 
-                Charts[i].Titles.Add(ChartTitles[i]);
+                Charts[i].Titles.Add(ChartTitleMonths[i]);
+                Charts[i].Titles.Add(ChartTitleCounts[i]);
 
                 Charts[i].Series.Add(ChartSerial[i]);
 
@@ -123,7 +137,7 @@ namespace TileExplorer
 
                 Controls.Add(Charts[i]);
 
-                ((System.ComponentModel.ISupportInitialize)Charts[i]).EndInit();
+                ((ISupportInitialize)Charts[i]).EndInit();
             }
 
             ResumeLayout(false);
@@ -132,52 +146,15 @@ namespace TileExplorer
             UpdateChartsBounds();
         }
 
-        private void GetGrid(int i, ref int column, ref int row)
+        private int GetChartLineWidth(int chartWidth)
         {
-            switch (i)
-            {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                    row = 0;
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                    row = 1;
-                    break;
-                case 8:
-                case 9:
-                case 10:
-                case 11:
-                    row = 2;
-                    break;
-            }
-            switch (i)
-            {
-                case 0:
-                case 4:
-                case 8:
-                    column = 0;
-                    break;
-                case 1:
-                case 5:
-                case 9:
-                    column = 1;
-                    break;
-                case 2:
-                case 6:
-                case 10:
-                    column = 2;
-                    break;
-                case 3:
-                case 7:
-                case 11:
-                    column = 3;
-                    break;
-            }
+            if (chartWidth <= 100) return 1;
+
+            if (chartWidth <= 200) return 2;
+
+            if (chartWidth <= 400) return 4;
+
+            return 8;
         }
 
         private void UpdateChartsBounds()
@@ -189,14 +166,11 @@ namespace TileExplorer
             var width = ClientSize.Width / 4;
             var height = (ClientSize.Height - top) / 3;
 
-            var column = 0;
-            var row = 0;
-
             for (var i = 0; i < 12; i++)
             {
-                GetGrid(i, ref column, ref row);
+                Charts[i].Bounds = new Rectangle(grid[i].col * width, top + grid[i].row * height, width, height);
 
-                Charts[i].Bounds = new Rectangle(column * width, top + row * height, width, height);
+                ChartSerial[i]["PixelPointWidth"] = $"{GetChartLineWidth(Charts[i].Bounds.Width)}";
             }
 
             ResumeLayout(false);
@@ -275,9 +249,13 @@ namespace TileExplorer
 
                     DebugWrite.Line(string.Join(", ", distances.Select(d => d.Distance)));
 
+                    var counts = string.Empty;
+
                     if (distances.Count > 0)
                     {
                         var maxDistance = 0D;
+
+                        var allDistances = 0D;
 
                         foreach (var distance in distances)
                         {
@@ -288,14 +266,22 @@ namespace TileExplorer
 
                             ChartSerial[i].Points[distance.Day - 1].YValues[0] = distance.Distance / 1000;
                             ChartSerial[i].Points[distance.Day - 1].IsEmpty = false;
+
+                            allDistances += distance.Distance;   
                         }
 
                         ChartAreas[i].AxisY.Maximum = Utils.DoubleFloorToEpsilon(maxDistance / 1000, ChartAreas[i].AxisY.Interval) + ChartAreas[i].AxisY.Interval;
+
+                        allDistances /= 1000;
+
+                        counts = string.Format(Resources.TextChartTracksByYearCounts, distances.Count, allDistances);
                     }
                     else
                     {
                         ChartAreas[i].AxisY.Maximum = ChartAreas[i].AxisY.Interval;
                     }
+
+                    ChartTitleCounts[i].Text = counts;
                 }
             }
             catch (TaskCanceledException e)
