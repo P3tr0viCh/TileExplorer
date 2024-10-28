@@ -51,6 +51,8 @@ namespace TileExplorer
             void ListItemChange(BaseId value);
             void ListItemDelete(BaseId value);
 
+            int Count { get; }
+
             void SetSelected(BaseId value);
         }
 

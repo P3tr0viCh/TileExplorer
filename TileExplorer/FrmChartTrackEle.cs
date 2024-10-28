@@ -217,7 +217,7 @@ namespace TileExplorer
                 return;
             }
 
-            if (Utils.DoubleEquals(distanceFromStart, Track.Distance, 0.1))
+            if (Utils.DoubleEquals(distanceFromStart, Track.Distance, 0.001))
             {
                 point = Track.TrackPoints.Last();
 

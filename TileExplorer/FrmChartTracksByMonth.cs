@@ -67,7 +67,7 @@ namespace TileExplorer
 
             UpdateSettings();
 
-            FillMonths();
+            cboxMonth.Items.AddRange(Utils.GetMonthNames());
 
             selfChange = true;
 
@@ -76,14 +76,6 @@ namespace TileExplorer
             selfChange = false;
 
             await UpdateDataAsync();
-        }
-
-        private void FillMonths()
-        {
-            for (var month = 1; month <= 12; month++)
-            {
-                cboxMonth.Items.Add(Utils.GetMonthName(Year, month));
-            }
         }
 
         public void UpdateSettings()
@@ -114,7 +106,7 @@ namespace TileExplorer
                 case DayOfWeek.Sunday:
                 case DayOfWeek.Saturday:
                     return Color.Red;
-                default: 
+                default:
                     return AppSettings.Roaming.Default.ColorChartText;
             }
         }

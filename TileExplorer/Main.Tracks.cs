@@ -147,41 +147,23 @@ namespace TileExplorer
                   overlayTracks.Routes.Cast<IMapItem>().Where(i => i.Model.Id == track.Id)?
                       .Cast<MapItemTrack>().FirstOrDefault());
 
-                await UpdateDataAsync(DataLoad.Tiles);
-                Utils.Forms.GetChildForms<Form>().ForEach(async frm =>
+                await UpdateDataAsync(DataLoad.TrackList | DataLoad.TracksTree | DataLoad.Tiles);
+
+                Utils.Forms.GetChildForms<Form>().ForEach(frm =>
                 {
                     switch (((IChildForm)frm).FormType)
                     {
                         case ChildFormType.TileInfo:
-                        case ChildFormType.TrackList:
-                            ((IListForm)frm).ListItemDelete(track);
-
-                            break;
-                        case ChildFormType.TracksTree:
-                        case ChildFormType.ResultYears:
-                        case ChildFormType.ResultEquipments:
-                            await ((IUpdateDataForm)frm).UpdateDataAsync();
+                            if (((IListForm)frm).Count == 0)
+                            {
+                                frm.Close();
+                            }
 
                             break;
                         case ChildFormType.ChartTrackEle:
                             if (((FrmChartTrackEle)frm).Track.Id == track.Id)
                             {
                                 frm.Close();
-                            }
-
-                            break;
-                        case ChildFormType.ChartTracksByYear:
-                            if (((FrmChartTracksByYear)frm).Year == track.DateTimeStart.Year)
-                            {
-                                await ((IUpdateDataForm)frm).UpdateDataAsync();
-                            }
-
-                            break;
-                        case ChildFormType.ChartTracksByMonth:
-                            if (((FrmChartTracksByMonth)frm).Year == track.DateTimeStart.Year &&
-                                ((FrmChartTracksByMonth)frm).Month == track.DateTimeStart.Month)
-                            {
-                                await ((IUpdateDataForm)frm).UpdateDataAsync();
                             }
 
                             break;
@@ -241,8 +223,6 @@ namespace TileExplorer
                     DebugWrite.Line("TrackSaveNewAsync done");
 
                     OverlayAddTrack(track);
-
-                    AddYear(track.DateTimeStart.Year);
                 }
 
                 return true;
@@ -287,18 +267,7 @@ namespace TileExplorer
                 track.IsVisible = miMainShowTracks.Checked;
             }
 
-            await UpdateDataAsync(DataLoad.Tiles);
-
-            Utils.Forms.GetChildForms<IUpdateDataForm>(
-                ChildFormType.TrackList |
-                ChildFormType.TracksTree |
-                ChildFormType.ResultYears |
-                ChildFormType.ResultEquipments |
-                ChildFormType.ChartTracksByYear |
-                ChildFormType.ChartTracksByMonth).ForEach(async frm =>
-            {
-                await frm.UpdateDataAsync();
-            });
+            await UpdateDataAsync(DataLoad.TrackList | DataLoad.TracksTree | DataLoad.Tiles);
         }
 
         private readonly WrapperCancellationTokenSource ctsTracksInfo = new WrapperCancellationTokenSource();
@@ -329,25 +298,6 @@ namespace TileExplorer
         }
 
         private readonly WrapperCancellationTokenSource ctsYears = new WrapperCancellationTokenSource();
-
-        private void AddYear(int year)
-        {
-            if (Years == null)
-            {
-                Years = new List<int> { year };
-            }
-            else
-            {
-                if (!Years.Contains(year))
-                {
-                    Years.Add(year);
-
-                    Years.Sort();
-                }
-            }
-
-            DebugWrite.Line(string.Join(", ", Years));
-        }
 
         private async Task LoadYearsAsync()
         {

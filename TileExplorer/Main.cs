@@ -48,6 +48,8 @@ namespace TileExplorer
 
         private async void Filter_OnChangedAsync()
         {
+            Selected = null;
+
             await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
         }
 
@@ -79,6 +81,8 @@ namespace TileExplorer
                 return;
             }
 
+            ProgramStatus.StatusChanged += ProgramStatus_StatusChanged;
+
             Database.Filter.Default.Day = AppSettings.Local.Default.Filter.Day;
             Database.Filter.Default.DateFrom = AppSettings.Local.Default.Filter.DateFrom;
             Database.Filter.Default.DateTo = AppSettings.Local.Default.Filter.DateTo;
@@ -86,13 +90,11 @@ namespace TileExplorer
 
             Database.Filter.Default.OnChanged += Filter_OnChangedAsync;
 
-            ProgramStatus.StatusChanged += ProgramStatus_StatusChanged;
-
             UpdateApp.Default.StatusChanged += UpdateApp_StatusChanged;
 
 #if DEBUG 
-            miMapTileAdd.Click += new EventHandler(MiMapTileAdd_Click);
-            miMapTileDelete.Click += new EventHandler(MiMapTileDelete_Click);
+            miMapTileAdd.Click += MiMapTileAdd_Click;
+            miMapTileDelete.Click += MiMapTileDelete_Click;
 
             miMapTileAdd.Visible = true;
             miMapTileDelete.Visible = true;
@@ -166,7 +168,8 @@ namespace TileExplorer
                 load = DataLoad.Tiles |
                        DataLoad.Tracks |
                        DataLoad.Markers |
-                       DataLoad.TracksTree;
+                       DataLoad.TracksTree |
+                       DataLoad.TrackList;
             }
 
             DebugWrite.Line($"Loading data {load}");
@@ -187,8 +190,6 @@ namespace TileExplorer
 
             if (load.HasFlag(DataLoad.Tracks))
             {
-                await LoadYearsAsync();
-
                 await LoadTracksInfoAsync();
 
                 tracksLoaded = false;
@@ -209,9 +210,68 @@ namespace TileExplorer
                 }
             }
 
+            if (load.HasFlag(DataLoad.TrackList))
+            {
+                await LoadYearsAsync();
+
+                await LoadTracksInfoAsync();
+            }
+            
             ChildFormsUpdateData(load);
 
             Selected = FindMapItem(savedSelected?.Model);
+        }
+
+        private void ChildFormsUpdateData(DataLoad load)
+        {
+            bool updateData;
+
+            Utils.Forms.GetChildForms<IUpdateDataForm>().ForEach(async frm =>
+            {
+                switch (frm.FormType)
+                {
+                    case ChildFormType.Filter:
+                        updateData = load.HasFlag(DataLoad.TrackList);
+
+                        break;
+                    case ChildFormType.TileInfo:
+                    case ChildFormType.TrackList:
+                    case ChildFormType.ResultYears:
+                    case ChildFormType.ResultEquipments:
+                        updateData = load.HasFlag(DataLoad.Tracks) |
+                                     load.HasFlag(DataLoad.TrackList);
+
+                        break;
+                    case ChildFormType.MarkerList:
+                        updateData = load.HasFlag(DataLoad.Markers);
+
+                        break;
+                    case ChildFormType.EquipmentList:
+                        updateData = load.HasFlag(DataLoad.Tracks) |
+                                     load.HasFlag(DataLoad.TrackList);
+
+                        break;
+                    case ChildFormType.TracksTree:
+                        updateData = load.HasFlag(DataLoad.TracksTree);
+
+                        break;
+                    case ChildFormType.ChartTracksByYear:
+                    case ChildFormType.ChartTracksByMonth:
+                        updateData = load.HasFlag(DataLoad.Tracks) |
+                                     load.HasFlag(DataLoad.TrackList);
+
+                        break;
+                    default:
+                        updateData = false;
+
+                        break;
+                }
+
+                if (updateData)
+                {
+                    await frm.UpdateDataAsync();
+                }
+            });
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -848,53 +908,6 @@ namespace TileExplorer
             }
         }
 
-        private void ChildFormsUpdateData(DataLoad load)
-        {
-            bool updateData;
-            Utils.Forms.GetChildForms<IUpdateDataForm>().ForEach(async frm =>
-            {
-                switch (frm.FormType)
-                {
-                    case ChildFormType.TileInfo:
-                    case ChildFormType.ResultYears:
-                        updateData = load.HasFlag(DataLoad.Tracks);
-
-                        break;
-                    case ChildFormType.TrackList:
-                    case ChildFormType.ResultEquipments:
-                        updateData = load.HasFlag(DataLoad.Tracks);
-
-                        break;
-                    case ChildFormType.MarkerList:
-                        updateData = load.HasFlag(DataLoad.Markers);
-
-                        break;
-                    case ChildFormType.EquipmentList:
-                        updateData = load.HasFlag(DataLoad.Tracks);
-
-                        break;
-                    case ChildFormType.TracksTree:
-                        updateData = load.HasFlag(DataLoad.TracksTree);
-
-                        break;
-                    case ChildFormType.ChartTracksByYear:
-                    case ChildFormType.ChartTracksByMonth:
-                        updateData = load.HasFlag(DataLoad.Tracks);
-
-                        break;
-                    default:
-                        updateData = false;
-
-                        break;
-                }
-
-                if (updateData)
-                {
-                    await frm.UpdateDataAsync();
-                }
-            });
-        }
-
         private async void MiMainDataUpdate_Click(object sender, EventArgs e)
         {
             await UpdateDataAsync();
@@ -909,15 +922,17 @@ namespace TileExplorer
             {
                 var tile = new Tile(MenuPopupPointLatLng);
 
-                if (await Database.Default.GetTileIdByXYAsync(tile) == 0)
+                var tileExists = await Database.Default.GetTileIdByXYAsync(tile) != Sql.NewId;
+
+                if (tileExists)
+                {
+                    Msg.Error("tile exists");
+                }
+                else
                 {
                     await Database.Default.TileSaveAsync(tile);
 
                     await UpdateDataAsync(DataLoad.Tiles);
-                }
-                else
-                {
-                    Msg.Error("tile exists");
                 }
             }
             finally
@@ -1386,32 +1401,22 @@ namespace TileExplorer
             Utils.Osm.StartUrlEdit((int)gMapControl.Zoom, MenuPopupPointLatLng);
         }
 
-        private void ShowTileInfo()
+        private async Task ShowTileInfoAsync()
         {
-            var tile = Task.Run(async () =>
+            var tile = new Tile(MenuPopupPointLatLng);
+
+            try
             {
-                var result = new Tile(MenuPopupPointLatLng);
+                tile.Id = await Database.Default.GetTileIdByXYAsync(tile);
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
 
-                try
-                {
-                    result.Id = await Database.Default.GetTileIdByXYAsync(result);
-                }
-                catch (Exception e)
-                {
-                    DebugWrite.Error(e);
+                Msg.Error(Resources.MsgDatabaseLoadListTileInfoFail, e.Message);
 
-                    BeginInvoke((MethodInvoker)delegate
-                    {
-                        Msg.Error(Resources.MsgDatabaseLoadListTileInfoFail, e.Message);
-                    });
-
-                    return null;
-                }
-
-                return result;
-            }).Result;
-
-            if (tile == null) return;
+                return;
+            }
 
             if (tile.Id <= Sql.NewId)
             {
@@ -1432,9 +1437,9 @@ namespace TileExplorer
             FrmList.ShowFrm(this, ChildFormType.TileInfo, tile);
         }
 
-        private void MiMapShowTileInfo_Click(object sender, EventArgs e)
+        private async void MiMapShowTileInfo_Click(object sender, EventArgs e)
         {
-            ShowTileInfo();
+            await ShowTileInfoAsync();
         }
 
         private void MiMainDataResultYears_Click(object sender, EventArgs e)

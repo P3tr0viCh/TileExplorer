@@ -84,8 +84,7 @@ namespace TileExplorer
 
             if (!AppSettings.Local.Default.DirectoryRoaming.IsEmpty())
             {
-                if (Utils.NormalizePath(AppSettings.Local.Default.DirectoryRoaming).Equals(
-                    Utils.NormalizePath(AppSettings.Local.Directory)))
+                if (Files.PathEquals(AppSettings.Local.Default.DirectoryRoaming, AppSettings.Local.Directory))
                 {
                     Msg.Error(string.Format(Resources.ErrorDirectoryWrongLocation, AppSettings.Local.Default.DirectoryRoaming));
 

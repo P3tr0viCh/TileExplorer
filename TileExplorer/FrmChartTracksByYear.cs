@@ -106,7 +106,7 @@ namespace TileExplorer
                 ChartAreas[i].AxisX.MajorTickMark.Enabled = false;
                 ChartAreas[i].AxisY.MajorTickMark.Enabled = false;
 
-                ChartTitleMonths[i].Text = Utils.GetMonthName(Year, month);
+                ChartTitleMonths[i].Text = Utils.GetMonthName(month);
                 ChartTitleMonths[i].Font = new Font("Segoe UI", 10F);
                 ChartTitleMonths[i].Alignment = ContentAlignment.TopLeft;
                 ChartTitleMonths[i].Position.Auto = false;

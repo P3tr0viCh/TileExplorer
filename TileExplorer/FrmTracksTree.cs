@@ -1,7 +1,6 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -96,13 +95,6 @@ namespace TileExplorer
             }
         }
 
-        private string MonthToString(int month)
-        {
-            var date = new DateTime(1981, month, 1);
-
-            return date.ToString("MMMM");
-        }
-
         private void CreateTracksTree(List<TracksTree> list)
         {
             list.ForEach(t => { DebugWrite.Line($"year: {t.Year}, month: {t.Month}"); });
@@ -137,7 +129,7 @@ namespace TileExplorer
 
                 treeNodeYear.Nodes.Add(new TreeNode()
                 {
-                    Text = MonthToString(item.Month),
+                    Text = Utils.GetMonthName(item.Month),
                     Tag = item.Month,
                 });
             }

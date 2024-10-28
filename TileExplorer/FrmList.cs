@@ -438,6 +438,8 @@ namespace TileExplorer
             }
         }
 
+        public int Count => bindingSource.Count;
+
         public void SetSelected(BaseId value)
         {
             Selected = value;
@@ -656,17 +658,6 @@ namespace TileExplorer
             }
 
             bindingSource.Remove(item);
-
-            switch (FormType)
-            {
-                case ChildFormType.TileInfo:
-                    if (bindingSource.Count == 0)
-                    {
-                        Close();
-                    }
-
-                    break;
-            }
         }
     }
 }

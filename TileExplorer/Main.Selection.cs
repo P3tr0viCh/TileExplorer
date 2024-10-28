@@ -65,6 +65,7 @@ namespace TileExplorer
                 if (selected == null)
                 {
                     SelectedTrackTiles = null;
+
                     return;
                 }
 
@@ -77,6 +78,7 @@ namespace TileExplorer
 
                         overlayMarkers.Markers.Remove((GMapMarker)selected);
                         overlayMarkers.Markers.Add((GMapMarker)selected);
+
                         Utils.Forms.GetFrmList(ChildFormType.MarkerList)?.SetSelected(selected.Model);
 
                         break;
@@ -87,6 +89,7 @@ namespace TileExplorer
                         selected.IsVisible = true;
 
                         SelectedTrackTiles = selected.Model as Track;
+
                         Utils.Forms.GetChildForms<FrmList>(ChildFormType.TrackList | ChildFormType.TileInfo).ForEach(frm =>
                         {
                             frm.SetSelected(selected.Model);

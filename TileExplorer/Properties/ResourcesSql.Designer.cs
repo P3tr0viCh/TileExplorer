@@ -230,6 +230,42 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to datetimestart BETWEEN &apos;{0}&apos; AND &apos;{1}&apos;.
+        /// </summary>
+        internal static string FilterDateBetween {
+            get {
+                return ResourceManager.GetString("FilterDateBetween", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to datetimestart &gt;= &apos;{0}&apos;.
+        /// </summary>
+        internal static string FilterDateFrom {
+            get {
+                return ResourceManager.GetString("FilterDateFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to datetimestart &lt; &apos;{0}&apos;.
+        /// </summary>
+        internal static string FilterDateTo {
+            get {
+                return ResourceManager.GetString("FilterDateTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CAST(strftime(&apos;%Y&apos;, datetimestart) AS INTEGER) IN ({0}).
+        /// </summary>
+        internal static string FilterYears {
+            get {
+                return ResourceManager.GetString("FilterYears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT * FROM equipments
         ///ORDER BY text;.
         /// </summary>
@@ -403,7 +439,7 @@ namespace TileExplorer.Properties {
         ///	CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year,
         ///	CAST(STRFTIME(&apos;%m&apos;, datetimestart) AS INTEGER) AS month,
         ///	CAST(STRFTIME(&apos;%d&apos;, datetimestart) AS INTEGER) AS day,
-        ///	SUM(distance)
+        ///	SUM(distance) AS distance
         ///FROM tracks
         ///WHERE year = :year AND month = :month 
         ///GROUP by year, month, day

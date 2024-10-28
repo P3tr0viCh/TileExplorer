@@ -1,12 +1,6 @@
 ﻿using P3tr0viCh.Utils;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
@@ -31,13 +25,6 @@ namespace TileExplorer
             DebugWrite.Line($"{sourceFileName} > {destFileName}");
 
             File.Copy(sourceFileName, destFileName, true);
-        }
-
-        public static string NormalizePath(string path)
-        {
-            return Path.GetFullPath(new Uri(path).LocalPath)
-                       .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                       .ToUpperInvariant();
         }
 
         public static double LinearInterpolate(double x, double x1, double y1, double x2, double y2)
@@ -66,9 +53,21 @@ namespace TileExplorer
             return Math.Floor(value / epsilon) * epsilon;
         }
 
-        public static string GetMonthName(int year, int month)
+        public static string GetMonthName(int month)
         {
-            return new DateTime(year, month, 1).ToString("MMMM");
+            return new DateTime(1981, month, 1).ToString("MMMM");
+        }
+
+        public static string[] GetMonthNames()
+        {
+            var result = new string[12];
+            
+            for (var month = 0; month < 12; month++)
+            {
+                result[month] = GetMonthName(month + 1);
+            }
+
+            return result;
         }
     }
 }

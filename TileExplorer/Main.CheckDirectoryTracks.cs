@@ -66,6 +66,19 @@ namespace TileExplorer
             DebugWrite.Line("done");
         }
 
+        private bool FileContains(string file)
+        {
+            foreach (var oldFile in GpxFiles.Default.Files)
+            {
+                if (Files.PathEquals(file, oldFile))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void GetNewFiles(List<string> files, List<string> newFiles)
         {
             GpxFiles.Directory = AppSettings.Roaming.Directory;
@@ -83,9 +96,9 @@ namespace TileExplorer
 
             foreach (var file in files)
             {
-                if (ctsCheckDirectoryTracks.IsCancellationRequested) return; 
-                
-                if (GpxFiles.Default.Files.Contains(file)) continue;
+                if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
+
+                if (FileContains(file)) continue;
 
                 newFiles.Add(file);
             }
@@ -197,7 +210,7 @@ namespace TileExplorer
                 {
                     ProgramStatus.Stop(status);
                 }
-                
+
                 if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
                 if (newFiles.Count == 0)
@@ -211,7 +224,7 @@ namespace TileExplorer
 
                     return;
                 }
-                
+
                 if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
                 if (!QuestionAddTracks(newFiles))
@@ -220,7 +233,7 @@ namespace TileExplorer
 
                     return;
                 }
-                
+
                 if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
                 await OpenTracksAsync(newFiles.ToArray());

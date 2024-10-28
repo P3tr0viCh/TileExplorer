@@ -1,5 +1,7 @@
-﻿using System;
+﻿using P3tr0viCh.Utils;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database;
@@ -8,7 +10,7 @@ using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
-    public partial class FrmFilter : Form, IChildForm
+    public partial class FrmFilter : Form, IChildForm, IUpdateDataForm
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -33,10 +35,10 @@ namespace TileExplorer
 
         private bool selfChange = false;
 
-        private void FrmFilter_Load(object sender, EventArgs e)
+        private async void FrmFilter_Load(object sender, EventArgs e)
         {
             AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStateFilter);
- 
+
             UpdateSettings();
 
             selfChange = true;
@@ -48,11 +50,13 @@ namespace TileExplorer
             dtpDateFrom.Value = Filter.Default.DateFrom != default ? Filter.Default.DateFrom : DateTime.Now.Date;
             dtpDateTo.Value = Filter.Default.DateTo != default ? Filter.Default.DateTo : DateTime.Now.Date;
 
-            tbYears.Text = Filter.Default.Years != default ? string.Join(", ", Filter.Default.Years) : string.Empty;
+            clbYears.ColumnWidth = clbYears.Width / 2 - 16;
 
             selfChange = false;
 
             MainForm.ChildFormOpened(this);
+
+            await UpdateDataAsync();
         }
 
         private void FrmFilter_FormClosing(object sender, FormClosingEventArgs e)
@@ -67,32 +71,6 @@ namespace TileExplorer
             MainForm.ChildFormClosed(this);
         }
 
-        private int[] SplitInts(string text)
-        {
-            var s = "";
-
-            var list = new List<int>();
-
-            foreach (var c in text)
-            {
-                if (c >= '0' && c <= '9')
-                {
-                    s += c;
-                }
-                else
-                {
-                    if (s != "") list.Add(int.Parse(s));
-
-                    s = "";
-                }
-                s.Split(' ');
-            }
-
-            if (s != "") list.Add(int.Parse(s));
-
-            return list.ToArray();
-        }
-
         private void FilterChanged()
         {
             timer.Stop();
@@ -102,7 +80,7 @@ namespace TileExplorer
             Filter.Default.DateFrom = dtpDateFrom.Value.Date;
             Filter.Default.DateTo = dtpDateTo.Value.Date;
 
-            Filter.Default.Years = SplitInts(tbYears.Text);
+            Filter.Default.Years = clbYears.CheckedItems.Cast<int>().ToArray();
 
             if (rbtnFilterNone.Checked)
                 Filter.Default.Type = Filter.FilterType.None;
@@ -121,25 +99,23 @@ namespace TileExplorer
             FilterChanged();
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            FilterChanged();
-        }
-
         private void DateTimeChanged(object sender, EventArgs e)
         {
             if (selfChange) return;
 
-            timer.Stop();
-            timer.Start();
+            timer.Restart();
         }
 
-        private void YearsChanged(object sender, EventArgs e)
+        private void ClbYears_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (selfChange) return;
 
-            timer.Stop();
-            timer.Start();
+            timer.Restart();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            FilterChanged();
         }
 
         public void UpdateSettings()
@@ -152,6 +128,14 @@ namespace TileExplorer
 
         public Task UpdateDataAsync()
         {
+            clbYears.DataSource = MainForm.Years;
+
+            for (var i = 0; i < clbYears.Items.Count; i++)
+            {
+                clbYears.SetItemChecked(i, Filter.Default.Years.Contains(
+                    int.Parse(clbYears.Items[i].ToString())));
+            }
+
             return Task.CompletedTask;
         }
     }

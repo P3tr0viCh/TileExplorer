@@ -11,6 +11,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
+using static P3tr0viCh.Utils.DataBaseConnection;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -130,24 +131,6 @@ namespace TileExplorer
             }
         }
 
-        public async Task TilesSaveAsync(List<Tile> tiles)
-        {
-            using (var connection = GetConnection())
-            {
-                await connection.OpenAsync();
-
-                using (var transaction = connection.BeginTransaction())
-                {
-                    tiles.ForEach(async tile =>
-                    {
-                        tile.Id = await connection.InsertAsync(tile, transaction);
-                    });
-
-                    transaction.Commit();
-                }
-            }
-        }
-
         public async Task<int> TileSaveAsync(Tile tile)
         {
             using (var connection = GetConnection())
@@ -164,11 +147,11 @@ namespace TileExplorer
             }
         }
 
-        public async Task<int> GetTileIdByXYAsync(Tile tile)
+        public async Task<long> GetTileIdByXYAsync(Tile tile)
         {
             using (var connection = GetConnection())
             {
-                return await connection.ExecuteScalarAsync<int>(
+                return await connection.QueryFirstOrDefaultAsync<long>(
                     ResourcesSql.SelectTileIdByXY,
                     new { x = tile.X, y = tile.Y });
             }
@@ -344,6 +327,13 @@ namespace TileExplorer
 
         public async Task TrackSaveNewAsync(Track track)
         {
+            await Utils.Tracks.CalcTrackTilesAsync(track);
+
+            foreach (var tile in track.TrackTiles)
+            {
+                tile.Id = await Default.GetTileIdByXYAsync(tile);
+            }
+
             using (var connection = GetConnection())
             {
                 await connection.OpenAsync();
@@ -358,33 +348,19 @@ namespace TileExplorer
 
                     await connection.InsertAsync(track.TrackPoints, transaction);
 
-                    int id;
-
-                    await Utils.Tracks.CalcTrackTilesAsync(track);
-
-                    track.TrackTiles.ForEach(async tile =>
+                    foreach (var tile in track.TrackTiles)
                     {
-                        id = await Default.GetTileIdByXYAsync(tile);
-
-                        if (id == Sql.NewId)
+                        if (tile.Id == Sql.NewId)
                         {
                             tile.Id = await connection.InsertAsync(tile, transaction);
                         }
-                        else
-                        {
-                            tile.Id = id;
-                        }
-                    });
 
-                    track.TrackTiles.ForEach(async tile =>
-                    {
                         await connection.InsertAsync(new TracksTiles()
                         {
                             TrackId = track.Id,
                             TileId = tile.Id,
-                        },
-                        transaction);
-                    });
+                        }, transaction);
+                    };
 
                     transaction.Commit();
                 }

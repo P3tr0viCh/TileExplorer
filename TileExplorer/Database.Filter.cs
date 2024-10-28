@@ -1,6 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Linq;
+using TileExplorer.Properties;
 
 namespace TileExplorer
 {
@@ -135,7 +136,7 @@ namespace TileExplorer
                     case FilterType.Day:
                         if (Day != default)
                         {
-                            sql = string.Format("datetimestart BETWEEN '{0}' AND '{1}'",
+                            sql = string.Format(ResourcesSql.FilterDateBetween,
                                 Day.ToString("yyyy-MM-dd"), Day.AddDays(1).ToString("yyyy-MM-dd"));
                         }
 
@@ -143,30 +144,26 @@ namespace TileExplorer
                     case FilterType.Period:
                         if (DateFrom != default && DateTo != default)
                         {
-                            sql = string.Format("datetimestart BETWEEN '{0}' AND '{1}'",
+                            sql = string.Format(ResourcesSql.FilterDateBetween,
                                 DateFrom.ToString("yyyy-MM-dd"), DateTo.AddDays(1).ToString("yyyy-MM-dd"));
                         }
                         else
                         {
                             if (DateFrom != default)
                             {
-                                sql = string.Format("datetimestart >= '{0}'", DateFrom.ToString("yyyy-MM-dd 00:00:00"));
+                                sql = string.Format(ResourcesSql.FilterDateFrom, DateFrom.ToString("yyyy-MM-dd 00:00:00"));
                             }
 
                             if (DateTo != default)
                             {
                                 sql = sql.JoinExcludeEmpty(" AND ",
-                                    string.Format("datetimestart < '{0}'", DateTo.AddDays(1).ToString("yyyy-MM-dd 00:00:00")));
+                                    string.Format(ResourcesSql.FilterDateTo, DateTo.AddDays(1).ToString("yyyy-MM-dd 00:00:00")));
                             }
                         }
 
                         break;
                     case FilterType.Years:
-                        if (Years != default && Years.Length > 0)
-                        {
-                            sql = string.Format("CAST(strftime('%Y', datetimestart) AS INTEGER) IN ({0})",
-                                string.Join(", ", Years));
-                        }
+                        sql = string.Format(ResourcesSql.FilterYears, string.Join(", ", Years));
 
                         break;
                     default:
