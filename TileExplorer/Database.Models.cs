@@ -13,8 +13,8 @@ namespace TileExplorer
     {
         public class Models
         {
-            private const int DEFAULT_OFFSET_X = 20;
-            private const int DEFAULT_OFFSET_Y = -10;
+            private const int DefaultOffsetX = 20;
+            private const int DefaultOffsetY = -10;
 
             public interface IBaseId
             {
@@ -72,8 +72,8 @@ namespace TileExplorer
 
                 public bool IsTextVisible { get; set; } = true;
 
-                public int OffsetX { get; set; } = DEFAULT_OFFSET_X;
-                public int OffsetY { get; set; } = DEFAULT_OFFSET_Y;
+                public int OffsetX { get; set; } = DefaultOffsetX;
+                public int OffsetY { get; set; } = DefaultOffsetY;
 
                 public void Assign(Marker source)
                 {

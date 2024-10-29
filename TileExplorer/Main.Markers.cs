@@ -3,9 +3,7 @@ using GMap.NET.WindowsForms;
 using P3tr0viCh.Utils;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -132,6 +130,7 @@ namespace TileExplorer
 
                 gMapControl.Invalidate();
             }
+
             Utils.Forms.GetFrmList(ChildFormType.MarkerList)?.ListItemChange(marker);
 
             await SelectMapItemAsync(this, marker);
@@ -155,6 +154,7 @@ namespace TileExplorer
             overlayMarkers.Markers.Remove(
                 overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?
                     .Cast<MapItemMarker>().FirstOrDefault());
+
             Utils.Forms.GetFrmList(ChildFormType.MarkerList)?.ListItemDelete(marker);
 
             Selected = null;

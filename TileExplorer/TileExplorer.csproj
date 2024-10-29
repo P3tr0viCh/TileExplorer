@@ -151,6 +151,9 @@
     <Compile Include="Main.Tracks.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Main.UpdateData.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MapItemMarkerCircle.cs" />
     <Compile Include="PresenterChildForm.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />

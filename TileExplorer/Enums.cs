@@ -49,6 +49,7 @@ namespace TileExplorer
             Markers = 4,
             TracksTree = 8,
             TrackList = 16,
+            Summary = 32,
         }
 
         public enum TileStatus

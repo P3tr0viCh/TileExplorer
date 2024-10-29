@@ -139,37 +139,36 @@ namespace TileExplorer
 
             if (!Msg.Question(string.Format(Resources.QuestionTrackDelete, name))) return;
 
-            if (await Database.Actions.TrackDeleteAsync(track))
+            if (!await Database.Actions.TrackDeleteAsync(track)) return;
+
+            Selected = null;
+
+            overlayTracks.Routes.Remove(
+                overlayTracks.Routes.Cast<IMapItem>().Where(i => i.Model.Id == track.Id)?
+                    .Cast<MapItemTrack>().FirstOrDefault());
+
+            await UpdateDataAsync(DataLoad.TrackList | DataLoad.TracksTree | DataLoad.Tiles | DataLoad.Summary);
+
+            Utils.Forms.GetChildForms<Form>().ForEach(frm =>
             {
-                Selected = null;
-
-                overlayTracks.Routes.Remove(
-                  overlayTracks.Routes.Cast<IMapItem>().Where(i => i.Model.Id == track.Id)?
-                      .Cast<MapItemTrack>().FirstOrDefault());
-
-                await UpdateDataAsync(DataLoad.TrackList | DataLoad.TracksTree | DataLoad.Tiles);
-
-                Utils.Forms.GetChildForms<Form>().ForEach(frm =>
+                switch (((IChildForm)frm).FormType)
                 {
-                    switch (((IChildForm)frm).FormType)
-                    {
-                        case ChildFormType.TileInfo:
-                            if (((IListForm)frm).Count == 0)
-                            {
-                                frm.Close();
-                            }
+                    case ChildFormType.TileInfo:
+                        if (((IListForm)frm).Count == 0)
+                        {
+                            frm.Close();
+                        }
 
-                            break;
-                        case ChildFormType.ChartTrackEle:
-                            if (((FrmChartTrackEle)frm).Track.Id == track.Id)
-                            {
-                                frm.Close();
-                            }
+                        break;
+                    case ChildFormType.ChartTrackEle:
+                        if (((FrmChartTrackEle)frm).Track.Id == track.Id)
+                        {
+                            frm.Close();
+                        }
 
-                            break;
-                    }
-                });
-            }
+                        break;
+                }
+            });
         }
 
         private async Task<bool> InternalOpenTracksAsync(string[] files)
@@ -258,16 +257,14 @@ namespace TileExplorer
                 files = openFileDialog.FileNames;
             }
 
-            var result = await InternalOpenTracksAsync(files);
-
-            if (!result) return;
+            if (!await InternalOpenTracksAsync(files)) return;
 
             foreach (var track in overlayTracks.Routes)
             {
                 track.IsVisible = miMainShowTracks.Checked;
             }
 
-            await UpdateDataAsync(DataLoad.TrackList | DataLoad.TracksTree | DataLoad.Tiles);
+            await UpdateDataAsync(DataLoad.TrackList | DataLoad.TracksTree | DataLoad.Tiles | DataLoad.Summary);
         }
 
         private readonly WrapperCancellationTokenSource ctsTracksInfo = new WrapperCancellationTokenSource();
