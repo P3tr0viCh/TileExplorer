@@ -39,6 +39,7 @@
             this.lblEleAscent = new System.Windows.Forms.Label();
             this.tbEleAscent = new System.Windows.Forms.TextBox();
             this.btnOKToALL = new System.Windows.Forms.Button();
+            this.btnCancelToALL = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -60,6 +61,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(336, 128);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
@@ -129,6 +131,16 @@
             this.btnOKToALL.UseVisualStyleBackColor = true;
             this.btnOKToALL.Click += new System.EventHandler(this.BtnOKToALL_Click);
             // 
+            // btnCancelToALL
+            // 
+            this.btnCancelToALL.Location = new System.Drawing.Point(112, 128);
+            this.btnCancelToALL.Name = "btnCancelToALL";
+            this.btnCancelToALL.Size = new System.Drawing.Size(126, 32);
+            this.btnCancelToALL.TabIndex = 9;
+            this.btnCancelToALL.Text = "Отмена для всех";
+            this.btnCancelToALL.UseVisualStyleBackColor = true;
+            this.btnCancelToALL.Click += new System.EventHandler(this.BtnCancelToALL_Click);
+            // 
             // FrmTrack
             // 
             this.AcceptButton = this.btnOk;
@@ -136,6 +148,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(424, 169);
+            this.Controls.Add(this.btnCancelToALL);
             this.Controls.Add(this.btnOKToALL);
             this.Controls.Add(this.tbEleAscent);
             this.Controls.Add(this.lblEleAscent);
@@ -154,6 +167,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Трек";
+            this.Load += new System.EventHandler(this.FrmTrack_Load);
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -172,5 +186,6 @@
         private System.Windows.Forms.Label lblEleAscent;
         private System.Windows.Forms.TextBox tbEleAscent;
         private System.Windows.Forms.Button btnOKToALL;
+        private System.Windows.Forms.Button btnCancelToALL;
     }
 }

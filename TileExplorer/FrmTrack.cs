@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -34,23 +32,26 @@ namespace TileExplorer
             }
         }
 
+        private bool saveOnClose;
+
         public FrmTrack()
         {
             InitializeComponent();
         }
 
-        public static DialogResult ShowDlg(Form owner, Track track, bool canToAll)
+        public static DialogResult ShowDlg(Form owner, Track track, bool canToAll, bool saveOnClose)
         {
             using (var frm = new FrmTrack()
             {
                 Owner = owner,
             })
             {
-                if (!frm.LoadData()) return DialogResult.None;
-
                 frm.Track = track;
 
                 frm.btnOKToALL.Visible = canToAll;
+                frm.btnCancelToALL.Visible = canToAll;
+
+                frm.saveOnClose = saveOnClose;
 
                 var result = frm.ShowDialog(owner);
 
@@ -65,18 +66,25 @@ namespace TileExplorer
 
         public static bool ShowDlg(Form owner, Track track)
         {
-            return ShowDlg(owner, track, false) == DialogResult.OK;
+            return ShowDlg(owner, track, false, true) == DialogResult.OK;
         }
 
-        private bool LoadData()
+        private async void FrmTrack_Load(object sender, EventArgs e)
         {
-            var status = MainForm.ProgramStatus.Start(Status.LoadData);
+            await LoadDataAsync();
+        }
 
+        private async Task<bool> LoadDataAsync()
+        {
             DebugWrite.Line("start");
 
             try
             {
-                Task.Run(async () => { await LoadDataAsync(); }).GetAwaiter().GetResult();
+                equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
+
+                equipmentBindingSource.Insert(0, new Equipment());
+
+                cboxEquipment.SelectedValue = track?.EquipmentId;
 
                 return true;
             }
@@ -88,13 +96,6 @@ namespace TileExplorer
 
                 return false;
             }
-        }
-
-        private async Task LoadDataAsync()
-        {
-            equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
-
-            equipmentBindingSource.Insert(0, new Equipment());
         }
 
         private bool CheckData()
@@ -156,7 +157,12 @@ namespace TileExplorer
 
         private async Task<bool> ApplyDataAsync()
         {
-            return CheckData() && UpdateData() && await SaveDataAsync();
+            if (!(CheckData() && UpdateData()))
+            {
+                return false;
+            }
+
+            return saveOnClose ? await SaveDataAsync() : true;
         }
 
         private async void BtnOk_Click(object sender, EventArgs e)
@@ -182,21 +188,19 @@ namespace TileExplorer
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
-            if (btnOKToALL.Visible && ModifierKeys == Keys.Shift)
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private void BtnCancelToALL_Click(object sender, EventArgs e)
+        {
+            if (!Msg.Question(Resources.QuestionTracksCancelToAll))
             {
-                if (!Msg.Question(Resources.QuestionTracksCancelToAll))
-                {
-                    DialogResult = DialogResult.None;
-
-                    return;
-                }
-
-                DialogResult = DialogResult.Abort;
+                DialogResult = DialogResult.None;
 
                 return;
             }
 
-            DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.Abort;
         }
     }
 }

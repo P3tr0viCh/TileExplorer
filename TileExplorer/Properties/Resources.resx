@@ -415,6 +415,6 @@ ddd</value>
 {0}.</value>
   </data>
   <data name="TextChartTracksByYearCounts" xml:space="preserve">
-    <value>{0}: {1:F0} км</value>
+    <value>{0} дн, {1:F0} км</value>
   </data>
 </root>

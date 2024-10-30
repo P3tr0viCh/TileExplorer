@@ -751,7 +751,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}: {1:F0} км.
+        ///   Looks up a localized string similar to {0} дн, {1:F0} км.
         /// </summary>
         internal static string TextChartTracksByYearCounts {
             get {

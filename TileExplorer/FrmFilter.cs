@@ -75,6 +75,8 @@ namespace TileExplorer
         {
             timer.Stop();
 
+            selfChange = true;
+
             Filter.Default.Day = dtpDay.Value.Date;
 
             Filter.Default.DateFrom = dtpDateFrom.Value.Date;
@@ -90,6 +92,8 @@ namespace TileExplorer
                 Filter.Default.Type = Filter.FilterType.Period;
             else if (rbtnFilterYears.Checked)
                 Filter.Default.Type = Filter.FilterType.Years;
+
+            selfChange = false;
         }
 
         private void FilterTypeChanged(object sender, EventArgs e)
@@ -128,6 +132,8 @@ namespace TileExplorer
 
         public Task UpdateDataAsync()
         {
+            if (selfChange) return Task.CompletedTask;
+
             clbYears.DataSource = MainForm.Years;
 
             for (var i = 0; i < clbYears.Items.Count; i++)

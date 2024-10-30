@@ -118,10 +118,7 @@ namespace TileExplorer
 
         public async Task TrackChangedAsync(Track track)
         {
-            Utils.Forms.GetChildForms<FrmList>(ChildFormType.TileInfo | ChildFormType.TrackList).ForEach(frm =>
-            {
-                frm.ListItemChange(track);
-            });
+            await UpdateDataAsync(DataLoad.ObjectChange, track);
 
             await SelectMapItemAsync(this, track);
         }
@@ -147,28 +144,7 @@ namespace TileExplorer
                 overlayTracks.Routes.Cast<IMapItem>().Where(i => i.Model.Id == track.Id)?
                     .Cast<MapItemTrack>().FirstOrDefault());
 
-            await UpdateDataAsync(DataLoad.TrackList | DataLoad.TracksTree | DataLoad.Tiles | DataLoad.Summary);
-
-            Utils.Forms.GetChildForms<Form>().ForEach(frm =>
-            {
-                switch (((IChildForm)frm).FormType)
-                {
-                    case ChildFormType.TileInfo:
-                        if (((IListForm)frm).Count == 0)
-                        {
-                            frm.Close();
-                        }
-
-                        break;
-                    case ChildFormType.ChartTrackEle:
-                        if (((FrmChartTrackEle)frm).Track.Id == track.Id)
-                        {
-                            frm.Close();
-                        }
-
-                        break;
-                }
-            });
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.ObjectDelete, track);
         }
 
         private async Task<bool> InternalOpenTracksAsync(string[] files)
@@ -177,15 +153,15 @@ namespace TileExplorer
 
             Track track;
 
+            var loadedCount = 0;
+
             try
             {
-                /*                var showDlg = true;
+                var showDlg = true;
 
-                                var canToAll = files.Count() > 1;
+                var canToAll = files.Length > 1;
 
-                                Equipment equipmentToAll = null;
-
-                                var exitForEach = false;*/
+                Equipment equipmentToAll = null;
 
                 foreach (var file in files)
                 {
@@ -195,33 +171,36 @@ namespace TileExplorer
 
                     // await Task.Delay(1000);
 
-                    /*                    if (showDlg)
-                                        {
-                                            switch (FrmTrack.ShowDlg(this, track, canToAll))
-                                            {
-                                                case DialogResult.Cancel:
-                                                    continue;
-                                                case DialogResult.Abort:
-                                                    exitForEach = true;
+                    if (showDlg)
+                    {
+                        switch (FrmTrack.ShowDlg(this, track, canToAll, false))
+                        {
+                            case DialogResult.Cancel:
+                                continue;
+                            case DialogResult.Abort:
+                                return loadedCount > 0;
+                            case DialogResult.Yes:
+                                showDlg = false;
 
-                                                    break;
-                                                case DialogResult.Yes:
-                                                    showDlg = false;
+                                equipmentToAll = track.Equipment;
 
-                                                    equipmentToAll = track.Equipment;
-
-                                                    break;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            track.Equipment = equipmentToAll;*/
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        track.Equipment = equipmentToAll;
+                    }
 
                     await Database.Default.TrackSaveNewAsync(track);
 
                     DebugWrite.Line("TrackSaveNewAsync done");
 
                     OverlayAddTrack(track);
+
+                    await UpdateDataAsync(DataLoad.ObjectChange, track);
+
+                    loadedCount++;
                 }
 
                 return true;
@@ -232,7 +211,7 @@ namespace TileExplorer
 
                 Msg.Error(e.Message);
 
-                return false;
+                return loadedCount > 0;
             }
             finally
             {
@@ -264,7 +243,7 @@ namespace TileExplorer
                 track.IsVisible = miMainShowTracks.Checked;
             }
 
-            await UpdateDataAsync(DataLoad.TrackList | DataLoad.TracksTree | DataLoad.Tiles | DataLoad.Summary);
+            await UpdateDataAsync(DataLoad.Tiles);
         }
 
         private readonly WrapperCancellationTokenSource ctsTracksInfo = new WrapperCancellationTokenSource();

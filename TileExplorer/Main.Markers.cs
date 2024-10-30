@@ -131,7 +131,7 @@ namespace TileExplorer
                 gMapControl.Invalidate();
             }
 
-            Utils.Forms.GetFrmList(ChildFormType.MarkerList)?.ListItemChange(marker);
+            await UpdateDataAsync(DataLoad.ObjectChange, marker);
 
             await SelectMapItemAsync(this, marker);
         }
@@ -155,7 +155,7 @@ namespace TileExplorer
                 overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?
                     .Cast<MapItemMarker>().FirstOrDefault());
 
-            Utils.Forms.GetFrmList(ChildFormType.MarkerList)?.ListItemDelete(marker);
+            await UpdateDataAsync(DataLoad.ObjectDelete, marker);
 
             Selected = null;
         }

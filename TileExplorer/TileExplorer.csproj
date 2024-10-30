@@ -182,12 +182,6 @@
     <Compile Include="FrmChartTrackEle.Designer.cs">
       <DependentUpon>FrmChartTrackEle.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmTracksTree.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmTracksTree.Designer.cs">
-      <DependentUpon>FrmTracksTree.cs</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces.cs" />
     <Compile Include="Main.ActionsSave.cs">
       <SubType>Form</SubType>
@@ -286,9 +280,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmChartTrackEle.resx">
       <DependentUpon>FrmChartTrackEle.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmTracksTree.resx">
-      <DependentUpon>FrmTracksTree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>

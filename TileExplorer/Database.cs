@@ -291,9 +291,6 @@ namespace TileExplorer
                 case nameof(Equipment):
                     sql = ResourcesSql.SelectEquipments;
                     break;
-                case nameof(TracksTree):
-                    sql = ResourcesSql.SelectTracksTree;
-                    break;
                 case nameof(TracksDistanceByMonth):
                     sql = ResourcesSql.SelectTracksDistanceByMonth;
 

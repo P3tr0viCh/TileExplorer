@@ -15,25 +15,11 @@ namespace TileExplorer
             Utils.Forms.GetFrmList(ChildFormType.EquipmentList)?.ListItemChange(equipment);
         }
 
-        private void EquipmentChange(Equipment equipment)
+        private async Task EquipmentChangeAsync(Equipment equipment)
         {
             if (!FrmEquipment.ShowDlg(this, equipment)) return;
-
-            Utils.Forms.GetChildForms<FrmList>().ForEach(async frm =>
-            {
-                switch (frm.FormType)
-                {
-                    case ChildFormType.EquipmentList:
-                        frm.ListItemChange(equipment);
-                        break;
-                    case ChildFormType.TrackList:
-                        await frm.UpdateDataAsync();
-                        break;
-                    case ChildFormType.ResultEquipments:
-                        await frm.UpdateDataAsync();
-                        break;
-                }
-            });
+            
+            await UpdateDataAsync(DataLoad.ObjectChange, equipment);
         }
 
         private async Task EquipmentDeleteAsync(Equipment equipment)
@@ -44,21 +30,7 @@ namespace TileExplorer
 
             if (!await Database.Actions.EquipmentDeleteAsync(equipment)) return;
 
-            Utils.Forms.GetChildForms<FrmList>().ForEach(async frm =>
-            {
-                switch (frm.FormType)
-                {
-                    case ChildFormType.EquipmentList:
-                        frm.ListItemDelete(equipment);
-
-                        break;
-                    case ChildFormType.TrackList:
-                    case ChildFormType.ResultEquipments:
-                        await frm.UpdateDataAsync();
-
-                        break;
-                }
-            });
+            await UpdateDataAsync(DataLoad.ObjectDelete, equipment);
         }
     }
 }

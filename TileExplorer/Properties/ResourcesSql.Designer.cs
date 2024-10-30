@@ -399,7 +399,6 @@ namespace TileExplorer.Properties {
         ///   Looks up a localized string similar to SELECT id, text, dt AS datetimestart, datetimefinish,
         ///	duration, durationinmove,
         ///	distance,
-        ///	distance / durationinmove AS averagespeed,
         ///	eleascent,
         ///	equipmentid, equipmenttext, equipmentbrand, equipmentmodel,
         ///	SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount
@@ -412,7 +411,8 @@ namespace TileExplorer.Properties {
         ///			WHERE tileid = tid AND datetimestart &lt; dt
         ///		) AS e
         ///	FROM (
-        ///		SELECT tracks.id AS id, tra [rest of string was truncated]&quot;;.
+        ///		SELECT tracks.id AS id, tracks.text AS text,
+        ///			datetimestart AS dt, da [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectTracks {
             get {
@@ -468,17 +468,6 @@ namespace TileExplorer.Properties {
         internal static string SelectTracksOnly {
             get {
                 return ResourceManager.GetString("SelectTracksOnly", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year, CAST(STRFTIME(&apos;%m&apos;, datetimestart) AS INTEGER) AS month
-        ///FROM tracks
-        ///GROUP by year, month;.
-        /// </summary>
-        internal static string SelectTracksTree {
-            get {
-                return ResourceManager.GetString("SelectTracksTree", resourceCulture);
             }
         }
         

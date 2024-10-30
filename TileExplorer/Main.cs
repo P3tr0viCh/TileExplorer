@@ -149,10 +149,6 @@ namespace TileExplorer
             {
                 ShowChildForm(ChildFormType.Filter, true);
             }
-            if (AppSettings.Local.Default.VisibleTracksTree)
-            {
-                ShowChildForm(ChildFormType.TracksTree, true);
-            }
 
             ProgramStatus.Stop(starting);
 
@@ -194,8 +190,6 @@ namespace TileExplorer
             AppSettings.Local.Default.VisibleTrackList = GetChildFormMenuItemState(ChildFormType.TrackList);
             AppSettings.Local.Default.VisibleMarkerList = GetChildFormMenuItemState(ChildFormType.MarkerList);
             AppSettings.Local.Default.VisibleEquipmentList = GetChildFormMenuItemState(ChildFormType.EquipmentList);
-
-            AppSettings.Local.Default.VisibleTracksTree = GetChildFormMenuItemState(ChildFormType.TracksTree);
 
             AppSettings.Local.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
 
@@ -893,10 +887,6 @@ namespace TileExplorer
                             FrmFilter.ShowFrm(this);
 
                             break;
-                        case ChildFormType.TracksTree:
-                            FrmTracksTree.ShowFrm(this);
-
-                            break;
                         case ChildFormType.TrackList:
                         case ChildFormType.MarkerList:
                         case ChildFormType.ResultYears:
@@ -934,11 +924,6 @@ namespace TileExplorer
         private void MiMainDataFilter_Click(object sender, EventArgs e)
         {
             ShowChildForm(ChildFormType.Filter, !miMainDataFilter.Checked);
-        }
-
-        private void MiMainDataTracksTree_Click(object sender, EventArgs e)
-        {
-            ShowChildForm(ChildFormType.TracksTree, !miMainDataTracksTree.Checked);
         }
 
         private void MiMainGrayScale_Click(object sender, EventArgs e)
@@ -1014,7 +999,7 @@ namespace TileExplorer
 
             if (value is Equipment equipment)
             {
-                EquipmentChange(equipment);
+                await EquipmentChangeAsync(equipment);
                 return;
             }
         }
@@ -1201,11 +1186,6 @@ namespace TileExplorer
             miMainDataFilter.PerformClick();
         }
 
-        private void TsbtnTracksTree_Click(object sender, EventArgs e)
-        {
-            miMainDataTracksTree.PerformClick();
-        }
-
         private void MiMainLeftPanel_Click(object sender, EventArgs e)
         {
             toolStripContainer.LeftToolStripPanelVisible = miMainLeftPanel.Checked;
@@ -1227,8 +1207,6 @@ namespace TileExplorer
                     return miMainDataResultEquipments;
                 case ChildFormType.EquipmentList:
                     return miMainDataEquipmentList;
-                case ChildFormType.TracksTree:
-                    return miMainDataTracksTree;
                 default:
                     return null;
             }

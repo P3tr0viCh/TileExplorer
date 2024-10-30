@@ -163,7 +163,7 @@ namespace TileExplorer
 
                 [DisplayName("Скорость")]
                 [Write(false)]
-                public float AverageSpeed { get; set; }
+                public float AverageSpeed { get => gpx.AverageSpeed; }
 
                 [DisplayName("Подъём")]
                 public float EleAscent { get => gpx.EleAscent; set => gpx.EleAscent = value; }
@@ -406,16 +406,6 @@ namespace TileExplorer
                     Brand = source.Brand;
                     Model = source.Model;
                 }
-            }
-
-            [Table("tracks")]
-            public class TracksTree : BaseId
-            {
-                [DisplayName("Год")]
-                public int Year { get; set; }
-
-                [DisplayName("Месяц")]
-                public int Month { get; set; }
             }
 
             [Table("tracks")]

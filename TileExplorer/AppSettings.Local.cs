@@ -38,7 +38,6 @@ namespace TileExplorer
             public bool VisibleEquipmentList { get; set; } = true;
             public bool VisibleResultYears { get; set; } = true;
             public bool VisibleResultEquipments { get; set; } = true;
-            public bool VisibleTracksTree { get; set; } = true;
 
             // ------------------------------------------------------------------------------------------------------------
             public bool VisibleLeftPanel { get; set; } = true;
@@ -52,7 +51,6 @@ namespace TileExplorer
             public FormState FormStateEquipmentList { get; set; }
             public FormState FormStateFilter { get; set; }
             public FormState FormStateSettings { get; set; }
-            public FormState FormStateTracksTree { get; set; }
             public FormState FormStateTileInfo { get; set; }
 
             // ------------------------------------------------------------------------------------------------------------

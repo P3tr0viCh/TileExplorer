@@ -1,7 +1,6 @@
 SELECT id, text, dt AS datetimestart, datetimefinish,
 	duration, durationinmove,
 	distance,
-	distance / durationinmove AS averagespeed,
 	eleascent,
 	equipmentid, equipmenttext, equipmentbrand, equipmentmodel,
 	SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount

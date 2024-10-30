@@ -84,7 +84,6 @@
             this.miMainDataEquipmentList = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.miMainDataTracksTree = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataChartTracks = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -105,7 +104,6 @@
             this.tsbtnResults = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbtnFilter = new System.Windows.Forms.ToolStripButton();
-            this.tsbtnTracksTree = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbtnChartTracks = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -520,7 +518,6 @@
             this.miMainDataEquipmentList,
             this.toolStripSeparator14,
             this.miMainDataFilter,
-            this.miMainDataTracksTree,
             this.toolStripSeparator21,
             this.miMainDataChartTracks,
             this.toolStripSeparator4,
@@ -623,15 +620,6 @@
             this.miMainDataFilter.Size = new System.Drawing.Size(262, 22);
             this.miMainDataFilter.Text = "Фильтр";
             this.miMainDataFilter.Click += new System.EventHandler(this.MiMainDataFilter_Click);
-            // 
-            // miMainDataTracksTree
-            // 
-            this.miMainDataTracksTree.Name = "miMainDataTracksTree";
-            this.miMainDataTracksTree.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.F)));
-            this.miMainDataTracksTree.Size = new System.Drawing.Size(262, 22);
-            this.miMainDataTracksTree.Text = "Треки по месяцам";
-            this.miMainDataTracksTree.Click += new System.EventHandler(this.MiMainDataTracksTree_Click);
             // 
             // toolStripSeparator21
             // 
@@ -757,12 +745,11 @@
             this.tsbtnResults,
             this.toolStripSeparator10,
             this.tsbtnFilter,
-            this.tsbtnTracksTree,
             this.toolStripSeparator20,
             this.tsbtnChartTracks});
             this.toolStrip.Location = new System.Drawing.Point(0, 4);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(41, 222);
+            this.toolStrip.Size = new System.Drawing.Size(41, 191);
             this.toolStrip.TabIndex = 1;
             // 
             // tsbtnTrackList
@@ -826,17 +813,6 @@
             this.tsbtnFilter.Text = "Ф";
             this.tsbtnFilter.ToolTipText = "Фильтр";
             this.tsbtnFilter.Click += new System.EventHandler(this.TsbtnFilter_Click);
-            // 
-            // tsbtnTracksTree
-            // 
-            this.tsbtnTracksTree.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbtnTracksTree.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnTracksTree.Image")));
-            this.tsbtnTracksTree.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbtnTracksTree.Name = "tsbtnTracksTree";
-            this.tsbtnTracksTree.Size = new System.Drawing.Size(39, 28);
-            this.tsbtnTracksTree.Text = "ТМ";
-            this.tsbtnTracksTree.ToolTipText = "Треки по месяцам";
-            this.tsbtnTracksTree.Click += new System.EventHandler(this.TsbtnTracksTree_Click);
             // 
             // toolStripSeparator20
             // 
@@ -1202,8 +1178,6 @@
         private System.Windows.Forms.ToolStripMenuItem miMainDataResultEquipments;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
         private System.Windows.Forms.ToolStripButton tsbtnResults;
-        private System.Windows.Forms.ToolStripMenuItem miMainDataTracksTree;
-        private System.Windows.Forms.ToolStripButton tsbtnTracksTree;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
         private System.Windows.Forms.ToolStripMenuItem miMapCopyCoords;
         private System.Windows.Forms.ToolStripMenuItem miMapCopyCoordsFloat;

@@ -35,7 +35,6 @@ namespace TileExplorer
             ResultYears = 16,
             ResultEquipments = 32,
             TileInfo = 64,
-            TracksTree = 128,
             ChartTrackEle = 256,
             ChartTracksByYear = 512,
             ChartTracksByMonth = 1024,
@@ -47,9 +46,16 @@ namespace TileExplorer
             Tiles = 1,
             Tracks = 2,
             Markers = 4,
-            TracksTree = 8,
-            TrackList = 16,
-            Summary = 32,
+            ObjectChange = 64,
+            ObjectDelete = 128,
+        }
+        
+        public enum DataUpdate
+        {
+            None,
+            Full,
+            ObjectChange,
+            ObjectDelete,
         }
 
         public enum TileStatus
