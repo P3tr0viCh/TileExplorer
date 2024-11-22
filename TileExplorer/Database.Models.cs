@@ -118,7 +118,10 @@ namespace TileExplorer
 
                 [Write(false)]
                 [Computed]
-                public List<Track> Tracks { get; set; } = null;
+                public int HeatmapValue { get; set; } = 0;
+
+                [Write(false)]
+                public int TrackCount { get; set; } = 0;
 
                 public override string ToString()
                 {

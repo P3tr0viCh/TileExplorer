@@ -1,4 +1,6 @@
 ﻿using GMap.NET;
+using P3tr0viCh.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static TileExplorer.Database.Models;
@@ -10,11 +12,25 @@ namespace TileExplorer
     {
         public static class Tiles
         {
+            public struct Heatmap
+            {
+                public const byte MinAlphaColor = 10;
+                public const byte MaxAlphaColor = 110;
+            }
+
             public struct CalcResult
             {
                 public int Visited;
                 public int MaxCluster;
                 public int MaxSquare;
+            }
+
+            private static int Scale(int value, int min, int max, int minScale, int maxScale)
+            {
+                var scale = (float)(maxScale - minScale) / (max - min);
+                var offset = min * scale - minScale;
+
+                return (int)Math.Round(value * scale - offset, 0);
             }
 
             private static Tile FindTileByXY(List<Tile> tiles, int x, int y)
@@ -33,21 +49,15 @@ namespace TileExplorer
             {
                 var result = new CalcResult();
 
-                foreach (var tile in tiles)
-                {
-                    if (tile.Status == TileStatus.Visited) result.Visited++;
-                }
+                if (tiles.Count == 0) return result;
 
-                if (result.Visited == 0)
-                {
-                    return result;
-                }
+                result.Visited = tiles.Count;
+
+                tiles.ForEach(tile => tile.Status = TileStatus.Visited);
 
                 foreach (var tile in tiles)
                 {
                     if (tile.X == 0 || tile.X == Const.TileMax - 1 || tile.Y == 0 || tile.Y == Const.TileMax - 1) continue;
-
-                    if (tile.Status == TileStatus.Unknown) continue;
 
                     if (GetTileStatus(tiles, tile.X, tile.Y - 1) == TileStatus.Unknown) continue;
                     if (GetTileStatus(tiles, tile.X, tile.Y + 1) == TileStatus.Unknown) continue;
@@ -124,6 +134,55 @@ namespace TileExplorer
                     {
                         tile.Status = TileStatus.MaxSquare;
                     }
+                }
+
+                // Heatmap
+
+                var minTrackCount = int.MaxValue;
+                var maxTrackCount = 0;
+
+                var trackCounts = new List<int>();
+
+                foreach (var tile in tiles)
+                {
+                    if (tile.TrackCount < minTrackCount) minTrackCount = tile.TrackCount;
+                    if (tile.TrackCount > maxTrackCount) maxTrackCount = tile.TrackCount;
+
+                    if (!trackCounts.Exists(t => t == tile.TrackCount)) trackCounts.Add(tile.TrackCount);
+                }
+
+                trackCounts.Sort();
+
+                DebugWrite.Line($"{minTrackCount} — {maxTrackCount}");
+                DebugWrite.Line($"{trackCounts.Count}");
+
+                trackCounts.ForEach(t => DebugWrite.Line(t.ToString()));
+
+                var lengthAlphaColor = maxTrackCount - minTrackCount;
+
+                foreach (var tile in tiles)
+                {
+                    if (tile.TrackCount == minTrackCount)
+                    {
+                        tile.HeatmapValue = Heatmap.MinAlphaColor;
+                    }
+                    else
+                    {
+                        if (tile.TrackCount == maxTrackCount)
+                        {
+                            tile.HeatmapValue = Heatmap.MaxAlphaColor;
+                        }
+                        else
+                        {
+                            var i = trackCounts.FindIndex(t => t == tile.TrackCount);
+
+                            tile.HeatmapValue = Scale(i,
+                                0, trackCounts.Count - 1,
+                                Heatmap.MinAlphaColor, Heatmap.MaxAlphaColor);
+                        }
+                    }
+
+                    DebugWrite.Line($"{tile.TrackCount}: {tile.HeatmapValue}");
                 }
 
                 return result;

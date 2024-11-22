@@ -30,7 +30,7 @@ namespace TileExplorer
 
         public void NotifyModelChanged()
         {
-            Name = string.Format("{0}x{1}", Model.X, Model.Y);
+            Name = $"{Model.X}x{Model.Y}";
 
             Points.Clear();
 
@@ -72,6 +72,9 @@ namespace TileExplorer
                         colorStroke = Color.FromArgb(100, Color.Gray);
                         break;
                 }
+
+                colorFill = Color.FromArgb(Model.HeatmapValue, Color.Red);
+                colorStroke = Color.FromArgb(AppSettings.Roaming.Default.ColorTileVisitedAlpha, Color.Red);
             }
 
             Fill = new SolidBrush(colorFill);

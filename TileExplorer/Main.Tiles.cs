@@ -1,9 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -18,8 +16,6 @@ namespace TileExplorer
 
         private void CalcTiles(List<Tile> tiles)
         {
-            tiles.ForEach(tile => tile.Status = TileStatus.Visited);
-
             var calcResult = Utils.Tiles.CalcTiles(tiles);
 
             statusStripPresenter.TilesVisited = calcResult.Visited;
