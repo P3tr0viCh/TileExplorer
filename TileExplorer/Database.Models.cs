@@ -109,15 +109,12 @@ namespace TileExplorer
                 public int Y { get; set; }
 
                 [Write(false)]
-                [Computed]
                 public TileStatus Status { get; set; } = TileStatus.Unknown;
 
                 [Write(false)]
-                [Computed]
                 public int ClusterId { get; set; } = -1;
 
                 [Write(false)]
-                [Computed]
                 public int HeatmapValue { get; set; } = 0;
 
                 [Write(false)]
@@ -172,11 +169,9 @@ namespace TileExplorer
                 public float EleAscent { get => gpx.EleAscent; set => gpx.EleAscent = value; }
 
                 [Write(false)]
-                [Computed]
                 public List<TrackPoint> TrackPoints { get; set; } = null;
 
                 [Write(false)]
-                [Computed]
                 public List<Tile> TrackTiles { get; set; } = null;
 
                 [DisplayName("Плитки +")]

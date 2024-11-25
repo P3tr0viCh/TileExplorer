@@ -41,6 +41,14 @@ namespace TileExplorer
             return a * x + b;
         }
 
+        private static int Scale(int value, int min, int max, int minScale, int maxScale)
+        {
+            var scale = (float)(maxScale - minScale) / (max - min);
+            var offset = min * scale - minScale;
+
+            return (int)Math.Round(value * scale - offset, 0);
+        }
+
         public static bool DoubleEquals(double x, double y, double tolerance)
         {
             var diff = Math.Abs(x - y);

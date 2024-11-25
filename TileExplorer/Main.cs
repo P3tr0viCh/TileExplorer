@@ -107,7 +107,9 @@ namespace TileExplorer
 #endif
 
             miMainShowGrid.Checked = AppSettings.Local.Default.VisibleGrid;
+            miMainTilesHeatmap.Checked = AppSettings.Local.Default.MapTilesHeatmap;
             miMainShowTiles.Checked = AppSettings.Local.Default.VisibleTiles;
+            miMainTilesHeatmap.Enabled = miMainShowTiles.Checked;
             miMainShowTracks.Checked = AppSettings.Local.Default.VisibleTracks;
             miMainShowMarkers.Checked = AppSettings.Local.Default.VisibleMarkers;
 
@@ -176,6 +178,7 @@ namespace TileExplorer
             AppSettings.Local.Default.FormStateMain = AppSettings.SaveFormState(this);
 
             AppSettings.Local.Default.MapGrayScale = miMainGrayScale.Checked;
+            AppSettings.Local.Default.MapTilesHeatmap = miMainTilesHeatmap.Checked;
 
             AppSettings.Local.Default.VisibleGrid = miMainShowGrid.Checked;
             AppSettings.Local.Default.VisibleTiles = miMainShowTiles.Checked;
@@ -652,6 +655,7 @@ namespace TileExplorer
 
         private async void MiMainShowTiles_Click(object sender, EventArgs e)
         {
+            miMainTilesHeatmap.Enabled = miMainShowTiles.Checked;
             await CheckAndLoadDataAsync(DataLoad.Tiles, miMainShowTiles.Checked);
         }
 
@@ -1491,6 +1495,11 @@ namespace TileExplorer
         private void MiMainDataChartTracks_Click(object sender, EventArgs e)
         {
             Utils.Forms.OpenChartTracksByYear(this, DateTime.Now.Year);
+        }
+
+        private void MiMainTilesHeatmap_Click(object sender, EventArgs e)
+        {
+            TilesSetHeatmap(miMainTilesHeatmap.Checked);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace TileExplorer
 
             // ------------------------------------------------------------------------------------------------------------
             public bool MapGrayScale { get; set; } = false;
+            public bool MapTilesHeatmap { get; set; } = false;
 
             // ------------------------------------------------------------------------------------------------------------
             public bool VisibleGrid { get; set; } = true;

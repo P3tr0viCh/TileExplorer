@@ -25,14 +25,6 @@ namespace TileExplorer
                 public int MaxSquare;
             }
 
-            private static int Scale(int value, int min, int max, int minScale, int maxScale)
-            {
-                var scale = (float)(maxScale - minScale) / (max - min);
-                var offset = min * scale - minScale;
-
-                return (int)Math.Round(value * scale - offset, 0);
-            }
-
             private static Tile FindTileByXY(List<Tile> tiles, int x, int y)
             {
                 return tiles.Find(t => t.X == x && t.Y == y);
@@ -157,8 +149,6 @@ namespace TileExplorer
                 DebugWrite.Line($"{trackCounts.Count}");
 
                 trackCounts.ForEach(t => DebugWrite.Line(t.ToString()));
-
-                var lengthAlphaColor = maxTrackCount - minTrackCount;
 
                 foreach (var tile in tiles)
                 {

@@ -1,6 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
@@ -45,7 +46,10 @@ namespace TileExplorer
                 {
                     if (ctsTiles.IsCancellationRequested) return;
 
-                    overlayTiles.Polygons.Add(new MapItemTile(tile));
+                    overlayTiles.Polygons.Add(new MapItemTile(tile)
+                    {
+                        Heatmap = miMainTilesHeatmap.Checked
+                    });
 
 #if DEBUG && CHECK_TILES
                 if (tile.Status > TileStatus.Visited)
@@ -81,6 +85,16 @@ namespace TileExplorer
 
                 DebugWrite.Line("end");
             }
+        }
+
+        private void TilesSetHeatmap(bool value)
+        {
+            foreach (var tile in overlayTiles.Polygons.Cast<MapItemTile>())
+            {
+                tile.Heatmap = value;
+            }
+
+            gMapControl.Invalidate();
         }
     }
 }
