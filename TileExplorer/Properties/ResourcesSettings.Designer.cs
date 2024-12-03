@@ -162,27 +162,9 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Цвет осей.
         /// </summary>
-        internal static string ColorChartAxis_Description {
-            get {
-                return ResourceManager.GetString("ColorChartAxis.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Цвет осей.
-        /// </summary>
         internal static string ColorChartAxis_DisplayName {
             get {
                 return ResourceManager.GetString("ColorChartAxis.DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Цвет линии отметки.
-        /// </summary>
-        internal static string ColorChartCursor_Description {
-            get {
-                return ResourceManager.GetString("ColorChartCursor.Description", resourceCulture);
             }
         }
         
@@ -198,27 +180,9 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Цвет сетки.
         /// </summary>
-        internal static string ColorChartGrid_Description {
-            get {
-                return ResourceManager.GetString("ColorChartGrid.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Цвет сетки.
-        /// </summary>
         internal static string ColorChartGrid_DisplayName {
             get {
                 return ResourceManager.GetString("ColorChartGrid.DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Цвет графика.
-        /// </summary>
-        internal static string ColorChartSerial_Description {
-            get {
-                return ResourceManager.GetString("ColorChartSerial.Description", resourceCulture);
             }
         }
         
@@ -232,16 +196,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Прозрачность графика.
-        /// </summary>
-        internal static string ColorChartSerialAlpha_Description {
-            get {
-                return ResourceManager.GetString("ColorChartSerialAlpha.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Прозрачность графика.
+        ///   Looks up a localized string similar to Цвет графика: прозрачность.
         /// </summary>
         internal static string ColorChartSerialAlpha_DisplayName {
             get {
@@ -250,7 +205,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Цвет значений.
+        ///   Looks up a localized string similar to Цвет текста значений.
         /// </summary>
         internal static string ColorChartText_Description {
             get {
@@ -264,6 +219,24 @@ namespace TileExplorer.Properties {
         internal static string ColorChartText_DisplayName {
             get {
                 return ResourceManager.GetString("ColorChartText.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Треки за год: цвет графика.
+        /// </summary>
+        internal static string ColorChartTracksByYearSerial_DisplayName {
+            get {
+                return ResourceManager.GetString("ColorChartTracksByYearSerial.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Треки за год: прозрачность графика.
+        /// </summary>
+        internal static string ColorChartTracksByYearSerialAlpha_DisplayName {
+            get {
+                return ResourceManager.GetString("ColorChartTracksByYearSerialAlpha.DisplayName", resourceCulture);
             }
         }
         
@@ -552,6 +525,78 @@ namespace TileExplorer.Properties {
         internal static string ColorTileClusterLineAlpha_DisplayName {
             get {
                 return ResourceManager.GetString("ColorTileClusterLineAlpha.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Цвет плитки в тепловой карте.
+        /// </summary>
+        internal static string ColorTileHeatmap_Description {
+            get {
+                return ResourceManager.GetString("ColorTileHeatmap.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тепловая карта: цвет.
+        /// </summary>
+        internal static string ColorTileHeatmap_DisplayName {
+            get {
+                return ResourceManager.GetString("ColorTileHeatmap.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Прозрачность границы плитки в тепловой карте.
+        /// </summary>
+        internal static string ColorTileHeatmapLineAlpha_Description {
+            get {
+                return ResourceManager.GetString("ColorTileHeatmapLineAlpha.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тепловая карта: прозрачность линии.
+        /// </summary>
+        internal static string ColorTileHeatmapLineAlpha_DisplayName {
+            get {
+                return ResourceManager.GetString("ColorTileHeatmapLineAlpha.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Максимальная прозрачность плитки в тепловой карте.
+        /// </summary>
+        internal static string ColorTileHeatmapMaxAlpha_Description {
+            get {
+                return ResourceManager.GetString("ColorTileHeatmapMaxAlpha.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тепловая карта: максимальная прозрачность плитки.
+        /// </summary>
+        internal static string ColorTileHeatmapMaxAlpha_DisplayName {
+            get {
+                return ResourceManager.GetString("ColorTileHeatmapMaxAlpha.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Минимальная прозрачность плитки в тепловой карте.
+        /// </summary>
+        internal static string ColorTileHeatmapMinAlpha_Description {
+            get {
+                return ResourceManager.GetString("ColorTileHeatmapMinAlpha.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тепловая карта: минимальная прозрачность плитки.
+        /// </summary>
+        internal static string ColorTileHeatmapMinAlpha_DisplayName {
+            get {
+                return ResourceManager.GetString("ColorTileHeatmapMinAlpha.DisplayName", resourceCulture);
             }
         }
         

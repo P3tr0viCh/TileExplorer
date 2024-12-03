@@ -12,12 +12,6 @@ namespace TileExplorer
     {
         public static class Tiles
         {
-            public struct Heatmap
-            {
-                public const byte MinAlphaColor = 10;
-                public const byte MaxAlphaColor = 110;
-            }
-
             public struct CalcResult
             {
                 public int Visited;
@@ -154,13 +148,13 @@ namespace TileExplorer
                 {
                     if (tile.TrackCount == minTrackCount)
                     {
-                        tile.HeatmapValue = Heatmap.MinAlphaColor;
+                        tile.HeatmapValue = AppSettings.Roaming.Default.ColorTileHeatmapMinAlpha;
                     }
                     else
                     {
                         if (tile.TrackCount == maxTrackCount)
                         {
-                            tile.HeatmapValue = Heatmap.MaxAlphaColor;
+                            tile.HeatmapValue = AppSettings.Roaming.Default.ColorTileHeatmapMaxAlpha;
                         }
                         else
                         {
@@ -168,7 +162,7 @@ namespace TileExplorer
 
                             tile.HeatmapValue = Scale(i,
                                 0, trackCounts.Count - 1,
-                                Heatmap.MinAlphaColor, Heatmap.MaxAlphaColor);
+                                AppSettings.Roaming.Default.ColorTileHeatmapMinAlpha, AppSettings.Roaming.Default.ColorTileHeatmapMaxAlpha);
                         }
                     }
 

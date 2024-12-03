@@ -150,41 +150,32 @@
   <data name="ColorChart.DisplayName" xml:space="preserve">
     <value>Цвет сетки</value>
   </data>
-  <data name="ColorChartAxis.Description" xml:space="preserve">
-    <value>Цвет осей</value>
-  </data>
   <data name="ColorChartAxis.DisplayName" xml:space="preserve">
     <value>Цвет осей</value>
-  </data>
-  <data name="ColorChartCursor.Description" xml:space="preserve">
-    <value>Цвет линии отметки</value>
   </data>
   <data name="ColorChartCursor.DisplayName" xml:space="preserve">
     <value>Цвет линии отметки</value>
   </data>
-  <data name="ColorChartGrid.Description" xml:space="preserve">
-    <value>Цвет сетки</value>
-  </data>
   <data name="ColorChartGrid.DisplayName" xml:space="preserve">
     <value>Цвет сетки</value>
-  </data>
-  <data name="ColorChartSerial.Description" xml:space="preserve">
-    <value>Цвет графика</value>
   </data>
   <data name="ColorChartSerial.DisplayName" xml:space="preserve">
     <value>Цвет графика</value>
   </data>
-  <data name="ColorChartSerialAlpha.Description" xml:space="preserve">
-    <value>Прозрачность графика</value>
-  </data>
   <data name="ColorChartSerialAlpha.DisplayName" xml:space="preserve">
-    <value>Прозрачность графика</value>
+    <value>Цвет графика: прозрачность</value>
   </data>
   <data name="ColorChartText.Description" xml:space="preserve">
-    <value>Цвет значений</value>
+    <value>Цвет текста значений</value>
   </data>
   <data name="ColorChartText.DisplayName" xml:space="preserve">
     <value>Цвет текста</value>
+  </data>
+  <data name="ColorChartTracksByYearSerial.DisplayName" xml:space="preserve">
+    <value>Треки за год: цвет графика</value>
+  </data>
+  <data name="ColorChartTracksByYearSerialAlpha.DisplayName" xml:space="preserve">
+    <value>Треки за год: прозрачность графика</value>
   </data>
   <data name="ColorMarkerFill.Description" xml:space="preserve">
     <value>Цвет фона маркера</value>
@@ -281,6 +272,30 @@
   </data>
   <data name="ColorTileClusterLineAlpha.DisplayName" xml:space="preserve">
     <value>Кластер: прозрачность линии</value>
+  </data>
+  <data name="ColorTileHeatmap.Description" xml:space="preserve">
+    <value>Цвет плитки в тепловой карте</value>
+  </data>
+  <data name="ColorTileHeatmap.DisplayName" xml:space="preserve">
+    <value>Тепловая карта: цвет</value>
+  </data>
+  <data name="ColorTileHeatmapLineAlpha.Description" xml:space="preserve">
+    <value>Прозрачность границы плитки в тепловой карте</value>
+  </data>
+  <data name="ColorTileHeatmapLineAlpha.DisplayName" xml:space="preserve">
+    <value>Тепловая карта: прозрачность линии</value>
+  </data>
+  <data name="ColorTileHeatmapMaxAlpha.Description" xml:space="preserve">
+    <value>Максимальная прозрачность плитки в тепловой карте</value>
+  </data>
+  <data name="ColorTileHeatmapMaxAlpha.DisplayName" xml:space="preserve">
+    <value>Тепловая карта: максимальная прозрачность плитки</value>
+  </data>
+  <data name="ColorTileHeatmapMinAlpha.Description" xml:space="preserve">
+    <value>Минимальная прозрачность плитки в тепловой карте</value>
+  </data>
+  <data name="ColorTileHeatmapMinAlpha.DisplayName" xml:space="preserve">
+    <value>Тепловая карта: минимальная прозрачность плитки</value>
   </data>
   <data name="ColorTileMaxCluster.Description" xml:space="preserve">
     <value>Цвет плиток максимального кластера</value>

@@ -63,8 +63,8 @@ namespace TileExplorer
             {
                 if (Heatmap)
                 {
-                    colorFill = Color.FromArgb(Model.HeatmapValue, Color.Red);
-                    colorStroke = Color.FromArgb(AppSettings.Roaming.Default.ColorTileVisitedAlpha, Color.Red);
+                    colorFill = Color.FromArgb(Model.HeatmapValue, AppSettings.Roaming.Default.ColorTileHeatmap);
+                    colorStroke = Color.FromArgb(AppSettings.Roaming.Default.ColorTileHeatmapLineAlpha, AppSettings.Roaming.Default.ColorTileHeatmap);
                 }
                 else
                 {

@@ -25,11 +25,13 @@ namespace TileExplorer
                                                        (1, 0), (1, 1), (1, 2), (1, 3),
                                                        (2, 0), (2, 1), (2, 2), (2, 3) };
 
-        private Chart[] Charts { get; set; } = new Chart[12];
-        private Title[] ChartTitleMonths { get; set; } = new Title[12];
-        private Title[] ChartTitleCounts { get; set; } = new Title[12];
-        private ChartArea[] ChartAreas { get; set; } = new ChartArea[12];
-        private Series[] ChartSerial { get; set; } = new Series[12];
+        private const int AxisYInterval = 10;
+
+        private Chart[] Charts { get; } = new Chart[12];
+        private Title[] ChartTitleMonths { get; } = new Title[12];
+        private Title[] ChartTitleCounts { get; } = new Title[12];
+        private ChartArea[] ChartAreas { get; } = new ChartArea[12];
+        private Series[] ChartSerial { get; } = new Series[12];
 
         public int Year { get; private set; }
 
@@ -93,7 +95,7 @@ namespace TileExplorer
                 ChartAreas[i].AxisX.LabelStyle.Font = new Font("Segoe UI", 10F);
                 ChartAreas[i].AxisY.LabelStyle.Font = new Font("Segoe UI", 10F);
                 ChartAreas[i].AxisX.Interval = 1D;
-                ChartAreas[i].AxisY.Interval = 10;
+                ChartAreas[i].AxisY.Interval = AxisYInterval;
                 ChartAreas[i].AxisX.IntervalAutoMode = IntervalAutoMode.VariableCount;
                 ChartAreas[i].AxisX.IntervalOffset = 1D;
                 ChartAreas[i].AxisX.IntervalOffsetType = DateTimeIntervalType.Days;
@@ -191,8 +193,8 @@ namespace TileExplorer
 
                 ChartSerial[i].LabelForeColor = AppSettings.Roaming.Default.ColorChartText;
 
-                ChartSerial[i].Color = Color.FromArgb(AppSettings.Roaming.Default.ColorChartSerialAlpha,
-                    AppSettings.Roaming.Default.ColorChartSerial);
+                ChartSerial[i].Color = Color.FromArgb(AppSettings.Roaming.Default.ColorChartTracksByYearSerialAlpha,
+                    AppSettings.Roaming.Default.ColorChartTracksByYearSerial);
             }
         }
 
@@ -210,16 +212,18 @@ namespace TileExplorer
             {
                 Debug.WriteLine($"year: {Year}");
 
+                selfChange = true;
+
+                cboxYear.ComboBox.DataSource = MainForm.Years;
+
+                cboxYear.SelectedItem = Year;
+
+                selfChange = false;
+
+                var maxDistance = 0D;
+
                 for (var i = 0; i < 12; i++)
                 {
-                    selfChange = true;
-
-                    cboxYear.ComboBox.DataSource = MainForm.Years;
-
-                    cboxYear.SelectedItem = Year;
-
-                    selfChange = false;
-
                     ChartSerial[i].Points.Clear();
 
                     var month = i + 1;
@@ -230,6 +234,7 @@ namespace TileExplorer
                     ChartAreas[i].AxisX.Maximum = new DateTime(Year, month, daysInMonth).AddDays(1).ToOADate();
 
                     DateTime date;
+
                     double dateOA;
 
                     for (var day = 1; day <= daysInMonth; day++)
@@ -253,8 +258,6 @@ namespace TileExplorer
 
                     if (distances.Count > 0)
                     {
-                        var maxDistance = 0D;
-
                         var allDistances = 0D;
 
                         foreach (var distance in distances)
@@ -267,21 +270,22 @@ namespace TileExplorer
                             ChartSerial[i].Points[distance.Day - 1].YValues[0] = distance.Distance / 1000;
                             ChartSerial[i].Points[distance.Day - 1].IsEmpty = false;
 
-                            allDistances += distance.Distance;   
+                            allDistances += distance.Distance;
                         }
-
-                        ChartAreas[i].AxisY.Maximum = Utils.DoubleFloorToEpsilon(maxDistance / 1000, ChartAreas[i].AxisY.Interval) + ChartAreas[i].AxisY.Interval;
 
                         allDistances /= 1000;
 
                         counts = string.Format(Resources.TextChartTracksByYearCounts, distances.Count, allDistances);
                     }
-                    else
-                    {
-                        ChartAreas[i].AxisY.Maximum = ChartAreas[i].AxisY.Interval;
-                    }
 
                     ChartTitleCounts[i].Text = counts;
+                }
+
+                maxDistance = Utils.DoubleFloorToEpsilon(maxDistance / 1000, AxisYInterval) + AxisYInterval;
+
+                for (var i = 0; i < 12; i++)
+                {
+                    ChartAreas[i].AxisY.Maximum = maxDistance;
                 }
             }
             catch (TaskCanceledException e)

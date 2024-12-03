@@ -76,6 +76,13 @@ namespace TileExplorer
 
             public byte ColorTileTrackSelectedLineAlpha { get; set; } = 88;
 
+            public Color ColorTileHeatmap { get; set; } = Color.Red;
+
+            public byte ColorTileHeatmapLineAlpha { get; set; } = 25;
+
+            public byte ColorTileHeatmapMinAlpha { get; set; } = 10;
+            public byte ColorTileHeatmapMaxAlpha { get; set; } = 130;
+
             // ------------------------------------------------------------------------------------------------------------
             public Color ColorTrack { get; set; } = Color.Red;
 
@@ -124,8 +131,10 @@ namespace TileExplorer
 
             // ------------------------------------------------------------------------------------------------------------
             public Color ColorChartSerial { get; set; } = Color.FromArgb(217, 217, 217);
-
             public byte ColorChartSerialAlpha { get; set; } = 192;
+
+            public Color ColorChartTracksByYearSerial { get; set; } = Color.Black;
+            public byte ColorChartTracksByYearSerialAlpha { get; set; } = 192;
 
             public Color ColorChartCursor { get; set; } = Color.Black;
 

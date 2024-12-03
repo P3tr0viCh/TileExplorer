@@ -189,6 +189,26 @@ namespace TileExplorer
         [LocalizedAttribute.Description("ColorTileTrackSelectedLineAlpha.Description", Resource)]
         public byte ColorTileTrackSelectedLineAlpha { get => Roaming.Default.ColorTileTrackSelectedLineAlpha; set => Roaming.Default.ColorTileTrackSelectedLineAlpha = value; }
 
+        [LocalizedAttribute.Category("Category.DesignTiles", Resource)]
+        [LocalizedAttribute.DisplayName("ColorTileHeatmap.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorTileHeatmap.Description", Resource)]
+        public Color ColorTileHeatmap { get => Roaming.Default.ColorTileHeatmap; set => Roaming.Default.ColorTileHeatmap = value; }
+
+        [LocalizedAttribute.Category("Category.DesignTiles", Resource)]
+        [LocalizedAttribute.DisplayName("ColorTileHeatmapLineAlpha.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorTileHeatmapLineAlpha.Description", Resource)]
+        public byte ColorTileHeatmapLineAlpha { get => Roaming.Default.ColorTileHeatmapLineAlpha; set => Roaming.Default.ColorTileHeatmapLineAlpha = value; }
+
+        [LocalizedAttribute.Category("Category.DesignTiles", Resource)]
+        [LocalizedAttribute.DisplayName("ColorTileHeatmapMinAlpha.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorTileHeatmapMinAlpha.Description", Resource)]
+        public byte ColorTileHeatmapMinAlpha { get => Roaming.Default.ColorTileHeatmapMinAlpha; set => Roaming.Default.ColorTileHeatmapMinAlpha = value; }
+
+        [LocalizedAttribute.Category("Category.DesignTiles", Resource)]
+        [LocalizedAttribute.DisplayName("ColorTileHeatmapMaxAlpha.DisplayName", Resource)]
+        [LocalizedAttribute.Description("ColorTileHeatmapMaxAlpha.Description", Resource)]
+        public byte ColorTileHeatmapMaxAlpha { get => Roaming.Default.ColorTileHeatmapMaxAlpha; set => Roaming.Default.ColorTileHeatmapMaxAlpha = value; }
+
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedAttribute.Category("Category.DesignTracks", Resource)]
         [LocalizedAttribute.DisplayName("ColorTrack.DisplayName", Resource)]
@@ -301,27 +321,30 @@ namespace TileExplorer
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedAttribute.Category("Category.Chart", Resource)]
         [LocalizedAttribute.DisplayName("ColorChartSerial.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartSerial.Description", Resource)]
         public Color ColorChartSerial { get => Roaming.Default.ColorChartSerial; set => Roaming.Default.ColorChartSerial = value; }
 
         [LocalizedAttribute.Category("Category.Chart", Resource)]
         [LocalizedAttribute.DisplayName("ColorChartSerialAlpha.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartSerialAlpha.Description", Resource)]
         public byte ColorChartSerialAlpha { get => Roaming.Default.ColorChartSerialAlpha; set => Roaming.Default.ColorChartSerialAlpha = value; }
 
         [LocalizedAttribute.Category("Category.Chart", Resource)]
+        [LocalizedAttribute.DisplayName("ColorChartTracksByYearSerial.DisplayName", Resource)]
+        public Color ColorChartTracksByYearSerial { get => Roaming.Default.ColorChartTracksByYearSerial; set => Roaming.Default.ColorChartTracksByYearSerial = value; }
+
+        [LocalizedAttribute.Category("Category.Chart", Resource)]
+        [LocalizedAttribute.DisplayName("ColorChartTracksByYearSerialAlpha.DisplayName", Resource)]
+        public byte ColorChartTracksByYearSerialAlpha { get => Roaming.Default.ColorChartTracksByYearSerialAlpha; set => Roaming.Default.ColorChartTracksByYearSerialAlpha = value; }
+
+        [LocalizedAttribute.Category("Category.Chart", Resource)]
         [LocalizedAttribute.DisplayName("ColorChartCursor.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartCursor.Description", Resource)]
         public Color ColorChartCursor { get => Roaming.Default.ColorChartCursor; set => Roaming.Default.ColorChartCursor = value; }
 
         [LocalizedAttribute.Category("Category.Chart", Resource)]
         [LocalizedAttribute.DisplayName("ColorChartAxis.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartAxis.Description", Resource)]
         public Color ColorChartAxis { get => Roaming.Default.ColorChartAxis; set => Roaming.Default.ColorChartAxis = value; }
 
         [LocalizedAttribute.Category("Category.Chart", Resource)]
         [LocalizedAttribute.DisplayName("ColorChartGrid.DisplayName", Resource)]
-        [LocalizedAttribute.Description("ColorChartGrid.Description", Resource)]
         public Color ColorChartGrid { get => Roaming.Default.ColorChartGrid; set => Roaming.Default.ColorChartGrid = value; }
 
         [LocalizedAttribute.Category("Category.Chart", Resource)]
