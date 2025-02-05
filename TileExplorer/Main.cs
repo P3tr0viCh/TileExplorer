@@ -1067,7 +1067,7 @@ namespace TileExplorer
 
         private bool SetDatabaseFileName()
         {
-            var directiryDatabase = AppSettings.Local.Default.DirectoryDatabase;
+            var directoryDatabase = AppSettings.Local.Default.DirectoryDatabase;
 
             var defaultDirectoryDatabase =
 #if DEBUG
@@ -1075,16 +1075,16 @@ namespace TileExplorer
 #else
                 Files.AppDataRoamingDirectory();
 #endif
-            if (directiryDatabase.IsEmpty())
+            if (directoryDatabase.IsEmpty())
             {
-                directiryDatabase = defaultDirectoryDatabase;
+                directoryDatabase = defaultDirectoryDatabase;
             }
 
-            if (!Directory.Exists(directiryDatabase))
+            if (!Directory.Exists(directoryDatabase))
             {
-                DebugWrite.Error("database directory not exists: " + directiryDatabase);
+                DebugWrite.Error("database directory not exists: " + directoryDatabase);
 
-                if (Msg.Question(Resources.ErrorDatabaseDirectoryNotExists, directiryDatabase, defaultDirectoryDatabase))
+                if (Msg.Question(Resources.ErrorDatabaseDirectoryNotExists, directoryDatabase, defaultDirectoryDatabase))
                 {
                     AppSettings.Local.Default.DirectoryDatabase = string.Empty;
 
@@ -1094,7 +1094,7 @@ namespace TileExplorer
                 return false;
             }
 
-            var databaseFileName = Path.Combine(directiryDatabase, Files.DatabaseFileName());
+            var databaseFileName = Path.Combine(directoryDatabase, Files.DatabaseFileName());
 
             DebugWrite.Line("database: " + databaseFileName);
 

@@ -11,7 +11,6 @@ using System.Data.SQLite;
 using System.IO;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
-using static P3tr0viCh.Utils.DataBaseConnection;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
