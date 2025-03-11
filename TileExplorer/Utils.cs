@@ -8,7 +8,7 @@ namespace TileExplorer
     {
         public static string AssemblyNameAndVersion()
         {
-            var assemblyDecorator = new Misc.AssemblyDecorator();
+            var assemblyDecorator = new AssemblyDecorator();
 
             return $"{assemblyDecorator.Assembly.GetName().Name}/{assemblyDecorator.VersionString()}";
         }
@@ -69,7 +69,7 @@ namespace TileExplorer
         public static string[] GetMonthNames()
         {
             var result = new string[12];
-            
+
             for (var month = 0; month < 12; month++)
             {
                 result[month] = GetMonthName(month + 1);

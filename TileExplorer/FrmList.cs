@@ -18,7 +18,7 @@ namespace TileExplorer
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        public ChildFormType FormType { get; set; }
+        public ChildFormType FormType { get; private set; }
 
         private object data;
         public object Value => data;

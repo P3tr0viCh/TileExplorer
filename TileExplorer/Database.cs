@@ -15,20 +15,13 @@ using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
-    public partial class Database
+    public partial class Database : DefaultInstance<Database>
     {
-        private static readonly Database defaultInstance = new Database();
-
-        public static Database Default => defaultInstance;
-
         private string fileName;
 
         public string FileName
         {
-            get
-            {
-                return fileName;
-            }
+            get => fileName;
             set
             {
                 fileName = value;

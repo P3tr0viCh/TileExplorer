@@ -1364,7 +1364,7 @@ namespace TileExplorer
         {
             var result = await UpdateApp.Default.UpdateAsync();
 
-            if (result.IsError)
+            if (result.HasError)
             {
                 Msg.Error(Resources.AppUpdateErrorInProgress, result.Message);
             }

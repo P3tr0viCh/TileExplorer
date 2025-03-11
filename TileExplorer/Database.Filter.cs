@@ -7,12 +7,8 @@ namespace TileExplorer
 {
     public partial class Database
     {
-        public class Filter
+        public class Filter : DefaultInstance<Filter>
         {
-            private static readonly Filter defaultInstance = new Filter();
-
-            public static Filter Default => defaultInstance;
-
             public delegate void Changed();
 
             public event Changed OnChanged;
@@ -28,10 +24,7 @@ namespace TileExplorer
             private FilterType type = FilterType.None;
             public FilterType Type
             {
-                get
-                {
-                    return type;
-                }
+                get => type;
                 set
                 {
                     if (type == value) return;
@@ -45,10 +38,7 @@ namespace TileExplorer
             private DateTime day = default;
             public DateTime Day
             {
-                get
-                {
-                    return day;
-                }
+                get => day;
                 set
                 {
                     if (day == value) return;
@@ -62,10 +52,7 @@ namespace TileExplorer
             private DateTime dateFrom = default;
             public DateTime DateFrom
             {
-                get
-                {
-                    return dateFrom;
-                }
+                get => dateFrom;
                 set
                 {
                     if (dateFrom == value) return;
@@ -79,10 +66,7 @@ namespace TileExplorer
             private DateTime dateTo = default;
             public DateTime DateTo
             {
-                get
-                {
-                    return dateTo;
-                }
+                get => dateTo;
                 set
                 {
                     if (dateTo == value) return;
@@ -106,10 +90,7 @@ namespace TileExplorer
             private int[] years = default;
             public int[] Years
             {
-                get
-                {
-                    return years;
-                }
+                get => years;
                 set
                 {
                     if (years == default && value == default) return;

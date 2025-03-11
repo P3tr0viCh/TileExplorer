@@ -1,6 +1,5 @@
 ﻿using GMap.NET;
 using P3tr0viCh.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using static TileExplorer.Database.Models;
@@ -139,10 +138,10 @@ namespace TileExplorer
 
                 trackCounts.Sort();
 
-                DebugWrite.Line($"{minTrackCount} — {maxTrackCount}");
-                DebugWrite.Line($"{trackCounts.Count}");
+                // DebugWrite.Line($"{minTrackCount} — {maxTrackCount}");
+                // DebugWrite.Line($"{trackCounts.Count}");
 
-                trackCounts.ForEach(t => DebugWrite.Line(t.ToString()));
+                // trackCounts.ForEach(t => DebugWrite.Line(t.ToString()));
 
                 foreach (var tile in tiles)
                 {
@@ -166,7 +165,7 @@ namespace TileExplorer
                         }
                     }
 
-                    DebugWrite.Line($"{tile.TrackCount}: {tile.HeatmapValue}");
+                    //DebugWrite.Line($"{tile.TrackCount}: {tile.HeatmapValue}");
                 }
 
                 return result;

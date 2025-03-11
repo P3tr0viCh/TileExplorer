@@ -10,20 +10,17 @@ using TileExplorer.Properties;
 
 namespace TileExplorer
 {
-    internal class UpdateApp
+    internal class UpdateApp : DefaultInstance<UpdateApp>
     {
         private const string GitHubOwner = "P3tr0viCh";
         private const string GitHubRepo = "TileExplorer";
 
-        public class UpdateResult
+        public struct UpdateResult
         {
-            public bool IsError = false;
-            public bool CanRestart = false;
+            public bool HasError;
+            public bool CanRestart;
             public string Message;
         }
-
-        private static readonly UpdateApp instance = new UpdateApp();
-        public static UpdateApp Default => instance;
 
         public event ProgramStatus<UpdateStatus>.StatusChangedEventHandler StatusChanged;
 
@@ -60,7 +57,7 @@ namespace TileExplorer
 
         public async Task<UpdateResult> UpdateAsync()
         {
-            var result = new UpdateResult();
+            var result = new UpdateResult() { HasError = false, CanRestart = false };
 
             if (AppUpdate != null)
             {
@@ -91,7 +88,6 @@ namespace TileExplorer
                     result.Message = Resources.AppUpdateInfoAlreadyLatest;
 
                     return result;
-
                 }
 
                 await AppUpdate.UpdateAsync();
@@ -106,21 +102,21 @@ namespace TileExplorer
                     AppUpdate.Versions.Local.ToString(),
                     Path.GetFileName(AppUpdate.Config.LocalFile));
 
-                result.IsError = true;
+                result.HasError = true;
                 result.Message = string.Format(Resources.AppUpdateErrorFileWrongLocation, path);
             }
             catch (HttpRequestException e)
             {
                 DebugWrite.Error(e);
 
-                result.IsError = true;
+                result.HasError = true;
                 result.Message = e.Message;
             }
             catch (Exception e)
             {
                 DebugWrite.Error(e);
 
-                result.IsError = true;
+                result.HasError = true;
                 result.Message = e.Message;
             }
             finally
