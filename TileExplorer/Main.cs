@@ -1301,7 +1301,8 @@ namespace TileExplorer
                     frm.BringToFront();
                     return;
                 }
-            };
+            }
+            ;
 
             FrmList.ShowFrm(this, ChildFormType.TileInfo, tile);
         }
@@ -1460,7 +1461,8 @@ namespace TileExplorer
                     frm.BringToFront();
                     return;
                 }
-            };
+            }
+            ;
 
             FrmChartTrackEle.ShowFrm(this, value);
         }
@@ -1494,7 +1496,22 @@ namespace TileExplorer
 
         private void MiMainDataChartTracks_Click(object sender, EventArgs e)
         {
-            Utils.Forms.OpenChartTracksByYear(this, DateTime.Now.Year);
+            if (Years.Count == 0)
+            {
+                return;
+            }
+
+            var frmList = Utils.Forms.GetChildForms<FrmChartTracksByYear>(ChildFormType.ChartTracksByYear);
+
+            var year = Years.Last();
+
+            if (frmList != null && frmList.Count == 1 && frmList.First().Year == year)
+            {
+                frmList.First().Close();
+                return;
+            }
+
+            Utils.Forms.OpenChartTracksByYear(this, year);
         }
 
         private void MiMainTilesHeatmap_Click(object sender, EventArgs e)

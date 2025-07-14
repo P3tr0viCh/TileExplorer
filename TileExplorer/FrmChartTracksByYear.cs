@@ -204,6 +204,11 @@ namespace TileExplorer
 
         public async Task UpdateDataAsync()
         {
+            if (MainForm.Years.Count == 0)
+            {
+                return;
+            }
+
             ctsChartTracksByYear.Start();
 
             var status = MainForm.ProgramStatus.Start(Status.LoadData);
@@ -215,6 +220,11 @@ namespace TileExplorer
                 selfChange = true;
 
                 cboxYear.ComboBox.DataSource = MainForm.Years;
+
+                if (!MainForm.Years.Contains(Year))
+                {
+                    Year = MainForm.Years.Last();
+                }
 
                 cboxYear.SelectedItem = Year;
 
@@ -252,8 +262,6 @@ namespace TileExplorer
                     var distances = await Database.Default.ListLoadAsync<Database.Models.TracksDistanceByMonth>(
                         new { year = Year, month });
 
-                    DebugWrite.Line(string.Join(", ", distances.Select(d => d.Distance)));
-
                     var counts = string.Empty;
 
                     if (distances.Count > 0)
@@ -279,6 +287,8 @@ namespace TileExplorer
                     }
 
                     ChartTitleCounts[i].Text = counts;
+
+                    DebugWrite.Line($"count: {distances.Count}, distances: {string.Join(", ", distances.Select(d => d.Distance))}");
                 }
 
                 maxDistance = Utils.DoubleFloorToEpsilon(maxDistance / 1000, AxisYInterval) + AxisYInterval;
