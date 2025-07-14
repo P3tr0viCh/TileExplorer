@@ -342,6 +342,8 @@ namespace TileExplorer
                         if (tile.Id == Sql.NewId)
                         {
                             tile.Id = await connection.InsertAsync(tile, transaction);
+
+                            track.NewTilesCount++;
                         }
 
                         await connection.InsertAsync(new TracksTiles()
