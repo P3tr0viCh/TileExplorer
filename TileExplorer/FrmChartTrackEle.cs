@@ -146,7 +146,10 @@ namespace TileExplorer
                         maxEleDistance = distance;
                     }
 
-                    ChartSerial.Points.AddXY(distance, point.Ele);
+                    ChartSerial.Points.Add(new DataPoint(distance, point.Ele)
+                    {
+                        Tag = point
+                    });
                 }
 
                 ChartArea.AxisY.Minimum = Utils.DoubleFloorToEpsilon(minEle, ChartArea.AxisY.Interval);
@@ -248,32 +251,14 @@ namespace TileExplorer
 
             var ele = Utils.LinearInterpolate(distanceFromStart, dist1, ele1, dist2, ele2);
 
-            var distance = 0D;
-            var dateTime = default(DateTime);
-            var dateTimeSpan = default(TimeSpan);
+            var trackPoint = (TrackPoint)pointPrev.Tag;
 
-            CursorPoint = default;
-
-            foreach (var trackPoint in Track.TrackPoints)
-            {
-                distance += trackPoint.Distance;
-
-                if (distance >= distanceFromStart)
-                {
-                    CursorPoint = new PointLatLng(trackPoint.Lat, trackPoint.Lng);
-
-                    dateTime = trackPoint.DateTime;
-
-                    dateTimeSpan = dateTime - Track.DateTimeStart;
-
-                    break;
-                }
-            }
+            CursorPoint = new PointLatLng(trackPoint.Lat, trackPoint.Lng);
 
             statusStripPresenter.Ele = ele;
-            statusStripPresenter.Distance = distance;
-            statusStripPresenter.DateTime = dateTime;
-            statusStripPresenter.DateTimeSpan = dateTimeSpan;
+            statusStripPresenter.Distance = distanceFromStart;
+            statusStripPresenter.DateTime = trackPoint.DateTime;
+            statusStripPresenter.DateTimeSpan = trackPoint.DateTime - Track.DateTimeStart;
 
             MainForm?.ShowMarkerPosition(this, CursorPoint);
         }
@@ -360,7 +345,7 @@ namespace TileExplorer
                     break;
                 }
 
-                selected.Points.Add(trackPoint.Point);
+                selected.Points.Add(trackPoint);
             }
 
             if (selected.Points.Count < 2)

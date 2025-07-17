@@ -256,25 +256,12 @@ namespace TileExplorer
             }
 
             [Table("tracks_points")]
-            public class TrackPoint : BaseId
+            public class TrackPoint : Gpx.Point, IBaseId
             {
-                private readonly Gpx.Point point = new Gpx.Point();
-
-                [Write(false)]
-                public Gpx.Point Point { get => point; set => point.Assign(value); }
+                [Key]
+                public long Id { get; set; } = 0;
 
                 public long TrackId { get; set; } = 0;
-
-                public int Num { get => point.Num; set => point.Num = value; }
-
-                public DateTime DateTime { get => point.DateTime; set => point.DateTime = value; }
-
-                public double Lat { get => point.Lat; set => point.Lat = value; }
-                public double Lng { get => point.Lng; set => point.Lng = value; }
-
-                public float Ele { get => point.Ele; set => point.Ele = value; }
-
-                public double Distance { get => point.Distance; set => point.Distance = value; }
 
                 public bool ShowOnMap { get; set; }
             }

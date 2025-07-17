@@ -58,7 +58,7 @@ namespace TileExplorer
                 {
                     if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
-                    DebugWrite.Line(file.ToString());
+                    DebugWrite.Line(file);
                 }
             }, ctsCheckDirectoryTracks.Token);
 #endif
@@ -112,7 +112,7 @@ namespace TileExplorer
 
             foreach (var file in newFiles)
             {
-                DebugWrite.Line(file.ToString());
+                DebugWrite.Line(file);
             }
 #endif
         }

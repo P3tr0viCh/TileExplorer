@@ -219,7 +219,7 @@ namespace TileExplorer
 
             GMap.NET.MapProviders.GMapProvider.UserAgent = Utils.AssemblyNameAndVersion();
 
-            DebugWrite.Line("useragent: " + GMap.NET.MapProviders.GMapProvider.UserAgent);
+            DebugWrite.Line($"useragent: {GMap.NET.MapProviders.GMapProvider.UserAgent}");
 
             gMapControl.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
             gMapControl.MapProvider.RefererUrl = Const.MapRefererUrl;
@@ -1082,7 +1082,7 @@ namespace TileExplorer
 
             if (!Directory.Exists(directoryDatabase))
             {
-                DebugWrite.Error("database directory not exists: " + directoryDatabase);
+                DebugWrite.Error($"database directory not exists: {directoryDatabase}");
 
                 if (Msg.Question(Resources.ErrorDatabaseDirectoryNotExists, directoryDatabase, defaultDirectoryDatabase))
                 {
@@ -1096,7 +1096,7 @@ namespace TileExplorer
 
             var databaseFileName = Path.Combine(directoryDatabase, Files.DatabaseFileName());
 
-            DebugWrite.Line("database: " + databaseFileName);
+            DebugWrite.Line($"database: {databaseFileName}");
 
             Database.Default.FileName = databaseFileName;
 
