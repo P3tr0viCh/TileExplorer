@@ -289,21 +289,31 @@ namespace TileExplorer
                 [DisplayName("Треки")]
                 public int Count { get; set; } = 0;
 
-                [DisplayName("Расстояние")]
-                public double DistanceSum { get; set; } = 0;
-
                 [DisplayName("Время в днях")]
                 public double DurationSum { get; set; } = 0;
 
                 [DisplayName("Время")]
                 public string DurationSumAsString => TimeSpan.FromDays(DurationSum).ToHoursMinutesString();
 
+                [DisplayName("Расстояние")]
+                public double DistanceSum { get; set; } = 0;
+
                 [DisplayName("50-")]
-                public double DistanceStep0 { get; set; } = 0;
+                public int DistanceStep0 { get; set; } = 0;
                 [DisplayName("50+")]
-                public double DistanceStep1 { get; set; } = 0;
+                public int DistanceStep1 { get; set; } = 0;
                 [DisplayName("100+")]
-                public double DistanceStep2 { get; set; } = 0;
+                public int DistanceStep2 { get; set; } = 0;
+
+                [DisplayName("Подъём")]
+                public double EleAscentSum { get; set; } = 0;
+
+                [DisplayName("500-")]
+                public int EleAscentStep0 { get; set; } = 0;
+                [DisplayName("500+")]
+                public int EleAscentStep1 { get; set; } = 0;
+                [DisplayName("1000+")]
+                public int EleAscentStep2 { get; set; } = 0;
             }
 
             public class ResultEquipments : BaseId

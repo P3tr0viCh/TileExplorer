@@ -154,6 +154,12 @@ namespace TileExplorer
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsResultYears);
 
                     dataGridView.Columns[nameof(ResultYears.DurationSum)].Visible = false;
+                    dataGridView.Columns[nameof(ResultYears.DurationSumAsString)].Visible = true;
+                    dataGridView.Columns[nameof(ResultYears.DistanceSum)].Visible = true;
+
+                    dataGridView.Columns[nameof(ResultYears.Year)].DisplayIndex = 0;
+                    dataGridView.Columns[nameof(ResultYears.Count)].DisplayIndex = 1;
+                    dataGridView.Columns[nameof(ResultYears.DurationSumAsString)].DisplayIndex = 2;
 
                     columnFormattingIndex = new int[1];
                     columnFormattingIndex[0] = dataGridView.Columns[nameof(ResultYears.Year)].Index;
@@ -302,16 +308,27 @@ namespace TileExplorer
                         DataGridViewCellStyles.Year;
                     dataGridView.Columns[nameof(ResultYears.Count)].DefaultCellStyle =
                         DataGridViewCellStyles.Count;
-                    dataGridView.Columns[nameof(ResultYears.DistanceSum)].DefaultCellStyle =
-                        DataGridViewCellStyles.DistanceSum;
+
                     dataGridView.Columns[nameof(ResultYears.DurationSumAsString)].DefaultCellStyle =
                         DataGridViewCellStyles.DurationAsString;
+
+                    dataGridView.Columns[nameof(ResultYears.DistanceSum)].DefaultCellStyle =
+                        DataGridViewCellStyles.DistanceSum;
                     dataGridView.Columns[nameof(ResultYears.DistanceStep0)].DefaultCellStyle =
                         DataGridViewCellStyles.DistanceStep;
                     dataGridView.Columns[nameof(ResultYears.DistanceStep1)].DefaultCellStyle =
                         DataGridViewCellStyles.DistanceStep;
                     dataGridView.Columns[nameof(ResultYears.DistanceStep2)].DefaultCellStyle =
                         DataGridViewCellStyles.DistanceStep;
+
+                    dataGridView.Columns[nameof(ResultYears.EleAscentSum)].DefaultCellStyle =
+                        DataGridViewCellStyles.EleAscentSum;
+                    dataGridView.Columns[nameof(ResultYears.EleAscentStep0)].DefaultCellStyle =
+                        DataGridViewCellStyles.EleAscentStep;
+                    dataGridView.Columns[nameof(ResultYears.EleAscentStep1)].DefaultCellStyle =
+                        DataGridViewCellStyles.EleAscentStep;
+                    dataGridView.Columns[nameof(ResultYears.EleAscentStep2)].DefaultCellStyle =
+                        DataGridViewCellStyles.EleAscentStep;
 
                     break;
                 case ChildFormType.ResultEquipments:

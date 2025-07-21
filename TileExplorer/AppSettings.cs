@@ -272,6 +272,11 @@ namespace TileExplorer
         public string FormatEleAscent { get => Roaming.Default.FormatEleAscent; set => Roaming.Default.FormatEleAscent = value; }
 
         [LocalizedAttribute.Category("Category.Format", Resource)]
+        [LocalizedAttribute.DisplayName("FormatEleAscent2.DisplayName", Resource)]
+        [LocalizedAttribute.Description("FormatEleAscent2.Description", Resource)]
+        public string FormatEleAscent2 { get => Roaming.Default.FormatEleAscent2; set => Roaming.Default.FormatEleAscent2 = value; }
+
+        [LocalizedAttribute.Category("Category.Format", Resource)]
         [LocalizedAttribute.DisplayName("FormatLatLng.DisplayName", Resource)]
         [LocalizedAttribute.Description("FormatLatLng.Description", Resource)]
         public string FormatLatLng { get => Roaming.Default.FormatLatLng; set => Roaming.Default.FormatLatLng = value; }

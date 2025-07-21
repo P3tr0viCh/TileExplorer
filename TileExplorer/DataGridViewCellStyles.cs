@@ -35,6 +35,16 @@ namespace TileExplorer
             Alignment = DataGridViewContentAlignment.TopRight,
         };
 
+        public static readonly DataGridViewCellStyle EleAscentSum = new DataGridViewCellStyle()
+        {
+            Alignment = DataGridViewContentAlignment.TopRight,
+        };
+
+        public static readonly DataGridViewCellStyle EleAscentStep = new DataGridViewCellStyle()
+        {
+            Alignment = DataGridViewContentAlignment.TopRight,
+        };
+
         public static readonly DataGridViewCellStyle EleAscent = new DataGridViewCellStyle()
         {
             Alignment = DataGridViewContentAlignment.TopRight,
@@ -62,9 +72,9 @@ namespace TileExplorer
         {
             Distance.Format = AppSettings.Roaming.Default.FormatDistance;
             DistanceSum.Format = AppSettings.Roaming.Default.FormatDistance2;
-            DistanceStep.Format = AppSettings.Roaming.Default.FormatDistance2;
 
             EleAscent.Format = AppSettings.Roaming.Default.FormatEleAscent;
+            EleAscentSum.Format = AppSettings.Roaming.Default.FormatEleAscent2;
 
             LatLng.Format = AppSettings.Roaming.Default.FormatLatLng;
 

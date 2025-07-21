@@ -1051,6 +1051,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Формат подъёмов (округлённое значение).
+        /// </summary>
+        internal static string FormatEleAscent2_Description {
+            get {
+                return ResourceManager.GetString("FormatEleAscent2.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Подъём (м).
+        /// </summary>
+        internal static string FormatEleAscent2_DisplayName {
+            get {
+                return ResourceManager.GetString("FormatEleAscent2.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Формат координат.
         /// </summary>
         internal static string FormatLatLng_Description {
