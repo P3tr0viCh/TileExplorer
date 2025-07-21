@@ -67,34 +67,7 @@ namespace TileExplorer
             {
                 var result = await Task.Factory.StartNew(() =>
                 {
-                    var track = new Track();
-
-                    DebugWrite.Line(path);
-
-                    track.Gpx.OpenFromFile(path);
-
-                    DebugWrite.Line("xml loaded");
-
-                    track.TrackPoints = new List<TrackPoint>();
-
-                    foreach (var point in track.Gpx.Points)
-                    {
-                        track.TrackPoints.Add(new TrackPoint()
-                        {
-                            Num = point.Num,
-
-                            Lat = point.Lat,
-                            Lng = point.Lng,
-
-                            DateTime = point.DateTime,
-
-                            Ele = point.Ele,
-
-                            Distance = point.Distance,
-                        });
-                    }
-
-                    DebugWrite.Line($"point count: {track.TrackPoints.Count}");
+                    var track = new Track(path);
 
                     return track;
                 });

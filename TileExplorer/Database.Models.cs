@@ -131,8 +131,27 @@ namespace TileExplorer
             {
                 private readonly Gpx.Track gpx = new Gpx.Track();
 
-                [Write(false)]
-                public Gpx.Track Gpx { get => gpx; set => gpx.Assign(value); }
+                public Track()
+                {
+                }
+
+                public Track(string path)
+                {
+                    DebugWrite.Line(path);
+
+                    gpx.OpenFromFile(path);
+
+                    DebugWrite.Line("xml loaded");
+
+                    TrackPoints = new List<TrackPoint>();
+
+                    foreach (var point in gpx.Points)
+                    {
+                        TrackPoints.Add(new TrackPoint(point));
+                    }
+
+                    DebugWrite.Line($"point count: {TrackPoints.Count}");
+                }
 
                 [DisplayName("Название")]
                 public string Text { get => gpx.Text; set => gpx.Text = value; }
@@ -179,20 +198,15 @@ namespace TileExplorer
                 public int NewTilesCount { get; set; } = 0;
 
                 private readonly Equipment equipment = new Equipment();
+
                 [DisplayName("Снаряжение")]
                 [Write(false)]
                 [Computed]
                 public Equipment Equipment
                 {
-                    get
-                    {
-                        return equipment;
-                    }
-                    set
-                    {
-                        equipment.Assign(value);
-                    }
+                    get => equipment; set => equipment.Assign(value);
                 }
+
                 [DisplayName("Снаряжение")]
                 [Write(false)]
                 [Computed]
@@ -235,7 +249,7 @@ namespace TileExplorer
 
                     base.Assign(source);
 
-                    Gpx = source.Gpx;
+                    gpx.Assign(source.gpx);
 
                     if (source.TrackPoints == null)
                     {
@@ -258,6 +272,24 @@ namespace TileExplorer
             [Table("tracks_points")]
             public class TrackPoint : Gpx.Point, IBaseId
             {
+                public TrackPoint()
+                {
+                }
+
+                public TrackPoint(Gpx.Point point)
+                {
+                    Num = point.Num;
+
+                    Lat = point.Lat;
+                    Lng = point.Lng;
+
+                    DateTime = point.DateTime;
+
+                    Ele = point.Ele;
+
+                    Distance = point.Distance;
+                }
+
                 [Key]
                 public long Id { get; set; } = 0;
 

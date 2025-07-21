@@ -105,7 +105,18 @@ namespace TileExplorer
 
                     dataGridView.Columns[nameof(Track.Text)].DisplayIndex = 0;
 
+                    dataGridView.Columns[nameof(Track.Text)].Visible = true;
+                    dataGridView.Columns[nameof(Track.DateTimeStart)].Visible = true;
+                    dataGridView.Columns[nameof(Track.DateTimeFinish)].Visible = true;
+                    dataGridView.Columns[nameof(Track.DurationAsString)].Visible = true;
+                    dataGridView.Columns[nameof(Track.DurationInMoveAsString)].Visible = true;
+                    dataGridView.Columns[nameof(Track.Distance)].Visible = true;
+                    dataGridView.Columns[nameof(Track.AverageSpeed)].Visible = true;
+                    dataGridView.Columns[nameof(Track.EleAscent)].Visible = true;
+                    dataGridView.Columns[nameof(Track.NewTilesCount)].Visible = true;
+
                     dataGridView.Columns[nameof(Track.Equipment)].Visible = false;
+                    dataGridView.Columns[nameof(Track.EquipmentName)].Visible = true;
 
                     var visible =
 #if SHOW_ALL_COLUMNS
@@ -113,7 +124,6 @@ namespace TileExplorer
 #else
                         false;
 #endif
-                    dataGridView.Columns[nameof(Track.Gpx)].Visible = visible;
                     dataGridView.Columns[nameof(Track.Duration)].Visible = visible;
                     dataGridView.Columns[nameof(Track.DurationInMove)].Visible = visible;
                     dataGridView.Columns[nameof(Track.EquipmentId)].Visible = visible;
