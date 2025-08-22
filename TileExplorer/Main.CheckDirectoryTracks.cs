@@ -81,7 +81,7 @@ namespace TileExplorer
 
         private void GetNewFiles(List<string> files, List<string> newFiles)
         {
-            GpxFiles.Directory = AppSettings.Roaming.Directory;
+            GpxFiles.Directory = AppSettings.Local.Default.DirectoryDatabase;
 
             GpxFiles.FileName = "GpxFiles.config";
 
