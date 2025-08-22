@@ -889,7 +889,8 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Расположение файла базы данных. Пустое значение — \AppData\Roaming\TileExplorer\.
+        ///   Looks up a localized string similar to Расположение файла базы данных.
+        ///Пустое значение — \AppData\Roaming\TileExplorer\.
         /// </summary>
         internal static string DirectoryDatabase_Description {
             get {
@@ -908,6 +909,7 @@ namespace TileExplorer.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to Каталог с общими для всех компьютеров настройками.
+        ///Пустое значение — \AppData\Roaming\TileExplorer\.
         /// </summary>
         internal static string DirectoryRoaming_Description {
             get {

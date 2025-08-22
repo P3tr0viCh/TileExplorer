@@ -136,6 +136,8 @@ namespace TileExplorer
 
             clbYears.DataSource = MainForm.Years;
 
+            if (Filter.Default.Years is null) return Task.CompletedTask;
+
             for (var i = 0; i < clbYears.Items.Count; i++)
             {
                 clbYears.SetItemChecked(i, Filter.Default.Years.Contains(

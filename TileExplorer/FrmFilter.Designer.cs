@@ -64,19 +64,6 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.clbYears.CheckOnClick = true;
             this.clbYears.IntegralHeight = false;
-            this.clbYears.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "1",
-            "2",
-            "3",
-            "4",
-            "1",
-            "2",
-            "3",
-            "4"});
             this.clbYears.Location = new System.Drawing.Point(8, 208);
             this.clbYears.MultiColumn = true;
             this.clbYears.Name = "clbYears";
