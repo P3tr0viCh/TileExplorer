@@ -113,6 +113,7 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Track.Distance)].Visible = true;
                     dataGridView.Columns[nameof(Track.AverageSpeed)].Visible = true;
                     dataGridView.Columns[nameof(Track.EleAscent)].Visible = true;
+                    dataGridView.Columns[nameof(Track.EleDescent)].Visible = true;
                     dataGridView.Columns[nameof(Track.NewTilesCount)].Visible = true;
 
                     dataGridView.Columns[nameof(Track.Equipment)].Visible = false;
@@ -300,6 +301,8 @@ namespace TileExplorer
                         DataGridViewCellStyles.Speed;
 
                     dataGridView.Columns[nameof(Track.EleAscent)].DefaultCellStyle =
+                        DataGridViewCellStyles.EleAscent;
+                    dataGridView.Columns[nameof(Track.EleDescent)].DefaultCellStyle =
                         DataGridViewCellStyles.EleAscent;
 
                     dataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle =

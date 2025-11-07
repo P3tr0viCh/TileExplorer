@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
 namespace TileExplorer
@@ -16,10 +15,7 @@ namespace TileExplorer
         private readonly Track track = new Track();
         private Track Track
         {
-            get
-            {
-                return track;
-            }
+            get => track;
             set
             {
                 track.Assign(value);
@@ -29,6 +25,7 @@ namespace TileExplorer
                 cboxEquipment.SelectedValue = track.EquipmentId;
 
                 tbEleAscent.Text = track.EleAscent == 0 ? string.Empty : track.EleAscent.ToString("0.#");
+                tbEleDescent.Text = track.EleDescent == 0 ? string.Empty : track.EleDescent.ToString("0.#");
             }
         }
 
@@ -98,19 +95,29 @@ namespace TileExplorer
             }
         }
 
-        private bool CheckData()
+        private bool CheckTextBox(TextBox textBox)
         {
-            if (!tbEleAscent.Text.IsEmpty() && !Misc.FloatCheck(tbEleAscent.Text))
+            if (textBox.Text.IsEmpty())
             {
-                tbEleAscent.Focus();
-                tbEleAscent.SelectAll();
-
-                Msg.Error(Resources.ErrorNeedDigit);
-
-                return false;
+                return true;
             }
 
-            return true;
+            if (Misc.FloatCheck(textBox.Text))
+            {
+                return true;
+            }
+
+            textBox.Focus();
+            textBox.SelectAll();
+
+            Msg.Error(Resources.ErrorNeedDigit);
+
+            return false;
+        }
+
+        private bool CheckData()
+        {
+            return CheckTextBox(tbEleAscent) && CheckTextBox(tbEleDescent);
         }
 
         private bool UpdateData()
@@ -122,6 +129,7 @@ namespace TileExplorer
                 track.Equipment = cboxEquipment.SelectedItem as Equipment;
 
                 track.EleAscent = Misc.FloatParse(tbEleAscent.Text);
+                track.EleDescent = Misc.FloatParse(tbEleDescent.Text);
 
                 return true;
             }

@@ -101,7 +101,8 @@ namespace TileExplorer
                 case PresenterStatusStripChartTrackEle.StatusLabel.DateTime: return slDateTime;
                 case PresenterStatusStripChartTrackEle.StatusLabel.DateTimeSpan: return slDateTimeSpan;
                 case PresenterStatusStripChartTrackEle.StatusLabel.IsSelection: return slIsSelection;
-                case PresenterStatusStripChartTrackEle.StatusLabel.SelectedEleAscent: return slSelectedEle;
+                case PresenterStatusStripChartTrackEle.StatusLabel.SelectedEleAscent: return slSelectedEleAscent;
+                case PresenterStatusStripChartTrackEle.StatusLabel.SelectedEleDescent: return slSelectedEleDescent;
                 case PresenterStatusStripChartTrackEle.StatusLabel.SelectedDistance: return slSelectedDistance;
                 default: throw new ArgumentOutOfRangeException();
             }
@@ -357,6 +358,7 @@ namespace TileExplorer
             selected.NotifyPointsChanged();
 
             statusStripPresenter.SelectedEleAscent = selected.EleAscent;
+            statusStripPresenter.SelectedEleDescent = selected.EleDescent;
             statusStripPresenter.SelectedDistance = selected.Distance;
         }
     }

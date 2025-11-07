@@ -44,7 +44,8 @@
             this.slDateTimeSpan = new System.Windows.Forms.ToolStripStatusLabel();
             this.slIsSelection = new System.Windows.Forms.ToolStripStatusLabel();
             this.slSelectedDistance = new System.Windows.Forms.ToolStripStatusLabel();
-            this.slSelectedEle = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slSelectedEleAscent = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slSelectedEleDescent = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -85,7 +86,7 @@
             series1.Points.Add(dataPoint5);
             series1.Points.Add(dataPoint6);
             this.chart.Series.Add(series1);
-            this.chart.Size = new System.Drawing.Size(584, 219);
+            this.chart.Size = new System.Drawing.Size(664, 219);
             this.chart.TabIndex = 0;
             this.chart.Text = "chart";
             this.chart.SelectionRangeChanging += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.Chart_SelectionRangeChanging);
@@ -103,10 +104,11 @@
             this.slDateTimeSpan,
             this.slIsSelection,
             this.slSelectedDistance,
-            this.slSelectedEle});
+            this.slSelectedEleAscent,
+            this.slSelectedEleDescent});
             this.statusStrip.Location = new System.Drawing.Point(0, 219);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(584, 22);
+            this.statusStrip.Size = new System.Drawing.Size(664, 22);
             this.statusStrip.TabIndex = 1;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -146,17 +148,23 @@
             this.slSelectedDistance.Size = new System.Drawing.Size(89, 17);
             this.slSelectedDistance.Text = "SelectedDist: 42";
             // 
-            // slSelectedEle
+            // slSelectedEleAscent
             // 
-            this.slSelectedEle.Name = "slSelectedEle";
-            this.slSelectedEle.Size = new System.Drawing.Size(93, 17);
-            this.slSelectedEle.Text = "Selected Ele: 666";
+            this.slSelectedEleAscent.Name = "slSelectedEleAscent";
+            this.slSelectedEleAscent.Size = new System.Drawing.Size(115, 17);
+            this.slSelectedEleAscent.Text = "Selected Ele Asc: 666";
+            // 
+            // slSelectedEleDescent
+            // 
+            this.slSelectedEleDescent.Name = "slSelectedEleDescent";
+            this.slSelectedEleDescent.Size = new System.Drawing.Size(121, 17);
+            this.slSelectedEleDescent.Text = "Selected Ele Desc: 666";
             // 
             // FrmChartTrackEle
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 241);
+            this.ClientSize = new System.Drawing.Size(664, 241);
             this.Controls.Add(this.chart);
             this.Controls.Add(this.statusStrip);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -190,6 +198,7 @@
         private System.Windows.Forms.ToolStripStatusLabel slDateTimeSpan;
         private System.Windows.Forms.ToolStripStatusLabel slIsSelection;
         private System.Windows.Forms.ToolStripStatusLabel slSelectedDistance;
-        private System.Windows.Forms.ToolStripStatusLabel slSelectedEle;
+        private System.Windows.Forms.ToolStripStatusLabel slSelectedEleAscent;
+        private System.Windows.Forms.ToolStripStatusLabel slSelectedEleDescent;
     }
 }

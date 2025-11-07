@@ -15,6 +15,7 @@ namespace TileExplorer
             IsSelection,
             SelectedDistance,
             SelectedEleAscent,
+            SelectedEleDescent,
         }
 
         public interface IPresenterStatusStripChartTrackEle
@@ -35,31 +36,23 @@ namespace TileExplorer
             IsSelection = false;
 
             SelectedEleAscent = 0;
+            SelectedEleDescent = 0;
             SelectedDistance = 0;
         }
 
         public double Ele
         {
-            set
-            {
-                view.GetLabel(StatusLabel.Ele).Text = string.Format(Resources.StatusEle, value);
-            }
+            set => view.GetLabel(StatusLabel.Ele).Text = string.Format(Resources.StatusEle, value);
         }
 
         public double Distance
         {
-            set
-            {
-                view.GetLabel(StatusLabel.Distance).Text = string.Format(Resources.StatusDistance, value / 1000);
-            }
+            set => view.GetLabel(StatusLabel.Distance).Text = string.Format(Resources.StatusDistance, value / 1000);
         }
 
         public DateTime DateTime
         {
-            set
-            {
-                view.GetLabel(StatusLabel.DateTime).Text = value.ToString(AppSettings.Roaming.Default.FormatDateTime);
-            }
+            set => view.GetLabel(StatusLabel.DateTime).Text = value.ToString(AppSettings.Roaming.Default.FormatDateTime);
         }
 
         public TimeSpan DateTimeSpan
@@ -85,23 +78,23 @@ namespace TileExplorer
 
                 view.GetLabel(StatusLabel.SelectedDistance).Visible = value;
                 view.GetLabel(StatusLabel.SelectedEleAscent).Visible = value;
+                view.GetLabel(StatusLabel.SelectedEleDescent).Visible = value;
             }
         }
 
         public double SelectedEleAscent
         {
-            set
-            {
-                view.GetLabel(StatusLabel.SelectedEleAscent).Text = string.Format(Resources.StatusEleAscent, value);
-            }
+            set => view.GetLabel(StatusLabel.SelectedEleAscent).Text = string.Format(Resources.StatusEleAscent, value);
+        }
+
+        public double SelectedEleDescent
+        {
+            set => view.GetLabel(StatusLabel.SelectedEleDescent).Text = string.Format(Resources.StatusEleDescent, value);
         }
 
         public double SelectedDistance
         {
-            set
-            {
-                view.GetLabel(StatusLabel.SelectedDistance).Text = string.Format(Resources.StatusDistance, value / 1000);
-            }
+            set => view.GetLabel(StatusLabel.SelectedDistance).Text = string.Format(Resources.StatusDistance, value / 1000);
         }
     }
 }

@@ -187,6 +187,9 @@ namespace TileExplorer
                 [DisplayName("Подъём")]
                 public float EleAscent { get => gpx.EleAscent; set => gpx.EleAscent = value; }
 
+                [DisplayName("Спуск")]
+                public float EleDescent { get => gpx.EleDescent; set => gpx.EleDescent = value; }
+
                 [Write(false)]
                 public List<TrackPoint> TrackPoints { get; set; } = null;
 

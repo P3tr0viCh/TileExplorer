@@ -15,10 +15,7 @@ namespace TileExplorer
 
         private Marker Marker
         {
-            get
-            {
-                return marker;
-            }
+            get => marker;
             set
             {
                 marker.Assign(value);

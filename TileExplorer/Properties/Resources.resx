@@ -417,4 +417,7 @@ ddd</value>
   <data name="TextChartTracksByYearCounts" xml:space="preserve">
     <value>{0} дн, {1:F0} км</value>
   </data>
+  <data name="StatusEleDescent" xml:space="preserve">
+    <value>Спуск:  {0:F0}</value>
+  </data>
 </root>

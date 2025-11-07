@@ -615,6 +615,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Спуск:  {0:F0}.
+        /// </summary>
+        internal static string StatusEleDescent {
+            get {
+                return ResourceManager.GetString("StatusEleDescent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Выделение.
         /// </summary>
         internal static string StatusIsSelection {
