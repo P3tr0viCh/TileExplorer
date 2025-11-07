@@ -321,8 +321,6 @@ namespace TileExplorer
                 Points = new List<Gpx.Point>()
             };
 
-            var distanceFromStart = 0D;
-
             var distanceSelectedStart = e.NewSelectionStart;
             var distanceSelectedEnd = e.NewSelectionEnd;
 
@@ -331,22 +329,24 @@ namespace TileExplorer
                 (distanceSelectedStart, distanceSelectedEnd) = (distanceSelectedEnd, distanceSelectedStart);
             }
 
-            foreach (var trackPoint in Track.TrackPoints)
-            {
-                distanceFromStart += trackPoint.Distance;
+            DebugWrite.Line($"distanceSelectedStart = {distanceSelectedStart}, " +
+                            $"distanceSelectedEnd = {distanceSelectedEnd}");
 
-                if (distanceFromStart < distanceSelectedStart)
-                {
-                    continue;
-                }
+            var pointStart = (TrackPoint)ChartSerial.Points.Select(x => x)
+                                    .Where(x => x.XValue < distanceSelectedStart)
+                                    .DefaultIfEmpty(ChartSerial.Points.First()).Last().Tag;
+            var pointEnd = (TrackPoint)ChartSerial.Points.Select(x => x)
+                                    .Where(x => x.XValue >= distanceSelectedEnd)
+                                    .DefaultIfEmpty(ChartSerial.Points.Last()).First().Tag;
 
-                if (distanceFromStart > distanceSelectedEnd)
-                {
-                    break;
-                }
+            DebugWrite.Line($"pointStart = {pointStart.DateTime}|{pointStart.Ele}, " +
+                            $"pointEnd = {pointEnd.DateTime}|{pointEnd.Ele}");
 
-                selected.Points.Add(trackPoint);
-            }
+            selected.Points.AddRange(Track.TrackPoints.Select(p => p)
+                .Where(p => p.Num >= pointStart.Num && p.Num <= pointEnd.Num).ToList());
+
+            DebugWrite.Line($"selected.first = {selected.Points.First().DateTime}|{selected.Points.First().Ele}, " +
+                $"selected.last = {selected.Points.Last().DateTime}|{selected.Points.Last().Ele}");
 
             if (selected.Points.Count < 2)
             {
