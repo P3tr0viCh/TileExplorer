@@ -420,4 +420,12 @@ ddd</value>
   <data name="StatusEleDescent" xml:space="preserve">
     <value>Спуск:  {0:F0}</value>
   </data>
+  <data name="BackupLoadFail" xml:space="preserve">
+    <value>Не удалось прочитать архив.
+Ошибка:
+{0}.</value>
+  </data>
+  <data name="BackupLoadOk" xml:space="preserve">
+    <value>Данные из архива '{0}' загружены.</value>
+  </data>
 </root>

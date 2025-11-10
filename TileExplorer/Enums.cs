@@ -21,6 +21,8 @@ namespace TileExplorer
             SaveData,
             [Description("Сохранение в архив...")]
             BackupSave,
+            [Description("Чтение из архива...")]
+            BackupLoad,
             [Description("Поиск файлов gpx...")]
             CheckDirectoryTracks,
         }

@@ -162,6 +162,26 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не удалось прочитать архив.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string BackupLoadFail {
+            get {
+                return ResourceManager.GetString("BackupLoadFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Данные из архива &apos;{0}&apos; загружены..
+        /// </summary>
+        internal static string BackupLoadOk {
+            get {
+                return ResourceManager.GetString("BackupLoadOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Не удалось сохранить архив.
         ///Ошибка:
         ///{0}..

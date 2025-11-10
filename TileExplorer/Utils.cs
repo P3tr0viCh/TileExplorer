@@ -77,5 +77,17 @@ namespace TileExplorer
 
             return result;
         }
+
+        public static void MsgResult(bool result, string message)
+        {
+            if (result)
+            {
+                Msg.Info(message);
+            }
+            else
+            {
+                Msg.Error(message);
+            }
+        }
     }
 }

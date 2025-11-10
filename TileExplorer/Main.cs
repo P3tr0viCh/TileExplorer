@@ -157,6 +157,8 @@ namespace TileExplorer
             await UpdateDataAsync();
 
             await CheckDirectoryTracksAsync(false);
+
+            BackupLoad();
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -371,10 +373,7 @@ namespace TileExplorer
         private bool fullScreen;
         private bool FullScreen
         {
-            get
-            {
-                return fullScreen;
-            }
+            get => fullScreen;
             set
             {
                 if (fullScreen == value) return;
@@ -1394,7 +1393,7 @@ namespace TileExplorer
 
         private async Task BackupSaveAsync()
         {
-            if (ProgramStatus.Contains(Status.BackupSave))
+            if (ProgramStatus.Contains(Status.BackupSave) || ProgramStatus.Contains(Status.BackupLoad))
             {
                 Msg.Info(Resources.BackupInfoInProgress);
 
@@ -1413,7 +1412,10 @@ namespace TileExplorer
 
             try
             {
-                var backup = new Backup();
+                var backup = new Backup
+                {
+                    Settings = AppSettings.Local.Default.BackupSettings
+                };
 
                 await backup.SaveAsync();
 
@@ -1432,19 +1434,74 @@ namespace TileExplorer
                 ProgramStatus.Stop(status);
             }
 
-            if (result)
+            Utils.MsgResult(result, resultMessage);
+        }
+
+        private void BackupLoad()
+        {
+            if (ProgramStatus.Contains(Status.BackupSave) || ProgramStatus.Contains(Status.BackupLoad))
             {
-                Msg.Info(resultMessage);
+                Msg.Info(Resources.BackupInfoInProgress);
+
+                return;
             }
-            else
+
+            if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
             {
-                Msg.Error(resultMessage);
+                return;
             }
+
+            if (!FrmBackup.ShowDlg(this))
+            {
+                return;
+            }
+
+            var settings = new Backup.BackupSettings
+            {
+                Directory = folderBrowserDialog.SelectedPath,
+                Equipments = Backup.FileType.ExcelXml
+            };
+
+            var status = ProgramStatus.Start(Status.BackupLoad);
+
+            bool result;
+            string resultMessage;
+
+            try
+            {
+                var backup = new Backup()
+                {
+                    Settings = settings
+                };
+
+                backup.Load();
+
+                result = true;
+                resultMessage = string.Format(Resources.BackupLoadOk, backup.Directory);
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                result = false;
+                resultMessage = string.Format(Resources.BackupLoadFail, e.Message);
+            }
+            finally
+            {
+                ProgramStatus.Stop(status);
+            }
+
+            Utils.MsgResult(result, resultMessage);
         }
 
         private async void MiMainDataBackupSave_Click(object sender, EventArgs e)
         {
             await BackupSaveAsync();
+        }
+
+        private void MiMainBackupLoad_Click(object sender, EventArgs e)
+        {
+            BackupLoad();
         }
 
         private void GMapControl_Paint(object sender, PaintEventArgs e)
