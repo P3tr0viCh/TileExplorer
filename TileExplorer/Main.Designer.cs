@@ -386,14 +386,14 @@
             // miMainBackupSave
             // 
             this.miMainBackupSave.Name = "miMainBackupSave";
-            this.miMainBackupSave.Size = new System.Drawing.Size(180, 22);
+            this.miMainBackupSave.Size = new System.Drawing.Size(133, 22);
             this.miMainBackupSave.Text = "Сохранить";
             this.miMainBackupSave.Click += new System.EventHandler(this.MiMainDataBackupSave_Click);
             // 
             // miMainBackupLoad
             // 
             this.miMainBackupLoad.Name = "miMainBackupLoad";
-            this.miMainBackupLoad.Size = new System.Drawing.Size(180, 22);
+            this.miMainBackupLoad.Size = new System.Drawing.Size(133, 22);
             this.miMainBackupLoad.Text = "Открыть";
             this.miMainBackupLoad.Click += new System.EventHandler(this.MiMainBackupLoad_Click);
             // 
@@ -1074,6 +1074,10 @@
             this.xxxToolStripMenuItem.Name = "xxxToolStripMenuItem";
             this.xxxToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.xxxToolStripMenuItem.Text = "xxx";
+            // 
+            // folderBrowserDialog
+            // 
+            this.folderBrowserDialog.ShowNewFolderButton = false;
             // 
             // Main
             // 

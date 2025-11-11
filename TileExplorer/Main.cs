@@ -1417,10 +1417,12 @@ namespace TileExplorer
                     Settings = AppSettings.Local.Default.BackupSettings
                 };
 
+                backup.Settings.Name = DateTime.Now.ToString("yyyy-MM-dd");
+
                 await backup.SaveAsync();
 
                 result = true;
-                resultMessage = string.Format(Resources.BackupSaveOk, backup.Directory);
+                resultMessage = string.Format(Resources.BackupSaveOk, backup.Settings.FullName);
             }
             catch (Exception e)
             {
@@ -1446,19 +1448,24 @@ namespace TileExplorer
                 return;
             }
 
-            if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
+            folderBrowserDialog.SelectedPath = "d:\\docs\\Projects.exe\\TileExplorer\\Debug\\0.0.0.0\\backup\\2025-11-10\\";
 
-            if (!FrmBackup.ShowDlg(this))
-            {
-                return;
-            }
+            /*           folderBrowserDialog.SelectedPath = AppSettings.Local.Default.BackupSettings.Directory;
+
+                       if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
+                       {
+                           return;
+                       }
+
+                       if (!FrmBackup.ShowDlg(this))
+                       {
+                           return;
+                       }*/
 
             var settings = new Backup.BackupSettings
             {
-                Directory = folderBrowserDialog.SelectedPath,
+                FullName = folderBrowserDialog.SelectedPath,
+                Markers = Backup.FileType.ExcelXml,
                 Equipments = Backup.FileType.ExcelXml
             };
 
@@ -1477,7 +1484,7 @@ namespace TileExplorer
                 backup.Load();
 
                 result = true;
-                resultMessage = string.Format(Resources.BackupLoadOk, backup.Directory);
+                resultMessage = string.Format(Resources.BackupLoadOk, backup.Settings.FullName);
             }
             catch (Exception e)
             {

@@ -1,4 +1,6 @@
 ﻿using P3tr0viCh.Utils;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
@@ -9,9 +11,9 @@ namespace TileExplorer
     {
         private const string fileNameEquipments = "equipments";
 
-        private DataTableFile dtfEquipments = CreateDataTableFile();
+        private DataTableFile dtfEquipments = CreateDataTableFileEquipments();
 
-        private static DataTableFile CreateDataTableFile()
+        private static DataTableFile CreateDataTableFileEquipments()
         {
             var table = new DataTable()
             {
@@ -47,8 +49,6 @@ namespace TileExplorer
 
             var equipments = await Database.Default.ListLoadAsync<Equipment>();
 
-            var fileName = GetSaveFileName(fileNameEquipments, FileType.ExcelXml);
-
             foreach (var equipment in equipments)
             {
                 var row = dtfEquipments.Table.NewRow();
@@ -60,7 +60,7 @@ namespace TileExplorer
                 dtfEquipments.Table.Rows.Add(row);
             }
 
-            dtfEquipments.FileName = fileName;
+            dtfEquipments.FileName = GetFullFileName(FileName.Equipments, FileType.ExcelXml);
 
             dtfEquipments.WriteToExcelXml();
 
@@ -86,13 +86,22 @@ namespace TileExplorer
 
             DebugWrite.Line("start");
 
-            dtfEquipments.FileName = GetLoadFileName(fileNameEquipments, FileType.ExcelXml);
+            dtfEquipments.FileName = GetFullFileName(FileName.Equipments, FileType.ExcelXml);
             
             dtfEquipments.ReadFromExcelXml();
+
+            var equipments = new List<Equipment>();
 
             foreach (DataRow row in dtfEquipments.Table.Rows)
             {
                 DebugWrite.Line($"{row["Text"]}: {row["Brand"]} — {row["Model"]}");
+
+                equipments.Add(new Equipment()
+                {
+                    Text = Convert.ToString(row["Text"]),
+                    Brand = Convert.ToString(row["Brand"]),
+                    Model = Convert.ToString(row["Model"])
+                });
             }
 
             DebugWrite.Line("end");

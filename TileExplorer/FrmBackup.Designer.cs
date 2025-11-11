@@ -49,6 +49,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(304, 248);
             this.btnCancel.Name = "btnCancel";
@@ -59,6 +60,7 @@
             // 
             // btnOk
             // 
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.Location = new System.Drawing.Point(216, 248);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
@@ -69,6 +71,8 @@
             // 
             // tbDirectory
             // 
+            this.tbDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbDirectory.Location = new System.Drawing.Point(8, 32);
             this.tbDirectory.Name = "tbDirectory";
             this.tbDirectory.Size = new System.Drawing.Size(328, 25);
@@ -76,6 +80,7 @@
             // 
             // btnDirectory
             // 
+            this.btnDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDirectory.Location = new System.Drawing.Point(344, 32);
             this.btnDirectory.Name = "btnDirectory";
             this.btnDirectory.Size = new System.Drawing.Size(40, 26);
@@ -89,9 +94,9 @@
             this.lblDirectory.AutoSize = true;
             this.lblDirectory.Location = new System.Drawing.Point(8, 8);
             this.lblDirectory.Name = "lblDirectory";
-            this.lblDirectory.Size = new System.Drawing.Size(175, 19);
+            this.lblDirectory.Size = new System.Drawing.Size(132, 19);
             this.lblDirectory.TabIndex = 0;
-            this.lblDirectory.Text = "Каталог с файлами архива";
+            this.lblDirectory.Text = "Каталог с архивами";
             // 
             // gbMarkers
             // 
@@ -178,8 +183,7 @@
             // FrmBackup
             // 
             this.AcceptButton = this.btnOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(392, 289);
             this.Controls.Add(this.gbSettings);
@@ -191,10 +195,11 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(408, 328);
             this.Name = "FrmBackup";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

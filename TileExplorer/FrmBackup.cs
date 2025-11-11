@@ -55,11 +55,6 @@ namespace TileExplorer
         {
             var settings = AppSettings.Local.Default.BackupSettings;
 
-            if (settings.Directory.IsEmpty())
-            {
-                settings.Directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            }
-
             folderBrowserDialog.SelectedPath = settings.Directory;
 
             tbDirectory.Text = settings.Directory;

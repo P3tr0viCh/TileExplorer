@@ -14,11 +14,58 @@ namespace TileExplorer
     {
         private const string fileNameMarkers = "markers";
 
+        private DataTableFile dtfMarkers = CreateDataTableFileMarkers();
+
+        private static DataTableFile CreateDataTableFileMarkers()
+        {
+            var table = new DataTable()
+            {
+                TableName = "Markers"
+            };
+
+            table.Columns.Add(new DataColumn()
+            {
+                DataType = typeof(double),
+                ColumnName = "Latitude",
+            });
+            table.Columns.Add(new DataColumn()
+            {
+                DataType = typeof(double),
+                ColumnName = "Longitude",
+            });
+            table.Columns.Add(new DataColumn()
+            {
+                DataType = typeof(string),
+                ColumnName = "Text",
+            });
+            table.Columns.Add(new DataColumn()
+            {
+                DataType = typeof(bool),
+                ColumnName = "TextVisible",
+            });
+            table.Columns.Add(new DataColumn()
+            {
+                DataType = typeof(int),
+                ColumnName = "OffsetX",
+            });
+            table.Columns.Add(new DataColumn()
+            {
+                DataType = typeof(int),
+                ColumnName = "OffsetY",
+            });
+
+            return new DataTableFile()
+            {
+                Table = table,
+                Author = Utils.AssemblyNameAndVersion(),
+            };
+        }
+
         private void SaveMarkersAsGpx(List<Marker> markers)
         {
             DebugWrite.Line("start");
 
-            var fileName = GetSaveFileName(fileNameMarkers, FileType.Gpx);
+            var fileName = GetFullFileName(FileName.Markers, FileType.Gpx);
 
             using (var xml = new XmlTextWriter(fileName, Encoding.UTF8))
             {
@@ -78,47 +125,9 @@ namespace TileExplorer
         {
             DebugWrite.Line("start");
 
-            var fileName = GetSaveFileName(fileNameMarkers, FileType.ExcelXml);
-
-            var table = new DataTable()
-            {
-                TableName = "Markers"
-            };
-
-            table.Columns.Add(new DataColumn()
-            {
-                DataType = typeof(double),
-                ColumnName = "Latitude",
-            });
-            table.Columns.Add(new DataColumn()
-            {
-                DataType = typeof(double),
-                ColumnName = "Longitude",
-            });
-            table.Columns.Add(new DataColumn()
-            {
-                DataType = typeof(string),
-                ColumnName = "Text",
-            });
-            table.Columns.Add(new DataColumn()
-            {
-                DataType = typeof(bool),
-                ColumnName = "TextVisible",
-            });
-            table.Columns.Add(new DataColumn()
-            {
-                DataType = typeof(int),
-                ColumnName = "OffsetX",
-            });
-            table.Columns.Add(new DataColumn()
-            {
-                DataType = typeof(int),
-                ColumnName = "OffsetY",
-            });
-
             foreach (var marker in markers)
             {
-                var row = table.NewRow();
+                var row = dtfMarkers.Table.NewRow();
 
                 row["Latitude"] = marker.Lat;
                 row["Longitude"] = marker.Lng;
@@ -127,16 +136,12 @@ namespace TileExplorer
                 row["OffsetX"] = marker.OffsetX;
                 row["OffsetY"] = marker.OffsetY;
 
-                table.Rows.Add(row);
+                dtfMarkers.Table.Rows.Add(row);
             }
 
-            new DataTableFile()
-            {
-                FileName = fileName,
-                Table = table,
-                Author = Utils.AssemblyNameAndVersion(),
+            dtfMarkers.FileName = GetFullFileName(FileName.Markers, FileType.ExcelXml);
 
-            }.WriteToExcelXml();
+            dtfMarkers.WriteToExcelXml();
 
             DebugWrite.Line("end");
         }
@@ -158,6 +163,39 @@ namespace TileExplorer
             {
                 SaveMarkersAsGpx(markers);
             }
+        }
+
+        private void LoadMarkers()
+        {
+            if (Settings.Markers == default)
+            {
+                return;
+            }
+
+            DebugWrite.Line("start");
+
+            dtfMarkers.FileName = GetFullFileName(FileName.Markers, FileType.ExcelXml);
+
+            dtfMarkers.ReadFromExcelXml();
+
+            var markers = new List<Marker>();
+
+            foreach (DataRow row in dtfMarkers.Table.Rows)
+            {
+                DebugWrite.Line($"{row["Text"]}: {row["Latitude"]} — {row["Longitude"]}");
+
+                markers.Add(new Marker()
+                {
+                    Lat = Convert.ToDouble(row["Latitude"]),
+                    Lng = Convert.ToDouble(row["Longitude"]),
+                    Text = Convert.ToString(row["Text"]),
+                    IsTextVisible = Convert.ToBoolean(row["TextVisible"]),
+                    OffsetX = Convert.ToInt32(row["OffsetX"]),
+                    OffsetY = Convert.ToInt32(row["OffsetY"])
+                });
+            }
+
+            DebugWrite.Line("end");
         }
     }
 }
