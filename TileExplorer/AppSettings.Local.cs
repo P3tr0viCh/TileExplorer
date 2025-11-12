@@ -1,5 +1,4 @@
 ﻿using P3tr0viCh.Utils;
-using static TileExplorer.Backup;
 
 namespace TileExplorer
 {
@@ -18,6 +17,7 @@ namespace TileExplorer
             public string DirectoryLastTileStatus { get; set; } = string.Empty;
             public string DirectoryTracks { get; set; } = string.Empty;
             public string DirectoryRoaming { get; set; } = string.Empty;
+            public string DirectoryBackups { get; set; } = string.Empty;
 
             // ------------------------------------------------------------------------------------------------------------
             public double HomeLat { get; set; } = 51.196369;
@@ -61,9 +61,6 @@ namespace TileExplorer
             public ColumnState[] ColumnsMarkerList { get; set; }
             public ColumnState[] ColumnsEquipmentList { get; set; }
             public ColumnState[] ColumnsTileInfo { get; set; }
-
-            // ------------------------------------------------------------------------------------------------------------
-            public BackupSettings BackupSettings = new BackupSettings();
         }
     }
 }

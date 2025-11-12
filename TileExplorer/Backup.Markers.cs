@@ -65,7 +65,7 @@ namespace TileExplorer
         {
             DebugWrite.Line("start");
 
-            var fileName = GetFullFileName(FileName.Markers, FileType.Gpx);
+            var fileName = GetFullFileName(FileName.MarkersGpx);
 
             using (var xml = new XmlTextWriter(fileName, Encoding.UTF8))
             {
@@ -139,7 +139,7 @@ namespace TileExplorer
                 dtfMarkers.Table.Rows.Add(row);
             }
 
-            dtfMarkers.FileName = GetFullFileName(FileName.Markers, FileType.ExcelXml);
+            dtfMarkers.FileName = GetFullFileName(FileName.MarkersExcelXml);
 
             dtfMarkers.WriteToExcelXml();
 
@@ -148,18 +148,19 @@ namespace TileExplorer
 
         private async Task SaveMarkersAsync()
         {
-            if (Settings.Markers == default)
+            if (!(Settings.FileNames.HasFlag(FileName.MarkersGpx) ||
+                  Settings.FileNames.HasFlag(FileName.MarkersExcelXml)))
             {
                 return;
             }
 
             var markers = await Database.Default.ListLoadAsync<Marker>();
 
-            if (Settings.Markers.HasFlag(FileType.ExcelXml))
+            if (Settings.FileNames.HasFlag(FileName.MarkersExcelXml))
             {
                 SaveMarkersAsExcelXml(markers);
             }
-            if (Settings.Markers.HasFlag(FileType.Gpx))
+            if (Settings.FileNames.HasFlag(FileName.MarkersGpx))
             {
                 SaveMarkersAsGpx(markers);
             }
@@ -167,14 +168,14 @@ namespace TileExplorer
 
         private void LoadMarkers()
         {
-            if (Settings.Markers == default)
+            if (!Settings.FileNames.HasFlag(FileName.MarkersExcelXml))
             {
                 return;
             }
 
             DebugWrite.Line("start");
 
-            dtfMarkers.FileName = GetFullFileName(FileName.Markers, FileType.ExcelXml);
+            dtfMarkers.FileName = GetFullFileName(FileName.MarkersExcelXml);
 
             dtfMarkers.ReadFromExcelXml();
 

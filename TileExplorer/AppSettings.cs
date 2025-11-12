@@ -32,6 +32,12 @@ namespace TileExplorer
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
         public string DirectoryRoaming { get => Local.Default.DirectoryRoaming; set => Local.Default.DirectoryRoaming = value; }
 
+        [LocalizedAttribute.Category("Category.Directories", Resource)]
+        [LocalizedAttribute.DisplayName("DirectoryBackups.DisplayName", Resource)]
+        [LocalizedAttribute.Description("DirectoryBackups.Description", Resource)]
+        [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
+        public string DirectoryBackups { get => Local.Default.DirectoryBackups; set => Local.Default.DirectoryBackups = value; }
+
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedAttribute.Category("Category.DesignMarkers", Resource)]
         [LocalizedAttribute.DisplayName("ColorMarkerFill.DisplayName", Resource)]
@@ -389,10 +395,7 @@ namespace TileExplorer
             return true;
         }
 
-        public static bool Save()
-        {
-            return LocalSave() && RoamingSave();
-        }
+        public static bool Save() => LocalSave() && RoamingSave();
 
         private static string GetDirectory(string directory, string defDirectory)
         {
@@ -447,10 +450,7 @@ namespace TileExplorer
             return true;
         }
 
-        public static bool Load()
-        {
-            return LocalLoad() && RoamingLoad();
-        }
+        public static bool Load() => LocalLoad() && RoamingLoad();
 
         public static Local.ColumnState[] SaveDataGridColumns(DataGridView dataGridView)
         {

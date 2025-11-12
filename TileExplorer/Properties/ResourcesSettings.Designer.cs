@@ -889,6 +889,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Каталог с архивами.
+        /// </summary>
+        internal static string DirectoryBackups_Description {
+            get {
+                return ResourceManager.GetString("DirectoryBackups.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архивы.
+        /// </summary>
+        internal static string DirectoryBackups_DisplayName {
+            get {
+                return ResourceManager.GetString("DirectoryBackups.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Расположение файла базы данных.
         ///Пустое значение — \AppData\Roaming\TileExplorer\.
         /// </summary>

@@ -10,112 +10,74 @@ namespace TileExplorer
         private const string fileNameExtXml = ".xml";
         private const string fileNameExtGpx = ".gpx";
 
-        private enum FileName
-        {
-            Markers,
-            Equipments,
-            LocalSettings,
-            RoamingSettings,
-        }
-
         [Flags]
-        public enum FileType
+        public enum FileName
         {
-            ExcelXml = 1,
-            Gpx = 2,
+            MarkersGpx = 1,
+            MarkersExcelXml = 2,
+            EquipmentsExcelXml = 4,
+            LocalSettings = 8,
+            RoamingSettings = 16,
         }
 
         public class BackupSettings
         {
-            private static string name = string.Empty;
-            public string Name
-            {
-                get => name;
-                set
-                {
-                    name = value;
-                    fullName = string.Empty;
-                }
-            }
+            public string Name { get; set; }
+            public string Directory { get; set; }
 
-            private static string directory = string.Empty;
-            public string Directory
-            {
-                get => directory;
-                set
-                {
-                    directory = value;
-                    fullName = string.Empty;
-                }
-            }
+            public bool NameUseDate { get; set; } = true;
 
-            private static string fullName = string.Empty;
-            public string FullName
-            {
-                get
-                {
-                    if (fullName.IsEmpty())
-                    {
-                        if (directory.IsEmpty())
-                        {
-                            directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                                Files.ExecutableName() + "Backup");
-
-                        }
-
-                        if (name.IsEmpty())
-                        {
-                            name = DateTime.Now.ToString("yyyy-MM-dd");
-                        }
-
-                        fullName = Path.Combine(directory, name);
-                    }
-
-                    return fullName;
-                }
-                set
-                {
-                    fullName = value.TrimEnd('\\');
-                    name = Path.GetFileName(fullName);
-                    directory = Path.GetDirectoryName(fullName);
-                }
-            }
-
-            public FileType Markers { get; set; } = default;
-            public FileType Equipments { get; set; } = default;
-
-            public bool LocalSettings { get; set; } = false;
-            public bool RoamingSettings { get; set; } = false;
+            public FileName FileNames { get; set; } = default;
         }
 
         public BackupSettings Settings { get; set; }
 
-        private string GetFileName(FileName fileName)
+        public Backup(BackupSettings settings) => Settings = settings;
+
+
+        private string fullPath = string.Empty;
+        public string FullPath
+        {
+            get
+            {
+                if (fullPath.IsEmpty())
+                {
+                    if (Settings.Directory.IsEmpty())
+                    {
+                        throw new ArgumentNullException(nameof(Settings.Directory));
+                    }
+
+                    if (Settings.Name.IsEmpty())
+                    {
+                        throw new ArgumentNullException(nameof(Settings.Name));
+                    }
+
+                    fullPath = Path.Combine(Settings.Directory, Settings.Name);
+                }
+
+                return fullPath;
+            }
+        }
+
+        private static string GetFileName(FileName fileName)
         {
             switch (fileName)
             {
-                case FileName.Markers: return fileNameMarkers;
-                case FileName.Equipments: return fileNameEquipments;
+                case FileName.MarkersGpx: return fileNameMarkers + fileNameExtGpx;
+                case FileName.MarkersExcelXml: return fileNameMarkers + fileNameExtXml;
+                case FileName.EquipmentsExcelXml: return fileNameEquipments + fileNameExtXml;
                 case FileName.LocalSettings: return $"Local.{Environment.MachineName}.{Files.ExtConfig}";
                 case FileName.RoamingSettings: return $"Roaming.{Files.ExtConfig}";
                 default: return string.Empty;
             }
         }
 
-        private string GetFileNameExt(FileType fileType)
+        public static string GetFullFileName(string directory, FileName fileName)
         {
-            switch (fileType)
-            {
-                case FileType.ExcelXml: return fileNameExtXml;
-                case FileType.Gpx: return fileNameExtGpx;
-                default: return string.Empty;
-            }
+            return Path.Combine(directory, GetFileName(fileName));
         }
 
-        private string GetFullFileName(FileName fileName, FileType fileType)
-        {
-            return Path.Combine(Settings.FullName, GetFileName(fileName) + GetFileNameExt(fileType));
-        }
+        private string GetFullFileName(FileName fileName) => GetFullFileName(FullPath, fileName);
 
         private async Task SaveSettingsAsync()
         {
@@ -123,18 +85,18 @@ namespace TileExplorer
 
             await Task.Factory.StartNew(() =>
             {
-                if (Settings.LocalSettings)
+                if (Settings.FileNames.HasFlag(FileName.LocalSettings))
                 {
                     DebugWrite.Line("save local");
 
-                    Utils.FileCopy(AppSettings.Local.FilePath, GetFullFileName(FileName.LocalSettings, default));
+                    Utils.FileCopy(AppSettings.Local.FilePath, GetFullFileName(FileName.LocalSettings));
                 }
 
-                if (Settings.RoamingSettings)
+                if (Settings.FileNames.HasFlag(FileName.RoamingSettings))
                 {
                     DebugWrite.Line("save roaming");
 
-                    Utils.FileCopy(AppSettings.Roaming.FilePath, GetFullFileName(FileName.RoamingSettings, default));
+                    Utils.FileCopy(AppSettings.Roaming.FilePath, GetFullFileName(FileName.RoamingSettings));
                 }
             });
 
@@ -143,7 +105,7 @@ namespace TileExplorer
 
         public async Task SaveAsync()
         {
-            Utils.DirectoryCreate(Settings.FullName);
+            Utils.DirectoryCreate(FullPath);
 
             await SaveMarkersAsync();
             await SaveEquipmentsAsync();
@@ -152,6 +114,8 @@ namespace TileExplorer
 
         public void Load()
         {
+            Files.CheckDirectoryExists(FullPath);
+
             LoadMarkers();
             LoadEquipments();
         }

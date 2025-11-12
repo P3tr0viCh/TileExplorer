@@ -393,6 +393,12 @@
   <data name="ColorTrackSelectedAlpha.DisplayName" xml:space="preserve">
     <value>Прозрачность выбранного</value>
   </data>
+  <data name="DirectoryBackups.Description" xml:space="preserve">
+    <value>Каталог с архивами</value>
+  </data>
+  <data name="DirectoryBackups.DisplayName" xml:space="preserve">
+    <value>Архивы</value>
+  </data>
   <data name="DirectoryDatabase.Description" xml:space="preserve">
     <value>Расположение файла базы данных.
 Пустое значение — \AppData\Roaming\TileExplorer\</value>

@@ -42,6 +42,10 @@
             this.gbSettings = new System.Windows.Forms.GroupBox();
             this.cboxLocalSettings = new System.Windows.Forms.CheckBox();
             this.cboxRoamingSettings = new System.Windows.Forms.CheckBox();
+            this.lblName = new System.Windows.Forms.Label();
+            this.btnName = new System.Windows.Forms.Button();
+            this.tbName = new System.Windows.Forms.TextBox();
+            this.cboxNameIsDate = new System.Windows.Forms.CheckBox();
             this.gbMarkers.SuspendLayout();
             this.gbEquipments.SuspendLayout();
             this.gbSettings.SuspendLayout();
@@ -51,20 +55,20 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(304, 248);
+            this.btnCancel.Location = new System.Drawing.Point(304, 304);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
-            this.btnCancel.TabIndex = 7;
+            this.btnCancel.TabIndex = 11;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(216, 248);
+            this.btnOk.Location = new System.Drawing.Point(216, 304);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
-            this.btnOk.TabIndex = 6;
+            this.btnOk.TabIndex = 10;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
@@ -102,10 +106,10 @@
             // 
             this.gbMarkers.Controls.Add(this.cboxMarkersExcelXml);
             this.gbMarkers.Controls.Add(this.cboxMarkersGpx);
-            this.gbMarkers.Location = new System.Drawing.Point(8, 64);
+            this.gbMarkers.Location = new System.Drawing.Point(8, 120);
             this.gbMarkers.Name = "gbMarkers";
             this.gbMarkers.Size = new System.Drawing.Size(184, 88);
-            this.gbMarkers.TabIndex = 3;
+            this.gbMarkers.TabIndex = 7;
             this.gbMarkers.TabStop = false;
             this.gbMarkers.Text = "Маркеры";
             // 
@@ -132,10 +136,10 @@
             // gbEquipments
             // 
             this.gbEquipments.Controls.Add(this.cboxEquipmentsExcelXml);
-            this.gbEquipments.Location = new System.Drawing.Point(200, 64);
+            this.gbEquipments.Location = new System.Drawing.Point(200, 120);
             this.gbEquipments.Name = "gbEquipments";
             this.gbEquipments.Size = new System.Drawing.Size(184, 88);
-            this.gbEquipments.TabIndex = 4;
+            this.gbEquipments.TabIndex = 8;
             this.gbEquipments.TabStop = false;
             this.gbEquipments.Text = "Снаряжение";
             // 
@@ -153,10 +157,10 @@
             // 
             this.gbSettings.Controls.Add(this.cboxLocalSettings);
             this.gbSettings.Controls.Add(this.cboxRoamingSettings);
-            this.gbSettings.Location = new System.Drawing.Point(8, 152);
+            this.gbSettings.Location = new System.Drawing.Point(8, 208);
             this.gbSettings.Name = "gbSettings";
             this.gbSettings.Size = new System.Drawing.Size(184, 88);
-            this.gbSettings.TabIndex = 5;
+            this.gbSettings.TabIndex = 9;
             this.gbSettings.TabStop = false;
             this.gbSettings.Text = "Настройки";
             // 
@@ -180,12 +184,56 @@
             this.cboxRoamingSettings.Text = "Общие";
             this.cboxRoamingSettings.UseVisualStyleBackColor = true;
             // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Location = new System.Drawing.Point(8, 64);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(83, 19);
+            this.lblName.TabIndex = 3;
+            this.lblName.Text = "Имя архива";
+            // 
+            // btnName
+            // 
+            this.btnName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnName.Location = new System.Drawing.Point(344, 88);
+            this.btnName.Name = "btnName";
+            this.btnName.Size = new System.Drawing.Size(40, 26);
+            this.btnName.TabIndex = 6;
+            this.btnName.Text = "...";
+            this.btnName.UseVisualStyleBackColor = true;
+            this.btnName.Click += new System.EventHandler(this.BtnName_Click);
+            // 
+            // tbName
+            // 
+            this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbName.Location = new System.Drawing.Point(8, 88);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(328, 25);
+            this.tbName.TabIndex = 5;
+            // 
+            // cboxNameIsDate
+            // 
+            this.cboxNameIsDate.AutoSize = true;
+            this.cboxNameIsDate.Location = new System.Drawing.Point(96, 64);
+            this.cboxNameIsDate.Name = "cboxNameIsDate";
+            this.cboxNameIsDate.Size = new System.Drawing.Size(114, 23);
+            this.cboxNameIsDate.TabIndex = 4;
+            this.cboxNameIsDate.Text = "Текущая дата";
+            this.cboxNameIsDate.UseVisualStyleBackColor = true;
+            this.cboxNameIsDate.CheckedChanged += new System.EventHandler(this.CboxNameIsDate_CheckedChanged);
+            // 
             // FrmBackup
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(392, 289);
+            this.ClientSize = new System.Drawing.Size(392, 345);
+            this.Controls.Add(this.cboxNameIsDate);
+            this.Controls.Add(this.lblName);
+            this.Controls.Add(this.btnName);
+            this.Controls.Add(this.tbName);
             this.Controls.Add(this.gbSettings);
             this.Controls.Add(this.gbEquipments);
             this.Controls.Add(this.gbMarkers);
@@ -199,7 +247,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(408, 328);
+            this.MinimumSize = new System.Drawing.Size(408, 384);
             this.Name = "FrmBackup";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -232,5 +280,9 @@
         private System.Windows.Forms.GroupBox gbSettings;
         private System.Windows.Forms.CheckBox cboxLocalSettings;
         private System.Windows.Forms.CheckBox cboxRoamingSettings;
+        private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.Button btnName;
+        private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.CheckBox cboxNameIsDate;
     }
 }

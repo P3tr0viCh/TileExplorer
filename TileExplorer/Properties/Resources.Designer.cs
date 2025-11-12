@@ -144,6 +144,42 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Архив не содержит снаряжение..
+        /// </summary>
+        internal static string BackupErrorEquipmentsNotExists {
+            get {
+                return ResourceManager.GetString("BackupErrorEquipmentsNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архив не содержит маркеры..
+        /// </summary>
+        internal static string BackupErrorMarkersNotExists {
+            get {
+                return ResourceManager.GetString("BackupErrorMarkersNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не указан архив..
+        /// </summary>
+        internal static string BackupErrorNameEmpty {
+            get {
+                return ResourceManager.GetString("BackupErrorNameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не выбраны данные для восстановления..
+        /// </summary>
+        internal static string BackupErrorNothingLoad {
+            get {
+                return ResourceManager.GetString("BackupErrorNothingLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Не выбраны данные для архивирования..
         /// </summary>
         internal static string BackupErrorNothingSave {
@@ -830,6 +866,24 @@ namespace TileExplorer.Properties {
         internal static string TextTracksTreeAll {
             get {
                 return ResourceManager.GetString("TextTracksTreeAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архив: восстановление.
+        /// </summary>
+        internal static string TitleBackupLoad {
+            get {
+                return ResourceManager.GetString("TitleBackupLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архив: сохранение.
+        /// </summary>
+        internal static string TitleBackupSave {
+            get {
+                return ResourceManager.GetString("TitleBackupSave", resourceCulture);
             }
         }
         

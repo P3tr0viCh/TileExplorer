@@ -428,4 +428,22 @@ ddd</value>
   <data name="BackupLoadOk" xml:space="preserve">
     <value>Данные из архива '{0}' загружены.</value>
   </data>
+  <data name="BackupErrorNameEmpty" xml:space="preserve">
+    <value>Не указан архив.</value>
+  </data>
+  <data name="BackupErrorNothingLoad" xml:space="preserve">
+    <value>Не выбраны данные для восстановления.</value>
+  </data>
+  <data name="TitleBackupLoad" xml:space="preserve">
+    <value>Архив: восстановление</value>
+  </data>
+  <data name="TitleBackupSave" xml:space="preserve">
+    <value>Архив: сохранение</value>
+  </data>
+  <data name="BackupErrorEquipmentsNotExists" xml:space="preserve">
+    <value>Архив не содержит снаряжение.</value>
+  </data>
+  <data name="BackupErrorMarkersNotExists" xml:space="preserve">
+    <value>Архив не содержит маркеры.</value>
+  </data>
 </root>

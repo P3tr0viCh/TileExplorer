@@ -1400,7 +1400,17 @@ namespace TileExplorer
                 return;
             }
 
-            if (!FrmBackup.ShowDlg(this))
+            var settings = new Backup.BackupSettings()
+            {
+                Directory = AppSettings.Local.Default.DirectoryBackups,
+                NameUseDate = true,
+                FileNames = Backup.FileName.MarkersExcelXml | Backup.FileName.MarkersGpx |
+                    Backup.FileName.EquipmentsExcelXml |
+                    Backup.FileName.LocalSettings |
+                    Backup.FileName.RoamingSettings,
+            };
+
+            if (!FrmBackup.ShowDlg(this, settings, FrmBackup.BackupAction.Save))
             {
                 return;
             }
@@ -1412,17 +1422,12 @@ namespace TileExplorer
 
             try
             {
-                var backup = new Backup
-                {
-                    Settings = AppSettings.Local.Default.BackupSettings
-                };
-
-                backup.Settings.Name = DateTime.Now.ToString("yyyy-MM-dd");
+                var backup = new Backup(settings);
 
                 await backup.SaveAsync();
 
                 result = true;
-                resultMessage = string.Format(Resources.BackupSaveOk, backup.Settings.FullName);
+                resultMessage = string.Format(Resources.BackupSaveOk, backup.FullPath);
             }
             catch (Exception e)
             {
@@ -1448,26 +1453,16 @@ namespace TileExplorer
                 return;
             }
 
-            folderBrowserDialog.SelectedPath = "d:\\docs\\Projects.exe\\TileExplorer\\Debug\\0.0.0.0\\backup\\2025-11-10\\";
-
-            /*           folderBrowserDialog.SelectedPath = AppSettings.Local.Default.BackupSettings.Directory;
-
-                       if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
-                       {
-                           return;
-                       }
-
-                       if (!FrmBackup.ShowDlg(this))
-                       {
-                           return;
-                       }*/
-
-            var settings = new Backup.BackupSettings
+            var settings = new Backup.BackupSettings()
             {
-                FullName = folderBrowserDialog.SelectedPath,
-                Markers = Backup.FileType.ExcelXml,
-                Equipments = Backup.FileType.ExcelXml
+                Directory = AppSettings.Local.Default.DirectoryBackups,
+                FileNames = Backup.FileName.MarkersExcelXml | Backup.FileName.EquipmentsExcelXml,
             };
+
+            if (!FrmBackup.ShowDlg(this, settings, FrmBackup.BackupAction.Load))
+            {
+                return;
+            }
 
             var status = ProgramStatus.Start(Status.BackupLoad);
 
@@ -1476,15 +1471,12 @@ namespace TileExplorer
 
             try
             {
-                var backup = new Backup()
-                {
-                    Settings = settings
-                };
+                var backup = new Backup(settings);
 
                 backup.Load();
 
                 result = true;
-                resultMessage = string.Format(Resources.BackupLoadOk, backup.Settings.FullName);
+                resultMessage = string.Format(Resources.BackupLoadOk, backup.FullPath);
             }
             catch (Exception e)
             {

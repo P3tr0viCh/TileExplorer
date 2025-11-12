@@ -139,7 +139,6 @@
             this.timerMapChange = new System.Windows.Forms.Timer(this.components);
             this.cmSelectedItems = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xxxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -386,15 +385,15 @@
             // miMainBackupSave
             // 
             this.miMainBackupSave.Name = "miMainBackupSave";
-            this.miMainBackupSave.Size = new System.Drawing.Size(133, 22);
+            this.miMainBackupSave.Size = new System.Drawing.Size(180, 22);
             this.miMainBackupSave.Text = "Сохранить";
             this.miMainBackupSave.Click += new System.EventHandler(this.MiMainDataBackupSave_Click);
             // 
             // miMainBackupLoad
             // 
             this.miMainBackupLoad.Name = "miMainBackupLoad";
-            this.miMainBackupLoad.Size = new System.Drawing.Size(133, 22);
-            this.miMainBackupLoad.Text = "Открыть";
+            this.miMainBackupLoad.Size = new System.Drawing.Size(180, 22);
+            this.miMainBackupLoad.Text = "Восстановить";
             this.miMainBackupLoad.Click += new System.EventHandler(this.MiMainBackupLoad_Click);
             // 
             // toolStripSeparator1
@@ -1075,10 +1074,6 @@
             this.xxxToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.xxxToolStripMenuItem.Text = "xxx";
             // 
-            // folderBrowserDialog
-            // 
-            this.folderBrowserDialog.ShowNewFolderButton = false;
-            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1229,7 +1224,6 @@
         private System.Windows.Forms.ToolStripMenuItem miMainDataChartTracks;
         private System.Windows.Forms.ToolStripMenuItem miMainTilesHeatmap;
         private System.Windows.Forms.ToolStripMenuItem miMainBackupLoad;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
     }
 }
 

@@ -60,7 +60,7 @@ namespace TileExplorer
                 dtfEquipments.Table.Rows.Add(row);
             }
 
-            dtfEquipments.FileName = GetFullFileName(FileName.Equipments, FileType.ExcelXml);
+            dtfEquipments.FileName = GetFullFileName(FileName.EquipmentsExcelXml);
 
             dtfEquipments.WriteToExcelXml();
 
@@ -69,7 +69,7 @@ namespace TileExplorer
 
         private async Task SaveEquipmentsAsync()
         {
-            if (Settings.Equipments == default)
+            if (!Settings.FileNames.HasFlag(FileName.EquipmentsExcelXml))
             {
                 return;
             }
@@ -79,14 +79,14 @@ namespace TileExplorer
 
         private void LoadEquipments()
         {
-            if (Settings.Equipments == default)
+            if (!Settings.FileNames.HasFlag(FileName.EquipmentsExcelXml))
             {
                 return;
             }
 
             DebugWrite.Line("start");
 
-            dtfEquipments.FileName = GetFullFileName(FileName.Equipments, FileType.ExcelXml);
+            dtfEquipments.FileName = GetFullFileName(FileName.EquipmentsExcelXml);
             
             dtfEquipments.ReadFromExcelXml();
 

@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using P3tr0viCh.Utils;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using TileExplorer.Properties;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
@@ -57,6 +60,20 @@ namespace TileExplorer
                 };
 
                 FrmChartTracksByMonth.ShowFrm(owner, year, month);
+            }
+
+            public static void TextBoxWrongValue(TextBox textBox, string error)
+            {
+                textBox.Focus();
+
+                Msg.Error(error);
+            }
+
+            public static void TextBoxWrongValue(TextBox textBox, string error, object arg0)
+            {
+                textBox.Focus();
+
+                Msg.Error(error, arg0);
             }
         }
     }
