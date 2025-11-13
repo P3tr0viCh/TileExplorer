@@ -157,8 +157,6 @@ namespace TileExplorer
             await UpdateDataAsync();
 
             await CheckDirectoryTracksAsync(false);
-
-            await BackupLoadAsync();
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -257,8 +255,7 @@ namespace TileExplorer
 
         private void StartUpdateGrid()
         {
-            timerMapChange.Stop();
-            timerMapChange.Start();
+            timerMapChange.Restart();
         }
 
         private void TimerMapChange_Tick(object sender, EventArgs e)
@@ -1007,23 +1004,25 @@ namespace TileExplorer
             }
         }
 
-        public async Task ListItemDeleteAsync(object sender, BaseId value)
+        public async Task ListItemDeleteAsync(object sender, List<BaseId> list)
         {
-            if (value is Marker marker)
+            var value = list.FirstOrDefault();
+
+            if (value is Marker)
             {
-                await MarkerDeleteAsync(marker);
+                await MarkerDeleteAsync(list.Cast<Marker>().ToList());
                 return;
             }
 
-            if (value is Track track)
+            if (value is Track)
             {
-                await TrackDeleteAsync(track);
+                await TrackDeleteAsync(list.Cast<Track>().ToList());
                 return;
             }
 
-            if (value is Equipment equipment)
+            if (value is Equipment)
             {
-                await EquipmentDeleteAsync(equipment);
+                await EquipmentDeleteAsync(list.Cast<Equipment>().ToList());
                 return;
             }
         }

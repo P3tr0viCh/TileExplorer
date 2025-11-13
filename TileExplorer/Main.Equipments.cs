@@ -1,4 +1,6 @@
 ﻿using P3tr0viCh.Utils;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
@@ -22,15 +24,24 @@ namespace TileExplorer
             await UpdateDataAsync(DataLoad.ObjectChange, equipment);
         }
 
-        private async Task EquipmentDeleteAsync(Equipment equipment)
+        private async Task EquipmentDeleteAsync(List<Equipment> equipments)
         {
-            var name = equipment.Name;
+            if (equipments?.Count == 0) return;
 
-            if (!Msg.Question(string.Format(Resources.QuestionEquipmentDelete, name))) return;
+            var firstEquipment = equipments.FirstOrDefault();
 
-            if (!await Database.Actions.EquipmentDeleteAsync(equipment)) return;
+            var name = firstEquipment.Name;
 
-            await UpdateDataAsync(DataLoad.ObjectDelete, equipment);
+            var question = equipments.Count == 1 ? Resources.QuestionEquipmentDelete : Resources.QuestionEquipmentsDelete;
+
+            if (!Msg.Question(question, name, equipments.Count - 1)) return;
+
+            if (!await Database.Actions.EquipmentDeleteAsync(equipments)) return;
+
+            foreach (var equipment in equipments)
+            {
+                await UpdateDataAsync(DataLoad.ObjectDelete, equipment);
+            }
         }
     }
 }

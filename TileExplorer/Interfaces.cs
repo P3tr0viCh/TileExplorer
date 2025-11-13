@@ -18,7 +18,7 @@ namespace TileExplorer
 
             void ListItemAdd(object sender, BaseId value);
             Task ListItemChangeAsync(object sender, BaseId value);
-            Task ListItemDeleteAsync(object sender, BaseId value);
+            Task ListItemDeleteAsync(object sender, List<BaseId> list);
 
             Task TrackChangedAsync(Track track);
             Task MarkerChangedAsync(Marker marker);

@@ -2,6 +2,7 @@
 using GMap.NET.WindowsForms;
 using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
@@ -136,28 +137,40 @@ namespace TileExplorer
             await SelectMapItemAsync(this, marker);
         }
 
-        private async Task MarkerDeleteAsync(Marker marker)
+        private async Task MarkerDeleteAsync(List<Marker> markers)
         {
-            if (marker == null) return;
+            if (markers?.Count == 0) return;
 
-            var name = marker.Text;
+            var firstMarker = markers.FirstOrDefault();
+
+            var name = firstMarker.Text;
 
             if (name.IsEmpty())
             {
-                name = marker.Lat.ToString() + ":" + marker.Lng.ToString();
+                name = $"{firstMarker.Lat}:{firstMarker.Lng}";
             }
 
-            if (!Msg.Question(string.Format(Resources.QuestionMarkerDelete, name))) return;
+            var question = markers.Count == 1 ? Resources.QuestionMarkerDelete : Resources.QuestionMarkersDelete;
 
-            if (!await Database.Actions.MarkerDeleteAsync(marker)) return;
+            if (!Msg.Question(question, name, markers.Count - 1)) return;
 
-            overlayMarkers.Markers.Remove(
-                overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?
-                    .Cast<MapItemMarker>().FirstOrDefault());
+            if (!await Database.Actions.MarkerDeleteAsync(markers)) return;
 
-            await UpdateDataAsync(DataLoad.ObjectDelete, marker);
+            foreach (var marker in markers)
+            {
+                overlayMarkers.Markers.Remove(
+                    overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?
+                        .Cast<MapItemMarker>().FirstOrDefault());
+
+                await UpdateDataAsync(DataLoad.ObjectDelete, marker);
+            }
 
             Selected = null;
+        }
+
+        private async Task MarkerDeleteAsync(Marker marker)
+        {
+            await MarkerDeleteAsync(new List<Marker>() { marker });
         }
     }
 }

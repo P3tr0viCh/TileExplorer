@@ -446,4 +446,13 @@ ddd</value>
   <data name="BackupErrorMarkersNotExists" xml:space="preserve">
     <value>Архив не содержит маркеры.</value>
   </data>
+  <data name="QuestionMarkersDelete" xml:space="preserve">
+    <value>Удалить маркер «{0}» и ещё {1}?</value>
+  </data>
+  <data name="QuestionEquipmentsDelete" xml:space="preserve">
+    <value>Удалить снаряжение «{0}» и ещё {1}?</value>
+  </data>
+  <data name="QuestionTracksDelete" xml:space="preserve">
+    <value>Удалить трек «{0}» и ещё {1}?</value>
+  </data>
 </root>

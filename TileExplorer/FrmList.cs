@@ -4,6 +4,7 @@
 
 using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -136,6 +137,8 @@ namespace TileExplorer
                     sortColumnIndex = dataGridView.Columns[sortColumn].Index;
                     sortOrderDescending = true;
 
+                    dataGridView.MultiSelect = true;
+
                     break;
                 case ChildFormType.MarkerList:
                     Text = Resources.TitleListMarkers;
@@ -154,6 +157,8 @@ namespace TileExplorer
                     sortColumn = nameof(Marker.Text);
                     sortColumnIndex = dataGridView.Columns[sortColumn].Index;
                     sortOrderDescending = true;
+
+                    dataGridView.MultiSelect = true;
 
                     break;
                 case ChildFormType.ResultYears:
@@ -205,6 +210,8 @@ namespace TileExplorer
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsEquipmentList);
 
                     dataGridView.Columns[nameof(Equipment.Name)].Visible = false;
+
+                    dataGridView.MultiSelect = true;
 
                     break;
                 case ChildFormType.TileInfo:
@@ -458,22 +465,29 @@ namespace TileExplorer
 
         public BaseId Selected
         {
+            get => ((BindingSource)dataGridView.DataSource).Current as BaseId;
+            set => bindingSource.Position = bindingSource.IndexOf(Find(value));
+        }
+
+        public List<BaseId> SelectedList
+        {
             get
             {
-                return ((BindingSource)dataGridView.DataSource).Current as BaseId;
-            }
-            set
-            {
-                bindingSource.Position = bindingSource.IndexOf(Find(value));
+                if (dataGridView.SelectedCells.Count == 0) return null;
+                
+                var selectedRows = dataGridView.SelectedCells
+                    .Cast<DataGridViewCell>()
+                    .Select(cell => cell.OwningRow).Distinct();
+
+                if (selectedRows?.Count() == 0) return null;
+                
+                return selectedRows.Select(item => (BaseId)item.DataBoundItem).ToList();
             }
         }
 
         public int Count => bindingSource.Count;
 
-        public void SetSelected(BaseId value)
-        {
-            Selected = value;
-        }
+        public void SetSelected(BaseId value) => Selected = value;
 
         private void BindingSource_PositionChanged(object sender, EventArgs e)
         {
@@ -524,7 +538,7 @@ namespace TileExplorer
 
         private async void TsbtnDelete_Click(object sender, EventArgs e)
         {
-            await MainForm.ListItemDeleteAsync(this, Selected);
+            await MainForm.ListItemDeleteAsync(this, SelectedList);
         }
 
         private void ShowTrackEleChart()

@@ -553,6 +553,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Удалить снаряжение «{0}» и ещё {1}?.
+        /// </summary>
+        internal static string QuestionEquipmentsDelete {
+            get {
+                return ResourceManager.GetString("QuestionEquipmentsDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Сохранить домашнее расположение?.
         /// </summary>
         internal static string QuestionHomeSave {
@@ -567,6 +576,15 @@ namespace TileExplorer.Properties {
         internal static string QuestionMarkerDelete {
             get {
                 return ResourceManager.GetString("QuestionMarkerDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить маркер «{0}» и ещё {1}?.
+        /// </summary>
+        internal static string QuestionMarkersDelete {
+            get {
+                return ResourceManager.GetString("QuestionMarkersDelete", resourceCulture);
             }
         }
         
@@ -631,6 +649,15 @@ namespace TileExplorer.Properties {
         internal static string QuestionTracksCancelToAll {
             get {
                 return ResourceManager.GetString("QuestionTracksCancelToAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить трек «{0}» и ещё {1}?.
+        /// </summary>
+        internal static string QuestionTracksDelete {
+            get {
+                return ResourceManager.GetString("QuestionTracksDelete", resourceCulture);
             }
         }
         

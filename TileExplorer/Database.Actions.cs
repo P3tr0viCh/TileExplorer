@@ -1,5 +1,6 @@
 ﻿using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
 
@@ -27,11 +28,11 @@ namespace TileExplorer
                 }
             }
 
-            public static async Task<bool> MarkerDeleteAsync(Marker marker)
+            public static async Task<bool> MarkerDeleteAsync(List<Marker> markers)
             {
                 try
                 {
-                    await Default.MarkerDeleteAsync(marker);
+                    await Default.MarkerDeleteAsync(markers);
 
                     return true;
                 }
@@ -45,11 +46,11 @@ namespace TileExplorer
                 }
             }
 
-            public static async Task<bool> TrackDeleteAsync(Track track)
+            public static async Task<bool> TrackDeleteAsync(List<Track> tracks)
             {
                 try
                 {
-                    await Default.TrackDeleteAsync(track);
+                    await Default.TrackDeleteAsync(tracks);
 
                     return true;
                 }
@@ -81,11 +82,11 @@ namespace TileExplorer
                 }
             }
 
-            public static async Task<bool> EquipmentDeleteAsync(Equipment equipment)
+            public static async Task<bool> EquipmentDeleteAsync(List<Equipment> equipments)
             {
                 try
                 {
-                    await Default.EquipmentDeleteAsync(equipment);
+                    await Default.EquipmentDeleteAsync(equipments);
 
                     return true;
                 }

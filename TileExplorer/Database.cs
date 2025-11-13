@@ -127,11 +127,21 @@ namespace TileExplorer
             }
         }
 
-        public async Task MarkerDeleteAsync(Marker marker)
+        public async Task MarkerDeleteAsync(List<Marker> markers)
         {
             using (var connection = GetConnection())
             {
-                await connection.DeleteAsync(marker);
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    foreach (var marker in markers)
+                    {
+                        await connection.DeleteAsync(marker);
+                    }
+
+                    transaction.Commit();
+                }
             }
         }
 
@@ -175,11 +185,21 @@ namespace TileExplorer
             }
         }
 
-        public async Task EquipmentDeleteAsync(Equipment equipment)
+        public async Task EquipmentDeleteAsync(List<Equipment> equipments)
         {
             using (var connection = GetConnection())
             {
-                await connection.DeleteAsync(equipment);
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    foreach (var equipment in equipments)
+                    {
+                        await connection.DeleteAsync(equipment);
+                    }
+
+                    transaction.Commit();
+                }
             }
         }
 
@@ -209,11 +229,21 @@ namespace TileExplorer
             }
         }
 
-        public async Task TrackDeleteAsync(Track track)
+        public async Task TrackDeleteAsync(List<Track> tracks)
         {
             using (var connection = GetConnection())
             {
-                await connection.DeleteAsync(track);
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    foreach (var track in tracks)
+                    {
+                        await connection.DeleteAsync(track);
+                    }
+
+                    transaction.Commit();
+                }
             }
         }
 
