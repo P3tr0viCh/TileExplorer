@@ -156,7 +156,8 @@ namespace TileExplorer.Properties {
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///	text TEXT, datetimestart TEXT, datetimefinish TEXT,
         ///	duration INTEGER, durationinmove INTEGER,
-        ///	distance REAL, eleascent REAL, equipmentid INTEGER
+        ///	distance REAL, eleascent REAL, eledescent REAL,
+        ///	equipmentid INTEGER
         ///);.
         /// </summary>
         internal static string CreateTableTracks {
@@ -312,17 +313,18 @@ namespace TileExplorer.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT (CASE WHEN year = 32000 THEN NULL ELSE year END) AS year, count,
-        ///    distancesum, durationsum,
-        ///    distancestep0, distancestep1, distancestep2
+        ///    durationsum, distancesum,
+        ///    distancestep0, distancestep1, distancestep2,
+        ///	eleascentsum,
+        ///    eleascentstep0, eleascentstep1, eleascentstep2
         ///FROM
         ///(SELECT 
         ///    CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year,
         ///    COUNT(*) AS count,
-        ///    SUM(distance) / 1000.0 AS distancesum, 
         ///	SUM(JULIANDAY(datetimefinish) - JULIANDAY(datetimestart)) AS durationsum,
+        ///    SUM(distance) / 1000.0 AS distancesum, 
         ///	SUM(IIF(distance &lt; 50000, 1, 0)) AS distancestep0,
-        ///	SUM(IIF(distance &gt;= 50000 AND distance &lt; 100000, 1, 0)) AS distancestep1,
-        ///	SUM(IIF [rest of string was truncated]&quot;;.
+        ///	SUM(IIF(distan [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectResultYears {
             get {
@@ -340,7 +342,10 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM tiles ORDER BY x, y;.
+        ///   Looks up a localized string similar to SELECT tiles.id, x, y, COUNT(*) AS trackcount FROM tiles
+        ///LEFT JOIN tracks_tiles ON tiles.id = tileid
+        ///GROUP BY tiles.id
+        ///ORDER BY x, y;.
         /// </summary>
         internal static string SelectTiles {
             get {
@@ -399,7 +404,7 @@ namespace TileExplorer.Properties {
         ///   Looks up a localized string similar to SELECT id, text, dt AS datetimestart, datetimefinish,
         ///	duration, durationinmove,
         ///	distance,
-        ///	eleascent,
+        ///	eleascent, eledescent,
         ///	equipmentid, equipmenttext, equipmentbrand, equipmentmodel,
         ///	SUM(CASE WHEN e = 0 THEN 1 ELSE 0 END) AS newtilescount
         ///FROM (
@@ -412,7 +417,7 @@ namespace TileExplorer.Properties {
         ///		) AS e
         ///	FROM (
         ///		SELECT tracks.id AS id, tracks.text AS text,
-        ///			datetimestart AS dt, da [rest of string was truncated]&quot;;.
+        ///			datetimesta [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectTracks {
             get {
@@ -480,6 +485,15 @@ namespace TileExplorer.Properties {
         internal static string SelectYears {
             get {
                 return ResourceManager.GetString("SelectYears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM {0};.
+        /// </summary>
+        internal static string TruncateTable {
+            get {
+                return ResourceManager.GetString("TruncateTable", resourceCulture);
             }
         }
     }

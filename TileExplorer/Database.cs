@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Threading.Tasks;
+using System.Transactions;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -63,6 +64,15 @@ namespace TileExplorer
             }
         }
 
+        private async Task TruncateTableAsync<T>(SQLiteConnection connection, SQLiteTransaction transaction)
+        {
+            var sql = string.Format(ResourcesSql.TruncateTable, Sql.TableName<T>());
+
+            DebugWrite.Line(sql);
+
+            await connection.ExecuteAsync(sql, null, transaction);
+        }
+
         public async Task<TracksInfo> LoadTracksInfoAsync(Filter filter)
         {
             using (var connection = GetConnection())
@@ -77,17 +87,42 @@ namespace TileExplorer
             }
         }
 
+        private async Task MarkerSaveAsync(SQLiteConnection connection, SQLiteTransaction transaction, Marker marker)
+        {
+            if (marker.Id == Sql.NewId)
+            {
+                await connection.InsertAsync(marker, transaction);
+            }
+            else
+            {
+                await connection.UpdateAsync(marker, transaction);
+            }
+        }
+
         public async Task MarkerSaveAsync(Marker marker)
         {
             using (var connection = GetConnection())
             {
-                if (marker.Id == Sql.NewId)
+                await MarkerSaveAsync(connection, null, marker);
+            }
+        }
+
+        public async Task MarkersReplaceAsync(List<Marker> markers)
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
                 {
-                    await connection.InsertAsync(marker);
-                }
-                else
-                {
-                    await connection.UpdateAsync(marker);
+                    await TruncateTableAsync<Marker>(connection, transaction);
+
+                    foreach (var marker in markers)
+                    {
+                        await MarkerSaveAsync(connection, transaction, marker);
+                    }
+
+                    transaction.Commit();
                 }
             }
         }
@@ -100,17 +135,42 @@ namespace TileExplorer
             }
         }
 
+        private async Task EquipmentSaveAsync(SQLiteConnection connection, SQLiteTransaction transaction, Equipment equipment)
+        {
+            if (equipment.Id == Sql.NewId)
+            {
+                await connection.InsertAsync(equipment, transaction);
+            }
+            else
+            {
+                await connection.UpdateAsync(equipment, transaction);
+            }
+        }
+
         public async Task EquipmentSaveAsync(Equipment equipment)
         {
             using (var connection = GetConnection())
             {
-                if (equipment.Id == Sql.NewId)
+                await EquipmentSaveAsync(connection, null, equipment);
+            }
+        }
+
+        public async Task EquipmentsReplaceAsync(List<Equipment> equipments)
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
                 {
-                    await connection.InsertAsync(equipment);
-                }
-                else
-                {
-                    await connection.UpdateAsync(equipment);
+                    await TruncateTableAsync<Equipment>(connection, transaction);
+
+                    foreach (var equipment in equipments)
+                    {
+                        await EquipmentSaveAsync(connection, transaction, equipment);
+                    }
+
+                    transaction.Commit();
                 }
             }
         }
@@ -351,7 +411,8 @@ namespace TileExplorer
                             TrackId = track.Id,
                             TileId = tile.Id,
                         }, transaction);
-                    };
+                    }
+                    ;
 
                     transaction.Commit();
                 }

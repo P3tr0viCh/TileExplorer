@@ -112,12 +112,12 @@ namespace TileExplorer
             await SaveSettingsAsync();
         }
 
-        public void Load()
+        public async Task LoadAsync()
         {
             Files.CheckDirectoryExists(FullPath);
 
-            LoadMarkers();
-            LoadEquipments();
+            await LoadMarkersAsync();
+            await LoadEquipmentsAsync();
         }
     }
 }

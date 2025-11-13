@@ -166,7 +166,7 @@ namespace TileExplorer
             }
         }
 
-        private void LoadMarkers()
+        private async Task LoadMarkersAsync()
         {
             if (!Settings.FileNames.HasFlag(FileName.MarkersExcelXml))
             {
@@ -195,6 +195,8 @@ namespace TileExplorer
                     OffsetY = Convert.ToInt32(row["OffsetY"])
                 });
             }
+
+            await Database.Default.MarkersReplaceAsync(markers);
 
             DebugWrite.Line("end");
         }

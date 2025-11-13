@@ -158,7 +158,7 @@ namespace TileExplorer
 
             await CheckDirectoryTracksAsync(false);
 
-            BackupLoad();
+            await BackupLoadAsync();
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -1444,7 +1444,7 @@ namespace TileExplorer
             Utils.MsgResult(result, resultMessage);
         }
 
-        private void BackupLoad()
+        private async Task BackupLoadAsync()
         {
             if (ProgramStatus.Contains(Status.BackupSave) || ProgramStatus.Contains(Status.BackupLoad))
             {
@@ -1455,6 +1455,9 @@ namespace TileExplorer
 
             var settings = new Backup.BackupSettings()
             {
+#if DEBUG
+                Name = "2025-11-11",
+#endif
                 Directory = AppSettings.Local.Default.DirectoryBackups,
                 FileNames = Backup.FileName.MarkersExcelXml | Backup.FileName.EquipmentsExcelXml,
             };
@@ -1473,7 +1476,7 @@ namespace TileExplorer
             {
                 var backup = new Backup(settings);
 
-                backup.Load();
+                await backup.LoadAsync();
 
                 result = true;
                 resultMessage = string.Format(Resources.BackupLoadOk, backup.FullPath);
@@ -1490,6 +1493,8 @@ namespace TileExplorer
                 ProgramStatus.Stop(status);
             }
 
+            await UpdateDataAsync();
+
             Utils.MsgResult(result, resultMessage);
         }
 
@@ -1498,9 +1503,9 @@ namespace TileExplorer
             await BackupSaveAsync();
         }
 
-        private void MiMainBackupLoad_Click(object sender, EventArgs e)
+        private async void MiMainBackupLoad_Click(object sender, EventArgs e)
         {
-            BackupLoad();
+            await BackupLoadAsync();
         }
 
         private void GMapControl_Paint(object sender, PaintEventArgs e)

@@ -84,6 +84,8 @@ namespace TileExplorer
             {
                 folderBrowserDialog.ShowNewFolderButton = false;
 
+                tbName.Text = Settings.Name;
+
                 cboxNameIsDate.Visible = false;
 
                 cboxMarkersGpx.Enabled = false;

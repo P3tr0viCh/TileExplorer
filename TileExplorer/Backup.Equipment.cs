@@ -77,7 +77,7 @@ namespace TileExplorer
             await SaveEquipmentsAsExcelXmlAsync();
         }
 
-        private void LoadEquipments()
+        private async Task LoadEquipmentsAsync()
         {
             if (!Settings.FileNames.HasFlag(FileName.EquipmentsExcelXml))
             {
@@ -103,6 +103,8 @@ namespace TileExplorer
                     Model = Convert.ToString(row["Model"])
                 });
             }
+
+            await Database.Default.EquipmentsReplaceAsync(equipments);
 
             DebugWrite.Line("end");
         }
