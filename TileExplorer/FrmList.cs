@@ -474,15 +474,36 @@ namespace TileExplorer
             get
             {
                 if (dataGridView.SelectedCells.Count == 0) return null;
-                
+
                 var selectedRows = dataGridView.SelectedCells
                     .Cast<DataGridViewCell>()
                     .Select(cell => cell.OwningRow).Distinct();
 
                 if (selectedRows?.Count() == 0) return null;
-                
+
                 return selectedRows.Select(item => (BaseId)item.DataBoundItem).ToList();
             }
+        }
+
+        private void SetSelectedRows(List<BaseId> values)
+        {
+            dataGridView.ClearSelection();
+
+            foreach (var value in values)
+            {
+                foreach (var row in from DataGridViewRow row in dataGridView.Rows
+                                    where (row.DataBoundItem as BaseId).Id == value.Id
+                                    select row)
+                {
+                    row.Selected = true;
+                    break;
+                }
+            }
+        }
+
+        private void SetSelectedRows(BaseId value)
+        {
+            SetSelectedRows(new List<BaseId>() { value });
         }
 
         public int Count => bindingSource.Count;
@@ -504,11 +525,11 @@ namespace TileExplorer
             }
         }
 
-        private void DataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private async void DataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
-            MainForm.ListItemChangeAsync(this, Selected);
+            await SelectedChangeAsync();
         }
 
         private void TsbtnAdd_Click(object sender, EventArgs e)
@@ -531,14 +552,28 @@ namespace TileExplorer
             MainForm.ListItemAdd(this, value);
         }
 
-        private void TsbtnChange_Click(object sender, EventArgs e)
+        private async Task SelectedChangeAsync()
         {
-            MainForm.ListItemChangeAsync(this, Selected);
+            SetSelectedRows(Selected);
+
+            await MainForm.ListItemChangeAsync(this, Selected);
+        }
+
+        private async void TsbtnChange_Click(object sender, EventArgs e)
+        {
+            await SelectedChangeAsync();
+        }
+
+        private async Task SelectedDeleteAsync()
+        {
+            SetSelectedRows(SelectedList);
+
+            await MainForm.ListItemDeleteAsync(this, SelectedList);
         }
 
         private async void TsbtnDelete_Click(object sender, EventArgs e)
         {
-            await MainForm.ListItemDeleteAsync(this, SelectedList);
+            await SelectedDeleteAsync();
         }
 
         private void ShowTrackEleChart()
