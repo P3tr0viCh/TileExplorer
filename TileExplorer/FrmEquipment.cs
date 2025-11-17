@@ -15,10 +15,7 @@ namespace TileExplorer
 
         private Equipment Equipment
         {
-            get
-            {
-                return equipment;
-            }
+            get => equipment;
             set
             {
                 equipment.Assign(value);
@@ -60,14 +57,8 @@ namespace TileExplorer
             tbBrand.Text = tbBrand.Text.Trim();
             tbModel.Text = tbModel.Text.Trim();
 
-            if (tbText.Text.IsEmpty() &&
-                tbBrand.Text.IsEmpty() &&
-                tbModel.Text.IsEmpty())
+            if (Utils.Forms.CheckTextBoxIsEmpty(tbText, Resources.ErrorNeedText))
             {
-                tbText.Focus();
-
-                Msg.Error(Resources.ErrorNeedText);
-
                 return false;
             }
 

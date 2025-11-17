@@ -1,5 +1,6 @@
 ﻿using P3tr0viCh.Utils;
 using System;
+using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -18,6 +19,7 @@ namespace TileExplorer
             EquipmentsExcelXml = 4,
             LocalSettings = 8,
             RoamingSettings = 16,
+            TrackExts = 32,
         }
 
         public class BackupSettings
@@ -68,6 +70,7 @@ namespace TileExplorer
                 case FileName.EquipmentsExcelXml: return fileNameEquipments + fileNameExtXml;
                 case FileName.LocalSettings: return $"Local.{Environment.MachineName}.{Files.ExtConfig}";
                 case FileName.RoamingSettings: return $"Roaming.{Files.ExtConfig}";
+                case FileName.TrackExts: return fileNameTrackExts + fileNameExtXml;
                 default: return string.Empty;
             }
         }
@@ -78,6 +81,15 @@ namespace TileExplorer
         }
 
         private string GetFullFileName(FileName fileName) => GetFullFileName(FullPath, fileName);
+
+        private static DataTableFile CreateDataTableFile(DataTable table)
+        {
+            return new DataTableFile()
+            {
+                Table = table,
+                Author = Utils.AssemblyNameAndVersion(),
+            };
+        }
 
         private async Task SaveSettingsAsync()
         {
@@ -110,6 +122,7 @@ namespace TileExplorer
             await SaveMarkersAsync();
             await SaveEquipmentsAsync();
             await SaveSettingsAsync();
+            await SaveTrackExtsAsync();
         }
 
         public async Task LoadAsync()

@@ -56,49 +56,6 @@ namespace TileExplorer
                             case nameof(Track.NewTilesCount):
                                 compare = x.NewTilesCount.CompareTo(y.NewTilesCount);
                                 break;
-                            case nameof(Track.EquipmentName):
-                                if (x.EquipmentName.IsEmpty() && y.EquipmentName.IsEmpty())
-                                {
-                                    compare = x.DateTimeStart.CompareTo(y.DateTimeStart); ;
-                                }
-                                else
-                                {
-                                    if (x.EquipmentName.IsEmpty())
-                                    {
-                                        if (sortOrderDescending)
-                                        {
-                                            compare = -1;
-                                        }
-                                        else
-                                        {
-                                            compare = 1;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (y.EquipmentName.IsEmpty())
-                                        {
-                                            if (sortOrderDescending)
-                                            {
-                                                compare = 1;
-                                            }
-                                            else
-                                            {
-                                                compare = -1;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            compare = x.EquipmentName.CompareTo(y.EquipmentName);
-
-                                            if (compare == 0)
-                                            {
-                                                compare = x.DateTimeStart.CompareTo(y.DateTimeStart);
-                                            }
-                                        }
-                                    }
-                                }
-                                break;
                         }
 
                         if (sortOrderDescending)
@@ -119,7 +76,7 @@ namespace TileExplorer
                 case ChildFormType.EquipmentList:
                     list = bindingSource.Cast<Equipment>().ToList();
 
-                    ((List<Equipment>)list).Sort((Equipment x, Equipment y) => x.Name.CompareTo(y.Name));
+                    ((List<Equipment>)list).Sort((Equipment x, Equipment y) => x.Text.CompareTo(y.Text));
 
                     break;
                 default:

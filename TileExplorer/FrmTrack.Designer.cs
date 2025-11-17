@@ -94,7 +94,7 @@
             // cboxEquipment
             // 
             this.cboxEquipment.DataSource = this.equipmentBindingSource;
-            this.cboxEquipment.DisplayMember = "Name";
+            this.cboxEquipment.DisplayMember = "Text";
             this.cboxEquipment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxEquipment.FormattingEnabled = true;
             this.cboxEquipment.Location = new System.Drawing.Point(8, 86);

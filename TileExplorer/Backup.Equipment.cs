@@ -36,11 +36,7 @@ namespace TileExplorer
                 ColumnName = "Model",
             });
 
-            return new DataTableFile()
-            {
-                Table = table,
-                Author = Utils.AssemblyNameAndVersion(),
-            };
+            return CreateDataTableFile(table);
         }
 
         private async Task SaveEquipmentsAsExcelXmlAsync()

@@ -1,5 +1,5 @@
 ﻿#if DEBUG
-//#define SHOW_SQL
+#define SHOW_SQL
 #endif
 
 using Dapper;
@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Threading.Tasks;
-using System.Transactions;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -347,7 +346,18 @@ namespace TileExplorer
                         }
                         else
                         {
-                            sql = ResourcesSql.SelectTracksOnly;
+                            dynamic f = filter;
+
+                            var forBackup = f.forBackup; 
+                            
+                            if (forBackup)
+                            {
+                                sql = ResourcesSql.SelectTracksForBackup;
+                            }
+                            else
+                            {
+                                sql = ResourcesSql.SelectTracksOnly;
+                            }
                         }
                     }
                     break;

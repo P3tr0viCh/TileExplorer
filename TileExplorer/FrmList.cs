@@ -116,9 +116,9 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Track.EleAscent)].Visible = true;
                     dataGridView.Columns[nameof(Track.EleDescent)].Visible = true;
                     dataGridView.Columns[nameof(Track.NewTilesCount)].Visible = true;
+                    dataGridView.Columns[nameof(Track.EquipmentText)].Visible = true;
 
                     dataGridView.Columns[nameof(Track.Equipment)].Visible = false;
-                    dataGridView.Columns[nameof(Track.EquipmentName)].Visible = true;
 
                     var visible =
 #if SHOW_ALL_COLUMNS
@@ -129,7 +129,6 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Track.Duration)].Visible = visible;
                     dataGridView.Columns[nameof(Track.DurationInMove)].Visible = visible;
                     dataGridView.Columns[nameof(Track.EquipmentId)].Visible = visible;
-                    dataGridView.Columns[nameof(Track.EquipmentText)].Visible = visible;
                     dataGridView.Columns[nameof(Track.EquipmentBrand)].Visible = visible;
                     dataGridView.Columns[nameof(Track.EquipmentModel)].Visible = visible;
 
@@ -146,7 +145,7 @@ namespace TileExplorer
                     toolStripLeft.Visible = true;
 
                     AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateMarkerList);
-                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsMarkerList);
+                    //AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsMarkerList);
 
                     dataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
 
@@ -208,8 +207,6 @@ namespace TileExplorer
 
                     AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateEquipmentList);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsEquipmentList);
-
-                    dataGridView.Columns[nameof(Equipment.Name)].Visible = false;
 
                     dataGridView.MultiSelect = true;
 

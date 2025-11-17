@@ -30,11 +30,11 @@ namespace TileExplorer
 
             var firstEquipment = equipments.FirstOrDefault();
 
-            var name = firstEquipment.Name;
+            var text = firstEquipment.Text;
 
             var question = equipments.Count == 1 ? Resources.QuestionEquipmentDelete : Resources.QuestionEquipmentsDelete;
 
-            if (!Msg.Question(question, name, equipments.Count - 1)) return;
+            if (!Msg.Question(question, text, equipments.Count - 1)) return;
 
             if (!await Database.Actions.EquipmentDeleteAsync(equipments)) return;
 

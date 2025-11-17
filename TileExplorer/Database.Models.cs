@@ -210,16 +210,14 @@ namespace TileExplorer
                     get => equipment; set => equipment.Assign(value);
                 }
 
+                [DisplayName("Снаряжение: ID")]
+                public long EquipmentId { get => Equipment.Id; set => Equipment.Id = value; }
+
                 [DisplayName("Снаряжение")]
                 [Write(false)]
                 [Computed]
-                public string EquipmentName => Equipment.Name;
-                [DisplayName("Снаряжение: ID")]
-                public long EquipmentId { get => Equipment.Id; set => Equipment.Id = value; }
-                [DisplayName("Снаряжение: название")]
-                [Write(false)]
-                [Computed]
                 public string EquipmentText { get => Equipment.Text; set => Equipment.Text = value; }
+
                 [DisplayName("Снаряжение: марка")]
                 [Write(false)]
                 [Computed]
@@ -351,7 +349,7 @@ namespace TileExplorer
                 public int EleAscentStep2 { get; set; } = 0;
             }
 
-            public class ResultEquipments : BaseId
+            public class ResultEquipments : BaseId, IModelText
             {
                 [DisplayName("Название")]
                 public string Text { get; set; } = string.Empty;
@@ -370,7 +368,7 @@ namespace TileExplorer
             }
 
             [Table("equipments")]
-            public class Equipment : BaseId
+            public class Equipment : BaseId, IModelText
             {
                 [DisplayName("Название")]
                 public string Text { get; set; }
@@ -380,37 +378,6 @@ namespace TileExplorer
 
                 [DisplayName("Модель")]
                 public string Model { get; set; }
-
-                [DisplayName("Название")]
-                [Write(false)]
-                [Computed]
-                public string Name
-                {
-                    get
-                    {
-                        if (Text.IsEmpty())
-                        {
-                            if (Brand.IsEmpty() && Model.IsEmpty())
-                            {
-                                return string.Empty;
-                            }
-
-                            if (Brand.IsEmpty())
-                            {
-                                return Model;
-                            }
-
-                            if (Model.IsEmpty())
-                            {
-                                return Brand;
-                            }
-
-                            return Brand + " " + Model;
-                        }
-
-                        return Text;
-                    }
-                }
 
                 public new void Clear()
                 {

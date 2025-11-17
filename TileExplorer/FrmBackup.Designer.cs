@@ -46,9 +46,12 @@
             this.btnName = new System.Windows.Forms.Button();
             this.tbName = new System.Windows.Forms.TextBox();
             this.cboxNameIsDate = new System.Windows.Forms.CheckBox();
+            this.gdTracks = new System.Windows.Forms.GroupBox();
+            this.cboxTrackExts = new System.Windows.Forms.CheckBox();
             this.gbMarkers.SuspendLayout();
             this.gbEquipments.SuspendLayout();
             this.gbSettings.SuspendLayout();
+            this.gdTracks.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -58,7 +61,7 @@
             this.btnCancel.Location = new System.Drawing.Point(304, 304);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
-            this.btnCancel.TabIndex = 11;
+            this.btnCancel.TabIndex = 12;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -68,7 +71,7 @@
             this.btnOk.Location = new System.Drawing.Point(216, 304);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
-            this.btnOk.TabIndex = 10;
+            this.btnOk.TabIndex = 11;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
@@ -224,12 +227,33 @@
             this.cboxNameIsDate.UseVisualStyleBackColor = true;
             this.cboxNameIsDate.CheckedChanged += new System.EventHandler(this.CboxNameIsDate_CheckedChanged);
             // 
+            // gdTracks
+            // 
+            this.gdTracks.Controls.Add(this.cboxTrackExts);
+            this.gdTracks.Location = new System.Drawing.Point(200, 208);
+            this.gdTracks.Name = "gdTracks";
+            this.gdTracks.Size = new System.Drawing.Size(184, 88);
+            this.gdTracks.TabIndex = 10;
+            this.gdTracks.TabStop = false;
+            this.gdTracks.Text = "Треки";
+            // 
+            // cboxTracksExt
+            // 
+            this.cboxTrackExts.AutoSize = true;
+            this.cboxTrackExts.Location = new System.Drawing.Point(8, 24);
+            this.cboxTrackExts.Name = "cboxTracksExt";
+            this.cboxTrackExts.Size = new System.Drawing.Size(107, 23);
+            this.cboxTrackExts.TabIndex = 0;
+            this.cboxTrackExts.Text = "Снаряжение";
+            this.cboxTrackExts.UseVisualStyleBackColor = true;
+            // 
             // FrmBackup
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(392, 345);
+            this.Controls.Add(this.gdTracks);
             this.Controls.Add(this.cboxNameIsDate);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.btnName);
@@ -259,6 +283,8 @@
             this.gbEquipments.PerformLayout();
             this.gbSettings.ResumeLayout(false);
             this.gbSettings.PerformLayout();
+            this.gdTracks.ResumeLayout(false);
+            this.gdTracks.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -284,5 +310,7 @@
         private System.Windows.Forms.Button btnName;
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.CheckBox cboxNameIsDate;
+        private System.Windows.Forms.GroupBox gdTracks;
+        private System.Windows.Forms.CheckBox cboxTrackExts;
     }
 }

@@ -54,11 +54,7 @@ namespace TileExplorer
                 ColumnName = "OffsetY",
             });
 
-            return new DataTableFile()
-            {
-                Table = table,
-                Author = Utils.AssemblyNameAndVersion(),
-            };
+            return CreateDataTableFile(table);
         }
 
         private void SaveMarkersAsGpx(List<Marker> markers)

@@ -29,10 +29,7 @@ namespace TileExplorer
             InitializeComponent();
         }
 
-        public FrmBackup(Form owner) : this()
-        {
-            Owner = owner;
-        }
+        public FrmBackup(Form owner) : this() => Owner = owner;
 
         public static bool ShowDlg(Form owner, BackupSettings settings, BackupAction action)
         {
@@ -71,6 +68,8 @@ namespace TileExplorer
             cboxLocalSettings.Checked = Settings.FileNames.HasFlag(FileName.LocalSettings);
             cboxRoamingSettings.Checked = Settings.FileNames.HasFlag(FileName.RoamingSettings);
 
+            cboxTrackExts.Checked = Settings.FileNames.HasFlag(FileName.TrackExts);
+
             if (Action == BackupAction.Save)
             {
                 cboxNameIsDate.Checked = Settings.NameUseDate;
@@ -95,6 +94,23 @@ namespace TileExplorer
             }
         }
 
+
+        private void UpdateFileNames()
+        {
+            Settings.FileNames = default;
+
+            if (cboxMarkersExcelXml.Checked) Settings.FileNames |= FileName.MarkersExcelXml;
+            if (cboxMarkersGpx.Checked) Settings.FileNames |= FileName.MarkersGpx;
+
+            if (cboxEquipmentsExcelXml.Checked) Settings.FileNames |= FileName.EquipmentsExcelXml;
+
+            if (cboxLocalSettings.Checked) Settings.FileNames |= FileName.LocalSettings;
+
+            if (cboxRoamingSettings.Checked) Settings.FileNames |= FileName.RoamingSettings;
+
+            if (cboxTrackExts.Checked) Settings.FileNames |= FileName.TrackExts;
+        }
+
         private bool CheckData()
         {
             var directory = tbDirectory.Text;
@@ -106,14 +122,12 @@ namespace TileExplorer
                 return false;
             }
 
-            var name = tbName.Text;
-
-            if (name.IsEmpty())
+            if (Utils.Forms.CheckTextBoxIsEmpty(tbName, Resources.BackupErrorNameEmpty))
             {
-                Utils.Forms.TextBoxWrongValue(tbName, Resources.BackupErrorNameEmpty);
-
                 return false;
             }
+
+            var name = tbName.Text;
 
             var backupDirectory = Path.Combine(directory, name);
 
@@ -124,9 +138,9 @@ namespace TileExplorer
                 return false;
             }
 
-            if (!(cboxMarkersExcelXml.Checked || cboxMarkersGpx.Checked ||
-                cboxEquipmentsExcelXml.Checked ||
-                cboxLocalSettings.Checked || cboxRoamingSettings.Checked))
+            UpdateFileNames();
+
+            if (Settings.FileNames == default)
             {
                 Msg.Error(IsActionLoad ? Resources.BackupErrorNothingLoad : Resources.BackupErrorNothingSave);
 
@@ -163,32 +177,6 @@ namespace TileExplorer
             Settings.Name = tbName.Text;
 
             Settings.NameUseDate = cboxNameIsDate.Checked;
-
-            Settings.FileNames = default;
-
-            if (cboxMarkersExcelXml.Checked)
-            {
-                Settings.FileNames |= FileName.MarkersExcelXml;
-            }
-            if (cboxMarkersGpx.Checked)
-            {
-                Settings.FileNames |= FileName.MarkersGpx;
-            }
-
-            if (cboxEquipmentsExcelXml.Checked)
-            {
-                Settings.FileNames |= FileName.EquipmentsExcelXml;
-            }
-
-            if (cboxLocalSettings.Checked)
-            {
-                Settings.FileNames |= FileName.LocalSettings;
-            }
-
-            if (cboxRoamingSettings.Checked)
-            {
-                Settings.FileNames |= FileName.RoamingSettings;
-            }
 
             return true;
         }

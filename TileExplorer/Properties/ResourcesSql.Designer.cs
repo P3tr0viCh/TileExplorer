@@ -457,6 +457,18 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT tracks.text, datetimestart, eleascent, eledescent, equipments.text AS equipmenttext
+        ///FROM tracks
+        ///LEFT JOIN equipments ON equipmentid = equipments.id
+        ///ORDER BY datetimestart DESC;.
+        /// </summary>
+        internal static string SelectTracksForBackup {
+            get {
+                return ResourceManager.GetString("SelectTracksForBackup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT count(*) AS count, sum(distance) AS distance
         ///FROM tracks
         ///{0};.
@@ -468,7 +480,8 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM tracks;.
+        ///   Looks up a localized string similar to SELECT * FROM tracks
+        ///ORDER BY datetimestart DESC;.
         /// </summary>
         internal static string SelectTracksOnly {
             get {

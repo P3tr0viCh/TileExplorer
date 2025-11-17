@@ -75,6 +75,18 @@ namespace TileExplorer
 
                 Msg.Error(error, arg0);
             }
+
+            public static bool CheckTextBoxIsEmpty(TextBox textBox, string error)
+            {
+                if (textBox.Text.IsEmpty())
+                {
+                    TextBoxWrongValue(textBox, error);
+
+                    return true;
+                }
+
+                return false;
+            }
         }
     }
 }
