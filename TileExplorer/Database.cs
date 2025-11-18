@@ -1,5 +1,5 @@
 ﻿#if DEBUG
-#define SHOW_SQL
+#define _SHOW_SQL
 #endif
 
 using Dapper;
@@ -11,7 +11,9 @@ using System.Data.SQLite;
 using System.IO;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
+using static P3tr0viCh.Utils.DataBaseConnection;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -72,6 +74,26 @@ namespace TileExplorer
             await connection.ExecuteAsync(sql, null, transaction);
         }
 
+        private async Task TableReplaceAsync<T>(List<T> values) where T : BaseId
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    await TruncateTableAsync<T>(connection, transaction);
+
+                    foreach (var value in values)
+                    {
+                        await ListItemSaveAsync(connection, transaction, value);
+                    }
+
+                    transaction.Commit();
+                }
+            }
+        }
+
         public async Task<TracksInfo> LoadTracksInfoAsync(Filter filter)
         {
             using (var connection = GetConnection())
@@ -86,15 +108,33 @@ namespace TileExplorer
             }
         }
 
-        private async Task MarkerSaveAsync(SQLiteConnection connection, SQLiteTransaction transaction, Marker marker)
+        private async Task ListItemSaveAsync<T>(SQLiteConnection connection, SQLiteTransaction transaction, T value) where T : BaseId
         {
-            if (marker.Id == Sql.NewId)
+            if (value.Id == Sql.NewId)
             {
-                await connection.InsertAsync(marker, transaction);
+                await connection.InsertAsync(value, transaction);
             }
             else
             {
-                await connection.UpdateAsync(marker, transaction);
+                await connection.UpdateAsync(value, transaction);
+            }
+        }
+
+        private async Task ListItemDeleteAsync<T>(List<T> values) where T : BaseId
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    foreach (var value in values)
+                    {
+                        await connection.DeleteAsync(value);
+                    }
+
+                    transaction.Commit();
+                }
             }
         }
 
@@ -102,104 +142,36 @@ namespace TileExplorer
         {
             using (var connection = GetConnection())
             {
-                await MarkerSaveAsync(connection, null, marker);
+                await ListItemSaveAsync(connection, null, marker);
             }
         }
 
         public async Task MarkersReplaceAsync(List<Marker> markers)
         {
-            using (var connection = GetConnection())
-            {
-                await connection.OpenAsync();
-
-                using (var transaction = connection.BeginTransaction())
-                {
-                    await TruncateTableAsync<Marker>(connection, transaction);
-
-                    foreach (var marker in markers)
-                    {
-                        await MarkerSaveAsync(connection, transaction, marker);
-                    }
-
-                    transaction.Commit();
-                }
-            }
+            await TableReplaceAsync(markers);
         }
 
         public async Task MarkerDeleteAsync(List<Marker> markers)
         {
-            using (var connection = GetConnection())
-            {
-                await connection.OpenAsync();
-
-                using (var transaction = connection.BeginTransaction())
-                {
-                    foreach (var marker in markers)
-                    {
-                        await connection.DeleteAsync(marker);
-                    }
-
-                    transaction.Commit();
-                }
-            }
-        }
-
-        private async Task EquipmentSaveAsync(SQLiteConnection connection, SQLiteTransaction transaction, Equipment equipment)
-        {
-            if (equipment.Id == Sql.NewId)
-            {
-                await connection.InsertAsync(equipment, transaction);
-            }
-            else
-            {
-                await connection.UpdateAsync(equipment, transaction);
-            }
+            await ListItemDeleteAsync(markers);
         }
 
         public async Task EquipmentSaveAsync(Equipment equipment)
         {
             using (var connection = GetConnection())
             {
-                await EquipmentSaveAsync(connection, null, equipment);
+                await ListItemSaveAsync(connection, null, equipment);
             }
         }
 
         public async Task EquipmentsReplaceAsync(List<Equipment> equipments)
         {
-            using (var connection = GetConnection())
-            {
-                await connection.OpenAsync();
-
-                using (var transaction = connection.BeginTransaction())
-                {
-                    await TruncateTableAsync<Equipment>(connection, transaction);
-
-                    foreach (var equipment in equipments)
-                    {
-                        await EquipmentSaveAsync(connection, transaction, equipment);
-                    }
-
-                    transaction.Commit();
-                }
-            }
+            await TableReplaceAsync(equipments);
         }
 
         public async Task EquipmentDeleteAsync(List<Equipment> equipments)
         {
-            using (var connection = GetConnection())
-            {
-                await connection.OpenAsync();
-
-                using (var transaction = connection.BeginTransaction())
-                {
-                    foreach (var equipment in equipments)
-                    {
-                        await connection.DeleteAsync(equipment);
-                    }
-
-                    transaction.Commit();
-                }
-            }
+            await ListItemDeleteAsync(equipments);
         }
 
         public async Task<int> TileSaveAsync(Tile tile)
@@ -279,6 +251,14 @@ namespace TileExplorer
             DebugWrite.Line("end");
         }
 
+        public async Task TrackSaveAsync(List<Track> tracks)
+        {
+            foreach (var track in tracks)
+            {
+                await Default.TrackSaveAsync(track);
+            }
+        }
+
         public async Task TracksTilesSaveAsync(List<TracksTiles> tracksTiles)
         {
             using (var connection = GetConnection())
@@ -348,8 +328,8 @@ namespace TileExplorer
                         {
                             dynamic f = filter;
 
-                            var forBackup = f.forBackup; 
-                            
+                            var forBackup = f.forBackup;
+
                             if (forBackup)
                             {
                                 sql = ResourcesSql.SelectTracksForBackup;
@@ -452,7 +432,32 @@ namespace TileExplorer
                             TileId = tile.Id,
                         }, transaction);
                     }
-                    ;
+
+                    transaction.Commit();
+                }
+            }
+        }
+
+        public async Task<List<Track>> TrackExtsLoadAsync()
+        {
+            DebugWrite.Line("TrackExtsLoadAsync");
+
+            return await ListLoadAsync<Track>(new { forBackup = true });
+        }
+
+        public async Task TrackExtsSaveAsync(List<Track> tracks)
+        {
+            DebugWrite.Line("TrackExtsSaveAsync");
+
+            if (tracks.Count == 0) return;
+
+            using (var connection = GetConnection())
+            {
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    await connection.UpdateAsync(tracks, transaction);
 
                     transaction.Commit();
                 }
@@ -469,7 +474,7 @@ namespace TileExplorer
             {
                 var list = await connection.QueryAsync<int>(sql);
 
-                return (List<int>)list;
+                return list.AsList();
             }
         }
     }

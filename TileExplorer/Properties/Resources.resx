@@ -440,10 +440,10 @@ ddd</value>
   <data name="TitleBackupSave" xml:space="preserve">
     <value>Архив: сохранение</value>
   </data>
-  <data name="BackupErrorEquipmentsNotExists" xml:space="preserve">
+  <data name="BackupErrorFileEquipmentsNotExists" xml:space="preserve">
     <value>Архив не содержит снаряжение.</value>
   </data>
-  <data name="BackupErrorMarkersNotExists" xml:space="preserve">
+  <data name="BackupErrorFileMarkersNotExists" xml:space="preserve">
     <value>Архив не содержит маркеры.</value>
   </data>
   <data name="QuestionMarkersDelete" xml:space="preserve">
@@ -454,5 +454,8 @@ ddd</value>
   </data>
   <data name="QuestionTracksDelete" xml:space="preserve">
     <value>Удалить трек «{0}» и ещё {1}?</value>
+  </data>
+  <data name="BackupErrorFileTrackExtsNotExists" xml:space="preserve">
+    <value>Архив не содержит данные о треках.</value>
   </data>
 </root>

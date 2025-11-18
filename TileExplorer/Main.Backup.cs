@@ -21,11 +21,7 @@ namespace TileExplorer
             {
                 Directory = AppSettings.Local.Default.DirectoryBackups,
                 NameUseDate = true,
-                FileNames = Backup.FileName.MarkersExcelXml | Backup.FileName.MarkersGpx |
-                    Backup.FileName.EquipmentsExcelXml |
-                    Backup.FileName.LocalSettings |
-                    Backup.FileName.RoamingSettings |
-                    Backup.FileName.TrackExts,
+                FileNames = Backup.FileName.SaveAll,
             };
 
             if (!FrmBackup.ShowDlg(this, settings, FrmBackup.BackupAction.Save))
@@ -74,10 +70,15 @@ namespace TileExplorer
             var settings = new Backup.BackupSettings()
             {
 #if DEBUG
-                Name = "2025-11-11",
+                Name = DateTime.Now.ToString("yyyy-MM-dd"),
 #endif
                 Directory = AppSettings.Local.Default.DirectoryBackups,
-                FileNames = Backup.FileName.MarkersExcelXml | Backup.FileName.EquipmentsExcelXml,
+                FileNames =
+#if DEBUG
+                    Backup.FileName.TrackExts,
+#else
+                    Backup.FileName.LoadAll,
+#endif
             };
 
             if (!FrmBackup.ShowDlg(this, settings, FrmBackup.BackupAction.Load))

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using TileExplorer.Properties;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
@@ -43,7 +42,8 @@ namespace TileExplorer
                         frm.BringToFront();
                         return;
                     }
-                };
+                }
+                ;
 
                 FrmChartTracksByYear.ShowFrm(owner, year);
             }
@@ -57,7 +57,8 @@ namespace TileExplorer
                         frm.BringToFront();
                         return;
                     }
-                };
+                }
+                ;
 
                 FrmChartTracksByMonth.ShowFrm(owner, year, month);
             }
@@ -65,15 +66,14 @@ namespace TileExplorer
             public static void TextBoxWrongValue(TextBox textBox, string error)
             {
                 textBox.Focus();
+                textBox.SelectAll();
 
                 Msg.Error(error);
             }
 
             public static void TextBoxWrongValue(TextBox textBox, string error, object arg0)
             {
-                textBox.Focus();
-
-                Msg.Error(error, arg0);
+                TextBoxWrongValue(textBox, string.Format(error, arg0));
             }
 
             public static bool CheckTextBoxIsEmpty(TextBox textBox, string error)
@@ -84,6 +84,23 @@ namespace TileExplorer
 
                     return true;
                 }
+
+                return false;
+            }
+
+            public static bool CheckTextBoxIsFloat(TextBox textBox)
+            {
+                if (textBox.Text.IsEmpty())
+                {
+                    return true;
+                }
+
+                if (Misc.FloatCheck(textBox.Text))
+                {
+                    return true;
+                }
+
+                TextBoxWrongValue(textBox, Resources.ErrorNeedDigit);
 
                 return false;
             }

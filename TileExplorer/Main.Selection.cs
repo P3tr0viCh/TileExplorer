@@ -1,6 +1,7 @@
 ﻿using GMap.NET.WindowsForms;
 using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
@@ -40,10 +41,7 @@ namespace TileExplorer
 
         public IMapItem Selected
         {
-            get
-            {
-                return selected;
-            }
+            get => selected;
             set
             {
                 if (selected == value) return;
@@ -155,6 +153,16 @@ namespace TileExplorer
             }
 
             Selected = item;
+        }
+
+        public void SelectTrackList(List<Track> tracks)
+        {
+            Selected = null;
+
+            Utils.Forms.GetChildForms<FrmList>(ChildFormType.TrackList | ChildFormType.TileInfo).ForEach(frm =>
+            {
+                frm.SetSelected(tracks.Cast<BaseId>().ToList());
+            });
         }
     }
 }

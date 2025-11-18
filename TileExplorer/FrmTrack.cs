@@ -95,29 +95,9 @@ namespace TileExplorer
             }
         }
 
-        private bool CheckTextBox(TextBox textBox)
-        {
-            if (textBox.Text.IsEmpty())
-            {
-                return true;
-            }
-
-            if (Misc.FloatCheck(textBox.Text))
-            {
-                return true;
-            }
-
-            textBox.Focus();
-            textBox.SelectAll();
-
-            Msg.Error(Resources.ErrorNeedDigit);
-
-            return false;
-        }
-
         private bool CheckData()
         {
-            return CheckTextBox(tbEleAscent) && CheckTextBox(tbEleDescent);
+            return Utils.Forms.CheckTextBoxIsFloat(tbEleAscent) && Utils.Forms.CheckTextBoxIsFloat(tbEleDescent);
         }
 
         private bool UpdateData()

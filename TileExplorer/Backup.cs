@@ -20,6 +20,12 @@ namespace TileExplorer
             LocalSettings = 8,
             RoamingSettings = 16,
             TrackExts = 32,
+
+            SaveAll = MarkersExcelXml | MarkersGpx |
+                    EquipmentsExcelXml |
+                    LocalSettings | RoamingSettings |
+                    TrackExts,
+            LoadAll = MarkersExcelXml | EquipmentsExcelXml | TrackExts,
         }
 
         public class BackupSettings
@@ -131,6 +137,7 @@ namespace TileExplorer
 
             await LoadMarkersAsync();
             await LoadEquipmentsAsync();
+            await LoadTrackExtsAsync();
         }
     }
 }

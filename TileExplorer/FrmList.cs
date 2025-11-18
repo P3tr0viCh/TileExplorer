@@ -28,6 +28,13 @@ namespace TileExplorer
 
         private int[] columnFormattingIndex;
 
+        private bool MultiSelect
+        {
+            get => dataGridView.MultiSelect; set => dataGridView.MultiSelect = value;
+        }
+
+        private bool MultiChange { get; set; } = false;
+
         public FrmList()
         {
             InitializeComponent();
@@ -136,7 +143,8 @@ namespace TileExplorer
                     sortColumnIndex = dataGridView.Columns[sortColumn].Index;
                     sortOrderDescending = true;
 
-                    dataGridView.MultiSelect = true;
+                    MultiSelect = true;
+                    MultiChange = true;
 
                     break;
                 case ChildFormType.MarkerList:
@@ -157,7 +165,7 @@ namespace TileExplorer
                     sortColumnIndex = dataGridView.Columns[sortColumn].Index;
                     sortOrderDescending = true;
 
-                    dataGridView.MultiSelect = true;
+                    MultiSelect = true;
 
                     break;
                 case ChildFormType.ResultYears:
@@ -208,7 +216,7 @@ namespace TileExplorer
                     AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateEquipmentList);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsEquipmentList);
 
-                    dataGridView.MultiSelect = true;
+                    MultiSelect = true;
 
                     break;
                 case ChildFormType.TileInfo:
@@ -480,6 +488,10 @@ namespace TileExplorer
 
                 return selectedRows.Select(item => (BaseId)item.DataBoundItem).ToList();
             }
+            set
+            {
+                SetSelectedRows(value);
+            }
         }
 
         private void SetSelectedRows(List<BaseId> values)
@@ -506,6 +518,8 @@ namespace TileExplorer
         public int Count => bindingSource.Count;
 
         public void SetSelected(BaseId value) => Selected = value;
+
+        public void SetSelected(List<BaseId> values) => SelectedList = values;
 
         private void BindingSource_PositionChanged(object sender, EventArgs e)
         {
@@ -551,9 +565,16 @@ namespace TileExplorer
 
         private async Task SelectedChangeAsync()
         {
-            SetSelectedRows(Selected);
+            if (MultiChange)
+            {
+                SetSelectedRows(SelectedList);
+            }
+            else
+            {
+                SetSelectedRows(Selected);
+            }
 
-            await MainForm.ListItemChangeAsync(this, Selected);
+            await MainForm.ListItemChangeAsync(this, SelectedList);
         }
 
         private async void TsbtnChange_Click(object sender, EventArgs e)

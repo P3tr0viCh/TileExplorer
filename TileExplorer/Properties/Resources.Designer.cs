@@ -146,18 +146,27 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Архив не содержит снаряжение..
         /// </summary>
-        internal static string BackupErrorEquipmentsNotExists {
+        internal static string BackupErrorFileEquipmentsNotExists {
             get {
-                return ResourceManager.GetString("BackupErrorEquipmentsNotExists", resourceCulture);
+                return ResourceManager.GetString("BackupErrorFileEquipmentsNotExists", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Архив не содержит маркеры..
         /// </summary>
-        internal static string BackupErrorMarkersNotExists {
+        internal static string BackupErrorFileMarkersNotExists {
             get {
-                return ResourceManager.GetString("BackupErrorMarkersNotExists", resourceCulture);
+                return ResourceManager.GetString("BackupErrorFileMarkersNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архив не содержит данные о треках..
+        /// </summary>
+        internal static string BackupErrorFileTrackExtsNotExists {
+            get {
+                return ResourceManager.GetString("BackupErrorFileTrackExtsNotExists", resourceCulture);
             }
         }
         

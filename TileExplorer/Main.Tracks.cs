@@ -9,6 +9,7 @@ using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
+using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -107,13 +108,29 @@ namespace TileExplorer
             }
         }
 
+        private async Task TrackChangeAsync(List<Track> tracks)
+        {
+            if (tracks?.Count == 0) return;
+
+            var track = tracks.FirstOrDefault();
+
+            if (tracks.Count == 1)
+            {
+                if (!FrmTrack.ShowDlg(this, track)) return;
+
+                await SelectMapItemAsync(this, track);
+            }
+            else
+            {
+                if (!FrmTrackList.ShowDlg(this, tracks)) return;
+
+                await UpdateTracksAsync(tracks);
+            }
+        }
+
         private async Task TrackChangeAsync(Track track)
         {
-            if (track == null) return;
-
-            FrmTrack.ShowDlg(this, track);
-
-            await SelectMapItemAsync(this, track);
+            await TrackChangeAsync(new List<Track>() { track });
         }
 
         public async Task TrackChangedAsync(Track track)
@@ -121,6 +138,13 @@ namespace TileExplorer
             await UpdateDataAsync(DataLoad.ObjectChange, track);
 
             await SelectMapItemAsync(this, track);
+        }
+
+        public async Task TrackChangedAsync(List<Track> tracks)
+        {
+            await UpdateDataAsync(DataLoad.Tracks);
+
+            SelectTrackList(tracks);
         }
 
         private async Task TrackDeleteAsync(List<Track> tracks)
@@ -320,6 +344,31 @@ namespace TileExplorer
                 ProgramStatus.Stop(status);
 
                 DebugWrite.Line("end");
+            }
+        }
+
+        private async Task UpdateTracksAsync(List<Track> tracks)
+        {
+            try
+            {
+                var status = ProgramStatus.Start(Status.SaveData);
+
+                try
+                {
+                    await Database.Default.TrackSaveAsync(tracks);
+                }
+                finally
+                {
+                    ProgramStatus.Stop(status);
+                }
+
+                await TrackChangedAsync(tracks);
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(e.Message);
             }
         }
     }

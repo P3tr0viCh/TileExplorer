@@ -146,6 +146,12 @@
     <Compile Include="FrmList.Sort.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FrmTrackList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmTrackList.Designer.cs">
+      <DependentUpon>FrmTrackList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.Backup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -296,6 +302,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmChartTrackEle.resx">
       <DependentUpon>FrmChartTrackEle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmTrackList.resx">
+      <DependentUpon>FrmTrackList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>

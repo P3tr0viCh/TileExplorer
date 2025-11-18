@@ -158,7 +158,8 @@ namespace TileExplorer
 
             await CheckDirectoryTracksAsync(false);
 
-            await BackupSaveAsync();
+            // await BackupSaveAsync();
+            // await BackupLoadAsync();
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -985,17 +986,19 @@ namespace TileExplorer
             }
         }
 
-        public async Task ListItemChangeAsync(object sender, BaseId value)
+        public async Task ListItemChangeAsync(object sender, List<BaseId> list)
         {
+            var value = list.FirstOrDefault();
+
             if (value is Marker marker)
             {
                 await MarkerChangeAsync(marker);
                 return;
             }
 
-            if (value is Track track)
+            if (value is Track)
             {
-                await TrackChangeAsync(track);
+                await TrackChangeAsync(list.Cast<Track>().ToList());
                 return;
             }
 

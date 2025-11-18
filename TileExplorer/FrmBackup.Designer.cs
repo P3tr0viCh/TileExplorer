@@ -237,14 +237,14 @@
             this.gdTracks.TabStop = false;
             this.gdTracks.Text = "Треки";
             // 
-            // cboxTracksExt
+            // cboxTrackExts
             // 
             this.cboxTrackExts.AutoSize = true;
             this.cboxTrackExts.Location = new System.Drawing.Point(8, 24);
-            this.cboxTrackExts.Name = "cboxTracksExt";
-            this.cboxTrackExts.Size = new System.Drawing.Size(107, 23);
+            this.cboxTrackExts.Name = "cboxTrackExts";
+            this.cboxTrackExts.Size = new System.Drawing.Size(166, 23);
             this.cboxTrackExts.TabIndex = 0;
-            this.cboxTrackExts.Text = "Снаряжение";
+            this.cboxTrackExts.Text = "Снаряжение и другое";
             this.cboxTrackExts.UseVisualStyleBackColor = true;
             // 
             // FrmBackup

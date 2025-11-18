@@ -94,7 +94,6 @@ namespace TileExplorer
             }
         }
 
-
         private void UpdateFileNames()
         {
             Settings.FileNames = default;
@@ -153,7 +152,7 @@ namespace TileExplorer
                 {
                     if (!File.Exists(GetFullFileName(backupDirectory, FileName.MarkersExcelXml)))
                     {
-                        Msg.Error(Resources.BackupErrorMarkersNotExists);
+                        Msg.Error(Resources.BackupErrorFileMarkersNotExists);
                         return false;
                     }
                 }
@@ -162,7 +161,16 @@ namespace TileExplorer
                 {
                     if (!File.Exists(GetFullFileName(backupDirectory, FileName.EquipmentsExcelXml)))
                     {
-                        Msg.Error(Resources.BackupErrorEquipmentsNotExists);
+                        Msg.Error(Resources.BackupErrorFileEquipmentsNotExists);
+                        return false;
+                    }
+                }
+
+                if (cboxTrackExts.Checked)
+                {
+                    if (!File.Exists(GetFullFileName(backupDirectory, FileName.TrackExts)))
+                    {
+                        Msg.Error(Resources.BackupErrorFileTrackExtsNotExists);
                         return false;
                     }
                 }
@@ -226,6 +234,8 @@ namespace TileExplorer
 
             cboxMarkersExcelXml.Checked = File.Exists(GetFullFileName(path, FileName.MarkersExcelXml));
             cboxEquipmentsExcelXml.Checked = File.Exists(GetFullFileName(path, FileName.EquipmentsExcelXml));
+
+            cboxTrackExts.Checked = File.Exists(GetFullFileName(path, FileName.TrackExts));
         }
     }
 }
