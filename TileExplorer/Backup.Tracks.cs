@@ -149,7 +149,7 @@ namespace TileExplorer
                         Text = track.EquipmentText,
                     };
 
-                    await Database.Default.EquipmentSaveAsync(equipment);
+                    await Database.Default.ListItemSaveAsync(equipment);
 
                     equipments.Add(equipment);
                 }

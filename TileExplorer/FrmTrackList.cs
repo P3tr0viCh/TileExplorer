@@ -45,7 +45,16 @@ namespace TileExplorer
 
             try
             {
-                equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
+                var status = MainForm.ProgramStatus.Start(Status.LoadData);
+
+                try
+                {
+                    equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
+                }
+                finally
+                {
+                    MainForm.ProgramStatus.Stop(status);
+                }
 
                 equipmentBindingSource.Insert(0, new Equipment());
 

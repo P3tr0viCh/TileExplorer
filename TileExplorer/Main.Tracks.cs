@@ -9,7 +9,6 @@ using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
-using static TileExplorer.Utils;
 
 namespace TileExplorer
 {

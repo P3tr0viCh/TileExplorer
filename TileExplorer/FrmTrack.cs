@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
 namespace TileExplorer
@@ -77,7 +78,16 @@ namespace TileExplorer
 
             try
             {
-                equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
+                var status = MainForm.ProgramStatus.Start(Status.LoadData);
+
+                try
+                {
+                    equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
+                }
+                finally
+                {
+                    MainForm.ProgramStatus.Stop(status);
+                }
 
                 equipmentBindingSource.Insert(0, new Equipment());
 
@@ -97,7 +107,7 @@ namespace TileExplorer
 
         private bool CheckData()
         {
-            return Utils.Forms.CheckTextBoxIsFloat(tbEleAscent) && Utils.Forms.CheckTextBoxIsFloat(tbEleDescent);
+            return Utils.Forms.TextBoxIsWrongFloat(tbEleAscent) && Utils.Forms.TextBoxIsWrongFloat(tbEleDescent);
         }
 
         private bool UpdateData()

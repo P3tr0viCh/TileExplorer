@@ -125,6 +125,8 @@ namespace TileExplorer
         {
             Utils.DirectoryCreate(FullPath);
 
+//            await Task.Delay(3000);
+
             await SaveMarkersAsync();
             await SaveEquipmentsAsync();
             await SaveSettingsAsync();
@@ -134,6 +136,8 @@ namespace TileExplorer
         public async Task LoadAsync()
         {
             Files.CheckDirectoryExists(FullPath);
+
+//            await Task.Delay(3000);
 
             await LoadMarkersAsync();
             await LoadEquipmentsAsync();

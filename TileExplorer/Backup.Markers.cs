@@ -192,7 +192,7 @@ namespace TileExplorer
                 });
             }
 
-            await Database.Default.MarkersReplaceAsync(markers);
+            await Database.Default.TableReplaceAsync(markers);
 
             DebugWrite.Line("end");
         }

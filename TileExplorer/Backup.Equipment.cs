@@ -100,7 +100,7 @@ namespace TileExplorer
                 });
             }
 
-            await Database.Default.EquipmentsReplaceAsync(equipments);
+            await Database.Default.TableReplaceAsync(equipments);
 
             DebugWrite.Line("end");
         }

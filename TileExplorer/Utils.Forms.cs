@@ -1,4 +1,5 @@
 ﻿using P3tr0viCh.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -76,9 +77,9 @@ namespace TileExplorer
                 TextBoxWrongValue(textBox, string.Format(error, arg0));
             }
 
-            public static bool CheckTextBoxIsEmpty(TextBox textBox, string error)
+            public static bool TextBoxIsWrongValue(Func<bool> check, TextBox textBox, string error)
             {
-                if (textBox.Text.IsEmpty())
+                if (check())
                 {
                     TextBoxWrongValue(textBox, error);
 
@@ -88,7 +89,17 @@ namespace TileExplorer
                 return false;
             }
 
-            public static bool CheckTextBoxIsFloat(TextBox textBox)
+            public static bool TextBoxIsWrongValue(Func<bool> check, TextBox textBox, string error, object arg0)
+            {
+                 return TextBoxIsWrongValue(check, textBox, string.Format(error, arg0));
+            }
+
+            public static bool TextBoxIsEmpty(TextBox textBox, string error)
+            {
+                return TextBoxIsWrongValue(() => textBox.Text.IsEmpty(), textBox, error);
+            }
+
+            public static bool TextBoxIsWrongFloat(TextBox textBox)
             {
                 if (textBox.Text.IsEmpty())
                 {

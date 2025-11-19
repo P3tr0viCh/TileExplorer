@@ -1,8 +1,10 @@
 ﻿using P3tr0viCh.Utils;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
 namespace TileExplorer
@@ -57,7 +59,7 @@ namespace TileExplorer
             tbBrand.Text = tbBrand.Text.Trim();
             tbModel.Text = tbModel.Text.Trim();
 
-            if (Utils.Forms.CheckTextBoxIsEmpty(tbText, Resources.ErrorNeedText))
+            if (Utils.Forms.TextBoxIsEmpty(tbText, Resources.ErrorNeedText))
             {
                 return false;
             }
@@ -74,19 +76,32 @@ namespace TileExplorer
             return true;
         }
 
-        private bool SaveData()
+        private async Task<bool> SaveDataAsync()
         {
-            return Database.Actions.EquipmentSaveAsync(Equipment).Result;
+            var result = false;
+
+            var status = MainForm.ProgramStatus.Start(Status.SaveData);
+
+            try
+            {
+                result = await Database.Actions.EquipmentSaveAsync(Equipment);
+            }
+            finally
+            {
+                MainForm.ProgramStatus.Stop(status);
+            }
+
+            return result;
         }
 
-        private bool ApplyData()
+        private async Task<bool> ApplyDataAsync()
         {
-            return CheckData() && UpdateData() && SaveData();
+            return CheckData() && UpdateData() && await SaveDataAsync();
         }
 
-        private void BtnOk_Click(object sender, EventArgs e)
+        private async void BtnOk_Click(object sender, EventArgs e)
         {
-            if (ApplyData())
+            if (await ApplyDataAsync())
             {
                 DialogResult = DialogResult.OK;
             }

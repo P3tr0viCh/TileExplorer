@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
 namespace TileExplorer
@@ -78,14 +79,25 @@ namespace TileExplorer
 
         private async Task<bool> SaveDataAsync()
         {
-            if (await Database.Actions.MarkerSaveAsync(Marker))
-            {
-                await MainForm.MarkerChangedAsync(Marker);
+            var result = false;
 
-                return true;
+            var status = MainForm.ProgramStatus.Start(Status.SaveData);
+            
+            try
+            {
+                result = await Database.Actions.MarkerSaveAsync(Marker);
+            }
+            finally
+            {
+                MainForm.ProgramStatus.Stop(status);
             }
 
-            return false;
+            if (result)
+            {
+                await MainForm.MarkerChangedAsync(Marker);
+            }
+
+            return result;
         }
 
         private async Task<bool> ApplyDataAsync()

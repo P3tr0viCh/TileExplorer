@@ -162,6 +162,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Архив содержит данные. Заменить?.
+        /// </summary>
+        internal static string BackupErrorFilesExists {
+            get {
+                return ResourceManager.GetString("BackupErrorFilesExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Архив не содержит данные о треках..
         /// </summary>
         internal static string BackupErrorFileTrackExtsNotExists {

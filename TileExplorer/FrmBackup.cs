@@ -110,18 +110,63 @@ namespace TileExplorer
             if (cboxTrackExts.Checked) Settings.FileNames |= FileName.TrackExts;
         }
 
+        private bool CheckFileNotExists(string backupDirectory, FileName fileName)
+        {
+            if (!Settings.FileNames.HasFlag(fileName))
+            {
+                return false;
+            }
+
+            var message = string.Empty;
+
+            switch (fileName)
+            {
+                case FileName.MarkersExcelXml:
+                    message = Resources.BackupErrorFileMarkersNotExists;
+                    break;
+                case FileName.EquipmentsExcelXml:
+                    message = Resources.BackupErrorFileEquipmentsNotExists;
+                    break;
+                case FileName.TrackExts:
+                    message = Resources.BackupErrorFileTrackExtsNotExists;
+                    break;
+            }
+
+            if (!File.Exists(GetFullFileName(backupDirectory, fileName)))
+            {
+                Msg.Error(message);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool CheckFileExists(string backupDirectory, FileName fileName)
+        {
+            if (!Settings.FileNames.HasFlag(fileName))
+            {
+                return false;
+            }
+
+            if (File.Exists(GetFullFileName(backupDirectory, fileName)))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         private bool CheckData()
         {
             var directory = tbDirectory.Text;
 
-            if (!Directory.Exists(directory))
+            if (Utils.Forms.TextBoxIsWrongValue(() => !Directory.Exists(directory), tbDirectory, Resources.ErrorDirectoryNotExists, directory))
             {
-                Utils.Forms.TextBoxWrongValue(tbDirectory, Resources.ErrorDirectoryNotExists, directory);
-
                 return false;
             }
 
-            if (Utils.Forms.CheckTextBoxIsEmpty(tbName, Resources.BackupErrorNameEmpty))
+            if (Utils.Forms.TextBoxIsEmpty(tbName, Resources.BackupErrorNameEmpty))
             {
                 return false;
             }
@@ -130,11 +175,13 @@ namespace TileExplorer
 
             var backupDirectory = Path.Combine(directory, name);
 
-            if (IsActionLoad && !Directory.Exists(backupDirectory))
+            if (IsActionLoad)
             {
-                Utils.Forms.TextBoxWrongValue(tbName, Resources.ErrorDirectoryNotExists, backupDirectory);
-
-                return false;
+                if (Utils.Forms.TextBoxIsWrongValue(() => !Directory.Exists(backupDirectory),
+                    tbName, Resources.ErrorDirectoryNotExists, backupDirectory))
+                {
+                    return false;
+                }
             }
 
             UpdateFileNames();
@@ -148,29 +195,35 @@ namespace TileExplorer
 
             if (IsActionLoad)
             {
-                if (cboxMarkersExcelXml.Checked)
+                if (CheckFileNotExists(backupDirectory, FileName.MarkersExcelXml))
                 {
-                    if (!File.Exists(GetFullFileName(backupDirectory, FileName.MarkersExcelXml)))
-                    {
-                        Msg.Error(Resources.BackupErrorFileMarkersNotExists);
-                        return false;
-                    }
+                    return false;
                 }
 
-                if (cboxEquipmentsExcelXml.Checked)
+                if (CheckFileNotExists(backupDirectory, FileName.EquipmentsExcelXml))
                 {
-                    if (!File.Exists(GetFullFileName(backupDirectory, FileName.EquipmentsExcelXml)))
-                    {
-                        Msg.Error(Resources.BackupErrorFileEquipmentsNotExists);
-                        return false;
-                    }
+                    return false;
                 }
 
-                if (cboxTrackExts.Checked)
+                if (CheckFileNotExists(backupDirectory, FileName.TrackExts))
                 {
-                    if (!File.Exists(GetFullFileName(backupDirectory, FileName.TrackExts)))
+                    return false;
+                }
+            }
+            else
+            {
+                var filesExists =
+                    CheckFileExists(backupDirectory, FileName.MarkersGpx) ||
+                    CheckFileExists(backupDirectory, FileName.MarkersExcelXml) ||
+                    CheckFileExists(backupDirectory, FileName.EquipmentsExcelXml) ||
+                    CheckFileExists(backupDirectory, FileName.RoamingSettings) ||
+                    CheckFileExists(backupDirectory, FileName.LocalSettings) ||
+                    CheckFileExists(backupDirectory, FileName.TrackExts);
+
+                if (filesExists)
+                {
+                    if (!Msg.Question(Resources.BackupErrorFilesExists))
                     {
-                        Msg.Error(Resources.BackupErrorFileTrackExtsNotExists);
                         return false;
                     }
                 }

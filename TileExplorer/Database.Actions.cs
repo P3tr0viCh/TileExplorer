@@ -14,7 +14,7 @@ namespace TileExplorer
             {
                 try
                 {
-                    await Default.MarkerSaveAsync(marker);
+                    await Default.ListItemSaveAsync(marker);
 
                     return true;
                 }
@@ -32,7 +32,7 @@ namespace TileExplorer
             {
                 try
                 {
-                    await Default.MarkerDeleteAsync(markers);
+                    await Default.ListItemDeleteAsync(markers);
 
                     return true;
                 }
@@ -68,7 +68,7 @@ namespace TileExplorer
             {
                 try
                 {
-                    await Default.EquipmentSaveAsync(equipment);
+                    await Default.ListItemSaveAsync(equipment);
 
                     return true;
                 }
@@ -86,7 +86,7 @@ namespace TileExplorer
             {
                 try
                 {
-                    await Default.EquipmentDeleteAsync(equipments);
+                    await Default.ListItemDeleteAsync(equipments);
 
                     return true;
                 }

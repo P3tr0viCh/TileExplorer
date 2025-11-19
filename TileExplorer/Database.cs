@@ -11,9 +11,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
-using static P3tr0viCh.Utils.DataBaseConnection;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -74,7 +72,7 @@ namespace TileExplorer
             await connection.ExecuteAsync(sql, null, transaction);
         }
 
-        private async Task TableReplaceAsync<T>(List<T> values) where T : BaseId
+        public async Task TableReplaceAsync<T>(List<T> values) where T : BaseId
         {
             using (var connection = GetConnection())
             {
@@ -108,7 +106,7 @@ namespace TileExplorer
             }
         }
 
-        private async Task ListItemSaveAsync<T>(SQLiteConnection connection, SQLiteTransaction transaction, T value) where T : BaseId
+        public async Task ListItemSaveAsync<T>(SQLiteConnection connection, SQLiteTransaction transaction, T value) where T : BaseId
         {
             if (value.Id == Sql.NewId)
             {
@@ -117,6 +115,14 @@ namespace TileExplorer
             else
             {
                 await connection.UpdateAsync(value, transaction);
+            }
+        }
+
+        public async Task ListItemSaveAsync<T>(T value) where T : BaseId
+        {
+            using (var connection = GetConnection())
+            {
+                await ListItemSaveAsync(connection, null, value);
             }
         }
 
@@ -136,42 +142,6 @@ namespace TileExplorer
                     transaction.Commit();
                 }
             }
-        }
-
-        public async Task MarkerSaveAsync(Marker marker)
-        {
-            using (var connection = GetConnection())
-            {
-                await ListItemSaveAsync(connection, null, marker);
-            }
-        }
-
-        public async Task MarkersReplaceAsync(List<Marker> markers)
-        {
-            await TableReplaceAsync(markers);
-        }
-
-        public async Task MarkerDeleteAsync(List<Marker> markers)
-        {
-            await ListItemDeleteAsync(markers);
-        }
-
-        public async Task EquipmentSaveAsync(Equipment equipment)
-        {
-            using (var connection = GetConnection())
-            {
-                await ListItemSaveAsync(connection, null, equipment);
-            }
-        }
-
-        public async Task EquipmentsReplaceAsync(List<Equipment> equipments)
-        {
-            await TableReplaceAsync(equipments);
-        }
-
-        public async Task EquipmentDeleteAsync(List<Equipment> equipments)
-        {
-            await ListItemDeleteAsync(equipments);
         }
 
         public async Task<int> TileSaveAsync(Tile tile)
@@ -384,13 +354,13 @@ namespace TileExplorer
 
             GetQuery<T>(out string sql, out object param, filter);
 
-            //await Task.Delay(3000);
+            // await Task.Delay(1000);
 
             using (var connection = GetConnection())
             {
                 var list = await connection.QueryAsync<T>(sql, param);
 
-                return (List<T>)list;
+                return list.AsList();
             }
         }
 

@@ -458,4 +458,7 @@ ddd</value>
   <data name="BackupErrorFileTrackExtsNotExists" xml:space="preserve">
     <value>Архив не содержит данные о треках.</value>
   </data>
+  <data name="BackupErrorFilesExists" xml:space="preserve">
+    <value>Архив содержит данные. Заменить?</value>
+  </data>
 </root>
