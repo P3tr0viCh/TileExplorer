@@ -12,10 +12,11 @@ using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
+using static TileExplorer.PresenterStatusStripChartTrackEle;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTrackEle : Form, IChildForm, IUpdateDataForm, PresenterStatusStripChartTrackEle.IPresenterStatusStripChartTrackEle
+    public partial class FrmChartTrackEle : Form, IChildForm, IUpdateDataForm, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -92,18 +93,18 @@ namespace TileExplorer
                 AppSettings.Roaming.Default.ColorChartSerial);
         }
 
-        ToolStripStatusLabel PresenterStatusStripChartTrackEle.IPresenterStatusStripChartTrackEle.GetLabel(PresenterStatusStripChartTrackEle.StatusLabel label)
+        ToolStripStatusLabel PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip.GetLabel(StatusLabel label)
         {
             switch (label)
             {
-                case PresenterStatusStripChartTrackEle.StatusLabel.Ele: return slEle;
-                case PresenterStatusStripChartTrackEle.StatusLabel.Distance: return slDistance;
-                case PresenterStatusStripChartTrackEle.StatusLabel.DateTime: return slDateTime;
-                case PresenterStatusStripChartTrackEle.StatusLabel.DateTimeSpan: return slDateTimeSpan;
-                case PresenterStatusStripChartTrackEle.StatusLabel.IsSelection: return slIsSelection;
-                case PresenterStatusStripChartTrackEle.StatusLabel.SelectedEleAscent: return slSelectedEleAscent;
-                case PresenterStatusStripChartTrackEle.StatusLabel.SelectedEleDescent: return slSelectedEleDescent;
-                case PresenterStatusStripChartTrackEle.StatusLabel.SelectedDistance: return slSelectedDistance;
+                case StatusLabel.Ele: return slEle;
+                case StatusLabel.Distance: return slDistance;
+                case StatusLabel.DateTime: return slDateTime;
+                case StatusLabel.DateTimeSpan: return slDateTimeSpan;
+                case StatusLabel.IsSelection: return slIsSelection;
+                case StatusLabel.SelectedEleAscent: return slSelectedEleAscent;
+                case StatusLabel.SelectedEleDescent: return slSelectedEleDescent;
+                case StatusLabel.SelectedDistance: return slSelectedDistance;
                 default: throw new ArgumentOutOfRangeException();
             }
         }

@@ -33,6 +33,9 @@
             this.bindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.slCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slSelectedCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripLeft = new System.Windows.Forms.ToolStrip();
             this.tsbtnAdd = new System.Windows.Forms.ToolStripButton();
             this.tsbtnChange = new System.Windows.Forms.ToolStripButton();
@@ -41,14 +44,17 @@
             this.tsbtnChartTrackEle = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.LeftToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.toolStripLeft.SuspendLayout();
             this.SuspendLayout();
             // 
             // bindingSource
             // 
+            this.bindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.BindingSource_ListChanged);
             this.bindingSource.PositionChanged += new System.EventHandler(this.BindingSource_PositionChanged);
             // 
             // dataGridView
@@ -63,20 +69,25 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersWidth = 32;
-            this.dataGridView.Size = new System.Drawing.Size(343, 240);
+            this.dataGridView.Size = new System.Drawing.Size(343, 218);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseDoubleClick);
             this.dataGridView.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseDown);
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_ColumnHeaderMouseClick);
             this.dataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataGridView_DataBindingComplete);
+            this.dataGridView.SelectionChanged += new System.EventHandler(this.DataGridView_SelectionChanged);
             // 
             // toolStripContainer
             // 
             // 
+            // toolStripContainer.BottomToolStripPanel
+            // 
+            this.toolStripContainer.BottomToolStripPanel.Controls.Add(this.statusStrip);
+            // 
             // toolStripContainer.ContentPanel
             // 
             this.toolStripContainer.ContentPanel.Controls.Add(this.dataGridView);
-            this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(343, 240);
+            this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(343, 218);
             this.toolStripContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             // 
             // toolStripContainer.LeftToolStripPanel
@@ -87,6 +98,29 @@
             this.toolStripContainer.Size = new System.Drawing.Size(384, 265);
             this.toolStripContainer.TabIndex = 2;
             this.toolStripContainer.Text = "toolStripContainer1";
+            // 
+            // statusStrip
+            // 
+            this.statusStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.slCount,
+            this.slSelectedCount});
+            this.statusStrip.Location = new System.Drawing.Point(0, 0);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(384, 22);
+            this.statusStrip.TabIndex = 0;
+            // 
+            // slCount
+            // 
+            this.slCount.Name = "slCount";
+            this.slCount.Size = new System.Drawing.Size(62, 17);
+            this.slCount.Text = "count: 666";
+            // 
+            // slSelectedCount
+            // 
+            this.slSelectedCount.Name = "slSelectedCount";
+            this.slSelectedCount.Size = new System.Drawing.Size(68, 17);
+            this.slSelectedCount.Text = "selected: 42";
             // 
             // toolStripLeft
             // 
@@ -180,11 +214,15 @@
             this.Load += new System.EventHandler(this.FrmListNew_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.toolStripContainer.BottomToolStripPanel.ResumeLayout(false);
+            this.toolStripContainer.BottomToolStripPanel.PerformLayout();
             this.toolStripContainer.ContentPanel.ResumeLayout(false);
             this.toolStripContainer.LeftToolStripPanel.ResumeLayout(false);
             this.toolStripContainer.LeftToolStripPanel.PerformLayout();
             this.toolStripContainer.ResumeLayout(false);
             this.toolStripContainer.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.toolStripLeft.ResumeLayout(false);
             this.toolStripLeft.PerformLayout();
             this.ResumeLayout(false);
@@ -202,5 +240,8 @@
         private System.Windows.Forms.ToolStripButton tsbtnDelete;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tsbtnChartTrackEle;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel slCount;
+        private System.Windows.Forms.ToolStripStatusLabel slSelectedCount;
     }
 }

@@ -5,6 +5,7 @@
 using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,10 +13,11 @@ using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
+using static TileExplorer.PresenterStatusStripList;
 
 namespace TileExplorer
 {
-    public partial class FrmList : Form, IChildForm, IUpdateDataForm, IListForm
+    public partial class FrmList : Form, IChildForm, IUpdateDataForm, IListForm, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -25,6 +27,8 @@ namespace TileExplorer
         public object Value => data;
 
         internal readonly PresenterChildForm childFormPresenter;
+
+        private readonly PresenterStatusStripList statusStripPresenter;
 
         private int[] columnFormattingIndex;
 
@@ -40,6 +44,8 @@ namespace TileExplorer
             InitializeComponent();
 
             childFormPresenter = new PresenterChildForm(this);
+
+            statusStripPresenter = new PresenterStatusStripList(this);
         }
 
         public static FrmList ShowFrm(Form owner, ChildFormType childFormType, object value = default)
@@ -153,7 +159,7 @@ namespace TileExplorer
                     toolStripLeft.Visible = true;
 
                     AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateMarkerList);
-                    //AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsMarkerList);
+                    AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsMarkerList);
 
                     dataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
 
@@ -172,6 +178,7 @@ namespace TileExplorer
                     Text = Resources.TitleListResultYears;
 
                     toolStripLeft.Visible = false;
+                    statusStrip.Visible = false;
 
                     AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateResultYears);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsResultYears);
@@ -195,6 +202,7 @@ namespace TileExplorer
                     Text = Resources.TitleListResultEquipments;
 
                     toolStripLeft.Visible = false;
+                    statusStrip.Visible = false;
 
                     AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateResultEquipments);
                     AppSettings.LoadDataGridColumns(dataGridView, AppSettings.Local.Default.ColumnsResultEquipments);
@@ -289,6 +297,16 @@ namespace TileExplorer
             }
 
             AppSettings.LocalSave();
+        }
+
+        ToolStripStatusLabel PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip.GetLabel(StatusLabel label)
+        {
+            switch (label)
+            {
+                case StatusLabel.Count: return slCount;
+                case StatusLabel.SelectedCount: return slSelectedCount;
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void UpdateSettings()
@@ -755,6 +773,17 @@ namespace TileExplorer
             }
 
             bindingSource.Remove(item);
+        }
+
+        private void BindingSource_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            statusStripPresenter.Count = Count;
+        }
+
+        private void DataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            statusStripPresenter.SelectedCount = dataGridView.SelectedCells
+                    .Cast<DataGridViewCell>().Select(cell => cell.OwningRow).Distinct().Count();
         }
     }
 }

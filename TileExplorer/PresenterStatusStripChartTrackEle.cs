@@ -1,10 +1,9 @@
 ﻿using P3tr0viCh.Utils;
 using System;
-using System.Windows.Forms;
 using TileExplorer.Properties;
 namespace TileExplorer
 {
-    internal class PresenterStatusStripChartTrackEle
+    internal class PresenterStatusStripChartTrackEle : PresenterStatusStrip<PresenterStatusStripChartTrackEle.StatusLabel>
     {
         public enum StatusLabel
         {
@@ -18,17 +17,8 @@ namespace TileExplorer
             SelectedEleDescent,
         }
 
-        public interface IPresenterStatusStripChartTrackEle
+        public PresenterStatusStripChartTrackEle(IPresenterStatusStrip view) : base(view)
         {
-            ToolStripStatusLabel GetLabel(StatusLabel label);
-        }
-
-        private readonly IPresenterStatusStripChartTrackEle view;
-
-        public PresenterStatusStripChartTrackEle(IPresenterStatusStripChartTrackEle view)
-        {
-            this.view = view;
-
             Ele = 0;
             Distance = 0;
             DateTime = default;
@@ -42,17 +32,17 @@ namespace TileExplorer
 
         public double Ele
         {
-            set => view.GetLabel(StatusLabel.Ele).Text = string.Format(Resources.StatusEle, value);
+            set => View.GetLabel(StatusLabel.Ele).Text = string.Format(Resources.StatusEle, value);
         }
 
         public double Distance
         {
-            set => view.GetLabel(StatusLabel.Distance).Text = string.Format(Resources.StatusDistance, value / 1000);
+            set => View.GetLabel(StatusLabel.Distance).Text = string.Format(Resources.StatusDistance, value / 1000);
         }
 
         public DateTime DateTime
         {
-            set => view.GetLabel(StatusLabel.DateTime).Text = value.ToString(AppSettings.Roaming.Default.FormatDateTime);
+            set => View.GetLabel(StatusLabel.DateTime).Text = value.ToString(AppSettings.Roaming.Default.FormatDateTime);
         }
 
         public TimeSpan DateTimeSpan
@@ -61,11 +51,11 @@ namespace TileExplorer
             {
                 if (value != default)
                 {
-                    view.GetLabel(StatusLabel.DateTimeSpan).Text = value.ToHoursMinutesString();
+                    View.GetLabel(StatusLabel.DateTimeSpan).Text = value.ToHoursMinutesString();
                 }
                 else
                 {
-                    view.GetLabel(StatusLabel.DateTimeSpan).Text = string.Empty;
+                    View.GetLabel(StatusLabel.DateTimeSpan).Text = string.Empty;
                 }
             }
         }
@@ -74,27 +64,27 @@ namespace TileExplorer
         {
             set
             {
-                view.GetLabel(StatusLabel.IsSelection).Text = value ? Resources.StatusIsSelection : string.Empty;
+                View.GetLabel(StatusLabel.IsSelection).Text = value ? Resources.StatusIsSelection : string.Empty;
 
-                view.GetLabel(StatusLabel.SelectedDistance).Visible = value;
-                view.GetLabel(StatusLabel.SelectedEleAscent).Visible = value;
-                view.GetLabel(StatusLabel.SelectedEleDescent).Visible = value;
+                View.GetLabel(StatusLabel.SelectedDistance).Visible = value;
+                View.GetLabel(StatusLabel.SelectedEleAscent).Visible = value;
+                View.GetLabel(StatusLabel.SelectedEleDescent).Visible = value;
             }
         }
 
         public double SelectedEleAscent
         {
-            set => view.GetLabel(StatusLabel.SelectedEleAscent).Text = string.Format(Resources.StatusEleAscent, value);
+            set => View.GetLabel(StatusLabel.SelectedEleAscent).Text = string.Format(Resources.StatusEleAscent, value);
         }
 
         public double SelectedEleDescent
         {
-            set => view.GetLabel(StatusLabel.SelectedEleDescent).Text = string.Format(Resources.StatusEleDescent, value);
+            set => View.GetLabel(StatusLabel.SelectedEleDescent).Text = string.Format(Resources.StatusEleDescent, value);
         }
 
         public double SelectedDistance
         {
-            set => view.GetLabel(StatusLabel.SelectedDistance).Text = string.Format(Resources.StatusDistance, value / 1000);
+            set => View.GetLabel(StatusLabel.SelectedDistance).Text = string.Format(Resources.StatusDistance, value / 1000);
         }
     }
 }

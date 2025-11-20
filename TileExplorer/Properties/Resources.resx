@@ -461,4 +461,10 @@ ddd</value>
   <data name="BackupErrorFilesExists" xml:space="preserve">
     <value>Архив содержит данные. Заменить?</value>
   </data>
+  <data name="StatusCount" xml:space="preserve">
+    <value>Количество: {0}</value>
+  </data>
+  <data name="StatusSelectedCount" xml:space="preserve">
+    <value>Выделено: {0}</value>
+  </data>
 </root>
