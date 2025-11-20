@@ -22,6 +22,7 @@ namespace TileExplorer
             Task TrackChangedAsync(Track track);
             Task TrackChangedAsync(List<Track> tracks);
             Task MarkerChangedAsync(Marker marker);
+            Task EquipmentChangedAsync(Equipment equipment);
 
             void ShowChartTrackEle(object sender, Track value);
 

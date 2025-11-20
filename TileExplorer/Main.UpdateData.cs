@@ -100,7 +100,8 @@ namespace TileExplorer
                 {
                     case ChildFormType.Filter:
                         if (load.HasFlag(DataLoad.Tracks) ||
-                            IsObjectChangedOrDeleted(load, value, typeof(Track)))
+                            IsObjectChangedOrDeleted(load, value, typeof(Track)) ||
+                            IsObjectChangedOrDeleted(load, value, typeof(Equipment)))
                         {
                             dataUpdate = DataUpdate.Full;
                         }

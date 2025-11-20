@@ -24,6 +24,13 @@ namespace TileExplorer
             await UpdateDataAsync(DataLoad.ObjectChange, equipment);
         }
 
+        public async Task EquipmentChangedAsync(Equipment equipment)
+        {
+            await UpdateDataAsync(DataLoad.ObjectChange, equipment);
+
+            Utils.Forms.GetFrmList(ChildFormType.EquipmentList)?.SetSelected(equipment);
+        }
+
         private async Task EquipmentDeleteAsync(List<Equipment> equipments)
         {
             if (equipments?.Count == 0) return;

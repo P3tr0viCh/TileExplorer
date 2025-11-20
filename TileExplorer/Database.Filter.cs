@@ -1,7 +1,10 @@
-﻿using P3tr0viCh.Utils;
+﻿using Dapper;
+using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TileExplorer.Properties;
+using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
@@ -13,23 +16,23 @@ namespace TileExplorer
 
             public event Changed OnChanged;
 
-            public enum FilterType
+            public enum FilterDateType
             {
-                None,
+                AllDate,
                 Day,
                 Period,
                 Years,
             }
 
-            private FilterType type = FilterType.None;
-            public FilterType Type
+            private FilterDateType dateType = FilterDateType.AllDate;
+            public FilterDateType DateType
             {
-                get => type;
+                get => dateType;
                 set
                 {
-                    if (type == value) return;
+                    if (dateType == value) return;
 
-                    type = value;
+                    dateType = value;
 
                     PerformOnChanged();
                 }
@@ -45,7 +48,7 @@ namespace TileExplorer
 
                     day = value;
 
-                    if (Type == FilterType.Day) PerformOnChanged();
+                    if (DateType == FilterDateType.Day) PerformOnChanged();
                 }
             }
 
@@ -59,7 +62,7 @@ namespace TileExplorer
 
                     dateFrom = value;
 
-                    if (Type == FilterType.Period) PerformOnChanged();
+                    if (DateType == FilterDateType.Period) PerformOnChanged();
                 }
             }
 
@@ -73,7 +76,7 @@ namespace TileExplorer
 
                     dateTo = value;
 
-                    if (Type == FilterType.Period) PerformOnChanged();
+                    if (DateType == FilterDateType.Period) PerformOnChanged();
                 }
             }
 
@@ -84,7 +87,7 @@ namespace TileExplorer
                 this.dateFrom = dateFrom;
                 this.dateTo = dateTo;
 
-                if (Type == FilterType.Period) PerformOnChanged();
+                if (DateType == FilterDateType.Period) PerformOnChanged();
             }
 
             private int[] years = default;
@@ -99,8 +102,69 @@ namespace TileExplorer
 
                     years = value;
 
-                    if (Type == FilterType.Years) PerformOnChanged();
+                    if (DateType == FilterDateType.Years) PerformOnChanged();
                 }
+            }
+
+            private bool useEquipments = false;
+            public bool UseEquipments
+            {
+                get => useEquipments;
+                set
+                {
+                    if (useEquipments == value) return;
+
+                    useEquipments = value;
+
+                    PerformOnChanged();
+                }
+            }
+
+            private long[] equipments = default;
+            public long[] Equipments
+            {
+                get => equipments;
+                set
+                {
+                    if (equipments == default && value == default) return;
+
+                    if (value != default && equipments != default && equipments.SequenceEqual(value)) return;
+
+                    equipments = value;
+
+                    if (UseEquipments) PerformOnChanged();
+                }
+            }
+
+            public void Clear()
+            {
+                dateType = FilterDateType.AllDate;
+                day = default;
+                dateFrom = default;
+                dateTo = default;
+                years = default;
+                useEquipments = false;
+                equipments = default;
+            }
+
+            public void Assign(Filter source)
+            {
+                if (source == null)
+                {
+                    Clear();
+
+                    return;
+                }
+
+                dateType = source.dateType;
+                day = source.day;
+                dateFrom = source.dateFrom;
+                dateTo = source.dateTo;
+                years = source.years;
+                useEquipments = source.useEquipments;
+                equipments = source.equipments;
+
+                PerformOnChanged();
             }
 
             private void PerformOnChanged()
@@ -112,9 +176,9 @@ namespace TileExplorer
             {
                 var sql = string.Empty;
 
-                switch (Type)
+                switch (DateType)
                 {
-                    case FilterType.Day:
+                    case FilterDateType.Day:
                         if (Day != default)
                         {
                             sql = string.Format(ResourcesSql.FilterDateBetween,
@@ -122,7 +186,7 @@ namespace TileExplorer
                         }
 
                         break;
-                    case FilterType.Period:
+                    case FilterDateType.Period:
                         if (DateFrom != default && DateTo != default)
                         {
                             sql = string.Format(ResourcesSql.FilterDateBetween,
@@ -143,13 +207,19 @@ namespace TileExplorer
                         }
 
                         break;
-                    case FilterType.Years:
+                    case FilterDateType.Years:
                         sql = string.Format(ResourcesSql.FilterYears, string.Join(", ", Years));
 
                         break;
                     default:
-                    case FilterType.None:
+                    case FilterDateType.AllDate:
                         break;
+                }
+
+                if (UseEquipments && Equipments != default)
+                {
+                    sql = sql.JoinExcludeEmpty(" AND ",
+                        string.Format(ResourcesSql.FilterEquipments, string.Join(", ", Equipments)));
                 }
 
                 if (!sql.IsEmpty()) sql = " WHERE " + sql;

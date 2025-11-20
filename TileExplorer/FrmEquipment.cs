@@ -91,6 +91,11 @@ namespace TileExplorer
                 MainForm.ProgramStatus.Stop(status);
             }
 
+            if (result)
+            {
+                await MainForm.EquipmentChangedAsync(Equipment);
+            }
+
             return result;
         }
 

@@ -83,10 +83,9 @@ namespace TileExplorer
 
             ProgramStatus.StatusChanged += ProgramStatus_StatusChanged;
 
-            Database.Filter.Default.Day = AppSettings.Local.Default.Filter.Day;
-            Database.Filter.Default.DateFrom = AppSettings.Local.Default.Filter.DateFrom;
-            Database.Filter.Default.DateTo = AppSettings.Local.Default.Filter.DateTo;
-            Database.Filter.Default.Years = AppSettings.Local.Default.Filter.Years;
+            Database.Filter.Default.Assign(AppSettings.Local.Default.Filter);
+            Database.Filter.Default.DateType = Database.Filter.FilterDateType.AllDate;
+            Database.Filter.Default.UseEquipments = false;
 
             Database.Filter.Default.OnChanged += Filter_OnChangedAsync;
 
@@ -199,10 +198,7 @@ namespace TileExplorer
 
             AppSettings.Local.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
 
-            AppSettings.Local.Default.Filter.Day = Database.Filter.Default.Day;
-            AppSettings.Local.Default.Filter.DateFrom = Database.Filter.Default.DateFrom;
-            AppSettings.Local.Default.Filter.DateTo = Database.Filter.Default.DateTo;
-            AppSettings.Local.Default.Filter.Years = Database.Filter.Default.Years;
+            AppSettings.Local.Default.Filter.Assign(Database.Filter.Default);
 
             AppSettings.LocalSave();
         }
@@ -438,7 +434,6 @@ namespace TileExplorer
 
             return list.OrderBy(i => ((IModelText)i.Model).Text);
         }
-
 
         private void ContextMenuShow(ContextMenuStrip menu, Point pos)
         {

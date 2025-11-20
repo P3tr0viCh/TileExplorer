@@ -1,10 +1,10 @@
 ﻿using P3tr0viCh.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TileExplorer.Database;
+using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 
@@ -43,7 +43,7 @@ namespace TileExplorer
 
             selfChange = true;
 
-            rbtnFilterNone.Checked = true;
+            rbtnFilterAllDate.Checked = true;
 
             dtpDay.Value = Filter.Default.Day != default ? Filter.Default.Day : DateTime.Now.Date;
 
@@ -51,6 +51,8 @@ namespace TileExplorer
             dtpDateTo.Value = Filter.Default.DateTo != default ? Filter.Default.DateTo : DateTime.Now.Date;
 
             clbYears.ColumnWidth = clbYears.Width / 2 - 16;
+
+            cboxUseEquipments.Checked = Filter.Default.UseEquipments;
 
             selfChange = false;
 
@@ -71,6 +73,14 @@ namespace TileExplorer
             MainForm.ChildFormClosed(this);
         }
 
+        private void FrmFilter_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
+        }
+
         private void FilterChanged()
         {
             timer.Stop();
@@ -84,14 +94,18 @@ namespace TileExplorer
 
             Filter.Default.Years = clbYears.CheckedItems.Cast<int>().ToArray();
 
-            if (rbtnFilterNone.Checked)
-                Filter.Default.Type = Filter.FilterType.None;
+            if (rbtnFilterAllDate.Checked)
+                Filter.Default.DateType = Filter.FilterDateType.AllDate;
             else if (rbtnFilterDay.Checked)
-                Filter.Default.Type = Filter.FilterType.Day;
+                Filter.Default.DateType = Filter.FilterDateType.Day;
             else if (rbtnFilterPeriod.Checked)
-                Filter.Default.Type = Filter.FilterType.Period;
+                Filter.Default.DateType = Filter.FilterDateType.Period;
             else if (rbtnFilterYears.Checked)
-                Filter.Default.Type = Filter.FilterType.Years;
+                Filter.Default.DateType = Filter.FilterDateType.Years;
+
+            Filter.Default.UseEquipments = cboxUseEquipments.Checked;
+
+            Filter.Default.Equipments = GetCheckedEquipments();
 
             selfChange = false;
         }
@@ -110,7 +124,14 @@ namespace TileExplorer
             timer.Restart();
         }
 
-        private void ClbYears_ItemCheck(object sender, ItemCheckEventArgs e)
+        private void CheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (selfChange) return;
+
+            timer.Restart();
+        }
+
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (selfChange) return;
 
@@ -130,21 +151,81 @@ namespace TileExplorer
             dtpDateTo.CustomFormat = AppSettings.Roaming.Default.FormatDate;
         }
 
-        public Task UpdateDataAsync()
+        private void UpdateDataYears()
         {
-            if (selfChange) return Task.CompletedTask;
-
             clbYears.DataSource = MainForm.Years;
 
-            if (Filter.Default.Years is null) return Task.CompletedTask;
+            if (Filter.Default.Years is null) return;
 
             for (var i = 0; i < clbYears.Items.Count; i++)
             {
                 clbYears.SetItemChecked(i, Filter.Default.Years.Contains(
                     int.Parse(clbYears.Items[i].ToString())));
             }
+        }
 
-            return Task.CompletedTask;
+        private class EquipmentFilter
+        {
+            public long EquipmentId { get; set; }
+            public string EquipmentText { get; set; }
+
+            public override string ToString() => EquipmentText;
+        }
+
+        private async Task UpdateDataEquipments()
+        {
+            clbEquipments.Items.Clear();
+
+            var equipments = await Database.Default.ListLoadAsync<Equipment>();
+
+            equipments.Insert(0, new Equipment()
+            {
+                Text = "(не указано)"
+            });
+
+            foreach (var equipment in equipments)
+            {
+                clbEquipments.Items.Add(new EquipmentFilter()
+                {
+                    EquipmentId = equipment.Id,
+                    EquipmentText = equipment.Text
+                });
+            }
+
+            if (Filter.Default.Equipments is null) return;
+
+            for (var i = 0; i < clbEquipments.Items.Count; i++)
+            {
+                clbEquipments.SetItemChecked(i, Filter.Default.Equipments.Contains(
+                    clbEquipments.Items.Cast<EquipmentFilter>().Select(e => e.EquipmentId).ElementAt(i)));
+            }
+        }
+
+        private long[] GetCheckedEquipments()
+        {
+            if (clbEquipments.CheckedItems.Count == 0) return default;
+
+            if (clbEquipments.CheckedItems.Count == clbEquipments.Items.Count) return default;
+
+            return clbEquipments.CheckedItems.Cast<EquipmentFilter>().Select(e => e.EquipmentId).ToArray();
+        }
+
+        public async Task UpdateDataAsync()
+        {
+            if (selfChange) return;
+
+            var status = MainForm.ProgramStatus.Start(Status.LoadData);
+
+            try
+            {
+                UpdateDataYears();
+
+                await UpdateDataEquipments();
+            }
+            finally
+            {
+                MainForm.ProgramStatus.Stop(status);
+            }
         }
     }
 }

@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.panelFilter = new System.Windows.Forms.Panel();
             this.clbYears = new System.Windows.Forms.CheckedListBox();
             this.dtpDateTo = new System.Windows.Forms.DateTimePicker();
             this.dtpDateFrom = new System.Windows.Forms.DateTimePicker();
@@ -37,26 +36,11 @@
             this.rbtnFilterYears = new System.Windows.Forms.RadioButton();
             this.rbtnFilterPeriod = new System.Windows.Forms.RadioButton();
             this.rbtnFilterDay = new System.Windows.Forms.RadioButton();
-            this.rbtnFilterNone = new System.Windows.Forms.RadioButton();
+            this.rbtnFilterAllDate = new System.Windows.Forms.RadioButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.panelFilter.SuspendLayout();
+            this.clbEquipments = new System.Windows.Forms.CheckedListBox();
+            this.cboxUseEquipments = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
-            // 
-            // panelFilter
-            // 
-            this.panelFilter.Controls.Add(this.clbYears);
-            this.panelFilter.Controls.Add(this.dtpDateTo);
-            this.panelFilter.Controls.Add(this.dtpDateFrom);
-            this.panelFilter.Controls.Add(this.dtpDay);
-            this.panelFilter.Controls.Add(this.rbtnFilterYears);
-            this.panelFilter.Controls.Add(this.rbtnFilterPeriod);
-            this.panelFilter.Controls.Add(this.rbtnFilterDay);
-            this.panelFilter.Controls.Add(this.rbtnFilterNone);
-            this.panelFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelFilter.Location = new System.Drawing.Point(0, 0);
-            this.panelFilter.Name = "panelFilter";
-            this.panelFilter.Size = new System.Drawing.Size(216, 313);
-            this.panelFilter.TabIndex = 1;
             // 
             // clbYears
             // 
@@ -69,7 +53,7 @@
             this.clbYears.Name = "clbYears";
             this.clbYears.Size = new System.Drawing.Size(200, 96);
             this.clbYears.TabIndex = 7;
-            this.clbYears.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ClbYears_ItemCheck);
+            this.clbYears.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
             // dtpDateTo
             // 
@@ -137,59 +121,91 @@
             this.rbtnFilterDay.UseVisualStyleBackColor = true;
             this.rbtnFilterDay.CheckedChanged += new System.EventHandler(this.FilterTypeChanged);
             // 
-            // rbtnFilterNone
+            // rbtnFilterAllDate
             // 
-            this.rbtnFilterNone.AutoSize = true;
-            this.rbtnFilterNone.Location = new System.Drawing.Point(8, 8);
-            this.rbtnFilterNone.Name = "rbtnFilterNone";
-            this.rbtnFilterNone.Size = new System.Drawing.Size(95, 23);
-            this.rbtnFilterNone.TabIndex = 0;
-            this.rbtnFilterNone.TabStop = true;
-            this.rbtnFilterNone.Text = "Все записи";
-            this.rbtnFilterNone.UseVisualStyleBackColor = true;
-            this.rbtnFilterNone.CheckedChanged += new System.EventHandler(this.FilterTypeChanged);
+            this.rbtnFilterAllDate.AutoSize = true;
+            this.rbtnFilterAllDate.Location = new System.Drawing.Point(8, 8);
+            this.rbtnFilterAllDate.Name = "rbtnFilterAllDate";
+            this.rbtnFilterAllDate.Size = new System.Drawing.Size(101, 23);
+            this.rbtnFilterAllDate.TabIndex = 0;
+            this.rbtnFilterAllDate.TabStop = true;
+            this.rbtnFilterAllDate.Text = "Любая дата";
+            this.rbtnFilterAllDate.UseVisualStyleBackColor = true;
+            this.rbtnFilterAllDate.CheckedChanged += new System.EventHandler(this.FilterTypeChanged);
             // 
             // timer
             // 
             this.timer.Interval = 444;
             this.timer.Tick += new System.EventHandler(this.Timer_Tick);
             // 
+            // clbEquipments
+            // 
+            this.clbEquipments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbEquipments.CheckOnClick = true;
+            this.clbEquipments.IntegralHeight = false;
+            this.clbEquipments.Location = new System.Drawing.Point(216, 32);
+            this.clbEquipments.Name = "clbEquipments";
+            this.clbEquipments.Size = new System.Drawing.Size(200, 96);
+            this.clbEquipments.TabIndex = 9;
+            this.clbEquipments.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
+            // 
+            // cboxUseEquipments
+            // 
+            this.cboxUseEquipments.AutoSize = true;
+            this.cboxUseEquipments.Location = new System.Drawing.Point(216, 8);
+            this.cboxUseEquipments.Name = "cboxUseEquipments";
+            this.cboxUseEquipments.Size = new System.Drawing.Size(107, 23);
+            this.cboxUseEquipments.TabIndex = 8;
+            this.cboxUseEquipments.Text = "Снаряжение";
+            this.cboxUseEquipments.UseVisualStyleBackColor = true;
+            this.cboxUseEquipments.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
+            // 
             // FrmFilter
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(216, 313);
-            this.Controls.Add(this.panelFilter);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(424, 313);
+            this.Controls.Add(this.cboxUseEquipments);
+            this.Controls.Add(this.clbEquipments);
+            this.Controls.Add(this.rbtnFilterAllDate);
+            this.Controls.Add(this.clbYears);
+            this.Controls.Add(this.rbtnFilterDay);
+            this.Controls.Add(this.dtpDateTo);
+            this.Controls.Add(this.rbtnFilterPeriod);
+            this.Controls.Add(this.dtpDateFrom);
+            this.Controls.Add(this.rbtnFilterYears);
+            this.Controls.Add(this.dtpDay);
             this.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(232, 1024);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(232, 352);
+            this.MinimumSize = new System.Drawing.Size(440, 352);
             this.Name = "FrmFilter";
             this.ShowInTaskbar = false;
             this.Text = "Фильтр";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmFilter_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmFilter_FormClosed);
             this.Load += new System.EventHandler(this.FrmFilter_Load);
-            this.panelFilter.ResumeLayout(false);
-            this.panelFilter.PerformLayout();
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmFilter_KeyUp);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel panelFilter;
         private System.Windows.Forms.RadioButton rbtnFilterYears;
         private System.Windows.Forms.RadioButton rbtnFilterPeriod;
         private System.Windows.Forms.RadioButton rbtnFilterDay;
-        private System.Windows.Forms.RadioButton rbtnFilterNone;
+        private System.Windows.Forms.RadioButton rbtnFilterAllDate;
         private System.Windows.Forms.DateTimePicker dtpDay;
         private System.Windows.Forms.DateTimePicker dtpDateTo;
         private System.Windows.Forms.DateTimePicker dtpDateFrom;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.CheckedListBox clbYears;
+        private System.Windows.Forms.CheckedListBox clbEquipments;
+        private System.Windows.Forms.CheckBox cboxUseEquipments;
     }
 }

@@ -258,6 +258,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to equipmentid IN ({0}).
+        /// </summary>
+        internal static string FilterEquipments {
+            get {
+                return ResourceManager.GetString("FilterEquipments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CAST(strftime(&apos;%Y&apos;, datetimestart) AS INTEGER) IN ({0}).
         /// </summary>
         internal static string FilterYears {
@@ -457,7 +466,10 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT tracks.text, datetimestart, eleascent, eledescent, equipments.text AS equipmenttext
+        ///   Looks up a localized string similar to SELECT tracks.text, datetimestart,
+        ///	eleascent, eledescent,
+        ///	equipmentid,
+        ///	equipments.text AS equipmenttext
         ///FROM tracks
         ///LEFT JOIN equipments ON equipmentid = equipments.id
         ///ORDER BY datetimestart DESC;.
