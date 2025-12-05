@@ -4,6 +4,7 @@
 
 using GMap.NET;
 using GMap.NET.WindowsForms;
+using Newtonsoft.Json;
 using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Utils;
 using System;
@@ -319,6 +320,7 @@ namespace TileExplorer
                 case StatusLabel.TilesVisited: return slTilesVisited;
                 case StatusLabel.TilesMaxCluster: return slTilesMaxCluster;
                 case StatusLabel.TilesMaxSquare: return slTilesMaxSquare;
+                case StatusLabel.TilesArea: return slTilesArea;
                 default: throw new ArgumentOutOfRangeException();
             }
         }

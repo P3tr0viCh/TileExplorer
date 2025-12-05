@@ -89,5 +89,10 @@ namespace TileExplorer
                 Msg.Error(message);
             }
         }
+
+        public static double CalculateSquareArea(double side)
+        {
+            return side * side;
+        }
     }
 }

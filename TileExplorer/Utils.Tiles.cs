@@ -16,6 +16,7 @@ namespace TileExplorer
                 public int Visited;
                 public int MaxCluster;
                 public int MaxSquare;
+                public double Area;
             }
 
             private static Tile FindTileByXY(List<Tile> tiles, int x, int y)
@@ -121,6 +122,8 @@ namespace TileExplorer
                     }
                 }
 
+                tiles.ForEach(tile => result.Area += CalculateTileArea(tile));
+
                 // Heatmap
 
                 var minTrackCount = int.MaxValue;
@@ -210,7 +213,6 @@ namespace TileExplorer
                 return CheckMaxSquare(tiles, x, y, square);
             }
 
-
             private static bool SetTileClusterId(List<Tile> tiles, int x, int y, int clusterId)
             {
                 var tile = FindTileByXY(tiles, x, y);
@@ -240,6 +242,18 @@ namespace TileExplorer
                         boudaryTiles.Add(new Tile(x, y));
                     }
                 }
+            }
+
+            public static double CalculateTileArea(Tile tile)
+            {
+                var tilePoints = TilePoints(tile);
+
+                var a = tilePoints[0];
+                var b = tilePoints[1];
+
+                var side = Geo.Haversine(a.Lat, a.Lng, b.Lat, b.Lng);
+
+                return CalculateSquareArea(side);
             }
 
             public static List<Tile> FindTilesBoundary(List<Tile> tiles)

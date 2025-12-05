@@ -22,6 +22,7 @@ namespace TileExplorer
             statusStripPresenter.TilesVisited = calcResult.Visited;
             statusStripPresenter.TilesMaxCluster = calcResult.MaxCluster;
             statusStripPresenter.TilesMaxSquare = calcResult.MaxSquare;
+            statusStripPresenter.TilesArea = calcResult.Area / 1000000;
         }
 
         private async Task LoadTilesAsync()

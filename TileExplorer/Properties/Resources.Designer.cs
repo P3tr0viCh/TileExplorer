@@ -779,6 +779,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Площадь: {0:F0} км².
+        /// </summary>
+        internal static string StatusTilesArea {
+            get {
+                return ResourceManager.GetString("StatusTilesArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Кластер: {0}.
         /// </summary>
         internal static string StatusTilesMaxCluster {
@@ -815,7 +824,7 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Расстояние: {0:F0}.
+        ///   Looks up a localized string similar to Расстояние: {0:F0} км.
         /// </summary>
         internal static string StatusTracksDistance {
             get {

@@ -68,7 +68,7 @@ namespace TileExplorer
 
             var mapCenter = parent.Position;
 
-            var lngLength = Geo.LongitudeLenghtForLatitude(mapCenter.Lat);
+            var lngLength = Geo.LongitudeLengthForLatitude(mapCenter.Lat);
 
             var x = lngLength * zoomMeters[zoom];
 

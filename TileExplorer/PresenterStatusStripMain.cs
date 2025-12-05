@@ -24,6 +24,7 @@ namespace TileExplorer
             TilesVisited,
             TilesMaxCluster,
             TilesMaxSquare,
+            TilesArea,
         }
 
         public PresenterStatusStripMain(IPresenterStatusStrip view) : base(view)
@@ -42,6 +43,7 @@ namespace TileExplorer
             TilesVisited = 0;
             TilesMaxCluster = 0;
             TilesMaxSquare = 0;
+            TilesArea = 0;
         }
 
         public double Zoom
@@ -125,6 +127,11 @@ namespace TileExplorer
         public int TilesMaxSquare
         {
             set => View.GetLabel(StatusLabel.TilesMaxSquare).Text = string.Format(Resources.StatusTilesMaxSquare, value);
+        }
+
+        public double TilesArea
+        {
+            set => View.GetLabel(StatusLabel.TilesArea).Text = string.Format(Resources.StatusTilesArea, value);
         }
     }
 }

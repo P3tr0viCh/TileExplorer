@@ -285,7 +285,7 @@
     <value>Треки: {0}</value>
   </data>
   <data name="StatusTracksDistance" xml:space="preserve">
-    <value>Расстояние: {0:F0}</value>
+    <value>Расстояние: {0:F0} км</value>
   </data>
   <data name="StatusZoom" xml:space="preserve">
     <value>Масштаб: {0}</value>
@@ -466,5 +466,8 @@ ddd</value>
   </data>
   <data name="StatusSelectedCount" xml:space="preserve">
     <value>Выделено: {0}</value>
+  </data>
+  <data name="StatusTilesArea" xml:space="preserve">
+    <value>Площадь: {0:F0} км²</value>
   </data>
 </root>

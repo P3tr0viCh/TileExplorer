@@ -139,6 +139,7 @@
             this.timerMapChange = new System.Windows.Forms.Timer(this.components);
             this.cmSelectedItems = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xxxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.slTilesArea = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -205,6 +206,7 @@
             this.slTracksCount,
             this.slTracksDistance,
             this.slTilesVisited,
+            this.slTilesArea,
             this.slTilesMaxCluster,
             this.slTilesMaxSquare});
             this.statusStrip.Location = new System.Drawing.Point(0, 0);
@@ -239,16 +241,16 @@
             // slStatus
             // 
             this.slStatus.Name = "slStatus";
-            this.slStatus.Size = new System.Drawing.Size(90, 17);
+            this.slStatus.Size = new System.Drawing.Size(63, 17);
             this.slStatus.Spring = true;
             this.slStatus.Text = "status";
             // 
             // slUpdateStatus
             // 
             this.slUpdateStatus.Name = "slUpdateStatus";
-            this.slUpdateStatus.Size = new System.Drawing.Size(90, 17);
+            this.slUpdateStatus.Size = new System.Drawing.Size(63, 17);
             this.slUpdateStatus.Spring = true;
-            this.slUpdateStatus.Text = "update status";
+            this.slUpdateStatus.Text = "update";
             // 
             // slTracksCount
             // 
@@ -385,14 +387,14 @@
             // miMainBackupSave
             // 
             this.miMainBackupSave.Name = "miMainBackupSave";
-            this.miMainBackupSave.Size = new System.Drawing.Size(180, 22);
+            this.miMainBackupSave.Size = new System.Drawing.Size(149, 22);
             this.miMainBackupSave.Text = "Сохранить";
             this.miMainBackupSave.Click += new System.EventHandler(this.MiMainDataBackupSave_Click);
             // 
             // miMainBackupLoad
             // 
             this.miMainBackupLoad.Name = "miMainBackupLoad";
-            this.miMainBackupLoad.Size = new System.Drawing.Size(180, 22);
+            this.miMainBackupLoad.Size = new System.Drawing.Size(149, 22);
             this.miMainBackupLoad.Text = "Восстановить";
             this.miMainBackupLoad.Click += new System.EventHandler(this.MiMainBackupLoad_Click);
             // 
@@ -1074,6 +1076,12 @@
             this.xxxToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.xxxToolStripMenuItem.Text = "xxx";
             // 
+            // slTilesArea
+            // 
+            this.slTilesArea.Name = "slTilesArea";
+            this.slTilesArea.Size = new System.Drawing.Size(53, 17);
+            this.slTilesArea.Text = "area: xxx";
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1224,6 +1232,7 @@
         private System.Windows.Forms.ToolStripMenuItem miMainDataChartTracks;
         private System.Windows.Forms.ToolStripMenuItem miMainTilesHeatmap;
         private System.Windows.Forms.ToolStripMenuItem miMainBackupLoad;
+        private System.Windows.Forms.ToolStripStatusLabel slTilesArea;
     }
 }
 
