@@ -1,5 +1,6 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
+using P3tr0viCh.Database;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -42,7 +43,7 @@ namespace TileExplorer
         public MapItemType Type => MapItemType.Marker;
 
         public Models.Marker Model { get => item.Model; set => item.Model = value; }
-        Models.BaseId IMapItem.Model { get => Model; set => Model = (Models.Marker)value; }
+        BaseId IMapItem.Model { get => Model; set => Model = (Models.Marker)value; }
 
         public bool Selected { get => item.Selected; set => item.Selected = value; }
 

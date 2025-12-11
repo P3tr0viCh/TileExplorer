@@ -4,8 +4,8 @@
 
 using GMap.NET;
 using GMap.NET.WindowsForms;
-using Newtonsoft.Json;
 using P3tr0viCh.AppUpdate;
+using P3tr0viCh.Database;
 using P3tr0viCh.Utils;
 using System;
 using System.Collections;

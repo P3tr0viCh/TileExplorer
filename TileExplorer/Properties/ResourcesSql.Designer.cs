@@ -61,15 +61,6 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to data source={0};version=3;foreign keys=true;.
-        /// </summary>
-        internal static string ConnectionString {
-            get {
-                return ResourceManager.GetString("ConnectionString", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to CREATE INDEX tracks_datetimestart_idx
         ///ON tracks(datetimestart ASC);.
         /// </summary>

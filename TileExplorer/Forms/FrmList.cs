@@ -2,6 +2,7 @@
 //#define SHOW_ALL_COLUMNS
 #endif
 
+using P3tr0viCh.Database;
 using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
@@ -249,6 +250,11 @@ namespace TileExplorer
             }
 
             dataGridView.Columns[nameof(BaseId.Id)].Visible = false;
+
+            if (dataGridView.ColumnExists(nameof(BaseId.IsNew)))
+            {
+                dataGridView.Columns[nameof(BaseId.IsNew)].Visible = false;
+            }
 
             UpdateSettings();
 

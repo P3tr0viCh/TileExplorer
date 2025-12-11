@@ -15,10 +15,7 @@ namespace TileExplorer
         private T model;
         public T Model
         {
-            get
-            {
-                return model;
-            }
+            get => model;
             set
             {
                 model = value;
@@ -30,10 +27,7 @@ namespace TileExplorer
         private bool selected = false;
         public bool Selected
         {
-            get
-            {
-                return selected;
-            }
+            get => selected;
             set
             {
                 if (selected == value) return;

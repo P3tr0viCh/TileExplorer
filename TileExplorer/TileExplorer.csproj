@@ -82,6 +82,9 @@
     <Reference Include="P3tr0viCh.AppUpdate">
       <HintPath>..\..\..\..\Projects.exe\P3tr0viCh.AppUpdate\$(Configuration)\P3tr0viCh.AppUpdate.dll</HintPath>
     </Reference>
+    <Reference Include="P3tr0viCh.Database">
+      <HintPath>..\..\..\..\Projects.exe\P3tr0viCh.Database\$(Configuration)\P3tr0viCh.Database.dll</HintPath>
+    </Reference>
     <Reference Include="P3tr0viCh.Utils, Version=1.0.8522.26839, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Projects.exe\P3tr0viCh.Utils\$(Configuration)\P3tr0viCh.Utils.dll</HintPath>
@@ -130,82 +133,82 @@
     <Compile Include="Backup.Equipment.cs" />
     <Compile Include="Backup.Markers.cs" />
     <Compile Include="Backup.Tracks.cs" />
-    <Compile Include="Database.Actions.cs" />
-    <Compile Include="FrmChartTracksByMonth.cs">
+    <Compile Include="Database\Database.Actions.cs" />
+    <Compile Include="Forms\FrmChartTracksByMonth.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmChartTracksByMonth.Designer.cs">
+    <Compile Include="Forms\FrmChartTracksByMonth.Designer.cs">
       <DependentUpon>FrmChartTracksByMonth.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmChartTracksByYear.cs">
+    <Compile Include="Forms\FrmChartTracksByYear.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmChartTracksByYear.Designer.cs">
+    <Compile Include="Forms\FrmChartTracksByYear.Designer.cs">
       <DependentUpon>FrmChartTracksByYear.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmList.Sort.cs">
+    <Compile Include="Forms\FrmList.Sort.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmTrackList.cs">
+    <Compile Include="Forms\FrmTrackList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmTrackList.Designer.cs">
+    <Compile Include="Forms\FrmTrackList.Designer.cs">
       <DependentUpon>FrmTrackList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Main.Backup.cs">
+    <Compile Include="Forms\Main.Backup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.CheckDirectoryTracks.cs">
+    <Compile Include="Forms\Main.CheckDirectoryTracks.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Equipments.cs">
+    <Compile Include="Forms\Main.Equipments.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Markers.cs">
+    <Compile Include="Forms\Main.Markers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Selection.cs">
+    <Compile Include="Forms\Main.Selection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Tiles.cs">
+    <Compile Include="Forms\Main.Tiles.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Tracks.cs">
+    <Compile Include="Forms\Main.Tracks.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.UpdateData.cs">
+    <Compile Include="Forms\Main.UpdateData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MapItemMarkerCircle.cs" />
+    <Compile Include="Models\MapItemMarkerCircle.cs" />
     <Compile Include="PresenterChildForm.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="FrmBackup.cs">
+    <Compile Include="Forms\FrmBackup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmBackup.Designer.cs">
+    <Compile Include="Forms\FrmBackup.Designer.cs">
       <DependentUpon>FrmBackup.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmEquipment.cs">
+    <Compile Include="Forms\FrmEquipment.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmEquipment.Designer.cs">
+    <Compile Include="Forms\FrmEquipment.Designer.cs">
       <DependentUpon>FrmEquipment.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmList.cs">
+    <Compile Include="Forms\FrmList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmList.Designer.cs">
+    <Compile Include="Forms\FrmList.Designer.cs">
       <DependentUpon>FrmList.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmChartTrackEle.cs">
+    <Compile Include="Forms\FrmChartTrackEle.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmChartTrackEle.Designer.cs">
+    <Compile Include="Forms\FrmChartTrackEle.Designer.cs">
       <DependentUpon>FrmChartTrackEle.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces.cs" />
-    <Compile Include="Main.ActionsSave.cs">
+    <Compile Include="Forms\Main.ActionsSave.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MapZoomRuler.cs" />
@@ -213,7 +216,7 @@
     <Compile Include="PresenterStatusStripList.cs" />
     <Compile Include="UpdateApp.cs" />
     <Compile Include="ProgramStatus.cs" />
-    <Compile Include="MapItemMarkerCross.cs" />
+    <Compile Include="Models\MapItemMarkerCross.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="Properties\ResourcesSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -231,83 +234,83 @@
     <Compile Include="Utils.Gpx.cs" />
     <Compile Include="Utils.Osm.cs" />
     <Compile Include="Utils.Tracks.cs" />
-    <Compile Include="Database.Filter.cs" />
-    <Compile Include="Database.Models.cs" />
-    <Compile Include="FrmTrack.cs">
+    <Compile Include="Database\Database.Filter.cs" />
+    <Compile Include="Database\Database.Models.cs" />
+    <Compile Include="Forms\FrmTrack.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmTrack.Designer.cs">
+    <Compile Include="Forms\FrmTrack.Designer.cs">
       <DependentUpon>FrmTrack.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmFilter.cs">
+    <Compile Include="Forms\FrmFilter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmFilter.Designer.cs">
+    <Compile Include="Forms\FrmFilter.Designer.cs">
       <DependentUpon>FrmFilter.cs</DependentUpon>
     </Compile>
-    <Compile Include="MapItem.cs" />
-    <Compile Include="MapItemTrack.cs" />
-    <Compile Include="MapItemTile.cs" />
-    <Compile Include="FrmSettings.cs">
+    <Compile Include="Models\MapItem.cs" />
+    <Compile Include="Models\MapItemTrack.cs" />
+    <Compile Include="Models\MapItemTile.cs" />
+    <Compile Include="Forms\FrmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmSettings.Designer.cs">
+    <Compile Include="Forms\FrmSettings.Designer.cs">
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="PresenterStatusStripMain.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="Database.cs" />
-    <Compile Include="FrmMarker.cs">
+    <Compile Include="Database\Database.cs" />
+    <Compile Include="Forms\FrmMarker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmMarker.Designer.cs">
+    <Compile Include="Forms\FrmMarker.Designer.cs">
       <DependentUpon>FrmMarker.cs</DependentUpon>
     </Compile>
-    <Compile Include="MapItemMarker.cs" />
-    <Compile Include="MapItemMarkerToolTip.cs" />
-    <Compile Include="Main.cs">
+    <Compile Include="Models\MapItemMarker.cs" />
+    <Compile Include="Models\MapItemMarkerToolTip.cs" />
+    <Compile Include="Forms\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Designer.cs">
+    <Compile Include="Forms\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FrmBackup.resx">
+    <EmbeddedResource Include="Forms\FrmBackup.resx">
       <DependentUpon>FrmBackup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmChartTracksByMonth.resx">
+    <EmbeddedResource Include="Forms\FrmChartTracksByMonth.resx">
       <DependentUpon>FrmChartTracksByMonth.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmChartTracksByYear.resx">
+    <EmbeddedResource Include="Forms\FrmChartTracksByYear.resx">
       <DependentUpon>FrmChartTracksByYear.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmEquipment.resx">
+    <EmbeddedResource Include="Forms\FrmEquipment.resx">
       <DependentUpon>FrmEquipment.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmList.resx">
+    <EmbeddedResource Include="Forms\FrmList.resx">
       <DependentUpon>FrmList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmTrack.resx">
+    <EmbeddedResource Include="Forms\FrmTrack.resx">
       <DependentUpon>FrmTrack.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmSettings.resx">
+    <EmbeddedResource Include="Forms\FrmSettings.resx">
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmMarker.resx">
+    <EmbeddedResource Include="Forms\FrmMarker.resx">
       <DependentUpon>FrmMarker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmFilter.resx">
+    <EmbeddedResource Include="Forms\FrmFilter.resx">
       <DependentUpon>FrmFilter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmChartTrackEle.resx">
+    <EmbeddedResource Include="Forms\FrmChartTrackEle.resx">
       <DependentUpon>FrmChartTrackEle.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmTrackList.resx">
+    <EmbeddedResource Include="Forms\FrmTrackList.resx">
       <DependentUpon>FrmTrackList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Main.resx">
+    <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

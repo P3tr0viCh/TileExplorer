@@ -4,6 +4,7 @@
 
 using Dapper;
 using Dapper.Contrib.Extensions;
+using P3tr0viCh.Database;
 using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,14 @@ namespace TileExplorer
 {
     public partial class Database : DefaultInstance<Database>
     {
-        private string fileName;
+        private ConnectionSQLite Connection { get; set; } = new ConnectionSQLite();
 
         public string FileName
         {
-            get => fileName;
+            get => Connection.FileName;
             set
             {
-                fileName = value;
+                Connection.FileName = value;
 
                 CreateDatabase();
             }
@@ -32,7 +33,7 @@ namespace TileExplorer
 
         private SQLiteConnection GetConnection()
         {
-            return new SQLiteConnection(string.Format(ResourcesSql.ConnectionString, FileName));
+            return new SQLiteConnection(Connection.ConnectionString);
         }
 
         private void CreateDatabase()
@@ -80,14 +81,22 @@ namespace TileExplorer
 
                 using (var transaction = connection.BeginTransaction())
                 {
-                    await TruncateTableAsync<T>(connection, transaction);
-
-                    foreach (var value in values)
+                    try
                     {
-                        await ListItemSaveAsync(connection, transaction, value);
-                    }
+                        await TruncateTableAsync<T>(connection, transaction);
 
-                    transaction.Commit();
+                        foreach (var value in values)
+                        {
+                            await ListItemSaveAsync(connection, transaction, value);
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }
@@ -178,12 +187,20 @@ namespace TileExplorer
 
                 using (var transaction = connection.BeginTransaction())
                 {
-                    foreach (var track in tracks)
+                    try
                     {
-                        await connection.DeleteAsync(track);
-                    }
+                        foreach (var track in tracks)
+                        {
+                            await connection.DeleteAsync(track);
+                        }
 
-                    transaction.Commit();
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }
@@ -200,16 +217,24 @@ namespace TileExplorer
 
                     using (var transaction = connection.BeginTransaction())
                     {
-                        await connection.InsertAsync(track, transaction);
-
-                        foreach (var trackPoint in track.TrackPoints)
+                        try
                         {
-                            trackPoint.TrackId = track.Id;
+                            await connection.InsertAsync(track, transaction);
+
+                            foreach (var trackPoint in track.TrackPoints)
+                            {
+                                trackPoint.TrackId = track.Id;
+                            }
+
+                            await connection.InsertAsync(track.TrackPoints, transaction);
+
+                            transaction.Commit();
                         }
-
-                        await connection.InsertAsync(track.TrackPoints, transaction);
-
-                        transaction.Commit();
+                        catch (Exception)
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
                     }
                 }
                 else
@@ -237,12 +262,20 @@ namespace TileExplorer
 
                 using (var transaction = connection.BeginTransaction())
                 {
-                    foreach (var tracksTile in tracksTiles)
+                    try
                     {
-                        await connection.InsertAsync(tracksTile, transaction);
-                    }
+                        foreach (var tracksTile in tracksTiles)
+                        {
+                            await connection.InsertAsync(tracksTile, transaction);
+                        }
 
-                    transaction.Commit();
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }
@@ -379,31 +412,39 @@ namespace TileExplorer
 
                 using (var transaction = connection.BeginTransaction())
                 {
-                    var trackId = await connection.InsertAsync(track, transaction);
-
-                    track.TrackPoints.ForEach(trackPoint =>
-                        trackPoint.TrackId = track.Id
-                    );
-
-                    await connection.InsertAsync(track.TrackPoints, transaction);
-
-                    foreach (var tile in track.TrackTiles)
+                    try
                     {
-                        if (tile.Id == Sql.NewId)
-                        {
-                            tile.Id = await connection.InsertAsync(tile, transaction);
+                        var trackId = await connection.InsertAsync(track, transaction);
 
-                            track.NewTilesCount++;
+                        track.TrackPoints.ForEach(trackPoint =>
+                            trackPoint.TrackId = track.Id
+                        );
+
+                        await connection.InsertAsync(track.TrackPoints, transaction);
+
+                        foreach (var tile in track.TrackTiles)
+                        {
+                            if (tile.Id == Sql.NewId)
+                            {
+                                tile.Id = await connection.InsertAsync(tile, transaction);
+
+                                track.NewTilesCount++;
+                            }
+
+                            await connection.InsertAsync(new TracksTiles()
+                            {
+                                TrackId = track.Id,
+                                TileId = tile.Id,
+                            }, transaction);
                         }
 
-                        await connection.InsertAsync(new TracksTiles()
-                        {
-                            TrackId = track.Id,
-                            TileId = tile.Id,
-                        }, transaction);
+                        transaction.Commit();
                     }
-
-                    transaction.Commit();
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }
@@ -427,9 +468,17 @@ namespace TileExplorer
 
                 using (var transaction = connection.BeginTransaction())
                 {
-                    await connection.UpdateAsync(tracks, transaction);
+                    try
+                    {
+                        await connection.UpdateAsync(tracks, transaction);
 
-                    transaction.Commit();
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }

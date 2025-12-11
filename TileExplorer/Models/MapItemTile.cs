@@ -1,5 +1,6 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
+using P3tr0viCh.Database;
 using System.Collections.Generic;
 using System.Drawing;
 using static TileExplorer.Database;
@@ -24,7 +25,7 @@ namespace TileExplorer
         }
 
         public Models.Tile Model { get => item.Model; set => item.Model = value; }
-        Models.BaseId IMapItem.Model { get => Model; set => Model = (Models.Tile)value; }
+        BaseId IMapItem.Model { get => Model; set => Model = (Models.Tile)value; }
 
         public bool Selected { get => item.Selected; set => item.Selected = value; }
 

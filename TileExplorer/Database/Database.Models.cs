@@ -6,6 +6,7 @@ using static TileExplorer.Enums;
 using Newtonsoft.Json;
 using GMap.NET;
 using P3tr0viCh.Utils;
+using P3tr0viCh.Database;
 
 namespace TileExplorer
 {
@@ -16,37 +17,9 @@ namespace TileExplorer
             private const int DefaultOffsetX = 20;
             private const int DefaultOffsetY = -10;
 
-            public interface IBaseId
-            {
-                long Id { get; set; }
-            }
-
             public interface IModelText
             {
                 string Text { get; set; }
-            }
-
-            public class BaseId : IBaseId
-            {
-                [Key]
-                public long Id { get; set; } = 0;
-
-                public void Clear()
-                {
-                    Id = 0;
-                }
-
-                public void Assign(BaseId source)
-                {
-                    if (source == null)
-                    {
-                        Clear();
-
-                        return;
-                    }
-
-                    Id = source.Id;
-                }
             }
 
             [Table("markers")]
