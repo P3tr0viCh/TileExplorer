@@ -87,7 +87,7 @@ namespace TileExplorer
 
                         foreach (var value in values)
                         {
-                            await ListItemSaveAsync(connection, transaction, value);
+                            await P3tr0viCh.Database.Actions.ListItemSaveAsync(connection, transaction, value);
                         }
 
                         transaction.Commit();
@@ -115,23 +115,11 @@ namespace TileExplorer
             }
         }
 
-        public async Task ListItemSaveAsync<T>(SQLiteConnection connection, SQLiteTransaction transaction, T value) where T : BaseId
-        {
-            if (value.Id == Sql.NewId)
-            {
-                await connection.InsertAsync(value, transaction);
-            }
-            else
-            {
-                await connection.UpdateAsync(value, transaction);
-            }
-        }
-
         public async Task ListItemSaveAsync<T>(T value) where T : BaseId
         {
             using (var connection = GetConnection())
             {
-                await ListItemSaveAsync(connection, null, value);
+                await P3tr0viCh.Database.Actions.ListItemSaveAsync(connection, null, value);
             }
         }
 
@@ -143,12 +131,20 @@ namespace TileExplorer
 
                 using (var transaction = connection.BeginTransaction())
                 {
-                    foreach (var value in values)
+                    try
                     {
-                        await connection.DeleteAsync(value);
-                    }
+                        foreach (var value in values)
+                        {
+                            await connection.DeleteAsync(value);
+                        }
 
-                    transaction.Commit();
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }
