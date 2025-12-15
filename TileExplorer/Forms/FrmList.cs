@@ -783,6 +783,17 @@ namespace TileExplorer
 
         private void BindingSource_ListChanged(object sender, ListChangedEventArgs e)
         {
+            switch (e.ListChangedType)
+            {
+                case ListChangedType.ItemAdded:
+                    tsbtnChange.Enabled = tsbtnDelete.Enabled = true;
+                    break;
+                case ListChangedType.Reset:
+                case ListChangedType.ItemDeleted:
+                    tsbtnDelete.Enabled = tsbtnChange.Enabled = Count > 0;
+                    break;
+            }
+
             statusStripPresenter.Count = Count;
         }
 
