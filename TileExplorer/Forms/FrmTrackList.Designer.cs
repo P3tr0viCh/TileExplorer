@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             this.cboxEquipment = new System.Windows.Forms.ComboBox();
+            this.equipmentBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.lblEquipment = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
-            this.equipmentBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -48,6 +48,10 @@
             this.cboxEquipment.Size = new System.Drawing.Size(168, 25);
             this.cboxEquipment.TabIndex = 1;
             this.cboxEquipment.ValueMember = "Id";
+            // 
+            // equipmentBindingSource
+            // 
+            this.equipmentBindingSource.DataSource = typeof(TileExplorer.Database.Models.Equipment);
             // 
             // lblEquipment
             // 
@@ -78,10 +82,6 @@
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
             // 
-            // equipmentBindingSource
-            // 
-            this.equipmentBindingSource.DataSource = typeof(TileExplorer.Database.Models.Equipment);
-            // 
             // FrmTrackList
             // 
             this.AcceptButton = this.btnOk;
@@ -100,7 +100,6 @@
             this.Name = "FrmTrackList";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Треки";
-            this.Load += new System.EventHandler(this.FrmTrackList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

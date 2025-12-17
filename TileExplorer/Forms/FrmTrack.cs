@@ -44,12 +44,12 @@ namespace TileExplorer
                 Owner = owner,
             })
             {
-                frm.Track = track;
-
                 frm.btnOKToALL.Visible = canToAll;
                 frm.btnCancelToALL.Visible = canToAll;
 
                 frm.saveOnClose = saveOnClose;
+
+                frm.Load += (sender, args) => frm.FrmTrack_Load(track);
 
                 var result = frm.ShowDialog(owner);
 
@@ -67,9 +67,11 @@ namespace TileExplorer
             return ShowDlg(owner, track, false, true) == DialogResult.OK;
         }
 
-        private async void FrmTrack_Load(object sender, EventArgs e)
+        private async void FrmTrack_Load(Track track)
         {
             await LoadDataAsync();
+
+            Track = track;
         }
 
         private async Task<bool> LoadDataAsync()

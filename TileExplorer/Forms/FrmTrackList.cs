@@ -28,15 +28,17 @@ namespace TileExplorer
                 Owner = owner,
             })
             {
-                frm.Tracks = tracks;
+                frm.Load += (sender, args) => frm.FrmTrackList_Load(tracks);
 
                 return frm.ShowDialog(owner) == DialogResult.OK;
             }
         }
 
-        private async void FrmTrackList_Load(object sender, EventArgs e)
+        private async void FrmTrackList_Load(List<Track> tracks)
         {
             await LoadDataAsync();
+
+            Tracks = tracks;
         }
 
         private async Task<bool> LoadDataAsync()
@@ -74,7 +76,7 @@ namespace TileExplorer
 
         private bool UpdateData()
         {
-            Tracks.ForEach(track => track.Equipment = cboxEquipment.SelectedItem as Equipment);
+            Tracks.ForEach(track => track.Equipment = cboxEquipment.GetSelectedItem<Equipment>());
 
             return true;
         }
