@@ -71,10 +71,10 @@ namespace TileExplorer
         public static void UpdateSettings()
         {
             Distance.Format = AppSettings.Roaming.Default.FormatDistance;
-            DistanceSum.Format = AppSettings.Roaming.Default.FormatDistance2;
+            DistanceSum.Format = AppSettings.Roaming.Default.FormatDistanceRound;
 
             EleAscent.Format = AppSettings.Roaming.Default.FormatEleAscent;
-            EleAscentSum.Format = AppSettings.Roaming.Default.FormatEleAscent2;
+            EleAscentSum.Format = AppSettings.Roaming.Default.FormatEleAscentRound;
 
             LatLng.Format = AppSettings.Roaming.Default.FormatLatLng;
 

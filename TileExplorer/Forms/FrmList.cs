@@ -640,7 +640,7 @@ namespace TileExplorer
             {
                 if (e.ColumnIndex == columnFormattingIndex[1])
                 {
-                    e.Value = (float)e.Value * 3.6;
+                    e.Value = (double)e.Value * 3.6;
                 }
             }
         }
@@ -786,11 +786,15 @@ namespace TileExplorer
             switch (e.ListChangedType)
             {
                 case ListChangedType.ItemAdded:
-                    tsbtnChange.Enabled = tsbtnDelete.Enabled = true;
+                    tsbtnChange.Enabled =
+                    tsbtnChartTrackEle.Enabled =
+                    tsbtnDelete.Enabled = true;
                     break;
                 case ListChangedType.Reset:
                 case ListChangedType.ItemDeleted:
-                    tsbtnDelete.Enabled = tsbtnChange.Enabled = Count > 0;
+                    tsbtnChange.Enabled =
+                    tsbtnChartTrackEle.Enabled =
+                    tsbtnDelete.Enabled = Count > 0;
                     break;
             }
 

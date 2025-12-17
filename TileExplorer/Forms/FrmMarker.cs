@@ -21,7 +21,7 @@ namespace TileExplorer
             {
                 marker.Assign(value);
 
-                tbText.Text = marker.Text;
+                tbText.SetText(marker.Text);
 
                 udPointLat.Value = (decimal)marker.Lat;
                 udPointLng.Value = (decimal)marker.Lng;
@@ -29,7 +29,7 @@ namespace TileExplorer
                 udOffsetX.Value = marker.OffsetX;
                 udOffsetY.Value = marker.OffsetY;
 
-                cboxTextVisible.Checked = marker.IsTextVisible;
+                cboxTextVisible.SetBool(marker.IsTextVisible);
             }
         }
 
@@ -55,7 +55,7 @@ namespace TileExplorer
         {
             try
             {
-                marker.Text = tbText.Text;
+                marker.Text = tbText.GetTrimText();
 
                 marker.Lat = (double)udPointLat.Value;
                 marker.Lng = (double)udPointLng.Value;
@@ -63,7 +63,7 @@ namespace TileExplorer
                 marker.OffsetX = (int)udOffsetX.Value;
                 marker.OffsetY = (int)udOffsetY.Value;
 
-                marker.IsTextVisible = cboxTextVisible.Checked;
+                marker.IsTextVisible = cboxTextVisible.GetBool();
 
                 return true;
             }

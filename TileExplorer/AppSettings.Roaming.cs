@@ -105,11 +105,11 @@ namespace TileExplorer
 
             public string FormatDistance { get; set; } = "#,0.00";
 
-            public string FormatDistance2 { get; set; } = "#,0";
+            public string FormatDistanceRound { get; set; } = "#,0";
 
             public string FormatEleAscent { get; set; } = "#,0";
 
-            public string FormatEleAscent2 { get; set; } = "#,0";
+            public string FormatEleAscentRound { get; set; } = "#,0";
 
             public string FormatLatLng { get; set; } = "0.000000";
 

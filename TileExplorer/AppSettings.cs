@@ -268,9 +268,9 @@ namespace TileExplorer
         public string FormatDistance { get => Roaming.Default.FormatDistance; set => Roaming.Default.FormatDistance = value; }
 
         [LocalizedAttribute.Category("Category.Format", Resource)]
-        [LocalizedAttribute.DisplayName("FormatDistance2.DisplayName", Resource)]
-        [LocalizedAttribute.Description("FormatDistance2.Description", Resource)]
-        public string FormatDistance2 { get => Roaming.Default.FormatDistance2; set => Roaming.Default.FormatDistance2 = value; }
+        [LocalizedAttribute.DisplayName("FormatDistanceRound.DisplayName", Resource)]
+        [LocalizedAttribute.Description("FormatDistanceRound.Description", Resource)]
+        public string FormatDistanceRound { get => Roaming.Default.FormatDistanceRound; set => Roaming.Default.FormatDistanceRound = value; }
 
         [LocalizedAttribute.Category("Category.Format", Resource)]
         [LocalizedAttribute.DisplayName("FormatEleAscent.DisplayName", Resource)]
@@ -278,9 +278,9 @@ namespace TileExplorer
         public string FormatEleAscent { get => Roaming.Default.FormatEleAscent; set => Roaming.Default.FormatEleAscent = value; }
 
         [LocalizedAttribute.Category("Category.Format", Resource)]
-        [LocalizedAttribute.DisplayName("FormatEleAscent2.DisplayName", Resource)]
-        [LocalizedAttribute.Description("FormatEleAscent2.Description", Resource)]
-        public string FormatEleAscent2 { get => Roaming.Default.FormatEleAscent2; set => Roaming.Default.FormatEleAscent2 = value; }
+        [LocalizedAttribute.DisplayName("FormatEleAscentSum.DisplayName", Resource)]
+        [LocalizedAttribute.Description("FormatEleAscentSum.Description", Resource)]
+        public string FormatEleAscentRound { get => Roaming.Default.FormatEleAscentRound; set => Roaming.Default.FormatEleAscentRound = value; }
 
         [LocalizedAttribute.Category("Category.Format", Resource)]
         [LocalizedAttribute.DisplayName("FormatLatLng.DisplayName", Resource)]

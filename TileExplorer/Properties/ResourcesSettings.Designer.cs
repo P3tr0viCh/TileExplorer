@@ -1037,18 +1037,18 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Формат расстояний (округлённое значение).
         /// </summary>
-        internal static string FormatDistance2_Description {
+        internal static string FormatDistanceRound_Description {
             get {
-                return ResourceManager.GetString("FormatDistance2.Description", resourceCulture);
+                return ResourceManager.GetString("FormatDistanceRound.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Расстояние (км).
         /// </summary>
-        internal static string FormatDistance2_DisplayName {
+        internal static string FormatDistanceRound_DisplayName {
             get {
-                return ResourceManager.GetString("FormatDistance2.DisplayName", resourceCulture);
+                return ResourceManager.GetString("FormatDistanceRound.DisplayName", resourceCulture);
             }
         }
         
@@ -1073,18 +1073,18 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Формат подъёмов (округлённое значение).
         /// </summary>
-        internal static string FormatEleAscent2_Description {
+        internal static string FormatEleAscentRound_Description {
             get {
-                return ResourceManager.GetString("FormatEleAscent2.Description", resourceCulture);
+                return ResourceManager.GetString("FormatEleAscentRound.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Подъём (м).
         /// </summary>
-        internal static string FormatEleAscent2_DisplayName {
+        internal static string FormatEleAscentRound_DisplayName {
             get {
-                return ResourceManager.GetString("FormatEleAscent2.DisplayName", resourceCulture);
+                return ResourceManager.GetString("FormatEleAscentRound.DisplayName", resourceCulture);
             }
         }
         

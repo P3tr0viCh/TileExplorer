@@ -21,12 +21,12 @@ namespace TileExplorer
             {
                 track.Assign(value);
 
-                tbText.Text = track.Text;
+                tbText.SetText(track.Text);
 
                 cboxEquipment.SelectedValue = track.EquipmentId;
 
-                tbEleAscent.Text = track.EleAscent == 0 ? string.Empty : track.EleAscent.ToString("0.#");
-                tbEleDescent.Text = track.EleDescent == 0 ? string.Empty : track.EleDescent.ToString("0.#");
+                tbEleAscent.SetDouble(track.EleAscent, AppSettings.Roaming.Default.FormatEleAscent);
+                tbEleDescent.SetDouble(track.EleDescent, AppSettings.Roaming.Default.FormatEleAscent);
             }
         }
 
@@ -91,8 +91,6 @@ namespace TileExplorer
 
                 equipmentBindingSource.Insert(0, new Equipment());
 
-                cboxEquipment.SelectedValue = track?.EquipmentId;
-
                 return true;
             }
             catch (Exception e)
@@ -114,12 +112,12 @@ namespace TileExplorer
         {
             try
             {
-                track.Text = tbText.Text;
+                track.Text = tbText.GetTrimText();
 
-                track.Equipment = cboxEquipment.SelectedItem as Equipment;
+                track.Equipment = cboxEquipment.GetSelectedItem<Equipment>();
 
-                track.EleAscent = Misc.FloatParse(tbEleAscent.Text);
-                track.EleDescent = Misc.FloatParse(tbEleDescent.Text);
+                track.EleAscent = tbEleAscent.GetDouble();
+                track.EleDescent = tbEleDescent.GetDouble();
 
                 return true;
             }

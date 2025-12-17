@@ -96,12 +96,12 @@ namespace TileExplorer
 
             public static bool TextBoxIsEmpty(TextBox textBox, string error)
             {
-                return TextBoxIsWrongValue(() => textBox.Text.IsEmpty(), textBox, error);
+                return TextBoxIsWrongValue(() => textBox.IsEmpty(), textBox, error);
             }
 
             public static bool TextBoxIsWrongFloat(TextBox textBox)
             {
-                if (textBox.Text.IsEmpty())
+                if (textBox.IsEmpty())
                 {
                     return true;
                 }

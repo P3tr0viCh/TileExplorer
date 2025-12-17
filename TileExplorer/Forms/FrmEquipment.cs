@@ -22,9 +22,9 @@ namespace TileExplorer
             {
                 equipment.Assign(value);
 
-                tbText.Text = equipment.Text;
-                tbBrand.Text = equipment.Brand;
-                tbModel.Text = equipment.Model;
+                tbText.SetText(equipment.Text);
+                tbBrand.SetText(equipment.Brand);
+                tbModel.SetText(equipment.Model);
             }
         }
 
@@ -55,10 +55,6 @@ namespace TileExplorer
 
         private bool CheckData()
         {
-            tbText.Text = tbText.Text.Trim();
-            tbBrand.Text = tbBrand.Text.Trim();
-            tbModel.Text = tbModel.Text.Trim();
-
             if (Utils.Forms.TextBoxIsEmpty(tbText, Resources.ErrorNeedText))
             {
                 return false;
@@ -69,9 +65,9 @@ namespace TileExplorer
 
         private bool UpdateData()
         {
-            equipment.Text = tbText.Text;
-            equipment.Brand = tbBrand.Text;
-            equipment.Model = tbModel.Text;
+            equipment.Text = tbText.GetTrimText();
+            equipment.Brand = tbBrand.GetTrimText();
+            equipment.Model = tbModel.GetTrimText();
 
             return true;
         }

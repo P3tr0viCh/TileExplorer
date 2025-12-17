@@ -443,10 +443,10 @@
   <data name="FormatDistance.DisplayName" xml:space="preserve">
     <value>Расстояние</value>
   </data>
-  <data name="FormatDistance2.Description" xml:space="preserve">
+  <data name="FormatDistanceRound.Description" xml:space="preserve">
     <value>Формат расстояний (округлённое значение)</value>
   </data>
-  <data name="FormatDistance2.DisplayName" xml:space="preserve">
+  <data name="FormatDistanceRound.DisplayName" xml:space="preserve">
     <value>Расстояние (км)</value>
   </data>
   <data name="FormatEleAscent.Description" xml:space="preserve">
@@ -455,10 +455,10 @@
   <data name="FormatEleAscent.DisplayName" xml:space="preserve">
     <value>Подъём</value>
   </data>
-  <data name="FormatEleAscent2.Description" xml:space="preserve">
+  <data name="FormatEleAscentRound.Description" xml:space="preserve">
     <value>Формат подъёмов (округлённое значение)</value>
   </data>
-  <data name="FormatEleAscent2.DisplayName" xml:space="preserve">
+  <data name="FormatEleAscentRound.DisplayName" xml:space="preserve">
     <value>Подъём (м)</value>
   </data>
   <data name="FormatLatLng.Description" xml:space="preserve">
