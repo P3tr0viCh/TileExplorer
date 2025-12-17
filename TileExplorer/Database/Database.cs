@@ -135,7 +135,7 @@ namespace TileExplorer
                     {
                         foreach (var value in values)
                         {
-                            await connection.DeleteAsync(value);
+                            await P3tr0viCh.Database.Actions.ListItemDeleteAsync(connection, transaction, value);
                         }
 
                         transaction.Commit();

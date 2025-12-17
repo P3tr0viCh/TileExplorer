@@ -1,10 +1,7 @@
-﻿using Dapper;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using TileExplorer.Properties;
-using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
