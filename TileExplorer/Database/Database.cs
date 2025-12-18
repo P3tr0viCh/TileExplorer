@@ -4,6 +4,7 @@
 
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Newtonsoft.Json.Linq;
 using P3tr0viCh.Database;
 using P3tr0viCh.Utils;
 using System;
@@ -73,7 +74,7 @@ namespace TileExplorer
             await connection.ExecuteAsync(sql, null, transaction);
         }
 
-        public async Task TableReplaceAsync<T>(List<T> values) where T : BaseId
+        public async Task TableReplaceAsync<T>(IEnumerable<T> values) where T : BaseId
         {
             using (var connection = GetConnection())
             {
@@ -123,7 +124,7 @@ namespace TileExplorer
             }
         }
 
-        private async Task ListItemDeleteAsync<T>(List<T> values) where T : BaseId
+        private async Task ListItemDeleteAsync<T>(IEnumerable<T> values) where T : BaseId
         {
             using (var connection = GetConnection())
             {
@@ -175,7 +176,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task TrackDeleteAsync(List<Track> tracks)
+        public async Task TrackDeleteAsync(IEnumerable<Track> tracks)
         {
             using (var connection = GetConnection())
             {
@@ -187,7 +188,7 @@ namespace TileExplorer
                     {
                         foreach (var track in tracks)
                         {
-                            await connection.DeleteAsync(track);
+                            await P3tr0viCh.Database.Actions.ListItemDeleteAsync(connection, transaction, track);
                         }
 
                         transaction.Commit();
@@ -242,7 +243,7 @@ namespace TileExplorer
             DebugWrite.Line("end");
         }
 
-        public async Task TrackSaveAsync(List<Track> tracks)
+        public async Task TrackSaveAsync(IEnumerable<Track> tracks)
         {
             foreach (var track in tracks)
             {
@@ -250,7 +251,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task TracksTilesSaveAsync(List<TracksTiles> tracksTiles)
+        public async Task TracksTilesSaveAsync(IEnumerable<TracksTiles> tracksTiles)
         {
             using (var connection = GetConnection())
             {
@@ -377,7 +378,7 @@ namespace TileExplorer
 #endif
         }
 
-        public async Task<List<T>> ListLoadAsync<T>(object filter = null)
+        public async Task<IEnumerable<T>> ListLoadAsync<T>(object filter = null)
         {
             DebugWrite.Line(typeof(T).Name);
 
@@ -389,7 +390,7 @@ namespace TileExplorer
             {
                 var list = await connection.QueryAsync<T>(sql, param);
 
-                return list.AsList();
+                return list;
             }
         }
 
@@ -445,7 +446,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task<List<Track>> TrackExtsLoadAsync()
+        public async Task<IEnumerable<Track>> TrackExtsLoadAsync()
         {
             DebugWrite.Line("TrackExtsLoadAsync");
 
@@ -479,7 +480,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task<List<int>> LoadYearsAsync()
+        public async Task<IEnumerable<int>> LoadYearsAsync()
         {
             DebugWrite.Line("years");
 
@@ -489,7 +490,7 @@ namespace TileExplorer
             {
                 var list = await connection.QueryAsync<int>(sql);
 
-                return list.AsList();
+                return list;
             }
         }
     }

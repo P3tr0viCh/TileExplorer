@@ -14,14 +14,14 @@ namespace TileExplorer
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        private List<Track> Tracks { get; set; }
+        private IEnumerable<Track> Tracks { get; set; }
 
         public FrmTrackList()
         {
             InitializeComponent();
         }
 
-        public static bool ShowDlg(Form owner, List<Track> tracks)
+        public static bool ShowDlg(Form owner, IEnumerable<Track> tracks)
         {
             using (var frm = new FrmTrackList()
             {
@@ -34,7 +34,7 @@ namespace TileExplorer
             }
         }
 
-        private async void FrmTrackList_Load(List<Track> tracks)
+        private async void FrmTrackList_Load(IEnumerable<Track> tracks)
         {
             await LoadDataAsync();
 
@@ -76,7 +76,10 @@ namespace TileExplorer
 
         private bool UpdateData()
         {
-            Tracks.ForEach(track => track.Equipment = cboxEquipment.GetSelectedItem<Equipment>());
+            foreach (var track in Tracks)
+            {
+                track.Equipment = cboxEquipment.GetSelectedItem<Equipment>();
+            }
 
             return true;
         }

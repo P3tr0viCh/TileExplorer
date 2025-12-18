@@ -168,7 +168,7 @@ namespace TileExplorer
 
                 DebugWrite.Line(string.Join(", ", distances.Select(d => d.Distance)));
 
-                if (distances.Count > 0)
+                if (distances.Count() > 0)
                 {
                     var maxDistance = 0D;
 

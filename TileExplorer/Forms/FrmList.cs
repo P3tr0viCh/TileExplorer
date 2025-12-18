@@ -498,7 +498,7 @@ namespace TileExplorer
             set => bindingSource.Position = bindingSource.IndexOf(Find(value));
         }
 
-        public List<BaseId> SelectedList
+        public IEnumerable<BaseId> SelectedList
         {
             get
             {
@@ -514,29 +514,8 @@ namespace TileExplorer
             }
             set
             {
-                SetSelectedRows(value);
+                dataGridView.SetSelectedRows(value);
             }
-        }
-
-        private void SetSelectedRows(List<BaseId> values)
-        {
-            dataGridView.ClearSelection();
-
-            foreach (var value in values)
-            {
-                foreach (var row in from DataGridViewRow row in dataGridView.Rows
-                                    where (row.DataBoundItem as BaseId).Id == value.Id
-                                    select row)
-                {
-                    row.Selected = true;
-                    break;
-                }
-            }
-        }
-
-        private void SetSelectedRows(BaseId value)
-        {
-            SetSelectedRows(new List<BaseId>() { value });
         }
 
         public int Count => bindingSource.Count;
@@ -591,11 +570,11 @@ namespace TileExplorer
         {
             if (MultiChange)
             {
-                SetSelectedRows(SelectedList);
+                dataGridView.SetSelectedRows(SelectedList);
             }
             else
             {
-                SetSelectedRows(Selected);
+                dataGridView.SetSelectedRows(Selected);
             }
 
             await MainForm.ListItemChangeAsync(this, SelectedList);
@@ -608,7 +587,7 @@ namespace TileExplorer
 
         private async Task SelectedDeleteAsync()
         {
-            SetSelectedRows(SelectedList);
+            dataGridView.SetSelectedRows(SelectedList);
 
             await MainForm.ListItemDeleteAsync(this, SelectedList);
         }

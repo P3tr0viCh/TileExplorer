@@ -142,7 +142,9 @@ namespace TileExplorer
                 {
                     try
                     {
-                        track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
+                        var trackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
+
+                        track.TrackPoints = trackPoints.ToList();
 
                         item = OverlayAddTrack(track);
                     }
@@ -156,7 +158,7 @@ namespace TileExplorer
             Selected = item;
         }
 
-        public void SelectTrackList(List<Track> tracks)
+        public void SelectTrackList(IEnumerable<Track> tracks)
         {
             Selected = null;
 

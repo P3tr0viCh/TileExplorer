@@ -39,11 +39,11 @@ namespace TileExplorer
 
                 overlayTiles.Clear();
 
-                var tiles = await Database.Default.ListLoadAsync<Tile>();
+                var tiles = (await Database.Default.ListLoadAsync<Tile>()).ToList();
 
                 CalcTiles(tiles);
 
-                tiles.ForEach(tile =>
+                foreach (var tile in tiles)
                 {
                     if (ctsTiles.IsCancellationRequested) return;
 
@@ -64,7 +64,7 @@ namespace TileExplorer
                     }));
                 }
 #endif
-                });
+                }
 
                 tilesLoaded = true;
             }

@@ -125,7 +125,9 @@ namespace TileExplorer
 
                 // await Task.Delay(3000, ctsChartTrackEle.Token);
 
-                Track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track = Track, full = true });
+                var trackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track = Track, full = true });
+
+                Track.TrackPoints = trackPoints.ToList();
 
                 var minEle = double.MaxValue;
                 var maxEle = double.MinValue;

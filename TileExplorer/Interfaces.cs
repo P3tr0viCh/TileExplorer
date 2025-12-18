@@ -17,11 +17,11 @@ namespace TileExplorer
             Task SelectMapItemAsync(object sender, BaseId value);
 
             void ListItemAdd(object sender, BaseId value);
-            Task ListItemChangeAsync(object sender, List<BaseId> list);
-            Task ListItemDeleteAsync(object sender, List<BaseId> list);
+            Task ListItemChangeAsync(object sender, IEnumerable<BaseId> list);
+            Task ListItemDeleteAsync(object sender, IEnumerable<BaseId> list);
 
             Task TrackChangedAsync(Track track);
-            Task TrackChangedAsync(List<Track> tracks);
+            Task TrackChangedAsync(IEnumerable<Track> tracks);
             Task MarkerChangedAsync(Marker marker);
             Task EquipmentChangedAsync(Equipment equipment);
 

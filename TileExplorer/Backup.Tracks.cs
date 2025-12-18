@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
 
@@ -107,15 +108,15 @@ namespace TileExplorer
 
             dtfTrackExts.ReadFromExcelXml();
 
-            var equipments = await Database.Default.ListLoadAsync<Equipment>();
+            var equipments = (await Database.Default.ListLoadAsync<Equipment>()).ToList();
 
             var tracks = await Database.Default.ListLoadAsync<Track>();
 
-#if DEBUG            
-            tracks.ForEach(track =>
+#if DEBUG   
+            foreach (var track in tracks)
             {
                 //DebugWrite.Line($"{track.DateTimeStart}: {track.Text}, {track.EquipmentId}, {track.EleAscent}");
-            });
+            }
 #endif
 
             var tracksFromBackup = new List<Track>();

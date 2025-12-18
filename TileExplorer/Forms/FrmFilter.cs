@@ -176,7 +176,7 @@ namespace TileExplorer
         {
             clbEquipments.Items.Clear();
 
-            var equipments = await Database.Default.ListLoadAsync<Equipment>();
+            var equipments = (await Database.Default.ListLoadAsync<Equipment>()).ToList();
 
             equipments.Insert(0, new Equipment()
             {

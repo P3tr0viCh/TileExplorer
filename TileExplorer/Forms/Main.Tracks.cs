@@ -51,7 +51,9 @@ namespace TileExplorer
 
                     if (ctsTracks.IsCancellationRequested) return;
 
-                    track.TrackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
+                    var trackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
+
+                    track.TrackPoints = trackPoints.ToList();
 
                     OverlayAddTrack(track);
 
@@ -107,13 +109,15 @@ namespace TileExplorer
             }
         }
 
-        private async Task TrackChangeAsync(List<Track> tracks)
+        private async Task TrackChangeAsync(IEnumerable<Track> tracks)
         {
-            if (tracks?.Count == 0) return;
+            var count = tracks?.Count();
+
+            if (count == 0) return;
 
             var track = tracks.FirstOrDefault();
 
-            if (tracks.Count == 1)
+            if (count == 1)
             {
                 if (!FrmTrack.ShowDlg(this, track)) return;
 
@@ -139,7 +143,7 @@ namespace TileExplorer
             await SelectMapItemAsync(this, track);
         }
 
-        public async Task TrackChangedAsync(List<Track> tracks)
+        public async Task TrackChangedAsync(IEnumerable<Track> tracks)
         {
             await UpdateDataAsync(DataLoad.Tracks);
 
@@ -322,7 +326,9 @@ namespace TileExplorer
 
             try
             {
-                Years = await Database.Default.LoadYearsAsync();
+                var years = await Database.Default.LoadYearsAsync();
+
+                Years = years.ToList();
 
                 DebugWrite.Line(string.Join(", ", Years));
             }
@@ -346,7 +352,7 @@ namespace TileExplorer
             }
         }
 
-        private async Task UpdateTracksAsync(List<Track> tracks)
+        private async Task UpdateTracksAsync(IEnumerable<Track> tracks)
         {
             try
             {

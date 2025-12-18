@@ -264,7 +264,8 @@ namespace TileExplorer
 
                     var counts = string.Empty;
 
-                    if (distances.Count > 0)
+                    var distancesCount = distances.Count();
+                    if (distancesCount > 0)
                     {
                         var allDistances = 0D;
 
@@ -283,12 +284,12 @@ namespace TileExplorer
 
                         allDistances /= 1000;
 
-                        counts = string.Format(Resources.TextChartTracksByYearCounts, distances.Count, allDistances);
+                        counts = string.Format(Resources.TextChartTracksByYearCounts, distancesCount, allDistances);
                     }
 
                     ChartTitleCounts[i].Text = counts;
 
-                    DebugWrite.Line($"count: {distances.Count}, distances: {string.Join(", ", distances.Select(d => d.Distance))}");
+                    DebugWrite.Line($"count: {distancesCount}, distances: {string.Join(", ", distances.Select(d => d.Distance))}");
                 }
 
                 maxDistance = Utils.DoubleFloorToEpsilon(maxDistance / 1000, AxisYInterval) + AxisYInterval;

@@ -57,7 +57,7 @@ namespace TileExplorer
             return CreateDataTableFile(table);
         }
 
-        private void SaveMarkersAsGpx(List<Marker> markers)
+        private void SaveMarkersAsGpx(IEnumerable<Marker> markers)
         {
             DebugWrite.Line("start");
 
@@ -117,7 +117,7 @@ namespace TileExplorer
             DebugWrite.Line("end");
         }
 
-        private void SaveMarkersAsExcelXml(List<Marker> markers)
+        private void SaveMarkersAsExcelXml(IEnumerable<Marker> markers)
         {
             DebugWrite.Line("start");
 

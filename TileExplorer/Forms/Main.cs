@@ -984,7 +984,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task ListItemChangeAsync(object sender, List<BaseId> list)
+        public async Task ListItemChangeAsync(object sender, IEnumerable<BaseId> list)
         {
             var value = list.FirstOrDefault();
 
@@ -1007,7 +1007,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task ListItemDeleteAsync(object sender, List<BaseId> list)
+        public async Task ListItemDeleteAsync(object sender, IEnumerable<BaseId> list)
         {
             var value = list.FirstOrDefault();
 
