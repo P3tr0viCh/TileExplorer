@@ -87,7 +87,7 @@ namespace TileExplorer
 
             DebugWrite.Line($"GpxFiles: {GpxFiles.FilePath}");
 
-            GpxFiles.Load();
+            GpxFiles.Default.Load();
 
             if (GpxFiles.Default.Files is null)
             {
@@ -105,7 +105,7 @@ namespace TileExplorer
 
             GpxFiles.Default.Files = files;
 
-            GpxFiles.Save();
+            GpxFiles.Default.Save();
 
 #if SHOW_FILES
             DebugWrite.Line($"new files count: {newFiles.Count()}");

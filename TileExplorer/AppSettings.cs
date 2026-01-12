@@ -369,7 +369,7 @@ namespace TileExplorer
         // ------------------------------------------------------------------------------------------------------------
         public static bool LocalSave()
         {
-            if (!Local.Save())
+            if (!Local.Default.Save())
             {
                 LastError = Local.LastError;
 
@@ -383,7 +383,7 @@ namespace TileExplorer
 
         public static bool RoamingSave()
         {
-            if (!Roaming.Save())
+            if (!Roaming.Default.Save())
             {
                 LastError = Roaming.LastError;
 
@@ -420,7 +420,7 @@ namespace TileExplorer
         {
             DebugWrite.Line($"Settings Local: {Local.FilePath}");
 
-            if (!Local.Load())
+            if (!Local.Default.Load())
             {
                 LastError = Local.LastError;
 
@@ -438,7 +438,7 @@ namespace TileExplorer
         {
             DebugWrite.Line($"Settings Roaming: {Roaming.FilePath}");
 
-            if (!Roaming.Load())
+            if (!Roaming.Default.Load())
             {
                 LastError = Roaming.LastError;
 

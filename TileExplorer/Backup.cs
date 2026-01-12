@@ -90,9 +90,8 @@ namespace TileExplorer
 
         private static DataTableFile CreateDataTableFile(DataTable table)
         {
-            return new DataTableFile()
+            return new DataTableFile(table)
             {
-                Table = table,
                 Author = Utils.AssemblyNameAndVersion(),
             };
         }

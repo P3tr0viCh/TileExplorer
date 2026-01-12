@@ -88,7 +88,7 @@ namespace TileExplorer
 
                         foreach (var value in values)
                         {
-                            await P3tr0viCh.Database.Actions.ListItemSaveAsync(connection, transaction, value);
+                            await connection.ListItemSaveAsync(value, transaction);
                         }
 
                         transaction.Commit();
@@ -120,7 +120,7 @@ namespace TileExplorer
         {
             using (var connection = GetConnection())
             {
-                await P3tr0viCh.Database.Actions.ListItemSaveAsync(connection, null, value);
+                await connection.ListItemSaveAsync(value);
             }
         }
 
@@ -136,7 +136,7 @@ namespace TileExplorer
                     {
                         foreach (var value in values)
                         {
-                            await P3tr0viCh.Database.Actions.ListItemDeleteAsync(connection, transaction, value);
+                            await connection.ListItemDeleteAsync(value, transaction);
                         }
 
                         transaction.Commit();
@@ -188,7 +188,7 @@ namespace TileExplorer
                     {
                         foreach (var track in tracks)
                         {
-                            await P3tr0viCh.Database.Actions.ListItemDeleteAsync(connection, transaction, track);
+                            await connection.ListItemDeleteAsync(track, transaction);
                         }
 
                         transaction.Commit();
