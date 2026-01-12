@@ -6,6 +6,7 @@ using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -17,69 +18,38 @@ namespace TileExplorer
     {
         internal class GpxFiles : SettingsBase<GpxFiles>
         {
-            public List<string> Files { get; set; }
+            public IEnumerable<string> Files { get; set; } = Enumerable.Empty<string>();
         }
 
         private readonly WrapperCancellationTokenSource ctsCheckDirectoryTracks = new WrapperCancellationTokenSource();
 
-        private void FindFiles(string directory, List<string> files)
-        {
-            foreach (var dir in Directory.EnumerateDirectories(directory))
-            {
-                if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
-                FindFiles(dir, files);
-            }
-
-            foreach (var file in Directory.EnumerateFiles(directory, "*.gpx"))
-            {
-                if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
-
-                // check *.gpx_2
-                if (!Path.GetExtension(file).ToLower().Equals(".gpx")) continue;
-
-                files.Add(file);
-            }
-        }
-
-        private async Task FindFilesAsync(string directory, List<string> files)
+        private async Task<IEnumerable<string>> FindFilesAsync(string directory)
         {
             DebugWrite.Line("start");
 
-            await Task.Factory.StartNew(() =>
+            try
             {
-                FindFiles(directory, files);
-            }, ctsCheckDirectoryTracks.Token);
+                var files = await Files.DirectoryEnumerateFilesAsync(directory, SearchOption.AllDirectories, ".gpx");
 
 #if SHOW_FILES
-            await Task.Factory.StartNew(() =>
-            {
                 foreach (var file in files)
                 {
-                    if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
+                    if (ctsCheckDirectoryTracks.IsCancellationRequested) break;
 
                     DebugWrite.Line(file);
                 }
-            }, ctsCheckDirectoryTracks.Token);
 #endif
 
-            DebugWrite.Line("done");
-        }
-
-        private bool FileContains(string file)
-        {
-            foreach (var oldFile in GpxFiles.Default.Files)
-            {
-                if (Files.PathEquals(file, oldFile))
-                {
-                    return true;
-                }
+                return files;
             }
-
-            return false;
+            finally
+            {
+                DebugWrite.Line("done");
+            }
         }
 
-        private void GetNewFiles(List<string> files, List<string> newFiles)
+        private IEnumerable<string> ExceptNewFiles(IEnumerable<string> files)
         {
             GpxFiles.Directory = Path.GetDirectoryName(Database.Default.FileName);
 
@@ -89,19 +59,7 @@ namespace TileExplorer
 
             GpxFiles.Default.Load();
 
-            if (GpxFiles.Default.Files is null)
-            {
-                GpxFiles.Default.Files = new List<string>();
-            }
-
-            foreach (var file in files)
-            {
-                if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
-
-                if (FileContains(file)) continue;
-
-                newFiles.Add(file);
-            }
+            var newFiles = files.Except(GpxFiles.Default.Files);
 
             GpxFiles.Default.Files = files;
 
@@ -112,49 +70,77 @@ namespace TileExplorer
 
             foreach (var file in newFiles)
             {
+                if (ctsCheckDirectoryTracks.IsCancellationRequested) break;
+
                 DebugWrite.Line(file);
             }
 #endif
+
+            return newFiles;
         }
 
-        private async Task GetNewFilesAsync(List<string> files, List<string> newFiles)
+        private async Task<IEnumerable<string>> ExceptNewFilesAsync(IEnumerable<string> files)
         {
             DebugWrite.Line("start");
 
-            await Task.Factory.StartNew(() =>
+            try
             {
-                GetNewFiles(files, newFiles);
-            }, ctsCheckDirectoryTracks.Token);
-
-            DebugWrite.Line("done");
+                return await Task.Factory.StartNew(() =>
+                {
+                    return ExceptNewFiles(files);
+                }, ctsCheckDirectoryTracks.Token);
+            }
+            finally
+            {
+                DebugWrite.Line("done");
+            }
         }
 
-        private bool QuestionAddTracks(List<string> files)
+        private async Task<IEnumerable<string>> GetNewFilesAsync(string directory)
         {
-            var question = string.Empty;
+            var status = ProgramStatus.Start(Status.CheckDirectoryTracks);
 
-            if (files.Count == 1)
+            try
             {
-                question = string.Format(Resources.QuestionNewTrackFinded1, files[0]);
+                var files = await FindFilesAsync(directory);
+
+                if (ctsCheckDirectoryTracks.IsCancellationRequested) return Enumerable.Empty<string>();
+
+                var newFiles = await ExceptNewFilesAsync(files);
+
+                DebugWrite.Line($"found files={files.Count()}, new files={newFiles.Count()}");
+
+                return newFiles;
+            }
+            finally
+            {
+                ProgramStatus.Stop(status);
+            }
+        }
+
+        private bool QuestionAddTracks(IEnumerable<string> files)
+        {
+            string question;
+
+            var count = files.Count();
+
+            if (count == 1)
+            {
+                question = string.Format(Resources.QuestionNewTrackFinded1, Path.GetFileName(files.First()));
             }
             else
             {
-                var questionFiles = string.Empty;
-
                 var maxShow = 5;
 
-                for (var i = 0; i < maxShow && i < files.Count; i++)
-                {
-                    questionFiles = questionFiles.JoinExcludeEmpty(Str.Eol, files[i]);
-                }
+                var questionFiles = string.Join(Str.Eol, files.Take(maxShow).Select(f => Path.GetFileName(f)));
 
-                if (files.Count <= maxShow)
+                if (count <= maxShow)
                 {
                     question = string.Format(Resources.QuestionNewTrackFinded2, questionFiles);
                 }
                 else
                 {
-                    question = string.Format(Resources.QuestionNewTrackFinded3, questionFiles, files.Count - maxShow);
+                    question = string.Format(Resources.QuestionNewTrackFinded3, questionFiles, count - maxShow);
                 }
             }
 
@@ -195,25 +181,11 @@ namespace TileExplorer
 
             try
             {
-                var files = new List<string>();
-                var newFiles = new List<string>();
-
-                var status = ProgramStatus.Start(Status.CheckDirectoryTracks);
-
-                try
-                {
-                    await FindFilesAsync(directoryTracks, files);
-
-                    await GetNewFilesAsync(files, newFiles);
-                }
-                finally
-                {
-                    ProgramStatus.Stop(status);
-                }
+                var files = await GetNewFilesAsync(directoryTracks);
 
                 if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
-                if (newFiles.Count == 0)
+                if (!files.Any())
                 {
                     DebugWrite.Line("no new files");
 
@@ -225,9 +197,7 @@ namespace TileExplorer
                     return;
                 }
 
-                if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
-
-                if (!QuestionAddTracks(newFiles))
+                if (!QuestionAddTracks(files))
                 {
                     DebugWrite.Line("add tracks canceled");
 
@@ -236,7 +206,7 @@ namespace TileExplorer
 
                 if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
-                await OpenTracksAsync(newFiles.ToArray());
+                await OpenTracksAsync(files.ToArray());
             }
             catch (TaskCanceledException e)
             {
