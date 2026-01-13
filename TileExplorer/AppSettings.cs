@@ -1,16 +1,14 @@
 ﻿using P3tr0viCh.Utils;
-using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.IO;
-using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
-    internal partial class AppSettings
+    internal partial class AppSettings : ISettingsBase
     {
         private const string Resource = "Properties.ResourcesSettings";
 
@@ -278,8 +276,8 @@ namespace TileExplorer
         public string FormatEleAscent { get => Roaming.Default.FormatEleAscent; set => Roaming.Default.FormatEleAscent = value; }
 
         [LocalizedAttribute.Category("Category.Format", Resource)]
-        [LocalizedAttribute.DisplayName("FormatEleAscentSum.DisplayName", Resource)]
-        [LocalizedAttribute.Description("FormatEleAscentSum.Description", Resource)]
+        [LocalizedAttribute.DisplayName("FormatEleAscentRound.DisplayName", Resource)]
+        [LocalizedAttribute.Description("FormatEleAscentRound.Description", Resource)]
         public string FormatEleAscentRound { get => Roaming.Default.FormatEleAscentRound; set => Roaming.Default.FormatEleAscentRound = value; }
 
         [LocalizedAttribute.Category("Category.Format", Resource)]
@@ -364,38 +362,25 @@ namespace TileExplorer
         public Color ColorChartText { get => Roaming.Default.ColorChartText; set => Roaming.Default.ColorChartText = value; }
 
         // ------------------------------------------------------------------------------------------------------------
-        public static Exception LastError { get; private set; } = null;
-
-        // ------------------------------------------------------------------------------------------------------------
         public static bool LocalSave()
         {
-            if (!Local.Default.Save())
-            {
-                LastError = Local.LastError;
+            if (Local.Default.Save()) return true;
 
-                DebugWrite.Error(LastError);
+            DebugWrite.Error(Local.LastError);
 
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
         public static bool RoamingSave()
         {
-            if (!Roaming.Default.Save())
-            {
-                LastError = Roaming.LastError;
+            if (Roaming.Default.Save()) return true;
 
-                DebugWrite.Error(LastError);
+            DebugWrite.Error(Roaming.LastError);
 
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
-        public static bool Save() => LocalSave() && RoamingSave();
+        public bool Save() => LocalSave() && RoamingSave();
 
         private static string GetDirectory(string directory, string defDirectory)
         {
@@ -422,9 +407,7 @@ namespace TileExplorer
 
             if (!Local.Default.Load())
             {
-                LastError = Local.LastError;
-
-                DebugWrite.Error(LastError);
+                DebugWrite.Error(Local.LastError);
 
                 return false;
             }
@@ -438,38 +421,13 @@ namespace TileExplorer
         {
             DebugWrite.Line($"Settings Roaming: {Roaming.FilePath}");
 
-            if (!Roaming.Default.Load())
-            {
-                LastError = Roaming.LastError;
+            if (Roaming.Default.Load()) return true;
 
-                DebugWrite.Error(LastError);
+            DebugWrite.Error(Roaming.LastError);
 
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
-        public static bool Load() => LocalLoad() && RoamingLoad();
-
-        public static Local.ColumnState[] SaveDataGridColumns(DataGridView dataGridView)
-        {
-            return Local.SaveDataGridColumns(dataGridView);
-        }
-
-        public static void LoadDataGridColumns(DataGridView dataGridView, Local.ColumnState[] columns)
-        {
-            Local.LoadDataGridColumns(dataGridView, columns);
-        }
-
-        public static Local.FormState SaveFormState(Form form)
-        {
-            return Local.SaveFormState(form);
-        }
-
-        public static void LoadFormState(Form form, Local.FormState state)
-        {
-            Local.LoadFormState(form, state);
-        }
+        public bool Load() => LocalLoad() && RoamingLoad();
     }
 }

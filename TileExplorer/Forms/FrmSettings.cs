@@ -1,106 +1,103 @@
 ﻿using P3tr0viCh.Utils;
 using System;
 using System.IO;
-using System.Windows.Forms;
 using TileExplorer.Properties;
 
 namespace TileExplorer
 {
-    public partial class FrmSettings : Form
+    internal class FrmSettings : FrmSettingsBase
     {
-        public FrmSettings()
+        public FrmSettings(ISettingsBase settings) : base(settings)
         {
-            InitializeComponent();
         }
 
-        public static bool ShowDlg(IWin32Window owner)
+        protected override void SaveFormState()
         {
-            using (var frm = new FrmSettings())
+            AppSettings.Local.Default.FormStateSettings = AppSettings.Local.SaveFormState(this);
+        }
+
+        protected override void LoadFormState()
+        {
+            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStateSettings);
+        }
+
+        private string prevDirectoryRoaming;
+
+        protected override void BeforeOpen()
+        {
+            prevDirectoryRoaming = AppSettings.Local.Default.DirectoryRoaming;
+        }
+
+        protected override void BeforeSave()
+        {
+            AppSettings.UpdateDirectoryRoaming();
+
+            if (AppSettings.Local.Default.DirectoryRoaming != prevDirectoryRoaming)
             {
-                AppSettings.Save();
-
-                AppSettings.LoadFormState(frm, AppSettings.Local.Default.FormStateSettings);
-
-                var prevDirectoryRoaming = AppSettings.Local.Default.DirectoryRoaming;
-
-                frm.propertyGrid.SelectedObject = new AppSettings();
-
-                if (frm.ShowDialog(owner) == DialogResult.OK)
+                if (File.Exists(AppSettings.Roaming.FilePath))
                 {
-                    AppSettings.Local.Default.FormStateSettings = AppSettings.SaveFormState(frm);
-
-                    AppSettings.UpdateDirectoryRoaming();
-
-                    if (AppSettings.Local.Default.DirectoryRoaming != prevDirectoryRoaming)
-                    {
-                        if (File.Exists(AppSettings.Roaming.FilePath))
-                        {
-                            AppSettings.RoamingLoad();
-                        }
-                    }
-
-                    AppSettings.Save();
-
-                    return true;
-                }
-                else
-                {
-                    AppSettings.Load();
-
-                    AppSettings.Local.Default.FormStateSettings = AppSettings.SaveFormState(frm);
-
-                    return false;
+                    AppSettings.RoamingLoad();
                 }
             }
         }
 
-        private bool CheckDirectory(string path)
+        private string GetFullPath(string path)
         {
-            if (path.IsEmpty()) return true;
+            if (path.IsEmpty()) return string.Empty;
 
-            if (Directory.Exists(path)) return true;
-
-            Msg.Error(string.Format(Resources.ErrorDirectoryNotExists, path));
-
-            return false;
+            return Path.GetFullPath(path);
         }
 
-        private bool CheckData()
+        private AppSettings AppSettings => Settings as AppSettings;
+
+        private void GetFullPaths()
         {
-            if (!CheckDirectory(AppSettings.Local.Default.DirectoryDatabase))
-            {
-                return false;
-            }
+            AppSettings.DirectoryDatabase = GetFullPath(AppSettings.DirectoryDatabase);
 
-            if (!CheckDirectory(AppSettings.Local.Default.DirectoryTracks))
-            {
-                return false;
-            }
+            AppSettings.DirectoryTracks = GetFullPath(AppSettings.DirectoryTracks);
 
-            if (!CheckDirectory(AppSettings.Local.Default.DirectoryRoaming))
-            {
-                return false;
-            }
+            AppSettings.DirectoryBackups = GetFullPath(AppSettings.DirectoryBackups);
 
-            if (!AppSettings.Local.Default.DirectoryRoaming.IsEmpty())
+            AppSettings.DirectoryRoaming = GetFullPath(AppSettings.DirectoryRoaming);
+
+            PropertyGrid.Refresh();
+        }
+
+        private void AssertDirectory(string path)
+        {
+            if (path.IsEmpty()) return;
+
+            if (Directory.Exists(path)) return;
+
+            throw new Exceptions.DirectoryNotExistsException(Resources.ErrorDirectoryNotExists, path);
+        }
+
+        private void AssertDirectories()
+        {
+            AssertDirectory(AppSettings.DirectoryDatabase);
+
+            AssertDirectory(AppSettings.DirectoryTracks);
+
+            AssertDirectory(AppSettings.DirectoryBackups);
+
+            AssertDirectory(AppSettings.DirectoryRoaming);
+
+            if (!AppSettings.DirectoryRoaming.IsEmpty())
             {
-                if (Files.PathEquals(AppSettings.Local.Default.DirectoryRoaming, AppSettings.Local.Directory))
+                if (Files.PathEquals(AppSettings.DirectoryRoaming, AppSettings.Local.Directory))
                 {
-                    Msg.Error(string.Format(Resources.ErrorDirectoryWrongLocation, AppSettings.Local.Default.DirectoryRoaming));
-
-                    return false;
+                    throw new ArgumentException(
+                        string.Format(Resources.ErrorDirectoryRoamingWrongLocation,
+                        AppSettings.DirectoryRoaming));
                 }
             }
-
-            return true;
         }
 
-        private void BtnOk_Click(object sender, EventArgs e)
+        protected override void CheckSettings()
         {
-            if (CheckData())
-            {
-                DialogResult = DialogResult.OK;
-            }
+            GetFullPaths();
+
+            AssertDirectories();
         }
     }
 }

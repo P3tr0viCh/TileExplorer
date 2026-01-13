@@ -373,8 +373,8 @@
   <data name="MsgDirectoryTracksNoNewFiles" xml:space="preserve">
     <value>Новые треки в каталоге «{0}» не найдены.</value>
   </data>
-  <data name="ErrorDirectoryWrongLocation" xml:space="preserve">
-    <value>Каталог «{0}» не может располагаться в указанном месте.</value>
+  <data name="ErrorDirectoryRoamingWrongLocation" xml:space="preserve">
+    <value>Каталог c общими настройками не может располагаться в «{0}».</value>
   </data>
   <data name="StatusIsSelection" xml:space="preserve">
     <value>Выделение</value>

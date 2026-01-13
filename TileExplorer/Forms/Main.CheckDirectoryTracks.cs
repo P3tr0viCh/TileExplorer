@@ -23,7 +23,6 @@ namespace TileExplorer
 
         private readonly WrapperCancellationTokenSource ctsCheckDirectoryTracks = new WrapperCancellationTokenSource();
 
-
         private async Task<IEnumerable<string>> FindFilesAsync(string directory)
         {
             DebugWrite.Line("start");
@@ -59,7 +58,7 @@ namespace TileExplorer
 
             GpxFiles.Default.Load();
 
-            var newFiles = files.Except(GpxFiles.Default.Files);
+            var newFiles = files.Except(GpxFiles.Default.Files, new PathComparer());
 
             GpxFiles.Default.Files = files;
 

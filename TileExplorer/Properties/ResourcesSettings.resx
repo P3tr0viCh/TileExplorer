@@ -401,14 +401,14 @@
   </data>
   <data name="DirectoryDatabase.Description" xml:space="preserve">
     <value>Расположение файла базы данных.
-Пустое значение — \AppData\Roaming\TileExplorer\</value>
+Пустое значение — \AppData\Roaming\P3tr0viCh\TileExplorer\</value>
   </data>
   <data name="DirectoryDatabase.DisplayName" xml:space="preserve">
     <value>База данных</value>
   </data>
   <data name="DirectoryRoaming.Description" xml:space="preserve">
     <value>Каталог с общими для всех компьютеров настройками.
-Пустое значение — \AppData\Roaming\TileExplorer\</value>
+Пустое значение — \AppData\Roaming\P3tr0viCh\TileExplorer\</value>
   </data>
   <data name="DirectoryRoaming.DisplayName" xml:space="preserve">
     <value>Общие настройки</value>

@@ -149,6 +149,9 @@
     <Compile Include="Forms\FrmList.Sort.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\FrmSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FrmTrackList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -168,6 +171,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Main.Selection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main.Settings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Main.Tiles.cs">
@@ -251,12 +257,6 @@
     <Compile Include="Models\MapItem.cs" />
     <Compile Include="Models\MapItemTrack.cs" />
     <Compile Include="Models\MapItemTile.cs" />
-    <Compile Include="Forms\FrmSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmSettings.Designer.cs">
-      <DependentUpon>FrmSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="PresenterStatusStripMain.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Utils.cs" />
@@ -294,9 +294,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmTrack.resx">
       <DependentUpon>FrmTrack.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmSettings.resx">
-      <DependentUpon>FrmSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmMarker.resx">
       <DependentUpon>FrmMarker.cs</DependentUpon>

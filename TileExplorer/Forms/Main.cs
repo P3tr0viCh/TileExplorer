@@ -71,7 +71,8 @@ namespace TileExplorer
             AppSettings.Local.Directory = Files.AppDataLocalDirectory();
 #endif
 
-            AppSettings.Load();
+            AppSettings.LocalLoad();
+            AppSettings.RoamingLoad();
 
             GMapLoad();
 
@@ -101,7 +102,7 @@ namespace TileExplorer
             miMapTileDelete.Visible = true;
 #endif
 
-            AppSettings.LoadFormState(this, AppSettings.Local.Default.FormStateMain);
+            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStateMain);
 
 #if DEBUG && DUMMY_TILES
             DummyTiles();
@@ -158,9 +159,6 @@ namespace TileExplorer
             await UpdateDataAsync();
 
             await CheckDirectoryTracksAsync(false);
-
-            // await BackupSaveAsync();
-            // await BackupLoadAsync();
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -179,7 +177,7 @@ namespace TileExplorer
 
             FullScreen = false;
 
-            AppSettings.Local.Default.FormStateMain = AppSettings.SaveFormState(this);
+            AppSettings.Local.Default.FormStateMain = AppSettings.Local.SaveFormState(this);
 
             AppSettings.Local.Default.MapGrayScale = miMainGrayScale.Checked;
             AppSettings.Local.Default.MapTilesHeatmap = miMainTilesHeatmap.Checked;
@@ -1102,73 +1100,6 @@ namespace TileExplorer
             Database.Default.FileName = databaseFileName;
 
             return true;
-        }
-
-        private void UpdateSettings()
-        {
-            MapItemMarkerCircle.DefaultFill.Color = AppSettings.Roaming.Default.ColorMarkerPosition;
-
-            MapItemMarker.DefaultFill.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerFillAlpha,
-                AppSettings.Roaming.Default.ColorMarkerFill);
-            MapItemMarker.DefaultSelectedFill.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerSelectedFillAlpha,
-                AppSettings.Roaming.Default.ColorMarkerSelectedFill);
-
-            MapItemMarker.DefaultStroke.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerLineAlpha,
-                AppSettings.Roaming.Default.ColorMarkerLine);
-            MapItemMarker.DefaultStroke.Width = AppSettings.Roaming.Default.WidthMarkerLine;
-
-            MapItemMarker.DefaultSelectedStroke.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerSelectedLineAlpha,
-                AppSettings.Roaming.Default.ColorMarkerSelectedLine);
-            MapItemMarker.DefaultSelectedStroke.Width = AppSettings.Roaming.Default.WidthMarkerLineSelected;
-
-            ((SolidBrush)GMapToolTip.DefaultFill).Color = Color.FromArgb(
-                   AppSettings.Roaming.Default.ColorMarkerTextFillAlpha,
-                   AppSettings.Roaming.Default.ColorMarkerTextFill);
-
-            ((SolidBrush)GMapToolTip.DefaultForeground).Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerTextAlpha,
-                AppSettings.Roaming.Default.ColorMarkerText);
-
-            GMapRoute.DefaultStroke.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorTrackAlpha,
-                AppSettings.Roaming.Default.ColorTrack);
-            GMapRoute.DefaultStroke.Width = AppSettings.Roaming.Default.WidthTrack;
-
-            MapItemTrack.DefaultSelectedStroke.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorTrackSelectedAlpha,
-                AppSettings.Roaming.Default.ColorTrackSelected);
-            MapItemTrack.DefaultSelectedStroke.Width = AppSettings.Roaming.Default.WidthTrackSelected;
-
-            DataGridViewCellStyles.UpdateSettings();
-        }
-
-        private async Task ShowSettingsAsync()
-        {
-            if (FrmSettings.ShowDlg(this))
-            {
-                if (!SetDatabaseFileName())
-                {
-                    AbnormalExit = true;
-                    Application.Exit();
-                    return;
-                }
-
-                UpdateSettings();
-
-                foreach (var frm in Application.OpenForms)
-                {
-                    if (frm is IChildForm form)
-                    {
-                        form.UpdateSettings();
-                    }
-                }
-
-                await UpdateDataAsync();
-            }
         }
 
         private async void MiMainSettings_Click(object sender, EventArgs e)

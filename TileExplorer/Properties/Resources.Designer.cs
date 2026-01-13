@@ -277,20 +277,20 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Каталог c общими настройками не может располагаться в «{0}»..
+        /// </summary>
+        internal static string ErrorDirectoryRoamingWrongLocation {
+            get {
+                return ResourceManager.GetString("ErrorDirectoryRoamingWrongLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Каталог с треками не указан..
         /// </summary>
         internal static string ErrorDirectoryTracksEmpty {
             get {
                 return ResourceManager.GetString("ErrorDirectoryTracksEmpty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Каталог «{0}» не может располагаться в указанном месте..
-        /// </summary>
-        internal static string ErrorDirectoryWrongLocation {
-            get {
-                return ResourceManager.GetString("ErrorDirectoryWrongLocation", resourceCulture);
             }
         }
         
