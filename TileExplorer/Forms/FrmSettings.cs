@@ -1,4 +1,7 @@
 ﻿using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Forms;
+using P3tr0viCh.Utils.Settings;
 using System;
 using System.IO;
 using TileExplorer.Properties;
@@ -7,18 +10,20 @@ namespace TileExplorer
 {
     internal class FrmSettings : FrmSettingsBase
     {
+        private AppSettings AppSettings => Settings as AppSettings;
+
         public FrmSettings(ISettingsBase settings) : base(settings)
         {
         }
 
         protected override void SaveFormState()
         {
-            AppSettings.Local.Default.FormStateSettings = AppSettings.Local.SaveFormState(this);
+            AppSettings.Local.SaveFormState(this, AppSettings.Local.Default.FormStates);
         }
 
         protected override void LoadFormState()
         {
-            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStateSettings);
+            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
         }
 
         private string prevDirectoryRoaming;
@@ -41,47 +46,8 @@ namespace TileExplorer
             }
         }
 
-        private string GetFullPath(string path)
-        {
-            if (path.IsEmpty()) return string.Empty;
-
-            return Path.GetFullPath(path);
-        }
-
-        private AppSettings AppSettings => Settings as AppSettings;
-
-        private void GetFullPaths()
-        {
-            AppSettings.DirectoryDatabase = GetFullPath(AppSettings.DirectoryDatabase);
-
-            AppSettings.DirectoryTracks = GetFullPath(AppSettings.DirectoryTracks);
-
-            AppSettings.DirectoryBackups = GetFullPath(AppSettings.DirectoryBackups);
-
-            AppSettings.DirectoryRoaming = GetFullPath(AppSettings.DirectoryRoaming);
-
-            PropertyGrid.Refresh();
-        }
-
-        private void AssertDirectory(string path)
-        {
-            if (path.IsEmpty()) return;
-
-            if (Directory.Exists(path)) return;
-
-            throw new Exceptions.DirectoryNotExistsException(Resources.ErrorDirectoryNotExists, path);
-        }
-
         private void AssertDirectories()
         {
-            AssertDirectory(AppSettings.DirectoryDatabase);
-
-            AssertDirectory(AppSettings.DirectoryTracks);
-
-            AssertDirectory(AppSettings.DirectoryBackups);
-
-            AssertDirectory(AppSettings.DirectoryRoaming);
-
             if (!AppSettings.DirectoryRoaming.IsEmpty())
             {
                 if (Files.PathEquals(AppSettings.DirectoryRoaming, AppSettings.Local.Directory))
@@ -95,8 +61,6 @@ namespace TileExplorer
 
         protected override void CheckSettings()
         {
-            GetFullPaths();
-
             AssertDirectories();
         }
     }

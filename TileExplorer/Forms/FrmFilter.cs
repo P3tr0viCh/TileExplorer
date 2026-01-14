@@ -1,4 +1,4 @@
-﻿using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils.Extensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +37,7 @@ namespace TileExplorer
 
         private async void FrmFilter_Load(object sender, EventArgs e)
         {
-            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStateFilter);
+            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
 
             UpdateSettings();
 
@@ -63,7 +63,7 @@ namespace TileExplorer
 
         private void FrmFilter_FormClosing(object sender, FormClosingEventArgs e)
         {
-            AppSettings.Local.Default.FormStateFilter = AppSettings.Local.SaveFormState(this);
+            AppSettings.Local.SaveFormState(this, AppSettings.Local.Default.FormStates);
 
             AppSettings.LocalSave();
         }

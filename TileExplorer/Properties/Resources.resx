@@ -166,9 +166,6 @@
 
 Отказ приведёт к закрытию приложения.</value>
   </data>
-  <data name="ErrorDirectoryNotExists" xml:space="preserve">
-    <value>Каталог «{0}» не существует.</value>
-  </data>
   <data name="ErrorNeedDigit" xml:space="preserve">
     <value>Необходимо ввести число.</value>
   </data>
@@ -469,5 +466,8 @@ ddd</value>
   </data>
   <data name="StatusTilesArea" xml:space="preserve">
     <value>Площадь: {0:F0} км²</value>
+  </data>
+  <data name="ErrorDirectoryNotExists" xml:space="preserve">
+    <value>Каталог «{0}» не существует.</value>
   </data>
 </root>

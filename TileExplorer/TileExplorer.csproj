@@ -128,11 +128,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSettings.Local.cs" />
-    <Compile Include="AppSettings.Roaming.cs" />
-    <Compile Include="Backup.Equipment.cs" />
-    <Compile Include="Backup.Markers.cs" />
-    <Compile Include="Backup.Tracks.cs" />
+    <Compile Include="AppSettings\AppSettings.Local.cs" />
+    <Compile Include="AppSettings\AppSettings.Roaming.cs" />
+    <Compile Include="AppBackup\Backup.Equipment.cs" />
+    <Compile Include="AppBackup\Backup.Markers.cs" />
+    <Compile Include="AppBackup\Backup.Tracks.cs" />
     <Compile Include="Database\Database.Actions.cs" />
     <Compile Include="Forms\FrmChartTracksByMonth.cs">
       <SubType>Form</SubType>
@@ -223,7 +223,7 @@
     <Compile Include="UpdateApp.cs" />
     <Compile Include="ProgramStatus.cs" />
     <Compile Include="Models\MapItemMarkerCross.cs" />
-    <Compile Include="AppSettings.cs" />
+    <Compile Include="AppSettings\AppSettings.cs" />
     <Compile Include="Properties\ResourcesSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -234,7 +234,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ResourcesSql.resx</DependentUpon>
     </Compile>
-    <Compile Include="Backup.cs" />
+    <Compile Include="AppBackup\Backup.cs" />
     <Compile Include="Utils.Forms.cs" />
     <Compile Include="Utils.Tiles.cs" />
     <Compile Include="Utils.Gpx.cs" />

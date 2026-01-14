@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using GMap.NET;
 using P3tr0viCh.Utils;
 using P3tr0viCh.Database;
+using P3tr0viCh.Utils.Extensions;
 
 namespace TileExplorer
 {

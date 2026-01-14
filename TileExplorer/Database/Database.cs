@@ -4,9 +4,10 @@
 
 using Dapper;
 using Dapper.Contrib.Extensions;
-using Newtonsoft.Json.Linq;
 using P3tr0viCh.Database;
+using P3tr0viCh.Database.Extensions;
 using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -303,10 +304,13 @@ namespace TileExplorer
                         sql = Filter.Default.ToSql();
 
                         if (sql.IsEmpty())
+                        {
                             sql = ResourcesSql.SelectTiles;
+                        }
                         else
-                            sql = string.Format(
-                                ResourcesSql.SelectTilesByTrackIds, sql);
+                        {
+                            sql = string.Format(ResourcesSql.SelectTilesByTrackIds, sql);
+                        }
                     }
                     break;
                 case nameof(Track):

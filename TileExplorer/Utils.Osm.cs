@@ -1,5 +1,6 @@
 ﻿using GMap.NET;
 using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Extensions;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;

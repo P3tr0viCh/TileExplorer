@@ -1,5 +1,5 @@
 ﻿using GMap.NET;
-using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Settings;
 using System.Drawing;
 using static TileExplorer.Enums;
 

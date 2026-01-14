@@ -161,11 +161,6 @@ namespace TileExplorer
         {
             var directory = tbDirectory.Text;
 
-            if (Utils.Forms.TextBoxIsWrongValue(() => !Directory.Exists(directory), tbDirectory, Resources.ErrorDirectoryNotExists, directory))
-            {
-                return false;
-            }
-
             if (Utils.Forms.TextBoxIsEmpty(tbName, Resources.BackupErrorNameEmpty))
             {
                 return false;

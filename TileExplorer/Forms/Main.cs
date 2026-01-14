@@ -7,6 +7,8 @@ using GMap.NET.WindowsForms;
 using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Database;
 using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Forms;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -102,7 +104,7 @@ namespace TileExplorer
             miMapTileDelete.Visible = true;
 #endif
 
-            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStateMain);
+            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
 
 #if DEBUG && DUMMY_TILES
             DummyTiles();
@@ -177,7 +179,7 @@ namespace TileExplorer
 
             FullScreen = false;
 
-            AppSettings.Local.Default.FormStateMain = AppSettings.Local.SaveFormState(this);
+            AppSettings.Local.SaveFormState(this, AppSettings.Local.Default.FormStates);
 
             AppSettings.Local.Default.MapGrayScale = miMainGrayScale.Checked;
             AppSettings.Local.Default.MapTilesHeatmap = miMainTilesHeatmap.Checked;
@@ -415,9 +417,14 @@ namespace TileExplorer
             FullScreen = !FullScreen;
         }
 
-        private void MiMainAbout_Click(object sender, EventArgs e)
+        private void ShowAbout()
         {
             FrmAbout.Show(new FrmAbout.Options() { Link = Resources.GitHubLink });
+        }
+
+        private void MiMainAbout_Click(object sender, EventArgs e)
+        {
+            ShowAbout();
         }
 
         private bool markerMoving;

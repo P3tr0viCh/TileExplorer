@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using static P3tr0viCh.Utils.Converters;
+using P3tr0viCh.Utils.Converters;
 
 namespace TileExplorer
 {
