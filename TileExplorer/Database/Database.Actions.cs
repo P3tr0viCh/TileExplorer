@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Database;
+using P3tr0viCh.Utils;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,94 +11,65 @@ namespace TileExplorer
     {
         internal static class Actions
         {
+            private static async Task<bool> ListItemSaveAsync<T>(T value) where T : BaseId
+            {
+                try
+                {
+                    await Default.ListItemSaveAsync(value);
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    DebugWrite.Error(e);
+
+                    Msg.Error(e.Message);
+
+                    return false;
+                }
+            }
+
+            private static async Task<bool> ListItemDeleteAsync<T>(IEnumerable<T> values) where T : BaseId
+            {
+                try
+                {
+                    await Default.ListItemDeleteAsync(values);
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    DebugWrite.Error(e);
+
+                    Msg.Error(e.Message);
+
+                    return false;
+                }
+            }
+
             public static async Task<bool> MarkerSaveAsync(Marker marker)
             {
-                try
-                {
-                    await Default.ListItemSaveAsync(marker);
-
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    DebugWrite.Error(e);
-
-                    Msg.Error(e.Message);
-
-                    return false;
-                }
+                return await ListItemSaveAsync(marker);
             }
 
-            public static async Task<bool> MarkerDeleteAsync(List<Marker> markers)
+            public static async Task<bool> MarkerDeleteAsync(IEnumerable<Marker> markers)
             {
-                try
-                {
-                    await Default.ListItemDeleteAsync(markers);
-
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    DebugWrite.Error(e);
-
-                    Msg.Error(e.Message);
-
-                    return false;
-                }
+                return await ListItemDeleteAsync(markers);
             }
 
-            public static async Task<bool> TrackDeleteAsync(List<Track> tracks)
+            public static async Task<bool> TrackDeleteAsync(IEnumerable<Track> tracks)
             {
-                try
-                {
-                    await Default.TrackDeleteAsync(tracks);
-
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    DebugWrite.Error(e);
-
-                    Msg.Error(e.Message);
-
-                    return false;
-                }
+                return await ListItemDeleteAsync(tracks);
             }
 
             public static async Task<bool> EquipmentSaveAsync(Equipment equipment)
             {
-                try
-                {
-                    await Default.ListItemSaveAsync(equipment);
-
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    DebugWrite.Error(e);
-
-                    Msg.Error(e.Message);
-
-                    return false;
-                }
+                return await ListItemSaveAsync(equipment);
             }
 
-            public static async Task<bool> EquipmentDeleteAsync(List<Equipment> equipments)
+            public static async Task<bool> EquipmentDeleteAsync(IEnumerable<Equipment> equipments)
             {
-                try
-                {
-                    await Default.ListItemDeleteAsync(equipments);
-
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    DebugWrite.Error(e);
-
-                    Msg.Error(e.Message);
-
-                    return false;
-                }
+                return await ListItemDeleteAsync(equipments);
             }
         }
     }

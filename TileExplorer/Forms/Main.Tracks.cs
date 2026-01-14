@@ -361,7 +361,10 @@ namespace TileExplorer
 
                 try
                 {
-                    await Database.Default.TrackSaveAsync(tracks);
+                    foreach (var track in tracks)
+                    {
+                        await Database.Default.TrackSaveAsync(track);
+                    }
                 }
                 finally
                 {
