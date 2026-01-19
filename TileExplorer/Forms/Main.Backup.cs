@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
-using static TileExplorer.Enums;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -10,7 +10,7 @@ namespace TileExplorer
     {
         private async Task BackupSaveAsync()
         {
-            if (ProgramStatus.Contains(Status.BackupSave) || ProgramStatus.Contains(Status.BackupLoad))
+            if (ProgramStatus.Default.Contains(Status.BackupSave) || ProgramStatus.Default.Contains(Status.BackupLoad))
             {
                 Msg.Info(Resources.BackupInfoInProgress);
 
@@ -29,7 +29,7 @@ namespace TileExplorer
                 return;
             }
 
-            var status = ProgramStatus.Start(Status.BackupSave);
+            var status = ProgramStatus.Default.Start(Status.BackupSave);
 
             bool result;
             string resultMessage;
@@ -52,7 +52,7 @@ namespace TileExplorer
             }
             finally
             {
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
 
             Utils.MsgResult(result, resultMessage);
@@ -60,7 +60,7 @@ namespace TileExplorer
 
         private async Task BackupLoadAsync()
         {
-            if (ProgramStatus.Contains(Status.BackupSave) || ProgramStatus.Contains(Status.BackupLoad))
+            if (ProgramStatus.Default.Contains(Status.BackupSave) || ProgramStatus.Default.Contains(Status.BackupLoad))
             {
                 Msg.Info(Resources.BackupInfoInProgress);
 
@@ -86,7 +86,7 @@ namespace TileExplorer
                 return;
             }
 
-            var status = ProgramStatus.Start(Status.BackupLoad);
+            var status = ProgramStatus.Default.Start(Status.BackupLoad);
 
             bool result;
             string resultMessage;
@@ -109,7 +109,7 @@ namespace TileExplorer
             }
             finally
             {
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
 
             await UpdateDataAsync();

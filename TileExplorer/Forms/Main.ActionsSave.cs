@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -103,7 +104,7 @@ namespace TileExplorer
 
         private void SaveTileBoundaryToFile()
         {
-            var status = ProgramStatus.Start(Status.SaveData);
+            var status = ProgramStatus.Default.Start(Status.SaveData);
 
             try
             {
@@ -135,7 +136,7 @@ namespace TileExplorer
             }
             finally
             {
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
         }
 

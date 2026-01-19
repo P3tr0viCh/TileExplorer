@@ -10,6 +10,7 @@ using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -44,7 +45,7 @@ namespace TileExplorer
 
             ctsMarkers.Start();
 
-            var status = ProgramStatus.Start(Status.LoadData);
+            var status = ProgramStatus.Default.Start(Status.LoadData);
 
             try
             {
@@ -79,7 +80,7 @@ namespace TileExplorer
             {
                 ctsMarkers.Finally();
 
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
 
                 DebugWrite.Line("end");
             }

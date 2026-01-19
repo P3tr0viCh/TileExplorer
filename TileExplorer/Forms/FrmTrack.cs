@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -81,7 +81,7 @@ namespace TileExplorer
 
             try
             {
-                var status = MainForm.ProgramStatus.Start(Status.LoadData);
+                var status = ProgramStatus.Default.Start(Status.LoadData);
 
                 try
                 {
@@ -89,7 +89,7 @@ namespace TileExplorer
                 }
                 finally
                 {
-                    MainForm.ProgramStatus.Stop(status);
+                    ProgramStatus.Default.Stop(status);
                 }
 
                 equipmentBindingSource.Insert(0, new Equipment());

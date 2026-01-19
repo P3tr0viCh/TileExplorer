@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -76,7 +76,7 @@ namespace TileExplorer
         {
             var result = false;
 
-            var status = MainForm.ProgramStatus.Start(Status.SaveData);
+            var status = ProgramStatus.Default.Start(Status.SaveData);
 
             try
             {
@@ -84,7 +84,7 @@ namespace TileExplorer
             }
             finally
             {
-                MainForm.ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
 
             if (result)

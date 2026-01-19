@@ -13,6 +13,7 @@ using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 using static TileExplorer.PresenterStatusStripChartTrackEle;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -115,7 +116,7 @@ namespace TileExplorer
         {
             ctsChartTrackEle.Start();
 
-            var status = MainForm.ProgramStatus.Start(Status.LoadData);
+            var status = ProgramStatus.Default.Start(Status.LoadData);
 
             try
             {
@@ -180,7 +181,7 @@ namespace TileExplorer
 
                 CursorXPositionChanged();
 
-                MainForm.ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
         }
 

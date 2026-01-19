@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
-using static TileExplorer.Enums;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -99,7 +99,7 @@ namespace TileExplorer
 
         private async Task<IEnumerable<string>> GetNewFilesAsync(string directory)
         {
-            var status = ProgramStatus.Start(Status.CheckDirectoryTracks);
+            var status = ProgramStatus.Default.Start(Status.CheckDirectoryTracks);
 
             try
             {
@@ -115,7 +115,7 @@ namespace TileExplorer
             }
             finally
             {
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
         }
 

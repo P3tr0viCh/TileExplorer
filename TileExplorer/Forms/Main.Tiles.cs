@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -31,7 +31,7 @@ namespace TileExplorer
 
             ctsTiles.Start();
 
-            var status = ProgramStatus.Start(Status.LoadData);
+            var status = ProgramStatus.Default.Start(Status.LoadData);
 
             try
             {
@@ -82,7 +82,7 @@ namespace TileExplorer
             {
                 ctsTiles.Finally();
 
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
 
                 DebugWrite.Line("end");
             }

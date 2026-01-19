@@ -24,6 +24,7 @@ using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 using static TileExplorer.PresenterStatusStripMain;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -38,8 +39,6 @@ namespace TileExplorer
         private readonly MapZoomRuler mapZoomRuler;
 
         private readonly PresenterStatusStripMain statusStripPresenter;
-
-        public ProgramStatus ProgramStatus { get; } = new ProgramStatus();
 
         public Main()
         {
@@ -86,7 +85,7 @@ namespace TileExplorer
                 return;
             }
 
-            ProgramStatus.StatusChanged += ProgramStatus_StatusChanged;
+            ProgramStatus.Default.StatusChanged += ProgramStatus_StatusChanged;
 
             Database.Filter.Default.Assign(AppSettings.Local.Default.Filter);
             Database.Filter.Default.DateType = Database.Filter.FilterDateType.AllDate;
@@ -129,7 +128,7 @@ namespace TileExplorer
 
             StartUpdateGrid();
 
-            var starting = ProgramStatus.Start(Status.Starting);
+            var starting = ProgramStatus.Default.Start(Status.Starting);
 
             if (AppSettings.Local.Default.VisibleResultYears)
             {
@@ -156,7 +155,7 @@ namespace TileExplorer
                 ShowChildForm(ChildFormType.Filter, true);
             }
 
-            ProgramStatus.Stop(starting);
+            ProgramStatus.Default.Stop(starting);
 
             await UpdateDataAsync();
 
@@ -803,7 +802,7 @@ namespace TileExplorer
 #if DEBUG
         private async Task AddTileAsync()
         {
-            var status = ProgramStatus.Start(Status.SaveData);
+            var status = ProgramStatus.Default.Start(Status.SaveData);
 
             try
             {
@@ -824,7 +823,7 @@ namespace TileExplorer
             }
             finally
             {
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
         }
 
@@ -835,7 +834,7 @@ namespace TileExplorer
 
         private async Task DeleteTileAsync()
         {
-            var status = ProgramStatus.Start(Status.SaveData);
+            var status = ProgramStatus.Default.Start(Status.SaveData);
 
             try
             {
@@ -851,7 +850,7 @@ namespace TileExplorer
             }
             finally
             {
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
         }
 

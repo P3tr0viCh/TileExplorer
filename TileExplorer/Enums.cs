@@ -6,27 +6,6 @@ namespace TileExplorer
 {
     public static class Enums
     {
-        [TypeConverter(typeof(EnumDescriptionConverter))]
-        public enum Status
-        {
-            [Description("")]
-            Idle,
-            [Description("")]
-            Starting,
-            [Description("Загрузка...")]
-            LoadData,
-            [Description("Чтение файла gpx...")]
-            LoadGpx,
-            [Description("Сохранение...")]
-            SaveData,
-            [Description("Сохранение в архив...")]
-            BackupSave,
-            [Description("Чтение из архива...")]
-            BackupLoad,
-            [Description("Поиск файлов gpx...")]
-            CheckDirectoryTracks,
-        }
-
         [Flags]
         public enum ChildFormType
         {

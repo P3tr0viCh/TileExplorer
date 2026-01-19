@@ -7,6 +7,7 @@ using static TileExplorer.Database;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -214,7 +215,7 @@ namespace TileExplorer
         {
             if (selfChange) return;
 
-            var status = MainForm.ProgramStatus.Start(Status.LoadData);
+            var status = ProgramStatus.Default.Start(Status.LoadData);
 
             try
             {
@@ -224,7 +225,7 @@ namespace TileExplorer
             }
             finally
             {
-                MainForm.ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
         }
     }

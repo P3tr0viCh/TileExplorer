@@ -10,6 +10,7 @@ using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -36,7 +37,7 @@ namespace TileExplorer
 
             ctsTracks.Start();
 
-            var status = ProgramStatus.Start(Status.LoadData);
+            var status = ProgramStatus.Default.Start(Status.LoadData);
 
             try
             {
@@ -104,7 +105,7 @@ namespace TileExplorer
             {
                 ctsTracks.Finally();
 
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
 
                 DebugWrite.Line("end");
             }
@@ -189,7 +190,7 @@ namespace TileExplorer
 
         private async Task<bool> InternalOpenTracksAsync(string[] files)
         {
-            var status = ProgramStatus.Start(Status.LoadGpx);
+            var status = ProgramStatus.Default.Start(Status.LoadGpx);
 
             Track track;
 
@@ -255,7 +256,7 @@ namespace TileExplorer
             }
             finally
             {
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
         }
 
@@ -323,7 +324,7 @@ namespace TileExplorer
 
             ctsYears.Start();
 
-            var status = ProgramStatus.Start(Status.LoadData);
+            var status = ProgramStatus.Default.Start(Status.LoadData);
 
             try
             {
@@ -347,7 +348,7 @@ namespace TileExplorer
             {
                 ctsYears.Finally();
 
-                ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
 
                 DebugWrite.Line("end");
             }
@@ -357,7 +358,7 @@ namespace TileExplorer
         {
             try
             {
-                var status = ProgramStatus.Start(Status.SaveData);
+                var status = ProgramStatus.Default.Start(Status.SaveData);
 
                 try
                 {
@@ -368,7 +369,7 @@ namespace TileExplorer
                 }
                 finally
                 {
-                    ProgramStatus.Stop(status);
+                    ProgramStatus.Default.Stop(status);
                 }
 
                 await TrackChangedAsync(tracks);

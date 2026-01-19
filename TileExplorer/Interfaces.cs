@@ -29,8 +29,6 @@ namespace TileExplorer
 
             void ShowMarkerPosition(object sender, PointLatLng value);
 
-            ProgramStatus ProgramStatus { get; }
-
             List<int> Years { get; }
         }
 

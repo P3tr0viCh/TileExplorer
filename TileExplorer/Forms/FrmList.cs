@@ -16,6 +16,7 @@ using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 using static TileExplorer.PresenterStatusStripList;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -244,7 +245,7 @@ namespace TileExplorer
 
             UpdateSettings();
 
-            if (MainForm.ProgramStatus.Current != Status.Starting)
+            if (ProgramStatus.Default.Current != Status.Starting)
             {
                 await UpdateDataAsync();
             }
@@ -362,7 +363,7 @@ namespace TileExplorer
 
             ctsList.Start();
 
-            var status = MainForm.ProgramStatus.Start(Status.LoadData);
+            var status = ProgramStatus.Default.Start(Status.LoadData);
 
             var errorMsg = string.Empty;
 
@@ -432,7 +433,7 @@ namespace TileExplorer
             {
                 ctsList.Finally();
 
-                MainForm.ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
 
             DebugWrite.Line("end");
@@ -484,7 +485,7 @@ namespace TileExplorer
                 case ChildFormType.TrackList:
                 case ChildFormType.MarkerList:
                 case ChildFormType.TileInfo:
-                    if (MainForm.ProgramStatus.IsIdle)
+                    if (ProgramStatus.Default.IsIdle)
                     {
                         MainForm.SelectMapItemAsync(this, Selected);
                     }

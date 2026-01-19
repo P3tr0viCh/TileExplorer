@@ -9,6 +9,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using TileExplorer.Properties;
 using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -115,7 +116,7 @@ namespace TileExplorer
         {
             ctsChartTracksByMonth.Start();
 
-            var status = MainForm.ProgramStatus.Start(Status.LoadData);
+            var status = ProgramStatus.Default.Start(Status.LoadData);
 
             try
             {
@@ -204,7 +205,7 @@ namespace TileExplorer
             {
                 ctsChartTracksByMonth.Finally();
 
-                MainForm.ProgramStatus.Stop(status);
+                ProgramStatus.Default.Stop(status);
             }
         }
 
