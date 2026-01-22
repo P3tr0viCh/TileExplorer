@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Utils;
 
 namespace TileExplorer
 {

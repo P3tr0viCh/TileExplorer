@@ -1276,7 +1276,6 @@ namespace TileExplorer
                     return;
                 }
             }
-            ;
 
             FrmList.ShowFrm(this, ChildFormType.TileInfo, tile);
         }

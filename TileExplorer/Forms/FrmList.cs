@@ -17,6 +17,7 @@ using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 using static TileExplorer.PresenterStatusStripList;
 using static TileExplorer.ProgramStatus;
+using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -581,6 +582,34 @@ namespace TileExplorer
             else
             {
                 dataGridView.SetSelectedRows(Selected);
+            }
+
+            switch (FormType)
+            {
+                case ChildFormType.TileInfo:
+                    var status = ProgramStatus.Default.Start(Status.LoadData);
+
+                    try
+                    {
+                        foreach (var track in SelectedList.Cast<Track>())
+                        {
+                            track.Tags = await Database.Default.ListLoadAsync<TagModel>(track);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        DebugWrite.Error(e);
+
+                        Msg.Error(e.Message);
+
+                        return;
+                    }
+                    finally
+                    {
+                        ProgramStatus.Default.Stop(status);
+                    }
+
+                    break;
             }
 
             await MainForm.ListItemChangeAsync(SelectedList);
