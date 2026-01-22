@@ -976,7 +976,7 @@ namespace TileExplorer
             return items.Cast<IMapItem>().FirstOrDefault(i => i.Model.Id == value.Id);
         }
 
-        public async void ListItemAdd(object sender, BaseId value)
+        public async void ListItemAdd(BaseId value)
         {
             if (value is Marker marker)
             {
@@ -1010,7 +1010,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task ListItemChangeAsync(object sender, IEnumerable<BaseId> list)
+        public async Task ListItemChangeAsync(IEnumerable<BaseId> list)
         {
             var value = list.FirstOrDefault();
 
@@ -1039,7 +1039,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task ListItemDeleteAsync(object sender, IEnumerable<BaseId> list)
+        public async Task ListItemDeleteAsync(IEnumerable<BaseId> list)
         {
             var value = list.FirstOrDefault();
 

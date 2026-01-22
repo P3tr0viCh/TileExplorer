@@ -569,7 +569,7 @@ namespace TileExplorer
                     break;
             }
 
-            MainForm.ListItemAdd(this, value);
+            MainForm.ListItemAdd(value);
         }
 
         private async Task SelectedChangeAsync()
@@ -583,7 +583,7 @@ namespace TileExplorer
                 dataGridView.SetSelectedRows(Selected);
             }
 
-            await MainForm.ListItemChangeAsync(this, SelectedList);
+            await MainForm.ListItemChangeAsync(SelectedList);
 
             dataGridView.SetSelectedRows(SelectedList);
         }
@@ -597,7 +597,7 @@ namespace TileExplorer
         {
             dataGridView.SetSelectedRows(SelectedList);
 
-            await MainForm.ListItemDeleteAsync(this, SelectedList);
+            await MainForm.ListItemDeleteAsync(SelectedList);
         }
 
         private async void TsbtnDelete_Click(object sender, EventArgs e)

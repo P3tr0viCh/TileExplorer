@@ -178,7 +178,7 @@ namespace TileExplorer
         {
             using (var connection = GetConnection())
             {
-                return await GetTileIdByXYAsync(tile);
+                return await GetTileIdByXYAsync(connection, tile);
             }
         }
 

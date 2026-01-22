@@ -16,9 +16,9 @@ namespace TileExplorer
 
             Task SelectMapItemAsync(object sender, BaseId value);
 
-            void ListItemAdd(object sender, BaseId value);
-            Task ListItemChangeAsync(object sender, IEnumerable<BaseId> list);
-            Task ListItemDeleteAsync(object sender, IEnumerable<BaseId> list);
+            void ListItemAdd(BaseId value);
+            Task ListItemChangeAsync(IEnumerable<BaseId> list);
+            Task ListItemDeleteAsync(IEnumerable<BaseId> list);
 
             Task TrackChangedAsync(Track track);
             Task TrackChangedAsync(IEnumerable<Track> tracks);
