@@ -130,6 +130,18 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CREATE TABLE tags (
+        ///    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        ///    text TEXT
+        ///);.
+        /// </summary>
+        internal static string CreateTableTags {
+            get {
+                return ResourceManager.GetString("CreateTableTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CREATE TABLE tiles (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///	x INTEGER NOT NULL, y INTEGER NOT NULL,
@@ -179,6 +191,21 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CREATE TABLE tracks_tags (
+        ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        ///	trackid INTEGER, tagid INTEGER,
+        ///	FOREIGN KEY (trackid) REFERENCES tracks (id)
+        ///	ON DELETE CASCADE
+        ///	ON UPDATE CASCADE
+        ///);.
+        /// </summary>
+        internal static string CreateTableTracksTags {
+            get {
+                return ResourceManager.GetString("CreateTableTracksTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CREATE TABLE tracks_tiles (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         ///	trackid INTEGER, tileid INTEGER,
@@ -218,6 +245,18 @@ namespace TileExplorer.Properties {
         internal static string CreateTriggerTracksTilesAD {
             get {
                 return ResourceManager.GetString("CreateTriggerTracksTilesAD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year
+        ///FROM tracks
+        ///GROUP by year
+        ///ORDER BY year;.
+        /// </summary>
+        internal static string DeleteTrackTagsByTrackId {
+            get {
+                return ResourceManager.GetString("DeleteTrackTagsByTrackId", resourceCulture);
             }
         }
         
@@ -329,6 +368,16 @@ namespace TileExplorer.Properties {
         internal static string SelectResultYears {
             get {
                 return ResourceManager.GetString("SelectResultYears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM tags
+        ///ORDER BY text;.
+        /// </summary>
+        internal static string SelectTags {
+            get {
+                return ResourceManager.GetString("SelectTags", resourceCulture);
             }
         }
         
@@ -489,6 +538,20 @@ namespace TileExplorer.Properties {
         internal static string SelectTracksOnly {
             get {
                 return ResourceManager.GetString("SelectTracksOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM tags
+        ///WHERE id IN (
+        ///	SELECT tagid FROM tracks_tags
+        ///	WHERE trackid = :trackid
+        ///)
+        ///ORDER BY text;.
+        /// </summary>
+        internal static string SelectTrackTagsByTrackId {
+            get {
+                return ResourceManager.GetString("SelectTrackTagsByTrackId", resourceCulture);
             }
         }
         

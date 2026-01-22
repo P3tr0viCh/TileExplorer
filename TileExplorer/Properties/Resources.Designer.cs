@@ -473,6 +473,17 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не удалось загрузить список тегов.
+        ///Ошибка:
+        ///{0}..
+        /// </summary>
+        internal static string MsgDatabaseLoadListTagsFail {
+            get {
+                return ResourceManager.GetString("MsgDatabaseLoadListTagsFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Не удалось загрузить информацию о плитке.
         ///Ошибка:
         ///{0}..
@@ -573,9 +584,9 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Удалить снаряжение «{0}» и ещё {1}?.
         /// </summary>
-        internal static string QuestionEquipmentsDelete {
+        internal static string QuestionEquipmentListDelete {
             get {
-                return ResourceManager.GetString("QuestionEquipmentsDelete", resourceCulture);
+                return ResourceManager.GetString("QuestionEquipmentListDelete", resourceCulture);
             }
         }
         
@@ -600,9 +611,9 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Удалить маркер «{0}» и ещё {1}?.
         /// </summary>
-        internal static string QuestionMarkersDelete {
+        internal static string QuestionMarkerListDelete {
             get {
-                return ResourceManager.GetString("QuestionMarkersDelete", resourceCulture);
+                return ResourceManager.GetString("QuestionMarkerListDelete", resourceCulture);
             }
         }
         
@@ -653,6 +664,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Удалить тег «{0}»?.
+        /// </summary>
+        internal static string QuestionTagDelete {
+            get {
+                return ResourceManager.GetString("QuestionTagDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Удалить тег «{0}» и ещё {1}?.
+        /// </summary>
+        internal static string QuestionTagListDelete {
+            get {
+                return ResourceManager.GetString("QuestionTagListDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Удалить трек «{0}»?.
         /// </summary>
         internal static string QuestionTrackDelete {
@@ -662,29 +691,29 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Остановить загрузку треков?.
-        /// </summary>
-        internal static string QuestionTracksCancelToAll {
-            get {
-                return ResourceManager.GetString("QuestionTracksCancelToAll", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Удалить трек «{0}» и ещё {1}?.
         /// </summary>
-        internal static string QuestionTracksDelete {
+        internal static string QuestionTrackListDelete {
             get {
-                return ResourceManager.GetString("QuestionTracksDelete", resourceCulture);
+                return ResourceManager.GetString("QuestionTrackListDelete", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Использовать снаряжение для всех треков?.
         /// </summary>
-        internal static string QuestionTracksOKToAll {
+        internal static string QuestionTrackListOKToAll {
             get {
-                return ResourceManager.GetString("QuestionTracksOKToAll", resourceCulture);
+                return ResourceManager.GetString("QuestionTrackListOKToAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Остановить загрузку треков?.
+        /// </summary>
+        internal static string QuestionTracksCancelToAll {
+            get {
+                return ResourceManager.GetString("QuestionTracksCancelToAll", resourceCulture);
             }
         }
         
@@ -992,6 +1021,15 @@ namespace TileExplorer.Properties {
         internal static string TitleListResultYears {
             get {
                 return ResourceManager.GetString("TitleListResultYears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Теги.
+        /// </summary>
+        internal static string TitleListTags {
+            get {
+                return ResourceManager.GetString("TitleListTags", resourceCulture);
             }
         }
         

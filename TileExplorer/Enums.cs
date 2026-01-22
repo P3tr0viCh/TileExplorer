@@ -9,28 +9,31 @@ namespace TileExplorer
         [Flags]
         public enum ChildFormType
         {
+            None = 0,
             Filter = 1,
-            TrackList = 2,
-            MarkerList = 4,
-            EquipmentList = 8,
-            ResultYears = 16,
-            ResultEquipments = 32,
-            TileInfo = 64,
-            ChartTrackEle = 256,
-            ChartTracksByYear = 512,
-            ChartTracksByMonth = 1024,
+            TrackList = Filter << 1,
+            MarkerList = TrackList << 1,
+            TagList = MarkerList << 1,
+            EquipmentList = TagList << 1,
+            ResultYears = EquipmentList << 1,
+            ResultEquipments = ResultYears << 1,
+            TileInfo = ResultEquipments << 1,
+            ChartTrackEle = TileInfo << 1,
+            ChartTracksByYear = ChartTrackEle << 1,
+            ChartTracksByMonth = ChartTracksByYear << 1,
         }
 
         [Flags]
         public enum DataLoad
         {
+            None = 0,
             Tiles = 1,
-            Tracks = 2,
-            Markers = 4,
-            ObjectChange = 64,
-            ObjectDelete = 128,
+            Tracks = Tiles << 1,
+            Markers = Tracks << 1,
+            ObjectChange = Markers << 1,
+            ObjectDelete = ObjectChange << 1,
         }
-        
+
         public enum DataUpdate
         {
             None,

@@ -165,32 +165,31 @@ namespace TileExplorer
             }
         }
 
-        private class EquipmentFilter
+        private class EquipmentItem: Equipment
         {
-            public long EquipmentId { get; set; }
-            public string EquipmentText { get; set; }
+            public EquipmentItem(Equipment equipment)
+            {
+                Assign(equipment);
+            }
 
-            public override string ToString() => EquipmentText;
+            public override string ToString() => Text;
         }
 
         private async Task UpdateDataEquipments()
         {
             clbEquipments.Items.Clear();
 
-            var equipments = (await Database.Default.ListLoadAsync<Equipment>()).ToList();
+            var equipments = await Database.Default.ListLoadAsync<Equipment>();
 
-            equipments.Insert(0, new Equipment()
-            {
-                Text = "(не указано)"
-            });
+            clbEquipments.Items.Add(new EquipmentItem(
+                new Equipment()
+                {
+                    Text = "(не указано)"
+                }));
 
             foreach (var equipment in equipments)
             {
-                clbEquipments.Items.Add(new EquipmentFilter()
-                {
-                    EquipmentId = equipment.Id,
-                    EquipmentText = equipment.Text
-                });
+                clbEquipments.Items.Add(new EquipmentItem(equipment));
             }
 
             if (Filter.Default.Equipments is null) return;
@@ -198,7 +197,7 @@ namespace TileExplorer
             for (var i = 0; i < clbEquipments.Items.Count; i++)
             {
                 clbEquipments.SetItemChecked(i, Filter.Default.Equipments.Contains(
-                    clbEquipments.Items.Cast<EquipmentFilter>().Select(e => e.EquipmentId).ElementAt(i)));
+                    clbEquipments.Items.Cast<EquipmentItem>().Select(e => e.Id).ElementAt(i)));
             }
         }
 
@@ -208,7 +207,7 @@ namespace TileExplorer
 
             if (clbEquipments.CheckedItems.Count == clbEquipments.Items.Count) return default;
 
-            return clbEquipments.CheckedItems.Cast<EquipmentFilter>().Select(e => e.EquipmentId).ToArray();
+            return clbEquipments.CheckedItems.Cast<EquipmentItem>().Select(e => e.Id).ToArray();
         }
 
         public async Task UpdateDataAsync()

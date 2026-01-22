@@ -152,7 +152,7 @@ namespace TileExplorer
                 name = $"{firstMarker.Lat}:{firstMarker.Lng}";
             }
 
-            var question = markers.Count == 1 ? Resources.QuestionMarkerDelete : Resources.QuestionMarkersDelete;
+            var question = markers.Count == 1 ? Resources.QuestionMarkerDelete : Resources.QuestionMarkerListDelete;
 
             if (!Msg.Question(question, name, markers.Count - 1)) return;
 

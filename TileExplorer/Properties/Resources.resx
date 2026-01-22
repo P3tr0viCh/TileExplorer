@@ -257,7 +257,7 @@
   <data name="QuestionTracksCancelToAll" xml:space="preserve">
     <value>Остановить загрузку треков?</value>
   </data>
-  <data name="QuestionTracksOKToAll" xml:space="preserve">
+  <data name="QuestionTrackListOKToAll" xml:space="preserve">
     <value>Использовать снаряжение для всех треков?</value>
   </data>
   <data name="StatusMousePosition" xml:space="preserve">
@@ -443,13 +443,13 @@ ddd</value>
   <data name="BackupErrorFileMarkersNotExists" xml:space="preserve">
     <value>Архив не содержит маркеры.</value>
   </data>
-  <data name="QuestionMarkersDelete" xml:space="preserve">
+  <data name="QuestionMarkerListDelete" xml:space="preserve">
     <value>Удалить маркер «{0}» и ещё {1}?</value>
   </data>
-  <data name="QuestionEquipmentsDelete" xml:space="preserve">
+  <data name="QuestionEquipmentListDelete" xml:space="preserve">
     <value>Удалить снаряжение «{0}» и ещё {1}?</value>
   </data>
-  <data name="QuestionTracksDelete" xml:space="preserve">
+  <data name="QuestionTrackListDelete" xml:space="preserve">
     <value>Удалить трек «{0}» и ещё {1}?</value>
   </data>
   <data name="BackupErrorFileTrackExtsNotExists" xml:space="preserve">
@@ -469,5 +469,19 @@ ddd</value>
   </data>
   <data name="ErrorDirectoryNotExists" xml:space="preserve">
     <value>Каталог «{0}» не существует.</value>
+  </data>
+  <data name="MsgDatabaseLoadListTagsFail" xml:space="preserve">
+    <value>Не удалось загрузить список тегов.
+Ошибка:
+{0}.</value>
+  </data>
+  <data name="QuestionTagDelete" xml:space="preserve">
+    <value>Удалить тег «{0}»?</value>
+  </data>
+  <data name="QuestionTagListDelete" xml:space="preserve">
+    <value>Удалить тег «{0}» и ещё {1}?</value>
+  </data>
+  <data name="TitleListTags" xml:space="preserve">
+    <value>Теги</value>
   </data>
 </root>

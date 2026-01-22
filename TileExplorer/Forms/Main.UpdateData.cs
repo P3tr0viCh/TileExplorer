@@ -130,6 +130,7 @@ namespace TileExplorer
                         break;
                     case ChildFormType.TrackList:
                         if (load.HasFlag(DataLoad.Tracks) ||
+                            IsObjectChangedOrDeleted(load, value, typeof(TagModel)) ||
                             IsObjectChangedOrDeleted(load, value, typeof(Equipment)))
                         {
                             dataUpdate = DataUpdate.Full;
@@ -181,6 +182,26 @@ namespace TileExplorer
                         }
 
                         if (IsObjectDeleted(load, value, typeof(Marker)))
+                        {
+                            dataUpdate = DataUpdate.ObjectDelete;
+                            break;
+                        }
+
+                        break;
+                    case ChildFormType.TagList:
+                        if (load.HasFlag(DataLoad.Tracks))
+                        {
+                            dataUpdate = DataUpdate.Full;
+                            break;
+                        }
+
+                        if (IsObjectChanged(load, value, typeof(TagModel)))
+                        {
+                            dataUpdate = DataUpdate.ObjectChange;
+                            break;
+                        }
+
+                        if (IsObjectDeleted(load, value, typeof(TagModel)))
                         {
                             dataUpdate = DataUpdate.ObjectDelete;
                             break;

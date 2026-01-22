@@ -136,6 +136,9 @@
   <data name="CreateTableMarkers" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateTableMarkers.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="CreateTableTags" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateTableTags.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
   <data name="CreateTableTiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateTableTiles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
@@ -145,6 +148,9 @@
   <data name="CreateTableTracksPoints" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateTableTracksPoints.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="CreateTableTracksTags" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateTableTracksTags.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
   <data name="CreateTableTracksTiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateTableTracksTiles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
@@ -153,6 +159,9 @@
   </data>
   <data name="CreateTriggerTracksTilesAD" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateTriggerTracksTilesAD.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="DeleteTrackTagsByTrackId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteTrackTagsByTrackId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="FilterDateBetween" xml:space="preserve">
     <value>datetimestart BETWEEN '{0}' AND '{1}'</value>
@@ -183,6 +192,9 @@
   </data>
   <data name="SelectResultYears" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectResultYears.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="SelectTags" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectTags.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="SelectTileIdByXY" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectTileIdByXY.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
@@ -219,6 +231,9 @@
   </data>
   <data name="SelectTracksOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectTracksOnly.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="SelectTrackTagsByTrackId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectTrackTagsByTrackId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="SelectYears" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectYears.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>

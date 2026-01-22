@@ -31,11 +31,12 @@ namespace TileExplorer
             // --------------------------------------------------------------------------
             public bool VisibleGrid { get; set; } = true;
             public bool VisibleMarkers { get; set; } = true;
-            public bool VisibleTracks { get; set; } = true;
+            public bool VisibleTracks { get; set; } = false;
             public bool VisibleTiles { get; set; } = true;
             public bool VisibleFilter { get; set; } = true;
             public bool VisibleMarkerList { get; set; } = true;
             public bool VisibleTrackList { get; set; } = true;
+            public bool VisibleTagList { get; set; } = true;
             public bool VisibleEquipmentList { get; set; } = true;
             public bool VisibleResultYears { get; set; } = true;
             public bool VisibleResultEquipments { get; set; } = true;

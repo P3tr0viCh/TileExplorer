@@ -1,6 +1,8 @@
 ﻿using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -28,6 +30,8 @@ namespace TileExplorer
 
                 tbEleAscent.SetDouble(track.EleAscent, AppSettings.Roaming.Default.FormatEleAscent);
                 tbEleDescent.SetDouble(track.EleDescent, AppSettings.Roaming.Default.FormatEleAscent);
+
+                CheckedListBoxSetChecked(clbTags, track.Tags);
             }
         }
 
@@ -86,6 +90,8 @@ namespace TileExplorer
                 try
                 {
                     equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
+
+                    await LoadDataTags();
                 }
                 finally
                 {
@@ -106,6 +112,68 @@ namespace TileExplorer
             }
         }
 
+        private class TagItem: TagModel
+        {
+            public TagItem(TagModel tag)
+            {
+                Assign(tag);
+            }
+
+            public override string ToString() => Text;
+        }
+
+        private async Task LoadDataTags()
+        {
+            clbTags.Items.Clear();
+
+            var tags = await Database.Default.ListLoadAsync<TagModel>();
+
+            foreach (var tag in tags)
+            {
+                clbTags.Items.Add(new TagItem(tag));
+            }
+        }
+
+        private long CheckedListBoxGetItemId(CheckedListBox checkedListBox, int index)
+        {
+            if (checkedListBox.Items.Count == 0) return -1;
+
+            var item = checkedListBox.Items[index] as TagItem;
+
+            return item.Id;
+        }
+
+        private bool EnumerableContainsId<T>(IEnumerable<T> items, long id) where T : IBaseId
+        {
+            foreach (var item in items)
+            {
+                if (item.Id == id) return true;
+            }
+
+            return false;
+        }
+
+        private void CheckedListBoxSetChecked<T>(CheckedListBox checkedListBox, IEnumerable<T> items) where T : IBaseId
+        {
+            if (items is null) return;
+
+            for (var i = 0; i < clbTags.Items.Count; i++)
+            {
+                var id = CheckedListBoxGetItemId(checkedListBox, i);
+
+                var exists = EnumerableContainsId(items, id);
+
+                clbTags.SetItemChecked(i, exists);
+            }
+        }
+
+        private IEnumerable<T> CheckedListBoxGetChecked<T>(CheckedListBox checkedListBox) where T : IBaseId
+        {
+            var checkedItems = clbTags.CheckedItems;
+
+            return checkedItems.Cast<T>();  
+        }
+
         private bool CheckData()
         {
             return Utils.Forms.TextBoxIsWrongFloat(tbEleAscent) && Utils.Forms.TextBoxIsWrongFloat(tbEleDescent);
@@ -121,6 +189,8 @@ namespace TileExplorer
 
                 track.EleAscent = tbEleAscent.GetDouble();
                 track.EleDescent = tbEleDescent.GetDouble();
+
+                track.Tags = CheckedListBoxGetChecked<TagModel>(clbTags);
 
                 return true;
             }
@@ -156,12 +226,19 @@ namespace TileExplorer
 
         private async Task<bool> ApplyDataAsync()
         {
-            if (!(CheckData() && UpdateData()))
+            if (!CheckData() || !UpdateData())
             {
                 return false;
             }
 
-            return saveOnClose ? await SaveDataAsync() : true;
+            if (saveOnClose)
+            {
+                return await SaveDataAsync();
+            }
+            else
+            {
+                return true;
+            }
         }
 
         private async void BtnOk_Click(object sender, EventArgs e)
@@ -174,7 +251,7 @@ namespace TileExplorer
 
         private async void BtnOKToALL_Click(object sender, EventArgs e)
         {
-            if (!Msg.Question(Resources.QuestionTracksOKToAll))
+            if (!Msg.Question(Resources.QuestionTrackListOKToAll))
             {
                 return;
             }

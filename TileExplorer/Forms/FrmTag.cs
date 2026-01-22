@@ -1,51 +1,49 @@
 ﻿using P3tr0viCh.Utils.Extensions;
-using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Interfaces;
+using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmEquipment : Form
+    public partial class FrmTag : Form
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        private readonly Equipment equipment = new Equipment();
+        private readonly TagModel tagModel = new TagModel();
 
-        private Equipment Equipment
+        private TagModel TagModel
         {
-            get => equipment;
+            get => tagModel;
             set
             {
-                equipment.Assign(value);
+                tagModel.Assign(value);
 
-                tbText.SetText(equipment.Text);
-                tbBrand.SetText(equipment.Brand);
-                tbModel.SetText(equipment.Model);
+                tbText.SetText(tagModel.Text);
             }
         }
 
-        public FrmEquipment()
+        public FrmTag()
         {
             InitializeComponent();
         }
 
-        public static bool ShowDlg(Form owner, Equipment equipment)
+        public static bool ShowDlg(Form owner, TagModel tag)
         {
-            using (var frm = new FrmEquipment()
+            using (var frm = new FrmTag()
             {
                 Owner = owner,
 
-                Equipment = equipment
+                TagModel = tag
             })
             {
                 var result = frm.ShowDialog(owner);
 
                 if (result == DialogResult.OK)
                 {
-                    equipment.Assign(frm.Equipment);
+                    tag.Assign(frm.TagModel);
                 }
 
                 return result == DialogResult.OK;
@@ -64,20 +62,18 @@ namespace TileExplorer
 
         private bool UpdateData()
         {
-            equipment.Text = tbText.GetTrimText();
-            equipment.Brand = tbBrand.GetTrimText();
-            equipment.Model = tbModel.GetTrimText();
+            tagModel.Text = tbText.GetTrimText();
 
             return true;
         }
 
         private async Task<bool> SaveDataAsync()
         {
-            var result = await Database.Actions.EquipmentSaveAsync(Equipment);
+            var result = await Database.Actions.TagSaveAsync(TagModel);
 
             if (result)
             {
-                await MainForm.EquipmentChangedAsync(Equipment);
+                await MainForm.TagChangedAsync(TagModel);
             }
 
             return result;
@@ -88,7 +84,7 @@ namespace TileExplorer
             return CheckData() && UpdateData() && await SaveDataAsync();
         }
 
-        private async void BtnOk_Click(object sender, EventArgs e)
+        private async void BtnOk_Click(object sender, System.EventArgs e)
         {
             if (await ApplyDataAsync())
             {

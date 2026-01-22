@@ -39,7 +39,7 @@ namespace TileExplorer
 
             var text = firstEquipment.Text;
 
-            var question = equipments.Count == 1 ? Resources.QuestionEquipmentDelete : Resources.QuestionEquipmentsDelete;
+            var question = equipments.Count == 1 ? Resources.QuestionEquipmentDelete : Resources.QuestionEquipmentListDelete;
 
             if (!Msg.Question(question, text, equipments.Count - 1)) return;
 

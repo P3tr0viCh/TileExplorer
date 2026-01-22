@@ -138,6 +138,7 @@ namespace TileExplorer
             {
                 ShowChildForm(ChildFormType.ResultEquipments, true);
             }
+            
             if (AppSettings.Local.Default.VisibleTrackList)
             {
                 ShowChildForm(ChildFormType.TrackList, true);
@@ -146,10 +147,16 @@ namespace TileExplorer
             {
                 ShowChildForm(ChildFormType.MarkerList, true);
             }
+
+            if (AppSettings.Local.Default.VisibleTagList)
+            {
+                ShowChildForm(ChildFormType.TagList, true);
+            }
             if (AppSettings.Local.Default.VisibleEquipmentList)
             {
                 ShowChildForm(ChildFormType.EquipmentList, true);
             }
+
             if (AppSettings.Local.Default.VisibleFilter)
             {
                 ShowChildForm(ChildFormType.Filter, true);
@@ -195,6 +202,8 @@ namespace TileExplorer
 
             AppSettings.Local.Default.VisibleTrackList = GetChildFormMenuItemState(ChildFormType.TrackList);
             AppSettings.Local.Default.VisibleMarkerList = GetChildFormMenuItemState(ChildFormType.MarkerList);
+            
+            AppSettings.Local.Default.VisibleTagList = GetChildFormMenuItemState(ChildFormType.TagList);
             AppSettings.Local.Default.VisibleEquipmentList = GetChildFormMenuItemState(ChildFormType.EquipmentList);
 
             AppSettings.Local.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
@@ -439,7 +448,7 @@ namespace TileExplorer
                 if (list?.Count() == 0) return null;
             }
 
-            return list.OrderBy(i => ((IModelText)i.Model).Text);
+            return list.OrderBy(i => ((IBaseText)i.Model).Text);
         }
 
         private void ContextMenuShow(ContextMenuStrip menu, Point pos)
@@ -453,7 +462,7 @@ namespace TileExplorer
 
             foreach (var mapItem in mapItems)
             {
-                var item = cmSelectedItems.Items.Add(((IModelText)mapItem.Model).Text);
+                var item = cmSelectedItems.Items.Add(((IBaseText)mapItem.Model).Text);
 
                 item.Tag = mapItem;
 
@@ -896,6 +905,7 @@ namespace TileExplorer
                         case ChildFormType.MarkerList:
                         case ChildFormType.ResultYears:
                         case ChildFormType.ResultEquipments:
+                        case ChildFormType.TagList:
                         case ChildFormType.EquipmentList:
                             FrmList.ShowFrm(this, childFormType);
 
@@ -919,6 +929,11 @@ namespace TileExplorer
         private void MiMainDataMarkerList_Click(object sender, EventArgs e)
         {
             ShowChildForm(ChildFormType.MarkerList, !miMainDataMarkerList.Checked);
+        }
+
+        private void MiMainDataTagList_Click(object sender, EventArgs e)
+        {
+            ShowChildForm(ChildFormType.TagList, !miMainDataTagList.Checked);
         }
 
         private void MiMainDataEquipmentList_Click(object sender, EventArgs e)
@@ -980,6 +995,13 @@ namespace TileExplorer
                 return;
             }
 
+            if (value is TagModel tag)
+            {
+                TagAdd(tag);
+
+                return;
+            }
+
             if (value is Equipment equipment)
             {
                 EquipmentAdd(equipment);
@@ -1004,6 +1026,12 @@ namespace TileExplorer
                 return;
             }
 
+            if (value is TagModel tag)
+            {
+                await TagChangeAsync(tag);
+                return;
+            }
+
             if (value is Equipment equipment)
             {
                 await EquipmentChangeAsync(equipment);
@@ -1024,6 +1052,12 @@ namespace TileExplorer
             if (value is Track)
             {
                 await TrackDeleteAsync(list.Cast<Track>().ToList());
+                return;
+            }
+
+            if (value is TagModel)
+            {
+                await TagDeleteAsync(list.Cast<TagModel>().ToList());
                 return;
             }
 
@@ -1147,6 +1181,8 @@ namespace TileExplorer
                     return miMainDataResultYears;
                 case ChildFormType.ResultEquipments:
                     return miMainDataResultEquipments;
+                case ChildFormType.TagList:
+                    return miMainDataTagList;
                 case ChildFormType.EquipmentList:
                     return miMainDataEquipmentList;
                 default:
@@ -1176,16 +1212,16 @@ namespace TileExplorer
             throw new NotImplementedException();
         }
 
-        public void ChildFormOpened(object sender)
+        public void ChildFormOpened(IChildForm frm)
         {
-            SetChildFormMenuItemState(((IChildForm)sender).FormType, true);
+            SetChildFormMenuItemState(frm.FormType, true);
         }
 
-        public void ChildFormClosed(object sender)
+        public void ChildFormClosed(IChildForm frm)
         {
             Selected = null;
 
-            SetChildFormMenuItemState(((IChildForm)sender).FormType, false);
+            SetChildFormMenuItemState(frm.FormType, false);
         }
 
         private void MiMainOsmOpen_Click(object sender, EventArgs e)

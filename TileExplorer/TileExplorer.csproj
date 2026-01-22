@@ -120,7 +120,9 @@
     <Compile Include="AppBackup\Backup.Equipment.cs" />
     <Compile Include="AppBackup\Backup.Markers.cs" />
     <Compile Include="AppBackup\Backup.Tracks.cs" />
+    <Compile Include="Database\Database.Models.Track.cs" />
     <Compile Include="Database\Database.Actions.cs" />
+    <Compile Include="Database\Database.Tables.cs" />
     <Compile Include="Forms\FrmChartTracksByMonth.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +140,12 @@
     </Compile>
     <Compile Include="Forms\FrmSettings.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmTag.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmTag.Designer.cs">
+      <DependentUpon>FrmTag.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmTrackList.cs">
       <SubType>Form</SubType>
@@ -161,6 +169,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Main.Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main.Tags.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Main.Tiles.cs">
@@ -207,6 +218,11 @@
     <Compile Include="MapZoomRuler.cs" />
     <Compile Include="Presenters\PresenterStatusStripChartTrackEle.cs" />
     <Compile Include="Presenters\PresenterStatusStripList.cs" />
+    <Compile Include="Properties\ResourcesColumnHeader.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResourcesColumnHeader.resx</DependentUpon>
+    </Compile>
     <Compile Include="UpdateApp.cs" />
     <Compile Include="ProgramStatus.cs" />
     <Compile Include="Models\MapItemMarkerCross.cs" />
@@ -279,6 +295,9 @@
     <EmbeddedResource Include="Forms\FrmList.resx">
       <DependentUpon>FrmList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmTag.resx">
+      <DependentUpon>FrmTag.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmTrack.resx">
       <DependentUpon>FrmTrack.cs</DependentUpon>
     </EmbeddedResource>
@@ -307,6 +326,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Properties\ResourcesColumnHeader.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourcesColumnHeader.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\ResourcesSettings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ResourcesSettings.Designer.cs</LastGenOutput>
@@ -346,10 +369,15 @@
     <None Include="e_sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\CreateTableTags.sql" />
+    <None Include="Resources\CreateTableTracksTags.sql" />
     <Content Include="Resources\CreateTriggerEquipmentsAD.sql" />
     <None Include="Resources\SelectYears.sql" />
     <None Include="Resources\SelectTracksDistanceByMonth.sql" />
     <None Include="Resources\SelectTracksForBackup.sql" />
+    <None Include="Resources\SelectTags.sql" />
+    <None Include="Resources\SelectTrackTagsByTrackId.sql" />
+    <None Include="Resources\DeleteTrackTagsByTrackId.sql" />
     <Content Include="TileExplorer.ico" />
     <None Include="Resources\SelectTracksOnly.sql" />
     <None Include="Resources\SelectTrackPointsByTrackIdFull.sql" />
@@ -360,7 +388,6 @@
     <None Include="Resources\SelectTilesByTrackId.sql" />
     <None Include="Resources\SelectTilesByTrackIds.sql" />
     <None Include="Resources\SelectTiles.sql" />
-    <None Include="Resources\ConnectionString.txt" />
     <None Include="Resources\SelectTracksInfo.sql" />
     <None Include="Resources\SelectTileIdByXY.sql" />
     <None Include="Resources\SelectTracksByTileId.sql" />

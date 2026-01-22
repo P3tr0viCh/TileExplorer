@@ -165,7 +165,7 @@ namespace TileExplorer
                 name = firstTrack.DateTimeStart.ToString();
             }
 
-            var question = tracks.Count == 1 ? Resources.QuestionTrackDelete : Resources.QuestionTracksDelete;
+            var question = tracks.Count == 1 ? Resources.QuestionTrackDelete : Resources.QuestionTrackListDelete;
 
             if (!Msg.Question(question, name, tracks.Count - 1)) return;
 

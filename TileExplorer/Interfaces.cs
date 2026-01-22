@@ -11,8 +11,8 @@ namespace TileExplorer
     {
         public interface IMainForm
         {
-            void ChildFormOpened(object sender);
-            void ChildFormClosed(object sender);
+            void ChildFormOpened(IChildForm frm);
+            void ChildFormClosed(IChildForm frm);
 
             Task SelectMapItemAsync(object sender, BaseId value);
 
@@ -23,6 +23,7 @@ namespace TileExplorer
             Task TrackChangedAsync(Track track);
             Task TrackChangedAsync(IEnumerable<Track> tracks);
             Task MarkerChangedAsync(Marker marker);
+            Task TagChangedAsync(TagModel tag);
             Task EquipmentChangedAsync(Equipment equipment);
 
             void ShowChartTrackEle(object sender, Track value);

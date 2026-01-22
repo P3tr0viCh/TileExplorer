@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using static TileExplorer.Interfaces;
 
 namespace TileExplorer
@@ -20,14 +21,14 @@ namespace TileExplorer
             form.FormClosed += Form_FormClosed;
         }
 
-        private void Form_Load(object sender, System.EventArgs e)
+        private void Form_Load(object sender, EventArgs e)
         {
-            (Form.Owner as IMainForm).ChildFormOpened(Form);
+            (Form.Owner as IMainForm).ChildFormOpened(Form as IChildForm);
         }
 
         private void Form_FormClosed(object sender, FormClosedEventArgs e)
         {
-            (Form.Owner as IMainForm).ChildFormClosed(Form);
+            (Form.Owner as IMainForm).ChildFormClosed(Form as IChildForm);
         }
 
         private void Form_KeyDown(object sender, KeyEventArgs e)

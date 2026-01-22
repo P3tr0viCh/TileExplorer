@@ -41,6 +41,7 @@
             this.slTracksCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTracksDistance = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTilesVisited = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slTilesArea = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTilesMaxCluster = new System.Windows.Forms.ToolStripStatusLabel();
             this.slTilesMaxSquare = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
@@ -79,6 +80,7 @@
             this.miMainDataTrackList = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainDataMarkerList = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.miMainDataTagList = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainDataEquipmentList = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.miMainDataChartTracks = new System.Windows.Forms.ToolStripMenuItem();
@@ -139,7 +141,6 @@
             this.timerMapChange = new System.Windows.Forms.Timer(this.components);
             this.cmSelectedItems = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xxxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.slTilesArea = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -269,6 +270,12 @@
             this.slTilesVisited.Name = "slTilesVisited";
             this.slTilesVisited.Size = new System.Drawing.Size(52, 17);
             this.slTilesVisited.Text = "tiles: xxx";
+            // 
+            // slTilesArea
+            // 
+            this.slTilesArea.Name = "slTilesArea";
+            this.slTilesArea.Size = new System.Drawing.Size(53, 17);
+            this.slTilesArea.Text = "area: xxx";
             // 
             // slTilesMaxCluster
             // 
@@ -535,6 +542,7 @@
             this.miMainDataTrackList,
             this.miMainDataMarkerList,
             this.toolStripSeparator9,
+            this.miMainDataTagList,
             this.miMainDataEquipmentList,
             this.toolStripSeparator7,
             this.miMainDataChartTracks,
@@ -592,6 +600,15 @@
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(259, 6);
+            // 
+            // miMainDataTagList
+            // 
+            this.miMainDataTagList.Name = "miMainDataTagList";
+            this.miMainDataTagList.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.G)));
+            this.miMainDataTagList.Size = new System.Drawing.Size(262, 22);
+            this.miMainDataTagList.Text = "Теги";
+            this.miMainDataTagList.Click += new System.EventHandler(this.MiMainDataTagList_Click);
             // 
             // miMainDataEquipmentList
             // 
@@ -1076,12 +1093,6 @@
             this.xxxToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.xxxToolStripMenuItem.Text = "xxx";
             // 
-            // slTilesArea
-            // 
-            this.slTilesArea.Name = "slTilesArea";
-            this.slTilesArea.Size = new System.Drawing.Size(53, 17);
-            this.slTilesArea.Text = "area: xxx";
-            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1233,6 +1244,7 @@
         private System.Windows.Forms.ToolStripMenuItem miMainTilesHeatmap;
         private System.Windows.Forms.ToolStripMenuItem miMainBackupLoad;
         private System.Windows.Forms.ToolStripStatusLabel slTilesArea;
+        private System.Windows.Forms.ToolStripMenuItem miMainDataTagList;
     }
 }
 

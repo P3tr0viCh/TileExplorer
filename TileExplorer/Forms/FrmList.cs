@@ -85,6 +85,9 @@ namespace TileExplorer
                 case ChildFormType.ResultEquipments:
                     type = typeof(ResultEquipments);
                     break;
+                case ChildFormType.TagList:
+                    type = typeof(TagModel);
+                    break;
                 case ChildFormType.EquipmentList:
                     type = typeof(Equipment);
                     break;
@@ -133,8 +136,10 @@ namespace TileExplorer
                     dataGridView.Columns[nameof(Track.EleDescent)].Visible = true;
                     dataGridView.Columns[nameof(Track.NewTilesCount)].Visible = true;
                     dataGridView.Columns[nameof(Track.EquipmentText)].Visible = true;
+                    dataGridView.Columns[nameof(Track.TagsAsString)].Visible = true;
 
                     dataGridView.Columns[nameof(Track.Equipment)].Visible = false;
+                    dataGridView.Columns[nameof(Track.Tags)].Visible = false;
 
                     var visible =
 #if SHOW_ALL_COLUMNS
@@ -163,9 +168,13 @@ namespace TileExplorer
 
                     dataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
 
+                    dataGridView.Columns[nameof(Marker.Text)].Visible = true;
+
                     dataGridView.Columns[nameof(Marker.IsTextVisible)].Visible = false;
                     dataGridView.Columns[nameof(Marker.OffsetX)].Visible = false;
                     dataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;
+
+                    dataGridView.Columns[nameof(Marker.Text)].HeaderText = ResourcesColumnHeader.Text;
 
                     sortColumn = nameof(Marker.Text);
                     sortColumnIndex = dataGridView.Columns[sortColumn].Index;
@@ -201,7 +210,13 @@ namespace TileExplorer
                     toolStripLeft.Visible = false;
                     statusStrip.Visible = false;
 
+                    dataGridView.Columns[nameof(ResultEquipments.Text)].DisplayIndex = 0;
+
+                    dataGridView.Columns[nameof(ResultEquipments.Text)].Visible = true;
+
                     dataGridView.Columns[nameof(ResultEquipments.DurationSum)].Visible = false;
+
+                    dataGridView.Columns[nameof(ResultEquipments.Text)].HeaderText = ResourcesColumnHeader.Name;
 
                     columnFormattingIndex = new int[1];
                     columnFormattingIndex[0] = dataGridView.Columns[nameof(ResultEquipments.Text)].Index;
@@ -210,8 +225,28 @@ namespace TileExplorer
                         new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingResultEquipments);
 
                     break;
+                case ChildFormType.TagList:
+                    Text = Resources.TitleListTags;
+
+                    dataGridView.Columns[nameof(TagModel.Text)].DisplayIndex = 0;
+
+                    dataGridView.Columns[nameof(TagModel.Text)].Visible = true;
+
+                    dataGridView.Columns[nameof(TagModel.Text)].HeaderText = ResourcesColumnHeader.Text;
+
+                    toolStripLeft.Visible = true;
+
+                    MultiSelect = true;
+
+                    break;
                 case ChildFormType.EquipmentList:
                     Text = Resources.TitleListEquipments;
+
+                    dataGridView.Columns[nameof(Equipment.Text)].DisplayIndex = 0;
+
+                    dataGridView.Columns[nameof(Equipment.Text)].Visible = true;
+
+                    dataGridView.Columns[nameof(Equipment.Text)].HeaderText = ResourcesColumnHeader.Name;
 
                     toolStripLeft.Visible = true;
 
@@ -343,6 +378,7 @@ namespace TileExplorer
                         DataGridViewCellStyles.DurationAsString;
 
                     break;
+                case ChildFormType.TagList:
                 case ChildFormType.EquipmentList:
                     break;
                 case ChildFormType.TileInfo:
@@ -376,7 +412,14 @@ namespace TileExplorer
                     case ChildFormType.TrackList:
                         errorMsg = Resources.MsgDatabaseLoadListTrackFail;
 
-                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Track>();
+                        var tracks = await Database.Default.ListLoadAsync<Track>();
+
+                        foreach (var track in tracks)
+                        {
+                            track.Tags = await Database.Default.ListLoadAsync<TagModel>(track);
+                        }
+
+                        bindingSource.DataSource = tracks;
 
                         break;
                     case ChildFormType.MarkerList:
@@ -395,6 +438,12 @@ namespace TileExplorer
                         errorMsg = Resources.MsgDatabaseLoadListResultEquipmentsFail;
 
                         bindingSource.DataSource = await Database.Default.ListLoadAsync<ResultEquipments>();
+
+                        break;
+                    case ChildFormType.TagList:
+                        errorMsg = Resources.MsgDatabaseLoadListTagsFail;
+
+                        bindingSource.DataSource = await Database.Default.ListLoadAsync<TagModel>();
 
                         break;
                     case ChildFormType.EquipmentList:
@@ -448,8 +497,8 @@ namespace TileExplorer
 
         public BaseId Selected
         {
-            get => ((BindingSource)dataGridView.DataSource).Current as BaseId;
-            set => bindingSource.Position = bindingSource.IndexOf(Find(value));
+            get => dataGridView.GetSelected<BaseId>();
+            set => dataGridView.SetSelected(value);
         }
 
         public IEnumerable<BaseId> SelectedList
@@ -512,6 +561,9 @@ namespace TileExplorer
                 case ChildFormType.MarkerList:
                     value = new Marker();
                     break;
+                case ChildFormType.TagList:
+                    value = new TagModel();
+                    break;
                 case ChildFormType.EquipmentList:
                     value = new Equipment();
                     break;
@@ -532,6 +584,8 @@ namespace TileExplorer
             }
 
             await MainForm.ListItemChangeAsync(this, SelectedList);
+
+            dataGridView.SetSelectedRows(SelectedList);
         }
 
         private async void TsbtnChange_Click(object sender, EventArgs e)

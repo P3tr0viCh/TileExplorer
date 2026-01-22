@@ -80,18 +80,7 @@ namespace TileExplorer
 
         private async Task<bool> SaveDataAsync()
         {
-            var result = false;
-
-            var status = ProgramStatus.Default.Start(Status.SaveData);
-            
-            try
-            {
-                result = await Database.Actions.MarkerSaveAsync(Marker);
-            }
-            finally
-            {
-                ProgramStatus.Default.Stop(status);
-            }
+            var result = await Database.Actions.MarkerSaveAsync(Marker);
 
             if (result)
             {

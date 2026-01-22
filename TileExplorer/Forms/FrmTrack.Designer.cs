@@ -42,6 +42,8 @@
             this.btnCancelToALL = new System.Windows.Forms.Button();
             this.tbEleDescent = new System.Windows.Forms.TextBox();
             this.lblEleDescent = new System.Windows.Forms.Label();
+            this.clbTags = new System.Windows.Forms.CheckedListBox();
+            this.lblTags = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,20 +66,20 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(336, 128);
+            this.btnCancel.Location = new System.Drawing.Point(336, 232);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
-            this.btnCancel.TabIndex = 11;
+            this.btnCancel.TabIndex = 13;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(248, 128);
+            this.btnOk.Location = new System.Drawing.Point(248, 232);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
-            this.btnOk.TabIndex = 10;
+            this.btnOk.TabIndex = 12;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
@@ -97,9 +99,9 @@
             this.cboxEquipment.DisplayMember = "Text";
             this.cboxEquipment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxEquipment.FormattingEnabled = true;
-            this.cboxEquipment.Location = new System.Drawing.Point(8, 86);
+            this.cboxEquipment.Location = new System.Drawing.Point(8, 88);
             this.cboxEquipment.Name = "cboxEquipment";
-            this.cboxEquipment.Size = new System.Drawing.Size(160, 25);
+            this.cboxEquipment.Size = new System.Drawing.Size(168, 25);
             this.cboxEquipment.TabIndex = 3;
             this.cboxEquipment.ValueMember = "Id";
             // 
@@ -110,7 +112,7 @@
             // lblEleAscent
             // 
             this.lblEleAscent.AutoSize = true;
-            this.lblEleAscent.Location = new System.Drawing.Point(176, 64);
+            this.lblEleAscent.Location = new System.Drawing.Point(8, 128);
             this.lblEleAscent.Name = "lblEleAscent";
             this.lblEleAscent.Size = new System.Drawing.Size(60, 19);
             this.lblEleAscent.TabIndex = 4;
@@ -118,34 +120,34 @@
             // 
             // tbEleAscent
             // 
-            this.tbEleAscent.Location = new System.Drawing.Point(176, 86);
+            this.tbEleAscent.Location = new System.Drawing.Point(8, 152);
             this.tbEleAscent.Name = "tbEleAscent";
             this.tbEleAscent.Size = new System.Drawing.Size(80, 25);
             this.tbEleAscent.TabIndex = 5;
             // 
             // btnOKToALL
             // 
-            this.btnOKToALL.Location = new System.Drawing.Point(8, 128);
+            this.btnOKToALL.Location = new System.Drawing.Point(8, 232);
             this.btnOKToALL.Name = "btnOKToALL";
             this.btnOKToALL.Size = new System.Drawing.Size(96, 32);
-            this.btnOKToALL.TabIndex = 8;
+            this.btnOKToALL.TabIndex = 10;
             this.btnOKToALL.Text = "OK для всех";
             this.btnOKToALL.UseVisualStyleBackColor = true;
             this.btnOKToALL.Click += new System.EventHandler(this.BtnOKToALL_Click);
             // 
             // btnCancelToALL
             // 
-            this.btnCancelToALL.Location = new System.Drawing.Point(112, 128);
+            this.btnCancelToALL.Location = new System.Drawing.Point(112, 232);
             this.btnCancelToALL.Name = "btnCancelToALL";
-            this.btnCancelToALL.Size = new System.Drawing.Size(126, 32);
-            this.btnCancelToALL.TabIndex = 9;
+            this.btnCancelToALL.Size = new System.Drawing.Size(128, 32);
+            this.btnCancelToALL.TabIndex = 11;
             this.btnCancelToALL.Text = "Отмена для всех";
             this.btnCancelToALL.UseVisualStyleBackColor = true;
             this.btnCancelToALL.Click += new System.EventHandler(this.BtnCancelToALL_Click);
             // 
             // tbEleDescent
             // 
-            this.tbEleDescent.Location = new System.Drawing.Point(264, 86);
+            this.tbEleDescent.Location = new System.Drawing.Point(96, 152);
             this.tbEleDescent.Name = "tbEleDescent";
             this.tbEleDescent.Size = new System.Drawing.Size(80, 25);
             this.tbEleDescent.TabIndex = 7;
@@ -153,18 +155,37 @@
             // lblEleDescent
             // 
             this.lblEleDescent.AutoSize = true;
-            this.lblEleDescent.Location = new System.Drawing.Point(264, 64);
+            this.lblEleDescent.Location = new System.Drawing.Point(96, 128);
             this.lblEleDescent.Name = "lblEleDescent";
             this.lblEleDescent.Size = new System.Drawing.Size(46, 19);
             this.lblEleDescent.TabIndex = 6;
             this.lblEleDescent.Text = "Спуск";
+            // 
+            // clbTags
+            // 
+            this.clbTags.FormattingEnabled = true;
+            this.clbTags.Location = new System.Drawing.Point(184, 88);
+            this.clbTags.Name = "clbTags";
+            this.clbTags.Size = new System.Drawing.Size(232, 124);
+            this.clbTags.TabIndex = 9;
+            // 
+            // lblTags
+            // 
+            this.lblTags.AutoSize = true;
+            this.lblTags.Location = new System.Drawing.Point(184, 64);
+            this.lblTags.Name = "lblTags";
+            this.lblTags.Size = new System.Drawing.Size(36, 19);
+            this.lblTags.TabIndex = 8;
+            this.lblTags.Text = "Теги";
             // 
             // FrmTrack
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(424, 169);
+            this.ClientSize = new System.Drawing.Size(424, 273);
+            this.Controls.Add(this.lblTags);
+            this.Controls.Add(this.clbTags);
             this.Controls.Add(this.tbEleDescent);
             this.Controls.Add(this.lblEleDescent);
             this.Controls.Add(this.btnCancelToALL);
@@ -207,5 +228,7 @@
         private System.Windows.Forms.Button btnCancelToALL;
         private System.Windows.Forms.TextBox tbEleDescent;
         private System.Windows.Forms.Label lblEleDescent;
+        private System.Windows.Forms.CheckedListBox clbTags;
+        private System.Windows.Forms.Label lblTags;
     }
 }

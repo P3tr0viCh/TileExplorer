@@ -21,6 +21,17 @@ namespace TileExplorer
 {
     public partial class Database : DefaultInstance<Database>
     {
+#if SHOW_SQL
+        private static void DebugWriteSql(string sql, object param, string memberName)
+        {
+            DebugWrite.Line(sql.SingleLine(), memberName);
+            if (param != null)
+            {
+                DebugWrite.Line($"params: {param}", memberName);
+            }
+        }
+#endif
+
         private ConnectionSQLite Connection { get; set; } = new ConnectionSQLite();
 
         public string FileName
@@ -49,10 +60,12 @@ namespace TileExplorer
             {
                 /* tables */
                 connection.Execute(ResourcesSql.CreateTableMarkers);
+                connection.Execute(ResourcesSql.CreateTableTags);
                 connection.Execute(ResourcesSql.CreateTableTiles);
                 connection.Execute(ResourcesSql.CreateTableTracks);
-                connection.Execute(ResourcesSql.CreateTableTracksPoints);
+                connection.Execute(ResourcesSql.CreateTableTracksTags);
                 connection.Execute(ResourcesSql.CreateTableTracksTiles);
+                connection.Execute(ResourcesSql.CreateTableTracksPoints);
                 connection.Execute(ResourcesSql.CreateTableEquipments);
 
                 /* indexes */
@@ -71,7 +84,9 @@ namespace TileExplorer
         {
             var sql = string.Format(ResourcesSql.TruncateTable, Sql.TableName<T>());
 
-            DebugWrite.Line(sql);
+#if SHOW_SQL
+            DebugWriteSql(sql, null, "TruncateTableAsync");
+#endif
 
             await connection.ExecuteAsync(sql, null, transaction);
         }
@@ -181,13 +196,13 @@ namespace TileExplorer
 
             using (var connection = GetConnection())
             {
-                if (track.Id == Sql.NewId)
-                {
-                    await connection.OpenAsync();
+                await connection.OpenAsync();
 
-                    using (var transaction = connection.BeginTransaction())
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
                     {
-                        try
+                        if (track.Id == Sql.NewId)
                         {
                             await connection.InsertAsync(track, transaction);
 
@@ -197,19 +212,21 @@ namespace TileExplorer
                             }
 
                             await connection.InsertAsync(track.TrackPoints, transaction);
-
-                            transaction.Commit();
                         }
-                        catch (Exception)
+                        else
                         {
-                            transaction.Rollback();
-                            throw;
+                            await connection.UpdateAsync(track, transaction);
                         }
+
+                        await TracksTagsSaveAsync(connection, transaction, track);
+
+                        transaction.Commit();
                     }
-                }
-                else
-                {
-                    await connection.UpdateAsync(track);
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
 
@@ -302,6 +319,19 @@ namespace TileExplorer
                     }
 
                     break;
+                case nameof(TagModel):
+                    if (filter == null)
+                    {
+                        sql = ResourcesSql.SelectTags;
+                    }
+                    else
+                    {
+                        sql = ResourcesSql.SelectTrackTagsByTrackId;
+
+                        param = new { trackid = ((Track)filter).Id };
+                    }
+
+                    break;
                 case nameof(Equipment):
                     sql = ResourcesSql.SelectEquipments;
                     break;
@@ -316,7 +346,7 @@ namespace TileExplorer
             }
 
 #if SHOW_SQL
-            DebugWrite.Line(sql);
+            DebugWriteSql(sql, param, "GetQuery");
 #endif
         }
 
@@ -419,6 +449,34 @@ namespace TileExplorer
                         throw;
                     }
                 }
+            }
+        }
+
+        public async Task TracksTagsSaveAsync(SQLiteConnection connection, SQLiteTransaction transaction,
+            Track track)
+        {
+            DebugWrite.Line("TracksTagsSaveAsync");
+
+            var sql = ResourcesSql.DeleteTrackTagsByTrackId;
+
+            object param = new { trackid = track.Id };
+
+            await connection.ExecuteSqlAsync(sql, param, transaction);
+
+            var trackTags = new List<TracksTags>();
+
+            foreach (var tag in track.Tags)
+            {
+                trackTags.Add(new TracksTags()
+                {
+                    TrackId = track.Id,
+                    TagId = tag.Id,
+                });
+            }
+
+            if (trackTags.Any())
+            {
+                await connection.ListItemSaveAsync(trackTags, transaction);
             }
         }
 

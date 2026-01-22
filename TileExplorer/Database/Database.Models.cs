@@ -1,30 +1,24 @@
 ﻿using Dapper.Contrib.Extensions;
-using System.Collections.Generic;
+using GMap.NET;
+using Newtonsoft.Json;
+using P3tr0viCh.Database;
+using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Extensions;
 using System;
 using System.ComponentModel;
 using static TileExplorer.Enums;
-using Newtonsoft.Json;
-using GMap.NET;
-using P3tr0viCh.Utils;
-using P3tr0viCh.Database;
-using P3tr0viCh.Utils.Extensions;
 
 namespace TileExplorer
 {
     public partial class Database
     {
-        public class Models
+        public partial class Models
         {
             private const int DefaultOffsetX = 20;
             private const int DefaultOffsetY = -10;
 
-            public interface IModelText
-            {
-                string Text { get; set; }
-            }
-
-            [Table("markers")]
-            public class Marker : BaseId, IModelText
+            [Table(Tables.markers)]
+            public class Marker : BaseText
             {
                 public Marker()
                 {
@@ -41,9 +35,6 @@ namespace TileExplorer
                 [DisplayName("Долгота")]
                 public double Lng { get; set; }
 
-                [DisplayName("Текст")]
-                public string Text { get; set; }
-
                 public bool IsTextVisible { get; set; } = true;
 
                 public int OffsetX { get; set; } = DefaultOffsetX;
@@ -55,14 +46,15 @@ namespace TileExplorer
 
                     Lat = source.Lat;
                     Lng = source.Lng;
-                    Text = source.Text;
+
                     IsTextVisible = source.IsTextVisible;
+
                     OffsetX = source.OffsetX;
                     OffsetY = source.OffsetY;
                 }
             }
 
-            [Table("tiles")]
+            [Table(Tables.tiles)]
             public class Tile : BaseId
             {
                 public Tile()
@@ -100,151 +92,7 @@ namespace TileExplorer
                 }
             }
 
-            [Table("tracks")]
-            public class Track : BaseId, IModelText
-            {
-                private readonly Gpx.Track gpx = new Gpx.Track();
-
-                public Track()
-                {
-                }
-
-                public Track(string path)
-                {
-                    DebugWrite.Line(path);
-
-                    gpx.OpenFromFile(path);
-
-                    DebugWrite.Line("xml loaded");
-
-                    TrackPoints = new List<TrackPoint>();
-
-                    foreach (var point in gpx.Points)
-                    {
-                        TrackPoints.Add(new TrackPoint(point));
-                    }
-
-                    DebugWrite.Line($"point count: {TrackPoints.Count}");
-                }
-
-                [DisplayName("Название")]
-                public string Text { get => gpx.Text; set => gpx.Text = value; }
-
-                [DisplayName("Начало")]
-                public DateTime DateTimeStart { get => gpx.DateTimeStart; set => gpx.DateTimeStart = value; }
-                [DisplayName("Окончание")]
-                public DateTime DateTimeFinish { get => gpx.DateTimeFinish; set => gpx.DateTimeFinish = value; }
-
-                [DisplayName("Время")]
-                public long Duration { get => gpx.Duration; set => gpx.Duration = value; }
-
-                [DisplayName("Время")]
-                [Write(false)]
-                [Computed]
-                public string DurationAsString => TimeSpan.FromSeconds(Duration).ToHoursMinutesString();
-
-                [DisplayName("Время в движении")]
-                public long DurationInMove { get => gpx.DurationInMove; set => gpx.DurationInMove = value; }
-
-                [DisplayName("Время в движении")]
-                [Write(false)]
-                [Computed]
-                public string DurationInMoveAsString => TimeSpan.FromSeconds(DurationInMove).ToHoursMinutesString();
-
-                [DisplayName("Расстояние")]
-                public double Distance { get => gpx.Distance; set => gpx.Distance = value; }
-
-                [DisplayName("Скорость")]
-                [Write(false)]
-                public double AverageSpeed { get => gpx.AverageSpeed; }
-
-                [DisplayName("Подъём")]
-                public double EleAscent { get => gpx.EleAscent; set => gpx.EleAscent = value; }
-
-                [DisplayName("Спуск")]
-                public double EleDescent { get => gpx.EleDescent; set => gpx.EleDescent = value; }
-
-                [Write(false)]
-                public List<TrackPoint> TrackPoints { get; set; } = null;
-
-                [Write(false)]
-                public List<Tile> TrackTiles { get; set; } = null;
-
-                [DisplayName("Плитки +")]
-                [Write(false)]
-                public int NewTilesCount { get; set; } = 0;
-
-                private readonly Equipment equipment = new Equipment();
-
-                [DisplayName("Снаряжение")]
-                [Write(false)]
-                [Computed]
-                public Equipment Equipment
-                {
-                    get => equipment; set => equipment.Assign(value);
-                }
-
-                [DisplayName("Снаряжение: ID")]
-                public long EquipmentId { get => Equipment.Id; set => Equipment.Id = value; }
-
-                [DisplayName("Снаряжение")]
-                [Write(false)]
-                [Computed]
-                public string EquipmentText { get => Equipment.Text; set => Equipment.Text = value; }
-
-                [DisplayName("Снаряжение: марка")]
-                [Write(false)]
-                [Computed]
-                public string EquipmentBrand { get => Equipment.Brand; set => Equipment.Brand = value; }
-
-                [DisplayName("Снаряжение: модель")]
-                [Write(false)]
-                [Computed]
-                public string EquipmentModel { get => Equipment.Model; set => Equipment.Model = value; }
-
-                public new void Clear()
-                {
-                    base.Clear();
-
-                    gpx.Clear();
-
-                    NewTilesCount = 0;
-
-                    Equipment = null;
-                }
-
-                public void Assign(Track source)
-                {
-                    if (source == null)
-                    {
-                        Clear();
-
-                        return;
-                    }
-
-                    base.Assign(source);
-
-                    gpx.Assign(source.gpx);
-
-                    if (source.TrackPoints == null)
-                    {
-                        TrackPoints = null;
-                    }
-                    else
-                    {
-                        TrackPoints = new List<TrackPoint>();
-
-                        TrackPoints.AddRange(source.TrackPoints);
-
-                    }
-
-                    NewTilesCount = source.NewTilesCount;
-
-                    Equipment = source.Equipment;
-                }
-            }
-
-            [Table("tracks_points")]
+            [Table(Tables.tracks_points)]
             public class TrackPoint : Gpx.Point, IBaseId
             {
                 public TrackPoint()
@@ -266,19 +114,19 @@ namespace TileExplorer
                 }
 
                 [Key]
-                public long Id { get; set; } = 0;
+                public long Id { get; set; } = Sql.NewId;
 
-                public long TrackId { get; set; } = 0;
+                public long TrackId { get; set; } = Sql.NewId;
 
                 public bool ShowOnMap { get; set; }
             }
 
-            [Table("tracks_tiles")]
+            [Table(Tables.tracks_tiles)]
             public class TracksTiles : BaseId
             {
-                public long TrackId { get; set; } = 0;
+                public long TrackId { get; set; } = Sql.NewId;
 
-                public long TileId { get; set; } = 0;
+                public long TileId { get; set; } = Sql.NewId;
             }
 
             public class TracksInfo
@@ -323,11 +171,8 @@ namespace TileExplorer
                 public int EleAscentStep2 { get; set; } = 0;
             }
 
-            public class ResultEquipments : BaseId, IModelText
+            public class ResultEquipments : BaseText
             {
-                [DisplayName("Название")]
-                public string Text { get; set; } = string.Empty;
-
                 [DisplayName("Треки")]
                 public int Count { get; set; } = 0;
 
@@ -340,24 +185,33 @@ namespace TileExplorer
                 [DisplayName("Время")]
                 public string DurationSumAsString => TimeSpan.FromDays(DurationSum).ToHoursMinutesString();
             }
-
-            [Table("equipments")]
-            public class Equipment : BaseId, IModelText
+            
+            [Table(Tables.tags)]
+            public class TagModel : BaseText
             {
-                [DisplayName("Название")]
-                public string Text { get; set; }
+            }
 
+            [Table(Tables.tracks_tags)]
+            public class TracksTags : BaseId
+            {
+                public long TrackId { get; set; } = Sql.NewId;
+
+                public long TagId { get; set; } = Sql.NewId;
+            }
+
+            [Table(Tables.equipments)]
+            public class Equipment : BaseText
+            {
                 [DisplayName("Марка")]
                 public string Brand { get; set; }
 
                 [DisplayName("Модель")]
                 public string Model { get; set; }
 
-                public new void Clear()
+                public override void Clear()
                 {
                     base.Clear();
 
-                    Text = string.Empty;
                     Brand = string.Empty;
                     Model = string.Empty;
                 }
@@ -379,7 +233,7 @@ namespace TileExplorer
                 }
             }
 
-            [Table("tracks")]
+            [Table(Tables.tracks)]
             public class TracksDistanceByMonth : BaseId
             {
                 [DisplayName("Год")]
