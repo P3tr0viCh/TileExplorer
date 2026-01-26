@@ -178,6 +178,9 @@
   <data name="FilterEquipments" xml:space="preserve">
     <value>equipmentid IN ({0})</value>
   </data>
+  <data name="FilterTags" xml:space="preserve">
+    <value>tracks.id IN (SELECT trackid FROM tracks_tags WHERE tagid IN ({0}))</value>
+  </data>
   <data name="FilterYears" xml:space="preserve">
     <value>CAST(strftime('%Y', datetimestart) AS INTEGER) IN ({0})</value>
   </data>

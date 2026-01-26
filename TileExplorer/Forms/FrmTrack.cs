@@ -74,6 +74,8 @@ namespace TileExplorer
 
         private async void FrmTrack_Load(Track track)
         {
+            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
+
             await LoadDataAsync();
 
             Track = track;
@@ -277,6 +279,13 @@ namespace TileExplorer
             }
 
             DialogResult = DialogResult.Abort;
+        }
+
+        private void FrmTrack_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AppSettings.Local.SaveFormState(this, AppSettings.Local.Default.FormStates);
+
+            AppSettings.LocalSave();
         }
     }
 }

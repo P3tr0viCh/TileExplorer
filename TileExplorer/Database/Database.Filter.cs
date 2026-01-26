@@ -134,6 +134,36 @@ namespace TileExplorer
                 }
             }
 
+            private bool useTags = false;
+            public bool UseTags
+            {
+                get => useTags;
+                set
+                {
+                    if (useTags == value) return;
+
+                    useTags = value;
+
+                    PerformOnChanged();
+                }
+            }
+
+            private long[] tags = default;
+            public long[] Tags
+            {
+                get => tags;
+                set
+                {
+                    if (tags == default && value == default) return;
+
+                    if (value != default && tags != default && tags.SequenceEqual(value)) return;
+
+                    tags = value;
+
+                    if (UseTags) PerformOnChanged();
+                }
+            }
+
             public void Clear()
             {
                 dateType = FilterDateType.AllDate;
@@ -143,6 +173,8 @@ namespace TileExplorer
                 years = default;
                 useEquipments = false;
                 equipments = default;
+                useTags = false;
+                tags = default;
             }
 
             public void Assign(Filter source)
@@ -161,6 +193,8 @@ namespace TileExplorer
                 years = source.years;
                 useEquipments = source.useEquipments;
                 equipments = source.equipments;
+                useTags = source.useTags;
+                tags = source.tags;
 
                 PerformOnChanged();
             }
@@ -218,6 +252,12 @@ namespace TileExplorer
                 {
                     sql = sql.JoinExcludeEmpty(" AND ",
                         string.Format(ResourcesSql.FilterEquipments, string.Join(", ", Equipments)));
+                }
+
+                if (UseTags && Tags != default)
+                {
+                    sql = sql.JoinExcludeEmpty(" AND ",
+                        string.Format(ResourcesSql.FilterTags, string.Join(", ", Tags)));
                 }
 
                 if (!sql.IsEmpty()) sql = " WHERE " + sql;

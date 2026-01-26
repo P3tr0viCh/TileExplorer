@@ -1,5 +1,5 @@
 ﻿#if DEBUG
-#define _SHOW_SQL
+#define SHOW_SQL
 #endif
 
 using Dapper;

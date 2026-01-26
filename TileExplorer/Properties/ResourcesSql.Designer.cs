@@ -305,6 +305,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to tracks.id IN (SELECT trackid FROM tracks_tags WHERE tagid IN ({0})).
+        /// </summary>
+        internal static string FilterTags {
+            get {
+                return ResourceManager.GetString("FilterTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CAST(strftime(&apos;%Y&apos;, datetimestart) AS INTEGER) IN ({0}).
         /// </summary>
         internal static string FilterYears {

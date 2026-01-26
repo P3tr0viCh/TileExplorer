@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Utils.Extensions;
+﻿using P3tr0viCh.Database;
+using P3tr0viCh.Utils.Extensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,6 +56,8 @@ namespace TileExplorer
 
             cboxUseEquipments.Checked = Filter.Default.UseEquipments;
 
+            cboxUseTags.Checked = Filter.Default.UseTags;
+
             selfChange = false;
 
             MainForm.ChildFormOpened(this);
@@ -107,6 +110,10 @@ namespace TileExplorer
             Filter.Default.UseEquipments = cboxUseEquipments.Checked;
 
             Filter.Default.Equipments = GetCheckedEquipments();
+
+            Filter.Default.UseTags = cboxUseTags.Checked;
+
+            Filter.Default.Tags = GetCheckedTags();
 
             selfChange = false;
         }
@@ -165,11 +172,11 @@ namespace TileExplorer
             }
         }
 
-        private class EquipmentItem: Equipment
+        private class CheckedListBoxItem : BaseText
         {
-            public EquipmentItem(Equipment equipment)
+            public CheckedListBoxItem(BaseText value)
             {
-                Assign(equipment);
+                Assign(value);
             }
 
             public override string ToString() => Text;
@@ -181,7 +188,7 @@ namespace TileExplorer
 
             var equipments = await Database.Default.ListLoadAsync<Equipment>();
 
-            clbEquipments.Items.Add(new EquipmentItem(
+            clbEquipments.Items.Add(new CheckedListBoxItem(
                 new Equipment()
                 {
                     Text = "(не указано)"
@@ -189,7 +196,7 @@ namespace TileExplorer
 
             foreach (var equipment in equipments)
             {
-                clbEquipments.Items.Add(new EquipmentItem(equipment));
+                clbEquipments.Items.Add(new CheckedListBoxItem(equipment));
             }
 
             if (Filter.Default.Equipments is null) return;
@@ -197,7 +204,7 @@ namespace TileExplorer
             for (var i = 0; i < clbEquipments.Items.Count; i++)
             {
                 clbEquipments.SetItemChecked(i, Filter.Default.Equipments.Contains(
-                    clbEquipments.Items.Cast<EquipmentItem>().Select(e => e.Id).ElementAt(i)));
+                    clbEquipments.Items.Cast<CheckedListBoxItem>().Select(e => e.Id).ElementAt(i)));
             }
         }
 
@@ -207,7 +214,36 @@ namespace TileExplorer
 
             if (clbEquipments.CheckedItems.Count == clbEquipments.Items.Count) return default;
 
-            return clbEquipments.CheckedItems.Cast<EquipmentItem>().Select(e => e.Id).ToArray();
+            return clbEquipments.CheckedItems.Cast<CheckedListBoxItem>().Select(e => e.Id).ToArray();
+        }
+
+        private async Task UpdateDataTags()
+        {
+            clbTags.Items.Clear();
+
+            var tags = await Database.Default.ListLoadAsync<TagModel>();
+
+            foreach (var tag in tags)
+            {
+                clbTags.Items.Add(new CheckedListBoxItem(tag));
+            }
+
+            if (Filter.Default.Tags is null) return;
+
+            for (var i = 0; i < clbTags.Items.Count; i++)
+            {
+                clbTags.SetItemChecked(i, Filter.Default.Tags.Contains(
+                    clbTags.Items.Cast<CheckedListBoxItem>().Select(t => t.Id).ElementAt(i)));
+            }
+        }
+
+        private long[] GetCheckedTags()
+        {
+            if (clbTags.CheckedItems.Count == 0) return default;
+
+            if (clbTags.CheckedItems.Count == clbTags.Items.Count) return default;
+
+            return clbTags.CheckedItems.Cast<CheckedListBoxItem>().Select(e => e.Id).ToArray();
         }
 
         public async Task UpdateDataAsync()
@@ -219,6 +255,8 @@ namespace TileExplorer
             try
             {
                 UpdateDataYears();
+
+                await UpdateDataTags();
 
                 await UpdateDataEquipments();
             }

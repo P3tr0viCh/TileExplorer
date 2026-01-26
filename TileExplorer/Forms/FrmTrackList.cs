@@ -1,7 +1,10 @@
-﻿using P3tr0viCh.Utils;
+﻿using Newtonsoft.Json.Linq;
+using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
@@ -37,9 +40,18 @@ namespace TileExplorer
 
         private async void FrmTrackList_Load(IEnumerable<Track> tracks)
         {
+            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
+
             await LoadDataAsync();
 
             Tracks = tracks;
+
+            var equipmentIds = tracks.Select(track => track.EquipmentId).Distinct();
+
+            if (equipmentIds.Count() == 1)
+            {
+                cboxEquipment.SelectedValue = equipmentIds.First();
+            }
         }
 
         private async Task<bool> LoadDataAsync()
@@ -91,6 +103,13 @@ namespace TileExplorer
             {
                 DialogResult = DialogResult.OK;
             }
+        }
+
+        private void FrmTrackList_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AppSettings.Local.SaveFormState(this, AppSettings.Local.Default.FormStates);
+
+            AppSettings.LocalSave();
         }
     }
 }

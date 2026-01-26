@@ -49,6 +49,8 @@
             // 
             // tbText
             // 
+            this.tbText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbText.Location = new System.Drawing.Point(8, 30);
             this.tbText.Name = "tbText";
             this.tbText.Size = new System.Drawing.Size(408, 25);
@@ -65,8 +67,9 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(336, 232);
+            this.btnCancel.Location = new System.Drawing.Point(336, 192);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
             this.btnCancel.TabIndex = 13;
@@ -76,7 +79,8 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(248, 232);
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOk.Location = new System.Drawing.Point(248, 192);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
             this.btnOk.TabIndex = 12;
@@ -105,10 +109,6 @@
             this.cboxEquipment.TabIndex = 3;
             this.cboxEquipment.ValueMember = "Id";
             // 
-            // equipmentBindingSource
-            // 
-            this.equipmentBindingSource.DataSource = typeof(TileExplorer.Database.Models.Equipment);
-            // 
             // lblEleAscent
             // 
             this.lblEleAscent.AutoSize = true;
@@ -127,7 +127,8 @@
             // 
             // btnOKToALL
             // 
-            this.btnOKToALL.Location = new System.Drawing.Point(8, 232);
+            this.btnOKToALL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnOKToALL.Location = new System.Drawing.Point(8, 192);
             this.btnOKToALL.Name = "btnOKToALL";
             this.btnOKToALL.Size = new System.Drawing.Size(96, 32);
             this.btnOKToALL.TabIndex = 10;
@@ -137,7 +138,8 @@
             // 
             // btnCancelToALL
             // 
-            this.btnCancelToALL.Location = new System.Drawing.Point(112, 232);
+            this.btnCancelToALL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCancelToALL.Location = new System.Drawing.Point(112, 192);
             this.btnCancelToALL.Name = "btnCancelToALL";
             this.btnCancelToALL.Size = new System.Drawing.Size(128, 32);
             this.btnCancelToALL.TabIndex = 11;
@@ -163,10 +165,17 @@
             // 
             // clbTags
             // 
+            this.clbTags.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbTags.CheckOnClick = true;
+            this.clbTags.ColumnWidth = 160;
             this.clbTags.FormattingEnabled = true;
+            this.clbTags.IntegralHeight = false;
             this.clbTags.Location = new System.Drawing.Point(184, 88);
+            this.clbTags.MultiColumn = true;
             this.clbTags.Name = "clbTags";
-            this.clbTags.Size = new System.Drawing.Size(232, 124);
+            this.clbTags.Size = new System.Drawing.Size(232, 89);
             this.clbTags.TabIndex = 9;
             // 
             // lblTags
@@ -183,7 +192,7 @@
             this.AcceptButton = this.btnOk;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(424, 273);
+            this.ClientSize = new System.Drawing.Size(424, 233);
             this.Controls.Add(this.lblTags);
             this.Controls.Add(this.clbTags);
             this.Controls.Add(this.tbEleDescent);
@@ -199,14 +208,15 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(440, 272);
             this.Name = "FrmTrack";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Трек";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTrack_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

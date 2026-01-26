@@ -49,10 +49,6 @@
             this.cboxEquipment.TabIndex = 1;
             this.cboxEquipment.ValueMember = "Id";
             // 
-            // equipmentBindingSource
-            // 
-            this.equipmentBindingSource.DataSource = typeof(TileExplorer.Database.Models.Equipment);
-            // 
             // lblEquipment
             // 
             this.lblEquipment.AutoSize = true;
@@ -98,8 +94,8 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FrmTrackList";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Треки";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTrackList_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

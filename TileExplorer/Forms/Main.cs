@@ -89,6 +89,7 @@ namespace TileExplorer
 
             Database.Filter.Default.Assign(AppSettings.Local.Default.Filter);
             Database.Filter.Default.DateType = Database.Filter.FilterDateType.AllDate;
+            Database.Filter.Default.UseTags = false;
             Database.Filter.Default.UseEquipments = false;
 
             Database.Filter.Default.OnChanged += Filter_OnChangedAsync;

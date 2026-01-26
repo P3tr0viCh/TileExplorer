@@ -40,6 +40,8 @@
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.clbEquipments = new System.Windows.Forms.CheckedListBox();
             this.cboxUseEquipments = new System.Windows.Forms.CheckBox();
+            this.cboxUseTags = new System.Windows.Forms.CheckBox();
+            this.clbTags = new System.Windows.Forms.CheckedListBox();
             this.SuspendLayout();
             // 
             // clbYears
@@ -140,12 +142,13 @@
             // 
             // clbEquipments
             // 
-            this.clbEquipments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.clbEquipments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.clbEquipments.CheckOnClick = true;
+            this.clbEquipments.ColumnWidth = 160;
             this.clbEquipments.IntegralHeight = false;
             this.clbEquipments.Location = new System.Drawing.Point(216, 32);
+            this.clbEquipments.MultiColumn = true;
             this.clbEquipments.Name = "clbEquipments";
             this.clbEquipments.Size = new System.Drawing.Size(200, 96);
             this.clbEquipments.TabIndex = 9;
@@ -162,10 +165,38 @@
             this.cboxUseEquipments.UseVisualStyleBackColor = true;
             this.cboxUseEquipments.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
+            // cboxUseTags
+            // 
+            this.cboxUseTags.AutoSize = true;
+            this.cboxUseTags.Location = new System.Drawing.Point(216, 136);
+            this.cboxUseTags.Name = "cboxUseTags";
+            this.cboxUseTags.Size = new System.Drawing.Size(55, 23);
+            this.cboxUseTags.TabIndex = 10;
+            this.cboxUseTags.Text = "Теги";
+            this.cboxUseTags.UseVisualStyleBackColor = true;
+            this.cboxUseTags.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
+            // 
+            // clbTags
+            // 
+            this.clbTags.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbTags.CheckOnClick = true;
+            this.clbTags.ColumnWidth = 160;
+            this.clbTags.IntegralHeight = false;
+            this.clbTags.Location = new System.Drawing.Point(216, 160);
+            this.clbTags.MultiColumn = true;
+            this.clbTags.Name = "clbTags";
+            this.clbTags.Size = new System.Drawing.Size(200, 144);
+            this.clbTags.TabIndex = 11;
+            this.clbTags.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
+            // 
             // FrmFilter
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(424, 313);
+            this.Controls.Add(this.cboxUseTags);
+            this.Controls.Add(this.clbTags);
             this.Controls.Add(this.cboxUseEquipments);
             this.Controls.Add(this.clbEquipments);
             this.Controls.Add(this.rbtnFilterAllDate);
@@ -207,5 +238,7 @@
         private System.Windows.Forms.CheckedListBox clbYears;
         private System.Windows.Forms.CheckedListBox clbEquipments;
         private System.Windows.Forms.CheckBox cboxUseEquipments;
+        private System.Windows.Forms.CheckBox cboxUseTags;
+        private System.Windows.Forms.CheckedListBox clbTags;
     }
 }
