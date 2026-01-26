@@ -25,6 +25,8 @@ namespace TileExplorer
 
             Selected = null;
 
+            await Task.Delay(100);
+
             if (load.HasFlag(DataLoad.Tiles))
             {
                 tilesLoaded = false;

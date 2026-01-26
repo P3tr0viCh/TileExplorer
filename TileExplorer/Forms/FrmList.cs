@@ -17,7 +17,6 @@ using static TileExplorer.Enums;
 using static TileExplorer.Interfaces;
 using static TileExplorer.PresenterStatusStripList;
 using static TileExplorer.ProgramStatus;
-using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -401,6 +400,8 @@ namespace TileExplorer
             ctsList.Start();
 
             var status = ProgramStatus.Default.Start(Status.LoadData);
+
+            await Task.Delay(100);
 
             var errorMsg = string.Empty;
 
