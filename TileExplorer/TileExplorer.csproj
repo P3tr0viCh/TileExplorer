@@ -371,6 +371,7 @@
     </None>
     <None Include="Resources\CreateTableTags.sql" />
     <None Include="Resources\CreateTableTracksTags.sql" />
+    <None Include="Resources\CreateIndexTracksTagsTrackId.sql" />
     <Content Include="Resources\CreateTriggerEquipmentsAD.sql" />
     <None Include="Resources\SelectYears.sql" />
     <None Include="Resources\SelectTracksDistanceByMonth.sql" />

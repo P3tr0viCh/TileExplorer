@@ -16,7 +16,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Utils;
 
 namespace TileExplorer
 {
@@ -72,6 +71,7 @@ namespace TileExplorer
                 /* indexes */
                 connection.Execute(ResourcesSql.CreateIndexTracksDateTimeStart);
                 connection.Execute(ResourcesSql.CreateIndexTracksPointsTrackId);
+                connection.Execute(ResourcesSql.CreateIndexTracksTagsTrackId);
                 connection.Execute(ResourcesSql.CreateIndexTracksTilesTileId);
                 connection.Execute(ResourcesSql.CreateIndexTracksTilesTrackId);
 

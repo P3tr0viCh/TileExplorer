@@ -81,6 +81,16 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CREATE INDEX tracks_tags_trackid_idx
+        ///ON tracks_tags (trackid);.
+        /// </summary>
+        internal static string CreateIndexTracksTagsTrackId {
+            get {
+                return ResourceManager.GetString("CreateIndexTracksTagsTrackId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CREATE INDEX tracks_tiles_tileid_idx
         ///ON tracks_tiles(tileid);.
         /// </summary>
@@ -249,10 +259,8 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT CAST(STRFTIME(&apos;%Y&apos;, datetimestart) AS INTEGER) AS year
-        ///FROM tracks
-        ///GROUP by year
-        ///ORDER BY year;.
+        ///   Looks up a localized string similar to DELETE FROM tracks_tags
+        ///WHERE trackid = :trackid;.
         /// </summary>
         internal static string DeleteTrackTagsByTrackId {
             get {
