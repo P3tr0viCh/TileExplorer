@@ -19,11 +19,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
+using TileExplorer.Presenters;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
-using static TileExplorer.PresenterStatusStripMain;
+using static TileExplorer.Presenters.PresenterStatusStripMain;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
@@ -995,20 +996,6 @@ namespace TileExplorer
 
                 return;
             }
-
-            if (value is TagModel tag)
-            {
-                TagAdd(tag);
-
-                return;
-            }
-
-            if (value is Equipment equipment)
-            {
-                EquipmentAdd(equipment);
-
-                return;
-            }
         }
 
         public async Task ListItemChangeAsync(IEnumerable<BaseId> list)
@@ -1018,24 +1005,14 @@ namespace TileExplorer
             if (value is Marker marker)
             {
                 await MarkerChangeAsync(marker);
+
                 return;
             }
 
             if (value is Track)
             {
-                await TrackChangeAsync(list.Cast<Track>().ToList());
-                return;
-            }
+                await TrackChangeAsync(list.Cast<Track>());
 
-            if (value is TagModel tag)
-            {
-                await TagChangeAsync(tag);
-                return;
-            }
-
-            if (value is Equipment equipment)
-            {
-                await EquipmentChangeAsync(equipment);
                 return;
             }
         }
@@ -1053,18 +1030,6 @@ namespace TileExplorer
             if (value is Track)
             {
                 await TrackDeleteAsync(list.Cast<Track>().ToList());
-                return;
-            }
-
-            if (value is TagModel)
-            {
-                await TagDeleteAsync(list.Cast<TagModel>().ToList());
-                return;
-            }
-
-            if (value is Equipment)
-            {
-                await EquipmentDeleteAsync(list.Cast<Equipment>().ToList());
                 return;
             }
         }

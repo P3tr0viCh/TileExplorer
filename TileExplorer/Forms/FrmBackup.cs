@@ -2,9 +2,9 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Backup;
-using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {

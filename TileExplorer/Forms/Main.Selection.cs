@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TileExplorer.Interfaces;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
@@ -164,7 +164,7 @@ namespace TileExplorer
 
             Utils.Forms.GetChildForms<FrmList>(ChildFormType.TrackList | ChildFormType.TileInfo).ForEach(frm =>
             {
-                frm.SetSelected(tracks.Cast<BaseId>().ToList());
+                frm.SetSelected(tracks);
             });
         }
     }

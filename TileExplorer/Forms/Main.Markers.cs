@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer

@@ -7,46 +7,39 @@ using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TileExplorer.Properties;
+using TileExplorer.Interfaces;
+using TileExplorer.Presenters;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
-using static TileExplorer.PresenterStatusStripList;
-using static TileExplorer.ProgramStatus;
+using static TileExplorer.Presenters.PresenterStatusStripList;
 
 namespace TileExplorer
 {
-    public partial class FrmList : Form, IChildForm, IUpdateDataForm, IListForm, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
+    public partial class FrmList : Form, IFrmList, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;
 
-        public ChildFormType FormType { get; private set; }
+        public DataGridView DataGridView => dataGridView;
 
-        private object data;
-        public object Value => data;
+        public ToolStrip ToolStrip => toolStrip;
 
-        internal readonly PresenterChildForm childFormPresenter;
+        public StatusStrip StatusStrip => statusStrip;
+
+        private IPresenterFrmList PresenterFrmList { get; set; }
+
+        public ChildFormType FormType => PresenterFrmList.FormType;
 
         private readonly PresenterStatusStripList statusStripPresenter;
 
-        private int[] columnFormattingIndex;
-
-        private bool MultiSelect
-        {
-            get => dataGridView.MultiSelect; set => dataGridView.MultiSelect = value;
-        }
-
-        private bool MultiChange { get; set; } = false;
+        public object Value => PresenterFrmList.Value;
 
         public FrmList()
         {
             InitializeComponent();
 
-            childFormPresenter = new PresenterChildForm(this);
+            PresenterChildForm.LinkTo(this);
 
             statusStripPresenter = new PresenterStatusStripList(this);
         }
@@ -55,243 +48,70 @@ namespace TileExplorer
         {
             var frm = new FrmList()
             {
-                Owner = owner,
-                FormType = childFormType,
-                data = value,
+                Owner = owner
             };
 
-            DebugWrite.Line($"ListType = {childFormType}");
+            DebugWrite.Line($"ChildFormType = {childFormType}");
+
+            var listType = FrmListType.None;
+
+            switch (childFormType)
+            {
+                case ChildFormType.TagList:
+                    listType = FrmListType.TagList;
+                    break;
+                case ChildFormType.TrackList:
+                    listType = FrmListType.TrackList;
+                    break;
+                case ChildFormType.MarkerList:
+                    listType = FrmListType.MarkerList;
+                    break;
+                case ChildFormType.EquipmentList:
+                    listType = FrmListType.EquipmentList;
+                    break;
+                case ChildFormType.TileInfo:
+                    listType = FrmListType.TileInfo;
+                    break;
+                case ChildFormType.ResultYears:
+                    listType = FrmListType.ResultYears;
+                    break;
+                case ChildFormType.ResultEquipments:
+                    listType = FrmListType.ResultEquipments;
+                    break;
+            }
+
+            DebugWrite.Line($"ListType = {listType}");
+
+            frm.PresenterFrmList = PresenterFrmListFactory.PresenterFrmListInstance(frm, listType);
+
+            frm.PresenterFrmList.Value = value;
+
+            frm.PresenterFrmList.OnListChanged += frm.PresenterFrmList_OnListChanged;
+
+            frm.PresenterFrmList.Bin
 
             frm.Show(owner);
 
             return frm;
         }
 
-        private async void FrmListNew_Load(object sender, EventArgs e)
+        private void PresenterFrmList_OnListChanged()
         {
-            Type type;
+            tsbtnChange.Enabled = tsbtnDelete.Enabled = tsbtnChartTrackEle.Enabled = !DataGridView.IsEmpty();
 
+            statusStripPresenter.Count = DataGridView.Count();
+        }
+
+        private void FrmListNew_Load(object sender, EventArgs e)
+        {
             switch (FormType)
             {
                 case ChildFormType.TrackList:
-                    type = typeof(Track);
-                    break;
-                case ChildFormType.MarkerList:
-                    type = typeof(Marker);
-                    break;
-                case ChildFormType.ResultYears:
-                    type = typeof(ResultYears);
-                    break;
-                case ChildFormType.ResultEquipments:
-                    type = typeof(ResultEquipments);
-                    break;
-                case ChildFormType.TagList:
-                    type = typeof(TagModel);
-                    break;
-                case ChildFormType.EquipmentList:
-                    type = typeof(Equipment);
-                    break;
-                case ChildFormType.TileInfo:
-                    type = typeof(Track);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-
-            bindingSource.DataSource = type;
-
-            dataGridView.DataSource = bindingSource;
-
-            AppSettings.Local.LoadFormState(this, FormType.ToString(), AppSettings.Local.Default.FormStates);
-            AppSettings.Local.LoadDataGridColumns(dataGridView, FormType.ToString(), AppSettings.Local.Default.ColumnStates);
-
-            switch (FormType)
-            {
-                case ChildFormType.TrackList:
-                    Text = Resources.TitleListTracks;
-
-                    toolStripLeft.Visible = true;
-
                     toolStripSeparator1.Visible = true;
                     tsbtnChartTrackEle.Visible = true;
 
-                    columnFormattingIndex = new int[2];
-
-                    columnFormattingIndex[0] = dataGridView.Columns[nameof(Track.Distance)].Index;
-                    columnFormattingIndex[1] = dataGridView.Columns[nameof(Track.AverageSpeed)].Index;
-
-                    dataGridView.CellFormatting +=
-                        new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingTrackList);
-
-                    dataGridView.Columns[nameof(Track.Text)].DisplayIndex = 0;
-
-                    dataGridView.Columns[nameof(Track.Text)].Visible = true;
-                    dataGridView.Columns[nameof(Track.DateTimeStart)].Visible = true;
-                    dataGridView.Columns[nameof(Track.DateTimeFinish)].Visible = true;
-                    dataGridView.Columns[nameof(Track.DurationAsString)].Visible = true;
-                    dataGridView.Columns[nameof(Track.DurationInMoveAsString)].Visible = true;
-                    dataGridView.Columns[nameof(Track.Distance)].Visible = true;
-                    dataGridView.Columns[nameof(Track.AverageSpeed)].Visible = true;
-                    dataGridView.Columns[nameof(Track.EleAscent)].Visible = true;
-                    dataGridView.Columns[nameof(Track.EleDescent)].Visible = true;
-                    dataGridView.Columns[nameof(Track.NewTilesCount)].Visible = true;
-                    dataGridView.Columns[nameof(Track.EquipmentText)].Visible = true;
-                    dataGridView.Columns[nameof(Track.TagsAsString)].Visible = true;
-
-                    dataGridView.Columns[nameof(Track.Equipment)].Visible = false;
-                    dataGridView.Columns[nameof(Track.Tags)].Visible = false;
-
-                    var visible =
-#if SHOW_ALL_COLUMNS
-                        true;
-#else
-                        false;
-#endif
-                    dataGridView.Columns[nameof(Track.Duration)].Visible = visible;
-                    dataGridView.Columns[nameof(Track.DurationInMove)].Visible = visible;
-                    dataGridView.Columns[nameof(Track.EquipmentId)].Visible = visible;
-                    dataGridView.Columns[nameof(Track.EquipmentBrand)].Visible = visible;
-                    dataGridView.Columns[nameof(Track.EquipmentModel)].Visible = visible;
-
-                    sortColumn = nameof(Track.DateTimeStart);
-                    sortColumnIndex = dataGridView.Columns[sortColumn].Index;
-                    sortOrderDescending = true;
-
-                    MultiSelect = true;
-                    MultiChange = true;
-
-                    break;
-                case ChildFormType.MarkerList:
-                    Text = Resources.TitleListMarkers;
-
-                    toolStripLeft.Visible = true;
-
-                    dataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
-
-                    dataGridView.Columns[nameof(Marker.Text)].Visible = true;
-
-                    dataGridView.Columns[nameof(Marker.IsTextVisible)].Visible = false;
-                    dataGridView.Columns[nameof(Marker.OffsetX)].Visible = false;
-                    dataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;
-
-                    dataGridView.Columns[nameof(Marker.Text)].HeaderText = ResourcesColumnHeader.Text;
-
-                    sortColumn = nameof(Marker.Text);
-                    sortColumnIndex = dataGridView.Columns[sortColumn].Index;
-                    sortOrderDescending = true;
-
-                    MultiSelect = true;
-
-                    break;
-                case ChildFormType.ResultYears:
-                    Text = Resources.TitleListResultYears;
-
-                    toolStripLeft.Visible = false;
-                    statusStrip.Visible = false;
-
-                    dataGridView.Columns[nameof(ResultYears.DurationSum)].Visible = false;
-                    dataGridView.Columns[nameof(ResultYears.DurationSumAsString)].Visible = true;
-                    dataGridView.Columns[nameof(ResultYears.DistanceSum)].Visible = true;
-
-                    dataGridView.Columns[nameof(ResultYears.Year)].DisplayIndex = 0;
-                    dataGridView.Columns[nameof(ResultYears.Count)].DisplayIndex = 1;
-                    dataGridView.Columns[nameof(ResultYears.DurationSumAsString)].DisplayIndex = 2;
-
-                    columnFormattingIndex = new int[1];
-                    columnFormattingIndex[0] = dataGridView.Columns[nameof(ResultYears.Year)].Index;
-
-                    dataGridView.CellFormatting +=
-                        new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingResultYears);
-
-                    break;
-                case ChildFormType.ResultEquipments:
-                    Text = Resources.TitleListResultEquipments;
-
-                    toolStripLeft.Visible = false;
-                    statusStrip.Visible = false;
-
-                    dataGridView.Columns[nameof(ResultEquipments.Text)].DisplayIndex = 0;
-
-                    dataGridView.Columns[nameof(ResultEquipments.Text)].Visible = true;
-
-                    dataGridView.Columns[nameof(ResultEquipments.DurationSum)].Visible = false;
-
-                    dataGridView.Columns[nameof(ResultEquipments.Text)].HeaderText = ResourcesColumnHeader.Name;
-
-                    columnFormattingIndex = new int[1];
-                    columnFormattingIndex[0] = dataGridView.Columns[nameof(ResultEquipments.Text)].Index;
-
-                    dataGridView.CellFormatting +=
-                        new DataGridViewCellFormattingEventHandler(DataGridView_CellFormattingResultEquipments);
-
-                    break;
-                case ChildFormType.TagList:
-                    Text = Resources.TitleListTags;
-
-                    dataGridView.Columns[nameof(TagModel.Text)].DisplayIndex = 0;
-
-                    dataGridView.Columns[nameof(TagModel.Text)].Visible = true;
-
-                    dataGridView.Columns[nameof(TagModel.Text)].HeaderText = ResourcesColumnHeader.Text;
-
-                    toolStripLeft.Visible = true;
-
-                    MultiSelect = true;
-
-                    break;
-                case ChildFormType.EquipmentList:
-                    Text = Resources.TitleListEquipments;
-
-                    dataGridView.Columns[nameof(Equipment.Text)].DisplayIndex = 0;
-
-                    dataGridView.Columns[nameof(Equipment.Text)].Visible = true;
-
-                    dataGridView.Columns[nameof(Equipment.Text)].HeaderText = ResourcesColumnHeader.Name;
-
-                    toolStripLeft.Visible = true;
-
-                    MultiSelect = true;
-
-                    break;
-                case ChildFormType.TileInfo:
-                    foreach (DataGridViewColumn column in dataGridView.Columns)
-                    {
-                        column.Visible = false;
-                    }
-
-                    dataGridView.Columns[nameof(Track.DateTimeStart)].Visible = true;
-                    dataGridView.Columns[nameof(Track.DateTimeStart)].DisplayIndex = 0;
-
-                    dataGridView.Columns[nameof(Track.Text)].Visible = true;
-
-                    toolStripLeft.Visible = false;
-
-                    break;
-                default:
-                    throw new NotImplementedException();
+                    return;
             }
-
-            dataGridView.Columns[nameof(BaseId.Id)].Visible = false;
-
-            if (dataGridView.ColumnExists(nameof(BaseId.IsNew)))
-            {
-                dataGridView.Columns[nameof(BaseId.IsNew)].Visible = false;
-            }
-
-            UpdateSettings();
-
-            if (ProgramStatus.Default.Current != Status.Starting)
-            {
-                await UpdateDataAsync();
-            }
-        }
-
-        private void FrmListNew_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            AppSettings.Local.SaveFormState(this, FormType.ToString(), AppSettings.Local.Default.FormStates);
-            AppSettings.Local.SaveDataGridColumns(dataGridView, FormType.ToString(), AppSettings.Local.Default.ColumnStates);
-
-            AppSettings.LocalSave();
         }
 
         ToolStripStatusLabel PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip.GetLabel(StatusLabel label)
@@ -304,198 +124,9 @@ namespace TileExplorer
             }
         }
 
-        public void UpdateSettings()
-        {
-            switch (FormType)
-            {
-                case ChildFormType.TrackList:
-                    dataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle =
-                        DataGridViewCellStyles.DateTime;
-                    dataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle =
-                        DataGridViewCellStyles.DateTime;
+        public void UpdateSettings() => PresenterFrmList.UpdateSettings();
 
-                    dataGridView.Columns[nameof(Track.DurationAsString)].DefaultCellStyle =
-                        DataGridViewCellStyles.DurationAsString;
-                    dataGridView.Columns[nameof(Track.DurationInMoveAsString)].DefaultCellStyle =
-                        DataGridViewCellStyles.DurationAsString;
-
-                    dataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle =
-                        DataGridViewCellStyles.Distance;
-
-                    dataGridView.Columns[nameof(Track.AverageSpeed)].DefaultCellStyle =
-                        DataGridViewCellStyles.Speed;
-
-                    dataGridView.Columns[nameof(Track.EleAscent)].DefaultCellStyle =
-                        DataGridViewCellStyles.EleAscent;
-                    dataGridView.Columns[nameof(Track.EleDescent)].DefaultCellStyle =
-                        DataGridViewCellStyles.EleAscent;
-
-                    dataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle =
-                        DataGridViewCellStyles.Count;
-
-                    break;
-                case ChildFormType.MarkerList:
-                    dataGridView.Columns[nameof(Marker.Lat)].DefaultCellStyle =
-                        DataGridViewCellStyles.LatLng;
-                    dataGridView.Columns[nameof(Marker.Lng)].DefaultCellStyle =
-                        DataGridViewCellStyles.LatLng;
-
-                    break;
-                case ChildFormType.ResultYears:
-                    dataGridView.Columns[nameof(ResultYears.Year)].DefaultCellStyle =
-                        DataGridViewCellStyles.Year;
-                    dataGridView.Columns[nameof(ResultYears.Count)].DefaultCellStyle =
-                        DataGridViewCellStyles.Count;
-
-                    dataGridView.Columns[nameof(ResultYears.DurationSumAsString)].DefaultCellStyle =
-                        DataGridViewCellStyles.DurationAsString;
-
-                    dataGridView.Columns[nameof(ResultYears.DistanceSum)].DefaultCellStyle =
-                        DataGridViewCellStyles.DistanceSum;
-                    dataGridView.Columns[nameof(ResultYears.DistanceStep0)].DefaultCellStyle =
-                        DataGridViewCellStyles.DistanceStep;
-                    dataGridView.Columns[nameof(ResultYears.DistanceStep1)].DefaultCellStyle =
-                        DataGridViewCellStyles.DistanceStep;
-                    dataGridView.Columns[nameof(ResultYears.DistanceStep2)].DefaultCellStyle =
-                        DataGridViewCellStyles.DistanceStep;
-
-                    dataGridView.Columns[nameof(ResultYears.EleAscentSum)].DefaultCellStyle =
-                        DataGridViewCellStyles.EleAscentSum;
-                    dataGridView.Columns[nameof(ResultYears.EleAscentStep0)].DefaultCellStyle =
-                        DataGridViewCellStyles.EleAscentStep;
-                    dataGridView.Columns[nameof(ResultYears.EleAscentStep1)].DefaultCellStyle =
-                        DataGridViewCellStyles.EleAscentStep;
-                    dataGridView.Columns[nameof(ResultYears.EleAscentStep2)].DefaultCellStyle =
-                        DataGridViewCellStyles.EleAscentStep;
-
-                    break;
-                case ChildFormType.ResultEquipments:
-                    dataGridView.Columns[nameof(ResultEquipments.Count)].DefaultCellStyle =
-                        DataGridViewCellStyles.Count;
-                    dataGridView.Columns[nameof(ResultEquipments.DistanceSum)].DefaultCellStyle =
-                        DataGridViewCellStyles.DistanceSum;
-                    dataGridView.Columns[nameof(ResultEquipments.DurationSumAsString)].DefaultCellStyle =
-                        DataGridViewCellStyles.DurationAsString;
-
-                    break;
-                case ChildFormType.TagList:
-                case ChildFormType.EquipmentList:
-                    break;
-                case ChildFormType.TileInfo:
-                    dataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle =
-                        DataGridViewCellStyles.DateTime;
-
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        private readonly WrapperCancellationTokenSource ctsList = new WrapperCancellationTokenSource();
-
-        public async Task UpdateDataAsync()
-        {
-            DebugWrite.Line("start");
-
-            ctsList.Start();
-
-            var status = ProgramStatus.Default.Start(Status.LoadData);
-
-            await Task.Delay(100);
-
-            var errorMsg = string.Empty;
-
-            try
-            {
-                // await Task.Delay(3000, ctsList.Token);
-
-                switch (FormType)
-                {
-                    case ChildFormType.TrackList:
-                        errorMsg = Resources.MsgDatabaseLoadListTrackFail;
-
-                        var tracks = await Database.Default.ListLoadAsync<Track>();
-
-                        foreach (var track in tracks)
-                        {
-                            track.Tags = await Database.Default.ListLoadAsync<TagModel>(track);
-                        }
-
-                        bindingSource.DataSource = tracks;
-
-                        break;
-                    case ChildFormType.MarkerList:
-                        errorMsg = Resources.MsgDatabaseLoadListMarkersFail;
-
-                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Marker>();
-
-                        break;
-                    case ChildFormType.ResultYears:
-                        errorMsg = Resources.MsgDatabaseLoadListResultYearsFail;
-
-                        bindingSource.DataSource = await Database.Default.ListLoadAsync<ResultYears>();
-
-                        break;
-                    case ChildFormType.ResultEquipments:
-                        errorMsg = Resources.MsgDatabaseLoadListResultEquipmentsFail;
-
-                        bindingSource.DataSource = await Database.Default.ListLoadAsync<ResultEquipments>();
-
-                        break;
-                    case ChildFormType.TagList:
-                        errorMsg = Resources.MsgDatabaseLoadListTagsFail;
-
-                        bindingSource.DataSource = await Database.Default.ListLoadAsync<TagModel>();
-
-                        break;
-                    case ChildFormType.EquipmentList:
-                        errorMsg = Resources.MsgDatabaseLoadListEquipmentsFail;
-
-                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
-
-                        break;
-                    case ChildFormType.TileInfo:
-                        errorMsg = Resources.MsgDatabaseLoadListTileInfoFail;
-
-                        var tile = (Tile)data;
-
-                        Text = string.Format(Resources.StatusTileId, tile.X, tile.Y);
-
-                        bindingSource.DataSource = await Database.Default.ListLoadAsync<Track>(tile);
-
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-
-                Sort();
-            }
-            catch (TaskCanceledException e)
-            {
-                DebugWrite.Error(e);
-            }
-            catch (Exception e)
-            {
-                DebugWrite.Error(e);
-
-                Msg.Error(errorMsg, e.Message);
-            }
-            finally
-            {
-                ctsList.Finally();
-
-                ProgramStatus.Default.Stop(status);
-            }
-
-            DebugWrite.Line("end");
-        }
-
-        public BaseId Find(BaseId value)
-        {
-            if (value == null) return null;
-
-            return bindingSource.Cast<BaseId>().Where(item => item.Id == value.Id).FirstOrDefault();
-        }
+        public async Task UpdateDataAsync() => await PresenterFrmList.UpdateDataAsync();
 
         public BaseId Selected
         {
@@ -505,30 +136,17 @@ namespace TileExplorer
 
         public IEnumerable<BaseId> SelectedList
         {
-            get
-            {
-                if (dataGridView.SelectedCells.Count == 0) return null;
-
-                var selectedRows = dataGridView.SelectedCells
-                    .Cast<DataGridViewCell>()
-                    .Select(cell => cell.OwningRow).Distinct();
-
-                if (selectedRows?.Count() == 0) return null;
-
-                return selectedRows.Select(item => (BaseId)item.DataBoundItem).ToList();
-            }
-            set
-            {
-                dataGridView.SetSelectedRows(value);
-            }
+            get => dataGridView.GetSelectedList<BaseId>();
+            set => dataGridView.SetSelectedList(value);
         }
 
-        public int Count => bindingSource.Count;
+        public int Count => dataGridView.Count();
 
         public void SetSelected(BaseId value) => Selected = value;
 
-        public void SetSelected(List<BaseId> values) => SelectedList = values;
+        public void SetSelected(IEnumerable<BaseId> values) => SelectedList = values;
 
+        // TODO: remove
         private void BindingSource_PositionChanged(object sender, EventArgs e)
         {
             switch (FormType)
@@ -544,95 +162,19 @@ namespace TileExplorer
             }
         }
 
-        private async void DataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private async void TsbtnAdd_Click(object sender, EventArgs e)
         {
-            if (e.RowIndex < 0) return;
-
-            await SelectedChangeAsync();
-        }
-
-        private void TsbtnAdd_Click(object sender, EventArgs e)
-        {
-            BaseId value = null;
-
-            switch (FormType)
-            {
-                case ChildFormType.TrackList:
-                    value = new Track();
-                    break;
-                case ChildFormType.MarkerList:
-                    value = new Marker();
-                    break;
-                case ChildFormType.TagList:
-                    value = new TagModel();
-                    break;
-                case ChildFormType.EquipmentList:
-                    value = new Equipment();
-                    break;
-            }
-
-            MainForm.ListItemAdd(value);
-        }
-
-        private async Task SelectedChangeAsync()
-        {
-            if (MultiChange)
-            {
-                dataGridView.SetSelectedRows(SelectedList);
-            }
-            else
-            {
-                dataGridView.SetSelectedRows(Selected);
-            }
-
-            switch (FormType)
-            {
-                case ChildFormType.TileInfo:
-                    var status = ProgramStatus.Default.Start(Status.LoadData);
-
-                    try
-                    {
-                        foreach (var track in SelectedList.Cast<Track>())
-                        {
-                            track.Tags = await Database.Default.ListLoadAsync<TagModel>(track);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        DebugWrite.Error(e);
-
-                        Msg.Error(e.Message);
-
-                        return;
-                    }
-                    finally
-                    {
-                        ProgramStatus.Default.Stop(status);
-                    }
-
-                    break;
-            }
-
-            await MainForm.ListItemChangeAsync(SelectedList);
-
-            dataGridView.SetSelectedRows(SelectedList);
+            await PresenterFrmList.ListItemAddNewAsync();
         }
 
         private async void TsbtnChange_Click(object sender, EventArgs e)
         {
-            await SelectedChangeAsync();
-        }
-
-        private async Task SelectedDeleteAsync()
-        {
-            dataGridView.SetSelectedRows(SelectedList);
-
-            await MainForm.ListItemDeleteAsync(SelectedList);
+            await PresenterFrmList.ListItemChangeSelectedAsync();
         }
 
         private async void TsbtnDelete_Click(object sender, EventArgs e)
         {
-            await SelectedDeleteAsync();
+            await PresenterFrmList.ListItemDeleteSelectedAsync();
         }
 
         private void ShowTrackEleChart()
@@ -645,37 +187,6 @@ namespace TileExplorer
         private void TsbtnTrackEleChart_Click(object sender, EventArgs e)
         {
             ShowTrackEleChart();
-        }
-
-        private void DataGridView_CellFormattingTrackList(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.ColumnIndex == columnFormattingIndex[0])
-            {
-                e.Value = (double)e.Value / 1000;
-            }
-            else
-            {
-                if (e.ColumnIndex == columnFormattingIndex[1])
-                {
-                    e.Value = (double)e.Value * 3.6;
-                }
-            }
-        }
-
-        private void DataGridView_CellFormattingResultYears(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.ColumnIndex == columnFormattingIndex[0])
-            {
-                if ((int)e.Value == 0) e.Value = Resources.TextTotal;
-            }
-        }
-
-        private void DataGridView_CellFormattingResultEquipments(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.ColumnIndex == columnFormattingIndex[0])
-            {
-                if ((e.Value as string).IsEmpty()) e.Value = Resources.TextOther;
-            }
         }
 
         private void ToolStripLeft_MouseEnter(object sender, EventArgs e)
@@ -695,133 +206,13 @@ namespace TileExplorer
             }
         }
 
-        private void DataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left) return;
+        public void ListItemChange(IBaseId value) => PresenterFrmList.ListItemChange(value);
 
-            switch (FormType)
-            {
-                case ChildFormType.TrackList:
-                    if (e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationAsString)].Index)
-                    {
-                        sortColumn = nameof(Track.Duration);
-                    }
-                    else
-                    {
-                        if (e.ColumnIndex == dataGridView.Columns[nameof(Track.DurationInMoveAsString)].Index)
-                        {
-                            sortColumn = nameof(Track.DurationInMove);
-                        }
-                        else
-                        {
-                            sortColumn = dataGridView.Columns[e.ColumnIndex].Name;
-                        }
-                    }
-
-                    if (sortColumnIndex == e.ColumnIndex)
-                    {
-                        sortOrderDescending = !sortOrderDescending;
-                    }
-
-                    sortColumnIndex = e.ColumnIndex;
-
-                    Sort();
-
-                    break;
-            }
-        }
-
-        private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            if (sortColumn == string.Empty || sortColumnIndex == -1)
-            {
-                return;
-            }
-
-            switch (FormType)
-            {
-                case ChildFormType.TrackList:
-                    dataGridView.Columns[sortColumnIndex].HeaderCell.SortGlyphDirection =
-                        sortOrderDescending ? SortOrder.Descending : SortOrder.Ascending;
-
-                    break;
-            }
-        }
-
-        private void DataGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                if (e.ColumnIndex >= 0 && e.RowIndex >= 0)
-                {
-                    dataGridView.CurrentCell = dataGridView[e.ColumnIndex, e.RowIndex];
-                }
-            }
-        }
-
-        private void FrmList_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            ctsList.Cancel();
-        }
-
-        public void ListItemChange(BaseId value)
-        {
-            var item = Find(value);
-
-            if (item == null)
-            {
-                bindingSource.Add(value);
-            }
-            else
-            {
-                var index = bindingSource.IndexOf(item);
-
-                bindingSource.List[index] = value;
-
-                bindingSource.ResetItem(index);
-            }
-
-            Sort();
-        }
-
-        public void ListItemDelete(BaseId value)
-        {
-            var item = Find(value);
-
-            if (item == null) return;
-
-            if (item == Selected)
-            {
-                Selected = null;
-            }
-
-            bindingSource.Remove(item);
-        }
-
-        private void BindingSource_ListChanged(object sender, ListChangedEventArgs e)
-        {
-            switch (e.ListChangedType)
-            {
-                case ListChangedType.ItemAdded:
-                    tsbtnChange.Enabled =
-                    tsbtnChartTrackEle.Enabled =
-                    tsbtnDelete.Enabled = true;
-                    break;
-                case ListChangedType.Reset:
-                case ListChangedType.ItemDeleted:
-                    tsbtnChange.Enabled =
-                    tsbtnChartTrackEle.Enabled =
-                    tsbtnDelete.Enabled = Count > 0;
-                    break;
-            }
-
-            statusStripPresenter.Count = Count;
-        }
+        public void ListItemDelete(IBaseId value) => PresenterFrmList.ListItemDelete(value);
 
         private void DataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            statusStripPresenter.SelectedCount = dataGridView.SelectedCells
-                    .Cast<DataGridViewCell>().Select(cell => cell.OwningRow).Distinct().Count();
+            statusStripPresenter.SelectedCount = DataGridView.SelectedCount();
         }
     }
 }

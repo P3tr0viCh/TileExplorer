@@ -1,7 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using TileExplorer.Properties;
 
-namespace TileExplorer
+namespace TileExplorer.Presenters
 {
     internal class PresenterStatusStripList : PresenterStatusStrip<PresenterStatusStripList.StatusLabel>
     {

@@ -7,9 +7,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using TileExplorer.Interfaces;
+using TileExplorer.Presenters;
 using TileExplorer.Properties;
 using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
@@ -19,8 +20,6 @@ namespace TileExplorer
         public IMainForm MainForm => Owner as IMainForm;
 
         public ChildFormType FormType => ChildFormType.ChartTracksByYear;
-
-        internal readonly PresenterChildForm childFormPresenter;
 
         private readonly (int row, int col)[] grid = { (0, 0), (0, 1), (0, 2), (0, 3),
                                                        (1, 0), (1, 1), (1, 2), (1, 3),
@@ -40,7 +39,7 @@ namespace TileExplorer
         {
             InitializeComponent();
 
-            childFormPresenter = new PresenterChildForm(this);
+            PresenterChildForm.LinkTo(this);
         }
 
         public static FrmChartTracksByYear ShowFrm(Form owner, int year)

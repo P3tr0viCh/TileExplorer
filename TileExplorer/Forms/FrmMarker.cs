@@ -3,9 +3,9 @@ using P3tr0viCh.Utils.Extensions;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Interfaces;
-using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
@@ -48,7 +48,14 @@ namespace TileExplorer
                 Marker = marker
             })
             {
-                return frm.ShowDialog(owner) == DialogResult.OK;
+                var result = frm.ShowDialog(owner);
+
+                if (result == DialogResult.OK)
+                {
+                    marker.Assign(frm.Marker);
+                }
+
+                return result == DialogResult.OK;
             }
         }
 

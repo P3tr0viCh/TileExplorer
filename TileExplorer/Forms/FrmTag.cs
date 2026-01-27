@@ -1,17 +1,14 @@
 ﻿using P3tr0viCh.Utils.Extensions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Interfaces;
-using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
     public partial class FrmTag : Form
     {
-        public IMainForm MainForm => Owner as IMainForm;
-
         private readonly TagModel tagModel = new TagModel();
 
         private TagModel TagModel
@@ -69,14 +66,7 @@ namespace TileExplorer
 
         private async Task<bool> SaveDataAsync()
         {
-            var result = await Database.Actions.TagSaveAsync(TagModel);
-
-            if (result)
-            {
-                await MainForm.TagChangedAsync(TagModel);
-            }
-
-            return result;
+            return await Database.Actions.TagSaveAsync(TagModel);
         }
 
         private async Task<bool> ApplyDataAsync()

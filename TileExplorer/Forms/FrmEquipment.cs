@@ -2,9 +2,9 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
@@ -73,14 +73,7 @@ namespace TileExplorer
 
         private async Task<bool> SaveDataAsync()
         {
-            var result = await Database.Actions.EquipmentSaveAsync(Equipment);
-
-            if (result)
-            {
-                await MainForm.EquipmentChangedAsync(Equipment);
-            }
-
-            return result;
+            return await Database.Actions.EquipmentSaveAsync(Equipment);
         }
 
         private async Task<bool> ApplyDataAsync()

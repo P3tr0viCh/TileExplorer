@@ -2,7 +2,8 @@
 using P3tr0viCh.Utils.Extensions;
 using System;
 using TileExplorer.Properties;
-namespace TileExplorer
+
+namespace TileExplorer.Presenters
 {
     internal class PresenterStatusStripChartTrackEle : PresenterStatusStrip<PresenterStatusStripChartTrackEle.StatusLabel>
     {

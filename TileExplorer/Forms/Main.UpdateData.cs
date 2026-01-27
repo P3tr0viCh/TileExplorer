@@ -1,10 +1,12 @@
-﻿using P3tr0viCh.Utils;
-using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
-using System.Threading.Tasks;
-using static TileExplorer.Database.Models;
+﻿using P3tr0viCh.Database;
+using P3tr0viCh.Utils;
 using System;
-using P3tr0viCh.Database;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TileExplorer.Interfaces;
+using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
@@ -67,7 +69,36 @@ namespace TileExplorer
 
             await UpdateDataChildFormsAsync(load, value);
 
+            if (load.HasFlag(DataLoad.ObjectDelete))
+            {
+                if (value?.GetType() == typeof(Track))
+                {
+                    var track = (Track)value;
+
+                    overlayTracks.Routes.Remove(
+                        overlayTracks.Routes.Cast<IMapItem>().Where(i => i.Model.Id == track.Id)?
+                        .Cast<MapItemTrack>().FirstOrDefault());
+                }
+
+                if (value?.GetType() == typeof(Marker))
+                {
+                    var marker = (Marker)value;
+
+                    overlayMarkers.Markers.Remove(
+                        overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?
+                        .Cast<MapItemMarker>().FirstOrDefault());
+                }
+            }
+
             Selected = FindMapItem(savedSelected?.Model);
+        }
+
+        public async Task UpdateDataAsync(DataLoad load, IEnumerable<object> list)
+        {
+            foreach (var value in list)
+            {
+                await UpdateDataAsync(DataLoad.ObjectDelete, value);
+            }
         }
 
         private bool IsObjectChanged(DataLoad load, object value, Type type)
@@ -104,6 +135,7 @@ namespace TileExplorer
                     case ChildFormType.Filter:
                         if (load.HasFlag(DataLoad.Tracks) ||
                             IsObjectChangedOrDeleted(load, value, typeof(Track)) ||
+                            IsObjectChangedOrDeleted(load, value, typeof(TagModel)) ||
                             IsObjectChangedOrDeleted(load, value, typeof(Equipment)))
                         {
                             dataUpdate = DataUpdate.Full;
@@ -197,18 +229,6 @@ namespace TileExplorer
                             break;
                         }
 
-                        if (IsObjectChanged(load, value, typeof(TagModel)))
-                        {
-                            dataUpdate = DataUpdate.ObjectChange;
-                            break;
-                        }
-
-                        if (IsObjectDeleted(load, value, typeof(TagModel)))
-                        {
-                            dataUpdate = DataUpdate.ObjectDelete;
-                            break;
-                        }
-
                         break;
                     case ChildFormType.EquipmentList:
                         if (load.HasFlag(DataLoad.Tracks))
@@ -258,11 +278,11 @@ namespace TileExplorer
 
                         break;
                     case DataUpdate.ObjectChange:
-                        ((FrmList)frm).ListItemChange((BaseId)value);
+                        ((IFrmList)frm).ListItemChange((BaseId)value);
 
                         break;
                     case DataUpdate.ObjectDelete:
-                        ((FrmList)frm).ListItemDelete((BaseId)value);
+                        ((IFrmList)frm).ListItemDelete((BaseId)value);
 
                         if (frm.FormType == ChildFormType.TileInfo)
                         {
@@ -274,7 +294,8 @@ namespace TileExplorer
 
                         break;
                 }
-            };
+            }
+            ;
         }
     }
 }

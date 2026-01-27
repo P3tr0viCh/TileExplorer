@@ -3,9 +3,9 @@ using GMap.NET.WindowsForms;
 using P3tr0viCh.Database;
 using System.Collections.Generic;
 using System.Drawing;
+using TileExplorer.Interfaces;
 using static TileExplorer.Database;
 using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {

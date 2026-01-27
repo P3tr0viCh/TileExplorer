@@ -142,7 +142,7 @@ namespace TileExplorer
             }
         }
 
-        private async Task ListItemDeleteAsync<T>(IEnumerable<T> values) where T : BaseId
+        public async Task ListItemDeleteAsync<T>(IEnumerable<T> values) where T : BaseId
         {
             using (var connection = GetConnection())
             {

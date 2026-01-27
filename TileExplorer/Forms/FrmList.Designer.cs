@@ -36,7 +36,7 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.slCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.slSelectedCount = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripLeft = new System.Windows.Forms.ToolStrip();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.tsbtnAdd = new System.Windows.Forms.ToolStripButton();
             this.tsbtnChange = new System.Windows.Forms.ToolStripButton();
             this.tsbtnDelete = new System.Windows.Forms.ToolStripButton();
@@ -49,12 +49,11 @@
             this.toolStripContainer.LeftToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
             this.statusStrip.SuspendLayout();
-            this.toolStripLeft.SuspendLayout();
+            this.toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // bindingSource
             // 
-            this.bindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.BindingSource_ListChanged);
             this.bindingSource.PositionChanged += new System.EventHandler(this.BindingSource_PositionChanged);
             // 
             // dataGridView
@@ -71,10 +70,6 @@
             this.dataGridView.RowHeadersWidth = 32;
             this.dataGridView.Size = new System.Drawing.Size(343, 218);
             this.dataGridView.TabIndex = 1;
-            this.dataGridView.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseDoubleClick);
-            this.dataGridView.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseDown);
-            this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_ColumnHeaderMouseClick);
-            this.dataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataGridView_DataBindingComplete);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.DataGridView_SelectionChanged);
             // 
             // toolStripContainer
@@ -92,7 +87,7 @@
             // 
             // toolStripContainer.LeftToolStripPanel
             // 
-            this.toolStripContainer.LeftToolStripPanel.Controls.Add(this.toolStripLeft);
+            this.toolStripContainer.LeftToolStripPanel.Controls.Add(this.toolStrip);
             this.toolStripContainer.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer.Name = "toolStripContainer";
             this.toolStripContainer.Size = new System.Drawing.Size(384, 265);
@@ -122,22 +117,22 @@
             this.slSelectedCount.Size = new System.Drawing.Size(68, 17);
             this.slSelectedCount.Text = "selected: 42";
             // 
-            // toolStripLeft
+            // toolStrip
             // 
-            this.toolStripLeft.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStripLeft.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStripLeft.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.toolStripLeft.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbtnAdd,
             this.tsbtnChange,
             this.tsbtnDelete,
             this.toolStripSeparator1,
             this.tsbtnChartTrackEle});
-            this.toolStripLeft.Location = new System.Drawing.Point(0, 4);
-            this.toolStripLeft.Name = "toolStripLeft";
-            this.toolStripLeft.Size = new System.Drawing.Size(41, 107);
-            this.toolStripLeft.TabIndex = 0;
-            this.toolStripLeft.MouseEnter += new System.EventHandler(this.ToolStripLeft_MouseEnter);
+            this.toolStrip.Location = new System.Drawing.Point(0, 4);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(41, 107);
+            this.toolStrip.TabIndex = 0;
+            this.toolStrip.MouseEnter += new System.EventHandler(this.ToolStripLeft_MouseEnter);
             // 
             // tsbtnAdd
             // 
@@ -209,8 +204,6 @@
             this.ShowInTaskbar = false;
             this.Text = "FrmList";
             this.Activated += new System.EventHandler(this.FrmList_Activated);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmListNew_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmList_FormClosed);
             this.Load += new System.EventHandler(this.FrmListNew_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
@@ -223,8 +216,8 @@
             this.toolStripContainer.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            this.toolStripLeft.ResumeLayout(false);
-            this.toolStripLeft.PerformLayout();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -234,7 +227,7 @@
         private System.Windows.Forms.BindingSource bindingSource;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.ToolStripContainer toolStripContainer;
-        private System.Windows.Forms.ToolStrip toolStripLeft;
+        private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripButton tsbtnAdd;
         private System.Windows.Forms.ToolStripButton tsbtnChange;
         private System.Windows.Forms.ToolStripButton tsbtnDelete;

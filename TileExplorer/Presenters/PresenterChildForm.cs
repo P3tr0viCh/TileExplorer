@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
-using static TileExplorer.Interfaces;
+using TileExplorer.Interfaces;
 
-namespace TileExplorer
+namespace TileExplorer.Presenters
 {
     internal class PresenterChildForm
     {
         private readonly Form Form;
 
-        public PresenterChildForm(Form form)
+        private PresenterChildForm(Form form)
         {
             Form = form;
 
@@ -19,6 +19,11 @@ namespace TileExplorer
             form.Load += Form_Load;
 
             form.FormClosed += Form_FormClosed;
+        }
+
+        public static void LinkTo(Form form)
+        {
+            new PresenterChildForm(form);
         }
 
         private void Form_Load(object sender, EventArgs e)

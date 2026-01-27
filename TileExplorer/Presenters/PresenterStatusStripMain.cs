@@ -2,10 +2,9 @@
 using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Utils;
 using TileExplorer.Properties;
-using static TileExplorer.Enums;
 using static TileExplorer.ProgramStatus;
 
-namespace TileExplorer
+namespace TileExplorer.Presenters
 {
     internal class PresenterStatusStripMain : PresenterStatusStrip<PresenterStatusStripMain.StatusLabel>
     {

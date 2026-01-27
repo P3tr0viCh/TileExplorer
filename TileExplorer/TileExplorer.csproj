@@ -120,6 +120,7 @@
     <Compile Include="AppBackup\Backup.Equipment.cs" />
     <Compile Include="AppBackup\Backup.Markers.cs" />
     <Compile Include="AppBackup\Backup.Tracks.cs" />
+    <Compile Include="Forms\ChildFormType.cs" />
     <Compile Include="Database\Database.Models.Track.cs" />
     <Compile Include="Database\Database.Actions.cs" />
     <Compile Include="Database\Database.Tables.cs" />
@@ -135,9 +136,8 @@
     <Compile Include="Forms\FrmChartTracksByYear.Designer.cs">
       <DependentUpon>FrmChartTracksByYear.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmList.Sort.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\FrmListGrant.cs" />
+    <Compile Include="Forms\FrmListType.cs" />
     <Compile Include="Forms\FrmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,9 +159,6 @@
     <Compile Include="Forms\Main.CheckDirectoryTracks.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Main.Equipments.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\Main.Markers.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -169,9 +166,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Main.Settings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Main.Tags.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Main.Tiles.cs">
@@ -183,6 +177,11 @@
     <Compile Include="Forms\Main.UpdateData.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Interfaces\IChildForm.cs" />
+    <Compile Include="Interfaces\IFrmList.cs" />
+    <Compile Include="Interfaces\IMapItem.cs" />
+    <Compile Include="Interfaces\IPresenterFrmList.cs" />
+    <Compile Include="Interfaces\IUpdateDataForm.cs" />
     <Compile Include="Models\MapItemMarkerCircle.cs" />
     <Compile Include="Presenters\PresenterChildForm.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />
@@ -211,11 +210,22 @@
     <Compile Include="Forms\FrmChartTrackEle.Designer.cs">
       <DependentUpon>FrmChartTrackEle.cs</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces.cs" />
+    <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Forms\Main.ActionsSave.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MapZoomRuler.cs" />
+    <Compile Include="Presenters\PresenterDataGridViewFrmList.cs" />
+    <Compile Include="Presenters\PresenterFrmListBase.cs" />
+    <Compile Include="Presenters\PresenterFrmListBase.Database.cs" />
+    <Compile Include="Presenters\PresenterFrmListFactory.cs" />
+    <Compile Include="Presenters\PresenterFrmListEquipments.cs" />
+    <Compile Include="Presenters\PresenterFrmListResultEquipments.cs" />
+    <Compile Include="Presenters\PresenterFrmListResultYears.cs" />
+    <Compile Include="Presenters\PresenterFrmListTracks.cs" />
+    <Compile Include="Presenters\PresenterFrmListTileInfo.cs" />
+    <Compile Include="Presenters\PresenterFrmListMarkers.cs" />
+    <Compile Include="Presenters\PresenterFrmListTag.cs" />
     <Compile Include="Presenters\PresenterStatusStripChartTrackEle.cs" />
     <Compile Include="Presenters\PresenterStatusStripList.cs" />
     <Compile Include="Properties\ResourcesColumnHeader.Designer.cs">

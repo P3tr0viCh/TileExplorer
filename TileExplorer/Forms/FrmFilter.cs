@@ -4,10 +4,10 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
 using static TileExplorer.Database;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer

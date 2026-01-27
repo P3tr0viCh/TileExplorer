@@ -1,4 +1,4 @@
-﻿using static TileExplorer.Interfaces;
+﻿using TileExplorer.Interfaces;
 
 namespace TileExplorer
 {

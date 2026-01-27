@@ -4,9 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
-using static TileExplorer.Enums;
-using static TileExplorer.Interfaces;
 
 namespace TileExplorer
 {
@@ -115,6 +114,17 @@ namespace TileExplorer
                 TextBoxWrongValue(textBox, Resources.ErrorNeedDigit);
 
                 return false;
+            }
+
+            public static void SelectCellOnCellMouseDown(DataGridView dataGridView, DataGridViewCellMouseEventArgs e)
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    if (e.ColumnIndex >= 0 && e.RowIndex >= 0)
+                    {
+                        dataGridView.CurrentCell = dataGridView[e.ColumnIndex, e.RowIndex];
+                    }
+                }
             }
         }
     }
