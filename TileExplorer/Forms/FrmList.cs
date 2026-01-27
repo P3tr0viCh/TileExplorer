@@ -88,8 +88,6 @@ namespace TileExplorer
 
             frm.PresenterFrmList.OnListChanged += frm.PresenterFrmList_OnListChanged;
 
-            frm.PresenterFrmList.Bin
-
             frm.Show(owner);
 
             return frm;
