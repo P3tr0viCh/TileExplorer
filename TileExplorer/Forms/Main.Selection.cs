@@ -89,10 +89,11 @@ namespace TileExplorer
 
                         SelectedTrackTiles = selected.Model as Track;
 
-                        Utils.Forms.GetChildForms<FrmList>(ChildFormType.TrackList | ChildFormType.TileInfo).ForEach(frm =>
-                        {
-                            frm.SetSelected(selected.Model);
-                        });
+                        Utils.Forms.GetChildForms<FrmList>(ChildFormType.TrackList | ChildFormType.TileInfo)
+                            .ForEach(frm =>
+                            {
+                                frm.SetSelected(selected.Model);
+                            });
 
                         break;
                 }
@@ -134,6 +135,8 @@ namespace TileExplorer
 
         public async Task SelectMapItemAsync(object sender, BaseId value)
         {
+            if (!ProgramStatus.Default.IsIdle) return;
+
             var item = FindMapItem(value);
 
             if (item == null)

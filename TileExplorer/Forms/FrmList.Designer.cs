@@ -28,9 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmList));
-            this.bindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -42,7 +40,6 @@
             this.tsbtnDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbtnChartTrackEle = new System.Windows.Forms.ToolStripButton();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -51,10 +48,6 @@
             this.statusStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // bindingSource
-            // 
-            this.bindingSource.PositionChanged += new System.EventHandler(this.BindingSource_PositionChanged);
             // 
             // dataGridView
             // 
@@ -205,7 +198,6 @@
             this.Text = "FrmList";
             this.Activated += new System.EventHandler(this.FrmList_Activated);
             this.Load += new System.EventHandler(this.FrmListNew_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStripContainer.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer.BottomToolStripPanel.PerformLayout();
@@ -223,8 +215,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.BindingSource bindingSource;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.ToolStripContainer toolStripContainer;
         private System.Windows.Forms.ToolStrip toolStrip;

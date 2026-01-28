@@ -19,6 +19,8 @@ namespace TileExplorer.Presenters
         public PresenterFrmListTileInfo(IFrmList frmList) : base(frmList)
         {
             Grants = FrmListGrant.Sort;
+
+            OnPositionChanged += PresenterFrmListMarkers_OnPositionChanged;
         }
 
         public Database.Models.Tile Tile => Value as Database.Models.Tile;
@@ -85,6 +87,11 @@ namespace TileExplorer.Presenters
         protected override async Task<IEnumerable<Track>> ListLoadAsync()
         {
             return await Database.Default.ListLoadAsync<Track>(Tile);
+        }
+
+        private void PresenterFrmListMarkers_OnPositionChanged()
+        {
+            MainForm.SelectMapItemAsync(this, Selected);
         }
     }
 }

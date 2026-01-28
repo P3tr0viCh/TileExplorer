@@ -20,6 +20,7 @@ namespace TileExplorer.Presenters
 
         public PresenterFrmListMarkers(IFrmList frmList) : base(frmList)
         {
+            OnPositionChanged += PresenterFrmListMarkers_OnPositionChanged;
         }
 
         protected override string FormTitle => Resources.TitleListMarkers;
@@ -116,6 +117,11 @@ namespace TileExplorer.Presenters
             }
 
             return result;
+        }
+
+        private void PresenterFrmListMarkers_OnPositionChanged()
+        {
+            MainForm.SelectMapItemAsync(this, Selected);
         }
     }
 }

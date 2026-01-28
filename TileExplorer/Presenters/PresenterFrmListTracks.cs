@@ -20,6 +20,7 @@ namespace TileExplorer.Presenters
 
         public PresenterFrmListTracks(IFrmList frmList) : base(frmList)
         {
+            OnPositionChanged += PresenterFrmListMarkers_OnPositionChanged;
         }
 
         protected override string FormTitle => Resources.TitleListTracks;
@@ -241,6 +242,11 @@ namespace TileExplorer.Presenters
             }
 
             return tracks;
+        }
+
+        private void PresenterFrmListMarkers_OnPositionChanged()
+        {
+            MainForm.SelectMapItemAsync(this, Selected);
         }
     }
 }

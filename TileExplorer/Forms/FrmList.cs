@@ -100,6 +100,11 @@ namespace TileExplorer
             statusStripPresenter.Count = DataGridView.Count();
         }
 
+        private void DataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            statusStripPresenter.SelectedCount = DataGridView.SelectedCount();
+        }
+
         private void FrmListNew_Load(object sender, EventArgs e)
         {
             switch (FormType)
@@ -143,22 +148,6 @@ namespace TileExplorer
         public void SetSelected(BaseId value) => Selected = value;
 
         public void SetSelected(IEnumerable<BaseId> values) => SelectedList = values;
-
-        // TODO: remove
-        private void BindingSource_PositionChanged(object sender, EventArgs e)
-        {
-            switch (FormType)
-            {
-                case ChildFormType.TrackList:
-                case ChildFormType.MarkerList:
-                case ChildFormType.TileInfo:
-                    if (ProgramStatus.Default.IsIdle)
-                    {
-                        MainForm.SelectMapItemAsync(this, Selected);
-                    }
-                    break;
-            }
-        }
 
         private async void TsbtnAdd_Click(object sender, EventArgs e)
         {
@@ -207,10 +196,5 @@ namespace TileExplorer
         public void ListItemChange(IBaseId value) => PresenterFrmList.ListItemChange(value);
 
         public void ListItemDelete(IBaseId value) => PresenterFrmList.ListItemDelete(value);
-
-        private void DataGridView_SelectionChanged(object sender, EventArgs e)
-        {
-            statusStripPresenter.SelectedCount = DataGridView.SelectedCount();
-        }
     }
 }

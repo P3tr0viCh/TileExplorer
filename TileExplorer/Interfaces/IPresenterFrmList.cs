@@ -5,6 +5,8 @@ namespace TileExplorer.Interfaces
 {
     public delegate void ListChanged();
 
+    public delegate void PositionChanged();
+
     internal interface IPresenterFrmList : IUpdateDataForm
     {
         FrmListType ListType { get; }
@@ -14,6 +16,8 @@ namespace TileExplorer.Interfaces
         object Value { get; set; }
 
         event ListChanged OnListChanged;
+
+        event PositionChanged OnPositionChanged;
 
         bool Changed { get; }
 

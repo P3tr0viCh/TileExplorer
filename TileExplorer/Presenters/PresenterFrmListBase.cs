@@ -50,6 +50,8 @@ namespace TileExplorer.Presenters
 
             presenterDataGridView = new PresenterDataGridViewFrmList<T>(this);
 
+            bindingSource.PositionChanged += new EventHandler(BindingSource_PositionChanged);
+
             DataGridView.CellDoubleClick += new DataGridViewCellEventHandler(DataGridView_CellDoubleClick);
 
             DataGridView.CellMouseDown += new DataGridViewCellMouseEventHandler(DataGridView_CellMouseDown);
@@ -63,6 +65,11 @@ namespace TileExplorer.Presenters
         private void FrmList_FormClosing(object sender, FormClosingEventArgs e)
         {
             FormClosing();
+        }
+
+        private void BindingSource_PositionChanged(object sender, EventArgs e)
+        {
+            PerformOnPositionChanged();
         }
 
         private FrmListGrant grants = FrmListGrant.All;
@@ -196,11 +203,20 @@ namespace TileExplorer.Presenters
 
         public event ListChanged OnListChanged;
 
+        public event PositionChanged OnPositionChanged;
+
         private void PerformOnListChanged()
         {
             Changed = true;
 
             OnListChanged?.Invoke();
+        }
+
+        private void PerformOnPositionChanged()
+        {
+            Changed = true;
+
+            OnPositionChanged?.Invoke();
         }
 
         public void ListItemChange(IBaseId value)
