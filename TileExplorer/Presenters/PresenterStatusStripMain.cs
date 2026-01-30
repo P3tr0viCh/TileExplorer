@@ -1,6 +1,7 @@
 ﻿using GMap.NET;
 using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Presenters;
 using TileExplorer.Properties;
 using static TileExplorer.ProgramStatus;
 

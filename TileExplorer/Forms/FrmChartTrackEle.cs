@@ -1,5 +1,6 @@
 ﻿using GMap.NET;
 using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Presenters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,11 +9,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using  TileExplorer.Interfaces;
+using TileExplorer.Interfaces;
 using TileExplorer.Presenters;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.Presenters.PresenterStatusStripChartTrackEle;
 using static TileExplorer.ProgramStatus;
 

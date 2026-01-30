@@ -1,4 +1,4 @@
-﻿using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils.Presenters;
 using TileExplorer.Properties;
 
 namespace TileExplorer.Presenters
