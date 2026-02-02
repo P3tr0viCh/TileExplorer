@@ -408,6 +408,8 @@ namespace TileExplorer
                             }, transaction);
                         }
 
+                        await TracksTagsSaveAsync(connection, transaction, track);
+
                         transaction.Commit();
                     }
                     catch (Exception)
