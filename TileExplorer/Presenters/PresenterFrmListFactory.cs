@@ -5,7 +5,7 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListFactory
     {
-        public static IPresenterFrmList PresenterFrmListInstance(IFrmList frmList, FrmListType listType)
+        public static IPresenterFrmListBase PresenterFrmListInstance(IFrmListBase frmList, FrmListType listType)
         {
             switch (listType)
             {

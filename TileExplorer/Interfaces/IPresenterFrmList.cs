@@ -1,31 +1,17 @@
 ﻿using P3tr0viCh.Utils;
-using System.Threading.Tasks;
+using P3tr0viCh.Utils.Interfaces;
 
 namespace TileExplorer.Interfaces
 {
-    public delegate void ListChanged();
-
     public delegate void PositionChanged();
 
-    internal interface IPresenterFrmList : IUpdateDataForm
+    internal interface IPresenterFrmListBase : IUpdateDataForm, IPresenterFrmList
     {
         FrmListType ListType { get; }
 
-        IFrmList FrmList { get; }
-
         object Value { get; set; }
 
-        event ListChanged OnListChanged;
-
-        event PositionChanged OnPositionChanged;
-
-        bool Changed { get; }
-
-        Task ListItemAddNewAsync();
-
-        Task ListItemChangeSelectedAsync();
-
-        Task ListItemDeleteSelectedAsync();
+//        event PositionChanged OnPositionChanged;
 
         void ListItemChange(IBaseId value);
 

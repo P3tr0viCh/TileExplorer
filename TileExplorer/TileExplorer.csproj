@@ -217,7 +217,6 @@
     <Compile Include="MapZoomRuler.cs" />
     <Compile Include="Presenters\PresenterDataGridViewFrmList.cs" />
     <Compile Include="Presenters\PresenterFrmListBase.cs" />
-    <Compile Include="Presenters\PresenterFrmListBase.Database.cs" />
     <Compile Include="Presenters\PresenterFrmListFactory.cs" />
     <Compile Include="Presenters\PresenterFrmListEquipments.cs" />
     <Compile Include="Presenters\PresenterFrmListResultEquipments.cs" />

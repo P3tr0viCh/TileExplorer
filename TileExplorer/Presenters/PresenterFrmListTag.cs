@@ -1,8 +1,7 @@
 ﻿using P3tr0viCh.Utils.Comparers;
+using P3tr0viCh.Utils.EventArguments;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
@@ -15,7 +14,7 @@ namespace TileExplorer.Presenters
 
         public override ChildFormType FormType => ChildFormType.TagList;
 
-        public PresenterFrmListTags(IFrmList frmList) : base(frmList)
+        public PresenterFrmListTags(IFrmListBase frmList) : base(frmList)
         {
             ItemChangeDialog += PresenterFrmListTags_ItemChangeDialog;
 
@@ -26,21 +25,17 @@ namespace TileExplorer.Presenters
 
         protected override void LoadFormState()
         {
-            bindingSource.DataSource = Enumerable.Empty<TagModel>();
-
-            DataGridView.DataSource = bindingSource;
-
             base.LoadFormState();
 
-            presenterDataGridView.SortColumn = nameof(TagModel.Text);
+            PresenterDataGridView.SortColumn = nameof(TagModel.Text);
         }
 
-        private void PresenterFrmListTags_ItemChangeDialog(object sender, ItemDialogEventArgs e)
+        private void PresenterFrmListTags_ItemChangeDialog(object sender, ItemDialogEventArgs<TagModel> e)
         {
             e.Ok = FrmTag.ShowDlg(Form, e.Value);
         }
 
-        private void PresenterFrmListTags_ItemListDeleteDialog(object sender, ItemListDialogEventArgs e)
+        private void PresenterFrmListTags_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<TagModel> e)
         {
             e.Ok = Utils.ShowItemDeleteDialog(e.Values,
                 Resources.QuestionTagDelete, Resources.QuestionTagListDelete);
@@ -53,7 +48,9 @@ namespace TileExplorer.Presenters
 
         protected override void UpdateColumns()
         {
-            DataGridView.Columns[nameof(TagModel.Text)].HeaderText = ResourcesColumnHeader.Text;
+            base.UpdateColumns();
+
+            FrmList.DataGridView.Columns[nameof(TagModel.Text)].HeaderText = ResourcesColumnHeader.Text;
         }
 
         public override int Compare(TagModel x, TagModel y, string dataPropertyName, ComparerSortOrder sortOrder)

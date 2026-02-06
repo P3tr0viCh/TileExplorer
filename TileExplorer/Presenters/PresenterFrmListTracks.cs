@@ -2,6 +2,7 @@
 using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,11 +19,11 @@ namespace TileExplorer.Presenters
 
         public override ChildFormType FormType => ChildFormType.TrackList;
 
-        public PresenterFrmListTracks(IFrmList frmList) : base(frmList)
+        public PresenterFrmListTracks(IFrmListBase frmList) : base(frmList)
         {
             Grants = Grants.AddFlag(FrmListGrant.MultiChange);
 
-            OnPositionChanged += PresenterFrmListMarkers_OnPositionChanged;
+            OnPositionChanged += PresenterFrmListTracks_OnPositionChanged;
 
             ItemChangeDialog += PresenterFrmListTracks_ItemChangeDialog;
             
@@ -239,7 +240,7 @@ namespace TileExplorer.Presenters
             return tracks;
         }
 
-        private void PresenterFrmListMarkers_OnPositionChanged()
+        private void PresenterFrmListTracks_OnPositionChanged()
         {
             MainForm.SelectMapItemAsync(this, Selected);
         }

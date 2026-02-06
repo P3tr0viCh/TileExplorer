@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using P3tr0viCh.Utils;
-using P3tr0viCh.Utils.Comparers;
-using P3tr0viCh.Utils.Extensions;
-using System.Collections;
+﻿using P3tr0viCh.Utils.Comparers;
+using P3tr0viCh.Utils.EventArguments;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
@@ -19,9 +16,9 @@ namespace TileExplorer.Presenters
 
         public override ChildFormType FormType => ChildFormType.MarkerList;
 
-        public PresenterFrmListMarkers(IFrmList frmList) : base(frmList)
+        public PresenterFrmListMarkers(IFrmListBase frmList) : base(frmList)
         {
-            OnPositionChanged += PresenterFrmListMarkers_OnPositionChanged;
+            BindingSource.PositionChanged += BindingSource_PositionChanged;
 
             ItemChangeDialog += PresenterFrmListMarkers_ItemChangeDialog;
 
@@ -34,10 +31,10 @@ namespace TileExplorer.Presenters
         {
             base.LoadFormState();
 
-            presenterDataGridView.SortColumn = nameof(Marker.Text);
+            PresenterDataGridView.SortColumn = nameof(Marker.Text);
         }
 
-        private async void PresenterFrmListMarkers_ItemChangeDialog(object sender, ItemDialogEventArgs e)
+        private async void PresenterFrmListMarkers_ItemChangeDialog(object sender, ItemDialogEventArgs<Marker> e)
         {
             if (e.Value.IsNew)
             {
@@ -49,7 +46,7 @@ namespace TileExplorer.Presenters
             }
         }
 
-        private void PresenterFrmListMarkers_ItemListDeleteDialog(object sender, ItemListDialogEventArgs e)
+        private void PresenterFrmListMarkers_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Marker> e)
         {
             e.Ok = Utils.ShowItemDeleteDialog(e.Values,
                 Resources.QuestionMarkerDelete, Resources.QuestionMarkerListDelete);
@@ -67,21 +64,23 @@ namespace TileExplorer.Presenters
 
         protected override void UpdateColumns()
         {
-            DataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
+            base.UpdateColumns();
+            
+            FrmList.DataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
 
-            DataGridView.Columns[nameof(Marker.Text)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Marker.Text)].Visible = true;
 
-            DataGridView.Columns[nameof(Marker.IsTextVisible)].Visible = false;
-            DataGridView.Columns[nameof(Marker.OffsetX)].Visible = false;
-            DataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;
+            FrmList.DataGridView.Columns[nameof(Marker.IsTextVisible)].Visible = false;
+            FrmList.DataGridView.Columns[nameof(Marker.OffsetX)].Visible = false;
+            FrmList.DataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;
 
-            DataGridView.Columns[nameof(Marker.Text)].HeaderText = ResourcesColumnHeader.Text;
+            FrmList.DataGridView.Columns[nameof(Marker.Text)].HeaderText = ResourcesColumnHeader.Text;
         }
 
         public override void UpdateSettings()
         {
-            DataGridView.Columns[nameof(Marker.Lat)].DefaultCellStyle = DataGridViewCellStyles.LatLng;
-            DataGridView.Columns[nameof(Marker.Lng)].DefaultCellStyle = DataGridViewCellStyles.LatLng;
+            FrmList.DataGridView.Columns[nameof(Marker.Lat)].DefaultCellStyle = DataGridViewCellStyles.LatLng;
+            FrmList.DataGridView.Columns[nameof(Marker.Lng)].DefaultCellStyle = DataGridViewCellStyles.LatLng;
         }
 
         public override int Compare(Marker x, Marker y, string dataPropertyName, ComparerSortOrder sortOrder)
@@ -108,9 +107,9 @@ namespace TileExplorer.Presenters
             return result;
         }
 
-        private void PresenterFrmListMarkers_OnPositionChanged()
+        private async void BindingSource_PositionChanged(object sender, EventArgs e)
         {
-            MainForm.SelectMapItemAsync(this, Selected);
+            await MainForm.SelectMapItemAsync(this, Selected);
         }
     }
 }

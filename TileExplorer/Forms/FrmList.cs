@@ -18,9 +18,11 @@ using static TileExplorer.Presenters.PresenterStatusStripList;
 
 namespace TileExplorer
 {
-    public partial class FrmList : Form, IFrmList, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
+    public partial class FrmList : Form, IFrmListBase, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;
+
+        public ChildFormType FormType => PresenterFrmList.FormType;
 
         public DataGridView DataGridView => dataGridView;
 
@@ -28,9 +30,7 @@ namespace TileExplorer
 
         public StatusStrip StatusStrip => statusStrip;
 
-        private IPresenterFrmList PresenterFrmList { get; set; }
-
-        public ChildFormType FormType => PresenterFrmList.FormType;
+        private IPresenterFrmListBase PresenterFrmList { get; set; }
 
         private readonly PresenterStatusStripList statusStripPresenter;
 
@@ -87,14 +87,14 @@ namespace TileExplorer
 
             frm.PresenterFrmList.Value = value;
 
-            frm.PresenterFrmList.OnListChanged += frm.PresenterFrmList_OnListChanged;
+            frm.PresenterFrmList.FrmListChanged += frm.PresenterFrmList_FrmListChanged;
 
             frm.Show(owner);
 
             return frm;
         }
 
-        private void PresenterFrmList_OnListChanged()
+        private void PresenterFrmList_FrmListChanged(object sender)
         {
             tsbtnChange.Enabled = tsbtnDelete.Enabled = tsbtnChartTrackEle.Enabled = !DataGridView.IsEmpty();
 

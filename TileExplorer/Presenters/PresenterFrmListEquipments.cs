@@ -1,7 +1,7 @@
 ﻿using P3tr0viCh.Utils.Comparers;
+using P3tr0viCh.Utils.EventArguments;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
@@ -14,7 +14,7 @@ namespace TileExplorer.Presenters
 
         public override ChildFormType FormType => ChildFormType.EquipmentList;
 
-        public PresenterFrmListEquipments(IFrmList frmList) : base(frmList)
+        public PresenterFrmListEquipments(IFrmListBase frmList) : base(frmList)
         {
             ItemChangeDialog += PresenterFrmListEquipments_ItemChangeDialog;
 
@@ -27,15 +27,15 @@ namespace TileExplorer.Presenters
         {
             base.LoadFormState();
 
-            presenterDataGridView.SortColumn = nameof(Equipment.Text);
+            PresenterDataGridView.SortColumn = nameof(Equipment.Text);
         }
 
-        private void PresenterFrmListEquipments_ItemChangeDialog(object sender, ItemDialogEventArgs e)
+        private void PresenterFrmListEquipments_ItemChangeDialog(object sender, ItemDialogEventArgs<Equipment> e)
         {
             e.Ok = FrmEquipment.ShowDlg(Form, e.Value);
         }
 
-        private void PresenterFrmListEquipments_ItemListDeleteDialog(object sender, ItemListDialogEventArgs e)
+        private void PresenterFrmListEquipments_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Equipment> e)
         {
             e.Ok = Utils.ShowItemDeleteDialog(e.Values,
                 Resources.QuestionEquipmentDelete, Resources.QuestionEquipmentListDelete);
@@ -53,11 +53,13 @@ namespace TileExplorer.Presenters
 
         protected override void UpdateColumns()
         {
-            DataGridView.Columns[nameof(Equipment.Text)].DisplayIndex = 0;
+            base.UpdateColumns();
 
-            DataGridView.Columns[nameof(Equipment.Text)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Equipment.Text)].DisplayIndex = 0;
 
-            DataGridView.Columns[nameof(Equipment.Text)].HeaderText = ResourcesColumnHeader.Name;
+            FrmList.DataGridView.Columns[nameof(Equipment.Text)].Visible = true;
+
+            FrmList.DataGridView.Columns[nameof(Equipment.Text)].HeaderText = ResourcesColumnHeader.Name;
         }
 
         public override void UpdateSettings()

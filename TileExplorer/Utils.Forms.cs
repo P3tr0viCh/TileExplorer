@@ -115,17 +115,6 @@ namespace TileExplorer
 
                 return false;
             }
-
-            public static void SelectCellOnCellMouseDown(DataGridView dataGridView, DataGridViewCellMouseEventArgs e)
-            {
-                if (e.Button == MouseButtons.Right)
-                {
-                    if (e.ColumnIndex >= 0 && e.RowIndex >= 0)
-                    {
-                        dataGridView.CurrentCell = dataGridView[e.ColumnIndex, e.RowIndex];
-                    }
-                }
-            }
         }
     }
 }

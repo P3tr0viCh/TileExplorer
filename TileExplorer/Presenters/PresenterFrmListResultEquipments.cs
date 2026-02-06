@@ -1,8 +1,6 @@
 ﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using P3tr0viCh.Utils.Forms;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
@@ -16,7 +14,7 @@ namespace TileExplorer.Presenters
 
         public override ChildFormType FormType => ChildFormType.ResultEquipments;
 
-        public PresenterFrmListResultEquipments(IFrmList frmList) : base(frmList)
+        public PresenterFrmListResultEquipments(IFrmListBase frmList) : base(frmList)
         {
             Grants = FrmListGrant.None;
         }
@@ -27,23 +25,23 @@ namespace TileExplorer.Presenters
         {
             base.LoadFormState();
 
-            StatusStrip.Visible = false;
+            FrmList.StatusStrip.Visible = false;
         }
 
         protected override void UpdateColumns()
         {
-            DataGridView.Columns[nameof(ResultEquipments.Text)].DisplayIndex = 0;
+            FrmList.DataGridView.Columns[nameof(ResultEquipments.Text)].DisplayIndex = 0;
 
-            DataGridView.Columns[nameof(ResultEquipments.Text)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(ResultEquipments.Text)].Visible = true;
 
-            DataGridView.Columns[nameof(ResultEquipments.DurationSum)].Visible = false;
+            FrmList.DataGridView.Columns[nameof(ResultEquipments.DurationSum)].Visible = false;
 
-            DataGridView.Columns[nameof(ResultEquipments.Text)].HeaderText = ResourcesColumnHeader.Name;
+            FrmList.DataGridView.Columns[nameof(ResultEquipments.Text)].HeaderText = ResourcesColumnHeader.Name;
 
             columnFormattingIndex = new int[1];
-            columnFormattingIndex[0] = DataGridView.Columns[nameof(ResultEquipments.Text)].Index;
+            columnFormattingIndex[0] = FrmList.DataGridView.Columns[nameof(ResultEquipments.Text)].Index;
 
-            DataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
+            FrmList.DataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
         }
 
         private int[] columnFormattingIndex;
@@ -63,11 +61,11 @@ namespace TileExplorer.Presenters
 
         public override void UpdateSettings()
         {
-            DataGridView.Columns[nameof(ResultEquipments.Count)].DefaultCellStyle =
+            FrmList.DataGridView.Columns[nameof(ResultEquipments.Count)].DefaultCellStyle =
                 DataGridViewCellStyles.Count;
-            DataGridView.Columns[nameof(ResultEquipments.DistanceSum)].DefaultCellStyle =
+            FrmList.DataGridView.Columns[nameof(ResultEquipments.DistanceSum)].DefaultCellStyle =
                 DataGridViewCellStyles.DistanceSum;
-            DataGridView.Columns[nameof(ResultEquipments.DurationSumAsString)].DefaultCellStyle =
+            FrmList.DataGridView.Columns[nameof(ResultEquipments.DurationSumAsString)].DefaultCellStyle =
                 DataGridViewCellStyles.DurationAsString;
         }
     }

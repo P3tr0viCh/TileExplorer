@@ -3,7 +3,7 @@
 namespace TileExplorer
 {
     [Flags]
-    public enum FrmListGrant
+    public enum FrmListGrant2
     {
         None = 0,
         Add = 1,
