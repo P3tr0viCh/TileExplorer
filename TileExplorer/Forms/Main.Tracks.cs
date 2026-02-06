@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using  TileExplorer.Interfaces;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -111,26 +111,28 @@ namespace TileExplorer
             }
         }
 
-        private async Task TrackChangeAsync(IEnumerable<Track> tracks)
+        private async Task<bool> TrackChangeAsync(IEnumerable<Track> tracks)
         {
             var count = tracks?.Count();
 
-            if (count == 0) return;
+            if (count == 0) return false;
 
             var track = tracks.FirstOrDefault();
 
             if (count == 1)
             {
-                if (!FrmTrack.ShowDlg(this, track)) return;
+                if (!FrmTrack.ShowDlg(this, track)) return false;
 
                 await SelectMapItemAsync(this, track);
             }
             else
             {
-                if (!FrmTrackList.ShowDlg(this, tracks)) return;
+                if (!FrmTrackList.ShowDlg(this, tracks)) return false;
 
                 await UpdateTracksAsync(tracks);
             }
+
+            return true;
         }
 
         private async Task TrackChangeAsync(Track track)
@@ -152,9 +154,9 @@ namespace TileExplorer
             SelectTrackList(tracks);
         }
 
-        private async Task TrackDeleteAsync(List<Track> tracks)
+        private async Task<bool> TrackDeleteAsync(List<Track> tracks)
         {
-            if (tracks?.Count == 0) return;
+            if (tracks?.Count == 0) return false;
 
             var firstTrack = tracks.FirstOrDefault();
 
@@ -167,9 +169,9 @@ namespace TileExplorer
 
             var question = tracks.Count == 1 ? Resources.QuestionTrackDelete : Resources.QuestionTrackListDelete;
 
-            if (!Msg.Question(question, name, tracks.Count - 1)) return;
+            if (!Msg.Question(question, name, tracks.Count - 1)) return false;
 
-            if (!await Database.Actions.TrackDeleteAsync(tracks)) return;
+            if (!await Database.Actions.TrackDeleteAsync(tracks)) return false;
 
             Selected = null;
 
@@ -181,6 +183,8 @@ namespace TileExplorer
 
                 await UpdateDataAsync(DataLoad.Tiles | DataLoad.ObjectDelete, track);
             }
+            
+            return true;
         }
 
         private async Task TrackDeleteAsync(Track track)
@@ -214,7 +218,9 @@ namespace TileExplorer
 
                     if (showDlg)
                     {
-                        switch (FrmTrack.ShowDlg(this, track, canToAll, false))
+                        var showDlgResult = FrmTrack.ShowDlg(this, track, canToAll, false);
+
+                        switch (showDlgResult)
                         {
                             case DialogResult.Cancel:
                                 continue;
@@ -260,7 +266,7 @@ namespace TileExplorer
             }
         }
 
-        private async Task OpenTracksAsync(string[] files)
+        private async Task<bool> OpenTracksAsync(string[] files)
         {
             Selected = null;
 
@@ -270,14 +276,16 @@ namespace TileExplorer
 
                 openFileDialog.InitialDirectory = AppSettings.Local.Default.DirectoryLastTracks;
 
-                if (openFileDialog.ShowDialog(this) != DialogResult.OK) return;
+                if (openFileDialog.ShowDialog(this) != DialogResult.OK) return false;
 
                 AppSettings.Local.Default.DirectoryLastTracks = Directory.GetParent(openFileDialog.FileName).FullName;
 
                 files = openFileDialog.FileNames;
             }
 
-            if (!await InternalOpenTracksAsync(files)) return;
+            var opened = await InternalOpenTracksAsync(files);
+
+            if (!opened) return false;
 
             foreach (var track in overlayTracks.Routes)
             {
@@ -285,6 +293,8 @@ namespace TileExplorer
             }
 
             await UpdateDataAsync(DataLoad.Tiles);
+
+            return true;
         }
 
         private readonly WrapperCancellationTokenSource ctsTracksInfo = new WrapperCancellationTokenSource();
@@ -362,10 +372,7 @@ namespace TileExplorer
 
                 try
                 {
-                    foreach (var track in tracks)
-                    {
-                        await Database.Default.TrackSaveAsync(track);
-                    }
+                    await Database.Default.TrackSaveAsync(tracks);
                 }
                 finally
                 {

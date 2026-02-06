@@ -1,5 +1,4 @@
-﻿using P3tr0viCh.Utils;
-using P3tr0viCh.Utils.Comparers;
+﻿using P3tr0viCh.Utils.Comparers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +17,9 @@ namespace TileExplorer.Presenters
 
         public PresenterFrmListTags(IFrmList frmList) : base(frmList)
         {
+            ItemChangeDialog += PresenterFrmListTags_ItemChangeDialog;
+
+            ItemListDeleteDialog += PresenterFrmListTags_ItemListDeleteDialog;
         }
 
         protected override string FormTitle => Resources.TitleListTags;
@@ -33,24 +35,15 @@ namespace TileExplorer.Presenters
             presenterDataGridView.SortColumn = nameof(TagModel.Text);
         }
 
-        protected override bool ShowItemChangeDialog(TagModel value)
+        private void PresenterFrmListTags_ItemChangeDialog(object sender, ItemDialogEventArgs e)
         {
-            return FrmTag.ShowDlg(Form, value);
+            e.Ok = FrmTag.ShowDlg(Form, e.Value);
         }
 
-        protected override bool ShowItemDeleteDialog(IEnumerable<TagModel> list)
+        private void PresenterFrmListTags_ItemListDeleteDialog(object sender, ItemListDialogEventArgs e)
         {
-            var count = list?.Count();
-
-            if (count == 0) return false;
-
-            var first = list.FirstOrDefault();
-
-            var text = first.Text;
-
-            var question = count == 1 ? Resources.QuestionTagDelete : Resources.QuestionTagListDelete;
-
-            return Msg.Question(question, text, count - 1);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
+                Resources.QuestionTagDelete, Resources.QuestionTagListDelete);
         }
 
         protected override async Task ListItemDeleteAsync(IEnumerable<TagModel> list)

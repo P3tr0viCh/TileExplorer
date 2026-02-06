@@ -20,7 +20,15 @@ namespace TileExplorer.Presenters
 
         public PresenterFrmListTracks(IFrmList frmList) : base(frmList)
         {
+            Grants = Grants.AddFlag(FrmListGrant.MultiChange);
+
             OnPositionChanged += PresenterFrmListMarkers_OnPositionChanged;
+
+            ItemChangeDialog += PresenterFrmListTracks_ItemChangeDialog;
+            
+            ItemListChangeDialog += PresenterFrmListTracks_ItemListChangeDialog;
+
+            ItemListDeleteDialog += PresenterFrmListTracks_ItemListDeleteDialog;
         }
 
         protected override string FormTitle => Resources.TitleListTracks;
@@ -33,48 +41,35 @@ namespace TileExplorer.Presenters
             presenterDataGridView.SortOrder = ComparerSortOrder.Descending;
         }
 
-        protected override bool ShowItemChangeDialog(Track value)
+        private async void PresenterFrmListTracks_ItemChangeDialog(object sender, ItemDialogEventArgs e)
         {
-            if (value.IsNew)
+            if (e.Value.IsNew)
             {
-                MainForm.ListItemAdd(value);
+                e.Ok = await MainForm.ListItemAddAsync(e.Value);
             }
             else
             {
-                MainForm.ListItemChangeAsync(new List<Track>() { value });
+                e.Ok = await MainForm.ListItemChangeAsync(new List<Track>() { e.Value });
             }
-
-            return true;
         }
 
-        protected override bool ShowItemChangeDialog(IEnumerable<Track> list)
+        private async void PresenterFrmListTracks_ItemListChangeDialog(object sender, ItemListDialogEventArgs e)
         {
-            MainForm.ListItemChangeAsync(list);
-
-            return true;
+            e.Ok = await MainForm.ListItemChangeAsync(e.Values);
         }
 
-        protected override bool ShowItemDeleteDialog(IEnumerable<Track> list)
+        private void PresenterFrmListTracks_ItemListDeleteDialog(object sender, ItemListDialogEventArgs e)
         {
-            var count = list?.Count();
-
-            if (count == 0) return false;
-
-            var first = list.FirstOrDefault();
-
-            var text = first.Text;
-
-            if (text.IsEmpty())
-            {
-                text = first.DateTimeStart.ToString();
-            }
-
-            var question = count == 1 ? Resources.QuestionTrackDelete : Resources.QuestionTrackListDelete;
-
-            return Msg.Question(question, text, count - 1);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
+               Resources.QuestionTrackDelete, Resources.QuestionTrackListDelete);
         }
 
         protected override async Task ListItemSaveAsync(Track value)
+        {
+            await Task.CompletedTask;
+        }
+
+        protected override async Task ListItemSaveAsync(IEnumerable<Track> list)
         {
             await Task.CompletedTask;
         }

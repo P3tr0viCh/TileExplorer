@@ -142,6 +142,14 @@ namespace TileExplorer
             }
         }
 
+        public async Task ListItemSaveAsync<T>(IEnumerable<T> list) where T : BaseId
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.ListItemSaveAsync(list);
+            }
+        }
+
         public async Task ListItemDeleteAsync<T>(IEnumerable<T> values) where T : BaseId
         {
             using (var connection = GetConnection())
@@ -191,7 +199,7 @@ namespace TileExplorer
             }
         }
 
-        public async Task TrackSaveAsync(Track track)
+        private async Task InternalTrackSaveAsync(IEnumerable<Track> tracks)
         {
             DebugWrite.Line("start");
 
@@ -203,23 +211,26 @@ namespace TileExplorer
                 {
                     try
                     {
-                        if (track.Id == Sql.NewId)
+                        foreach (var track in tracks)
                         {
-                            await connection.InsertAsync(track, transaction);
-
-                            foreach (var trackPoint in track.TrackPoints)
+                            if (track.Id == Sql.NewId)
                             {
-                                trackPoint.TrackId = track.Id;
+                                await connection.InsertAsync(track, transaction);
+
+                                foreach (var trackPoint in track.TrackPoints)
+                                {
+                                    trackPoint.TrackId = track.Id;
+                                }
+
+                                await connection.InsertAsync(track.TrackPoints, transaction);
+                            }
+                            else
+                            {
+                                await connection.UpdateAsync(track, transaction);
                             }
 
-                            await connection.InsertAsync(track.TrackPoints, transaction);
+                            await TracksTagsSaveAsync(connection, transaction, track);
                         }
-                        else
-                        {
-                            await connection.UpdateAsync(track, transaction);
-                        }
-
-                        await TracksTagsSaveAsync(connection, transaction, track);
 
                         transaction.Commit();
                     }
@@ -232,6 +243,16 @@ namespace TileExplorer
             }
 
             DebugWrite.Line("end");
+        }
+
+        public async Task TrackSaveAsync(Track track)
+        {
+            await InternalTrackSaveAsync(new List<Track>() { track });
+        }
+
+        public async Task TrackSaveAsync(IEnumerable<Track> tracks)
+        {
+            await InternalTrackSaveAsync(tracks);
         }
 
         private void GetQuery<T>(out string sql, out object param, in object filter)
@@ -384,7 +405,7 @@ namespace TileExplorer
                 {
                     try
                     {
-                        var trackId = await connection.InsertAsync(track, transaction);
+                        await connection.InsertAsync(track, transaction);
 
                         track.TrackPoints.ForEach(trackPoint =>
                             trackPoint.TrackId = track.Id

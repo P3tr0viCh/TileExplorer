@@ -1,9 +1,5 @@
-﻿using P3tr0viCh.Utils;
-using P3tr0viCh.Utils.Comparers;
-using P3tr0viCh.Utils.Extensions;
-using System.Collections;
+﻿using P3tr0viCh.Utils.Comparers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
@@ -20,6 +16,9 @@ namespace TileExplorer.Presenters
 
         public PresenterFrmListEquipments(IFrmList frmList) : base(frmList)
         {
+            ItemChangeDialog += PresenterFrmListEquipments_ItemChangeDialog;
+
+            ItemListDeleteDialog += PresenterFrmListEquipments_ItemListDeleteDialog;
         }
 
         protected override string FormTitle => Resources.TitleListEquipments;
@@ -31,24 +30,15 @@ namespace TileExplorer.Presenters
             presenterDataGridView.SortColumn = nameof(Equipment.Text);
         }
 
-        protected override bool ShowItemChangeDialog(Equipment value)
+        private void PresenterFrmListEquipments_ItemChangeDialog(object sender, ItemDialogEventArgs e)
         {
-            return FrmEquipment.ShowDlg(Form, value);
+            e.Ok = FrmEquipment.ShowDlg(Form, e.Value);
         }
 
-        protected override bool ShowItemDeleteDialog(IEnumerable<Equipment> list)
+        private void PresenterFrmListEquipments_ItemListDeleteDialog(object sender, ItemListDialogEventArgs e)
         {
-            var count = list?.Count();
-
-            if (count == 0) return false;
-
-            var first = list.FirstOrDefault();
-
-            var text = first.Text;
-
-            var question = count == 1 ? Resources.QuestionEquipmentDelete : Resources.QuestionEquipmentListDelete;
-
-            return Msg.Question(question, text, count - 1);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
+                Resources.QuestionEquipmentDelete, Resources.QuestionEquipmentListDelete);
         }
 
         protected override async Task ListItemSaveAsync(Equipment value)

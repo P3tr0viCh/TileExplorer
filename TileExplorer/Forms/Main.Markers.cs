@@ -86,7 +86,7 @@ namespace TileExplorer
             }
         }
 
-        private void MarkerAdd(Marker marker)
+        private bool MarkerAdd(Marker marker)
         {
             var prevMarkersVisible = overlayMarkers.IsVisibile;
 
@@ -99,20 +99,24 @@ namespace TileExplorer
             markerNewPosition.Position = new PointLatLng(marker.Lat, marker.Lng);
             markerNewPosition.IsVisible = true;
 
-            FrmMarker.ShowDlg(this, marker);
+            var result = FrmMarker.ShowDlg(this, marker);
 
             markerNewPosition.IsVisible = false;
 
             overlayMarkers.IsVisibile = prevMarkersVisible;
+
+            return result;
         }
 
-        private async Task MarkerChangeAsync(Marker marker)
+        private async Task<bool> MarkerChangeAsync(Marker marker)
         {
-            if (marker == null) return;
+            if (marker == null) return false;
 
-            FrmMarker.ShowDlg(this, marker);
+            if (!FrmMarker.ShowDlg(this, marker)) return false;
 
             await SelectMapItemAsync(this, marker);
+
+            return true;
         }
 
         public async Task MarkerChangedAsync(Marker marker)
@@ -139,9 +143,9 @@ namespace TileExplorer
             await SelectMapItemAsync(this, marker);
         }
 
-        private async Task MarkerDeleteAsync(List<Marker> markers)
+        private async Task<bool> MarkerDeleteAsync(List<Marker> markers)
         {
-            if (markers?.Count == 0) return;
+            if (markers?.Count == 0) return false;
 
             var firstMarker = markers.FirstOrDefault();
 
@@ -154,9 +158,9 @@ namespace TileExplorer
 
             var question = markers.Count == 1 ? Resources.QuestionMarkerDelete : Resources.QuestionMarkerListDelete;
 
-            if (!Msg.Question(question, name, markers.Count - 1)) return;
+            if (!Msg.Question(question, name, markers.Count - 1)) return false;
 
-            if (!await Database.Actions.MarkerDeleteAsync(markers)) return;
+            if (!await Database.Actions.MarkerDeleteAsync(markers)) return false;
 
             foreach (var marker in markers)
             {
@@ -168,6 +172,8 @@ namespace TileExplorer
             }
 
             Selected = null;
+
+            return true;
         }
 
         private async Task MarkerDeleteAsync(Marker marker)

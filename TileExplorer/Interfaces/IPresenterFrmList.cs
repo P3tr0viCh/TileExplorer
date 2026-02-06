@@ -27,8 +27,6 @@ namespace TileExplorer.Interfaces
 
         Task ListItemDeleteSelectedAsync();
 
-        IBaseId Find(IBaseId value);
-
         void ListItemChange(IBaseId value);
 
         void ListItemDelete(IBaseId value);

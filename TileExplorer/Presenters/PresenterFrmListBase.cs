@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Database;
+﻿using Newtonsoft.Json.Linq;
+using P3tr0viCh.Database;
 using P3tr0viCh.Database.Extensions;
 using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Comparers;
@@ -220,7 +221,7 @@ namespace TileExplorer.Presenters
             OnPositionChanged?.Invoke();
         }
 
-        public void ListItemChange(IBaseId value)
+        private void InternalListItemChange(IBaseId value)
         {
             var item = Find(value);
 
@@ -236,6 +237,11 @@ namespace TileExplorer.Presenters
 
                 bindingSource.ResetItem(index);
             }
+        }
+
+        public void ListItemChange(IBaseId value)
+        {
+            InternalListItemChange(value);
 
             DataGridView.SetSelectedRows(value);
 
@@ -244,9 +250,28 @@ namespace TileExplorer.Presenters
             PerformOnListChanged();
         }
 
-        public void ListItemDelete(IBaseId value)
+        public void ListItemChange(IEnumerable<T> list)
+        {
+            foreach (var item in list)
+            {
+                InternalListItemChange(item);
+            }
+
+            DataGridView.SetSelectedRows(list);
+
+            presenterDataGridView.Sort();
+
+            PerformOnListChanged();
+        }
+
+        private void InternalListItemDelete(IBaseId value)
         {
             bindingSource.Remove(value);
+        }
+
+        public void ListItemDelete(IBaseId value)
+        {
+            InternalListItemDelete(value);
 
             PerformOnListChanged();
         }
@@ -255,7 +280,7 @@ namespace TileExplorer.Presenters
         {
             foreach (var item in list)
             {
-                bindingSource.Remove(item);
+                InternalListItemDelete(item);
             }
 
             PerformOnListChanged();
@@ -263,14 +288,95 @@ namespace TileExplorer.Presenters
 
         protected virtual T GetNewItem() => new T();
 
-        protected abstract bool ShowItemChangeDialog(T value);
-
-        protected virtual bool ShowItemChangeDialog(IEnumerable<T> list)
+        public class OkEventArgs : EventArgs
         {
-            return false;
+            public bool Ok { get; set; } = false;
+
+            public OkEventArgs()
+            {
+            }
         }
 
-        protected abstract bool ShowItemDeleteDialog(IEnumerable<T> list);
+        public class ItemDialogEventArgs : OkEventArgs
+        {
+            public T Value { get; set; } = null;
+
+            public ItemDialogEventArgs()
+            {
+            }
+        }
+
+        public class ItemListDialogEventArgs : OkEventArgs
+        {
+            public IEnumerable<T> Values { get; set; } = null;
+
+            public ItemListDialogEventArgs()
+            {
+            }
+        }
+
+        public delegate void ItemChangeDialogEventHandler(object sender, ItemDialogEventArgs e);
+
+        public delegate void ItemListChangeDialogEventHandler(object sender, ItemListDialogEventArgs e);
+
+        public delegate void ItemListDeleteDialogEventHandler(object sender, ItemListDialogEventArgs e);
+
+        public event ItemChangeDialogEventHandler ItemChangeDialog;
+
+        public event ItemListChangeDialogEventHandler ItemListChangeDialog;
+
+        public event ItemListDeleteDialogEventHandler ItemListDeleteDialog;
+
+        internal void OnItemChangeDialogEvent(ItemDialogEventArgs e)
+        {
+            ItemChangeDialog?.Invoke(this, e);
+        }
+
+        internal void OnItemListChangeDialogEvent(ItemListDialogEventArgs e)
+        {
+            ItemListChangeDialog?.Invoke(this, e);
+        }
+
+        internal void OnItemListDeleteDialogEvent(ItemListDialogEventArgs e)
+        {
+            ItemListDeleteDialog?.Invoke(this, e);
+        }
+
+        private bool ShowItemChangeDialog(T value)
+        {
+            var itemDialogEventArgs = new ItemDialogEventArgs()
+            {
+                Value = value
+            };
+
+            OnItemChangeDialogEvent(itemDialogEventArgs);
+
+            return itemDialogEventArgs.Ok;
+        }
+
+        private bool ShowItemListChangeDialog(IEnumerable<T> values)
+        {
+            var itemListDialogEventArgs = new ItemListDialogEventArgs()
+            {
+                Values = values
+            };
+
+            OnItemListChangeDialogEvent(itemListDialogEventArgs);
+
+            return itemListDialogEventArgs.Ok;
+        }
+
+        private bool ShowItemDeleteDialog(IEnumerable<T> values)
+        {
+            var itemListDialogEventArgs = new ItemListDialogEventArgs()
+            {
+                Values = values
+            };
+
+            OnItemListDeleteDialogEvent(itemListDialogEventArgs);
+
+            return itemListDialogEventArgs.Ok;
+        }
 
         public async Task UpdateDataAsync()
         {
@@ -299,6 +405,28 @@ namespace TileExplorer.Presenters
             }
         }
 
+        private async Task ListItemChangeAsync(IEnumerable<T> list)
+        {
+            try
+            {
+                if (!ShowItemListChangeDialog(list)) return;
+
+                await PerformListItemSaveAsync(list);
+
+                ListItemChange(list);
+
+                await MainForm.UpdateDataAsync(DataLoad.ObjectChange, list);
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Line(e.GetQuery());
+
+                DebugWrite.Error(e);
+
+                Msg.Error(e.Message);
+            }
+        }
+
         public async Task ListItemAddNewAsync()
         {
             if (!CanAdd) return;
@@ -312,11 +440,22 @@ namespace TileExplorer.Presenters
         {
             if (!CanChange) return;
 
-            var item = Selected;
+            if (Grants.HasFlag(FrmListGrant.MultiChange))
+            {
+                var list = SelectedList;
 
-            DataGridView.SetSelectedRows(item);
+                DataGridView.SetSelectedRows(list);
 
-            await ListItemChangeAsync(item);
+                await ListItemChangeAsync(list);
+            }
+            else
+            {
+                var item = Selected;
+
+                DataGridView.SetSelectedRows(item);
+
+                await ListItemChangeAsync(item);
+            }
         }
 
         public async Task ListItemDeleteSelectedAsync()
@@ -327,7 +466,7 @@ namespace TileExplorer.Presenters
             {
                 var list = SelectedList;
 
-                DataGridView.SetSelectedRows(list.Cast<BaseId>());
+                DataGridView.SetSelectedRows(list);
 
                 if (!ShowItemDeleteDialog(list)) return;
 

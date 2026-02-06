@@ -12,7 +12,7 @@ namespace TileExplorer
 {
     public partial class Main
     {
-        public async Task UpdateDataAsync(DataLoad load = default, object value = null)
+        private async Task InternalUpdateDataAsync(DataLoad load = default, object value = null)
         {
             if (load == default)
             {
@@ -22,12 +22,6 @@ namespace TileExplorer
             }
 
             DebugWrite.Line($"Loading data {load}");
-
-            var savedSelected = Selected;
-
-            Selected = null;
-
-            await Task.Delay(100);
 
             if (load.HasFlag(DataLoad.Tiles))
             {
@@ -89,15 +83,34 @@ namespace TileExplorer
                         .Cast<MapItemMarker>().FirstOrDefault());
                 }
             }
+        }
 
-            Selected = FindMapItem(savedSelected?.Model);
+        public async Task UpdateDataAsync(DataLoad load = default, object value = null)
+        {
+            var savedSelected = Selected;
+
+            Selected = null;
+
+            await Task.Delay(100);
+
+            await InternalUpdateDataAsync(load, value);
+
+            var selected = value is BaseId ? value as BaseId: savedSelected?.Model;
+
+            var item = FindMapItem(selected);
+            
+            Selected = item;
         }
 
         public async Task UpdateDataAsync(DataLoad load, IEnumerable<object> list)
         {
+            Selected = null;
+
+            await Task.Delay(100);
+
             foreach (var value in list)
             {
-                await UpdateDataAsync(DataLoad.ObjectDelete, value);
+                await InternalUpdateDataAsync(load, value);
             }
         }
 

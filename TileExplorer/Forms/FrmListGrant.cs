@@ -10,6 +10,7 @@ namespace TileExplorer
         Change = 2,
         Delete = 4,
         Sort = 8,
+        MultiChange = 16,
         All = Add | Change | Delete | Sort,
     }
 }

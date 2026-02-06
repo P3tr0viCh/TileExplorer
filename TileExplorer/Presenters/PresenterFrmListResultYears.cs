@@ -1,7 +1,4 @@
 ﻿using P3tr0viCh.Utils.Comparers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
@@ -27,16 +24,6 @@ namespace TileExplorer.Presenters
             base.LoadFormState();
 
             StatusStrip.Visible = false;
-        }
-
-        protected override bool ShowItemChangeDialog(ResultYears value)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool ShowItemDeleteDialog(IEnumerable<ResultYears> list)
-        {
-            throw new NotImplementedException();
         }
 
         protected override void UpdateColumns()

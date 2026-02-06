@@ -30,16 +30,6 @@ namespace TileExplorer.Presenters
             StatusStrip.Visible = false;
         }
 
-        protected override bool ShowItemChangeDialog(ResultEquipments value)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool ShowItemDeleteDialog(IEnumerable<ResultEquipments> list)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override void UpdateColumns()
         {
             DataGridView.Columns[nameof(ResultEquipments.Text)].DisplayIndex = 0;

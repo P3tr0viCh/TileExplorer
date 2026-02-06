@@ -17,9 +17,9 @@ namespace TileExplorer.Interfaces
         Task UpdateDataAsync(DataLoad load = default, object value = null);
         Task UpdateDataAsync(DataLoad load, IEnumerable<object> list);
 
-        void ListItemAdd(BaseId value);
-        Task ListItemChangeAsync(IEnumerable<BaseId> list);
-        Task ListItemDeleteAsync(IEnumerable<BaseId> list);
+        Task<bool> ListItemAddAsync(BaseId value);
+        Task<bool> ListItemChangeAsync(IEnumerable<BaseId> list);
+        Task<bool> ListItemDeleteAsync(IEnumerable<BaseId> list);
 
         Task TrackChangedAsync(Track track);
         Task TrackChangedAsync(IEnumerable<Track> tracks);

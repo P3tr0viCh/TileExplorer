@@ -1,6 +1,5 @@
 ﻿using GMap.NET.Internals;
 using P3tr0viCh.Utils.Comparers;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -72,16 +71,6 @@ namespace TileExplorer.Presenters
             }
 
             return result;
-        }
-
-        protected override bool ShowItemChangeDialog(Track value)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool ShowItemDeleteDialog(IEnumerable<Track> list)
-        {
-            throw new NotImplementedException();
         }
 
         protected override async Task<IEnumerable<Track>> ListLoadAsync()

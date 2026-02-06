@@ -1,7 +1,11 @@
 ﻿using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using TileExplorer.Properties;
+using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
@@ -109,6 +113,22 @@ namespace TileExplorer
             }
 
             return x.CompareTo(y) * (descending ? -1 : 1);
+        }
+
+        public static bool ShowItemDeleteDialog<T>(IEnumerable<T> list,
+            string questionItem, string questionItemList) where T : IBaseText
+        {
+            var count = list?.Count();
+
+            if (count == 0) return false;
+
+            var first = list.FirstOrDefault();
+
+            var text = first.Text;
+
+            var question = count == 1 ? questionItem : questionItemList;
+
+            return Msg.Question(question, text, count - 1);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Utils;
+﻿using Newtonsoft.Json.Linq;
+using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Extensions;
 using System.Collections;
@@ -21,6 +22,10 @@ namespace TileExplorer.Presenters
         public PresenterFrmListMarkers(IFrmList frmList) : base(frmList)
         {
             OnPositionChanged += PresenterFrmListMarkers_OnPositionChanged;
+
+            ItemChangeDialog += PresenterFrmListMarkers_ItemChangeDialog;
+
+            ItemListDeleteDialog += PresenterFrmListMarkers_ItemListDeleteDialog;
         }
 
         protected override string FormTitle => Resources.TitleListMarkers;
@@ -32,38 +37,22 @@ namespace TileExplorer.Presenters
             presenterDataGridView.SortColumn = nameof(Marker.Text);
         }
 
-        protected override bool ShowItemChangeDialog(Marker value)
+        private async void PresenterFrmListMarkers_ItemChangeDialog(object sender, ItemDialogEventArgs e)
         {
-            if (value.IsNew)
+            if (e.Value.IsNew)
             {
-                MainForm.ListItemAdd(value);
+                e.Ok = await MainForm.ListItemAddAsync(e.Value);
             }
             else
             {
-                MainForm.ListItemChangeAsync(new List<Marker>() { value });
+                e.Ok = await MainForm.ListItemChangeAsync(new List<Marker>() { e.Value });
             }
-
-            return true;
         }
 
-        protected override bool ShowItemDeleteDialog(IEnumerable<Marker> list)
+        private void PresenterFrmListMarkers_ItemListDeleteDialog(object sender, ItemListDialogEventArgs e)
         {
-            var count = list?.Count();
-
-            if (count == 0) return false;
-
-            var first = list.FirstOrDefault();
-
-            var text = first.Text;
-
-            if (text.IsEmpty())
-            {
-                text = $"{first.Lat}:{first.Lng}";
-            }
-
-            var question = count == 1 ? Resources.QuestionMarkerDelete : Resources.QuestionMarkerListDelete;
-
-            return Msg.Question(question, text, count - 1);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
+                Resources.QuestionMarkerDelete, Resources.QuestionMarkerListDelete);
         }
 
         protected override async Task ListItemSaveAsync(Marker value)

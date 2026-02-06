@@ -141,7 +141,7 @@ namespace TileExplorer
             {
                 ShowChildForm(ChildFormType.ResultEquipments, true);
             }
-            
+
             if (AppSettings.Local.Default.VisibleTrackList)
             {
                 ShowChildForm(ChildFormType.TrackList, true);
@@ -205,7 +205,7 @@ namespace TileExplorer
 
             AppSettings.Local.Default.VisibleTrackList = GetChildFormMenuItemState(ChildFormType.TrackList);
             AppSettings.Local.Default.VisibleMarkerList = GetChildFormMenuItemState(ChildFormType.MarkerList);
-            
+
             AppSettings.Local.Default.VisibleTagList = GetChildFormMenuItemState(ChildFormType.TagList);
             AppSettings.Local.Default.VisibleEquipmentList = GetChildFormMenuItemState(ChildFormType.EquipmentList);
 
@@ -979,60 +979,58 @@ namespace TileExplorer
             return items.Cast<IMapItem>().FirstOrDefault(i => i.Model.Id == value.Id);
         }
 
-        public async void ListItemAdd(BaseId value)
+        public async Task<bool> ListItemAddAsync(BaseId value)
         {
             if (value is Marker marker)
             {
                 marker.Lat = gMapControl.Position.Lat;
                 marker.Lng = gMapControl.Position.Lng;
 
-                MarkerAdd(marker);
-
-                return;
+                return MarkerAdd(marker);
             }
 
             if (value is Track)
             {
-                await OpenTracksAsync(null);
+                var result = await OpenTracksAsync(null);
 
-                return;
+                return result;
             }
+
+            return false;
         }
 
-        public async Task ListItemChangeAsync(IEnumerable<BaseId> list)
+        public async Task<bool> ListItemChangeAsync(IEnumerable<BaseId> list)
         {
             var value = list.FirstOrDefault();
 
             if (value is Marker marker)
             {
-                await MarkerChangeAsync(marker);
-
-                return;
+                return await MarkerChangeAsync(marker);
             }
 
             if (value is Track)
             {
-                await TrackChangeAsync(list.Cast<Track>());
-
-                return;
+                return await TrackChangeAsync(list.Cast<Track>());
             }
+
+            return false;
         }
 
-        public async Task ListItemDeleteAsync(IEnumerable<BaseId> list)
+        public async Task<bool> ListItemDeleteAsync(IEnumerable<BaseId> list)
         {
             var value = list.FirstOrDefault();
 
             if (value is Marker)
             {
-                await MarkerDeleteAsync(list.Cast<Marker>().ToList());
-                return;
+                return await MarkerDeleteAsync(list.Cast<Marker>().ToList());
             }
 
             if (value is Track)
             {
-                await TrackDeleteAsync(list.Cast<Track>().ToList());
-                return;
+                return await TrackDeleteAsync(list.Cast<Track>().ToList());
             }
+
+            return false;
         }
 
         public void UpdateGrid()
