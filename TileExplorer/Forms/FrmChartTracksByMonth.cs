@@ -1,4 +1,5 @@
 ﻿using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,12 +10,11 @@ using System.Windows.Forms.DataVisualization.Charting;
 using TileExplorer.Interfaces;
 using TileExplorer.Presenters;
 using TileExplorer.Properties;
-using static TileExplorer.Enums;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTracksByMonth : Form, IChildForm, IUpdateDataForm
+    public partial class FrmChartTracksByMonth : Form, IChildForm, IFrmUpdateData
     {
         public IMainForm MainForm => Owner as IMainForm;
 

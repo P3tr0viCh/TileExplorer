@@ -5,23 +5,23 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListFactory
     {
-        public static IPresenterFrmListBase PresenterFrmListInstance(IFrmListBase frmList, FrmListType listType)
+        public static IPresenterFrmListBase PresenterFrmListInstance(IFrmListBase frmList, ChildFormType frmType)
         {
-            switch (listType)
+            switch (frmType)
             {
-                case FrmListType.TagList:
+                case ChildFormType.TagList:
                     return new PresenterFrmListTags(frmList);
-                case FrmListType.TrackList:
+                case ChildFormType.TrackList:
                     return new PresenterFrmListTracks(frmList);
-                case FrmListType.MarkerList:
+                case ChildFormType.MarkerList:
                     return new PresenterFrmListMarkers(frmList);
-                case FrmListType.EquipmentList:
+                case ChildFormType.EquipmentList:
                     return new PresenterFrmListEquipments(frmList);
-                case FrmListType.TileInfo:
+                case ChildFormType.TileInfo:
                     return new PresenterFrmListTileInfo(frmList);
-                case FrmListType.ResultYears:
+                case ChildFormType.ResultYears:
                     return new PresenterFrmListResultYears(frmList);
-                case FrmListType.ResultEquipments:
+                case ChildFormType.ResultEquipments:
                     return new PresenterFrmListResultEquipments(frmList);
                 default:
                     throw new NotImplementedException();

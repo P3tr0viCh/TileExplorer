@@ -1,4 +1,5 @@
 ﻿using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,12 +11,11 @@ using System.Windows.Forms.DataVisualization.Charting;
 using TileExplorer.Interfaces;
 using TileExplorer.Presenters;
 using TileExplorer.Properties;
-using static TileExplorer.Enums;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTracksByYear : Form, IChildForm, IUpdateDataForm
+    public partial class FrmChartTracksByYear : Form, IChildForm, IFrmUpdateData 
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -219,6 +219,8 @@ namespace TileExplorer
 
                 selfChange = true;
 
+                Application.DoEvents();
+
                 cboxYear.ComboBox.DataSource = MainForm.Years;
 
                 if (!MainForm.Years.Contains(Year))
@@ -265,6 +267,7 @@ namespace TileExplorer
                     var counts = string.Empty;
 
                     var distancesCount = distances.Count();
+
                     if (distancesCount > 0)
                     {
                         var allDistances = 0D;

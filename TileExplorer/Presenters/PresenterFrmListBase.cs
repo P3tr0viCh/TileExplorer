@@ -4,6 +4,8 @@ using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.EventArguments;
 using P3tr0viCh.Utils.Presenters;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
@@ -19,8 +21,6 @@ namespace TileExplorer.Presenters
 
         public abstract ChildFormType FormType { get; }
 
-        public abstract FrmListType ListType { get; }
-
         public PresenterFrmListBase(IFrmListBase frmList) : base(frmList)
         {
             ItemChanged += PresenterFrmListBase_ItemChanged;
@@ -30,7 +30,7 @@ namespace TileExplorer.Presenters
 
         protected override void FormOpened()
         {
-            DebugWrite.Line($"ListType = {ListType}");
+            DebugWrite.Line($"ListType = {FormType}");
         }
 
         protected override void FormClosed()
@@ -43,21 +43,16 @@ namespace TileExplorer.Presenters
             FormClosing();
         }
 
-        private void BindingSource_PositionChanged(object sender, EventArgs e)
-        {
-            PerformOnPositionChanged();
-        }
-
         protected override void LoadFormState()
         {
-            AppSettings.Local.LoadFormState(Form, ListType.ToString(), AppSettings.Local.Default.FormStates);
-            AppSettings.Local.LoadDataGridColumns(FrmList.DataGridView, ListType.ToString(), AppSettings.Local.Default.ColumnStates);
+            AppSettings.Local.LoadFormState(Form, FormType.ToString(), AppSettings.Local.Default.FormStates);
+            AppSettings.Local.LoadDataGridColumns(FrmList.DataGridView, FormType.ToString(), AppSettings.Local.Default.ColumnStates);
         }
 
         protected override void SaveFormState()
         {
-            AppSettings.Local.SaveFormState(Form, ListType.ToString(), AppSettings.Local.Default.FormStates);
-            AppSettings.Local.SaveDataGridColumns(FrmList.DataGridView, ListType.ToString(), AppSettings.Local.Default.ColumnStates);
+            AppSettings.Local.SaveFormState(Form, FormType.ToString(), AppSettings.Local.Default.FormStates);
+            AppSettings.Local.SaveDataGridColumns(FrmList.DataGridView, FormType.ToString(), AppSettings.Local.Default.ColumnStates);
         }
 
         protected override void UpdateColumns()
@@ -76,13 +71,6 @@ namespace TileExplorer.Presenters
         public IBaseId Find(IBaseId value)
         {
             return Find(value as T);
-        }
-
-        public event PositionChanged OnPositionChanged;
-
-        private void PerformOnPositionChanged()
-        {
-            OnPositionChanged?.Invoke();
         }
 
         private async void PresenterFrmListBase_ItemChanged(object sender, ItemChangedEventArgs<T> e)
@@ -124,10 +112,21 @@ namespace TileExplorer.Presenters
             PerformListLoadException(e);
         }
 
-        public abstract void ListItemChange(IBaseId value);
+        protected override Task<IEnumerable<T>> ListLoadAsync(CancellationToken cancellationToken)
+        {
+            Application.DoEvents();
 
-        public abstract void ListItemDelete(IBaseId value);
+            return Database.Default.ListLoadAsync<T>();
+        }
 
-        public abstract Task UpdateDataAsync();
+        public virtual void ListItemChange(IBaseId value)
+        {
+
+        }
+
+        public virtual void ListItemDelete(IBaseId value)
+        {
+
+        }
     }
 }

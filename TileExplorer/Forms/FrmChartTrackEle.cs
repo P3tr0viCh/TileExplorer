@@ -1,5 +1,6 @@
 ﻿using GMap.NET;
 using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Interfaces;
 using P3tr0viCh.Utils.Presenters;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTrackEle : Form, IChildForm, IUpdateDataForm, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
+    public partial class FrmChartTrackEle : Form, IChildForm, IFrmUpdateData, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;
 

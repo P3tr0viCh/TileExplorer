@@ -10,8 +10,6 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListTags : PresenterFrmListBase<TagModel>
     {
-        public override FrmListType ListType => FrmListType.TagList;
-
         public override ChildFormType FormType => ChildFormType.TagList;
 
         public PresenterFrmListTags(IFrmListBase frmList) : base(frmList)

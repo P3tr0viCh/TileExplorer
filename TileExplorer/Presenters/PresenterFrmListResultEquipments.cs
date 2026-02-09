@@ -10,8 +10,6 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListResultEquipments : PresenterFrmListBase<ResultEquipments>
     {
-        public override FrmListType ListType => FrmListType.ResultEquipments;
-
         public override ChildFormType FormType => ChildFormType.ResultEquipments;
 
         public PresenterFrmListResultEquipments(IFrmListBase frmList) : base(frmList)

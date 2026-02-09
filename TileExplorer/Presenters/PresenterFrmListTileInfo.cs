@@ -1,7 +1,9 @@
 ﻿using GMap.NET.Internals;
 using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Forms;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
@@ -12,15 +14,13 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListTileInfo : PresenterFrmListBase<Track>
     {
-        public override FrmListType ListType => FrmListType.TileInfo;
-
         public override ChildFormType FormType => ChildFormType.TileInfo;
 
         public PresenterFrmListTileInfo(IFrmListBase frmList) : base(frmList)
         {
             Grants = FrmListGrant.Sort;
 
-            OnPositionChanged += PresenterFrmListMarkers_OnPositionChanged;
+            BindingSource.PositionChanged += BindingSource_PositionChanged;
         }
 
         public Database.Models.Tile Tile => Value as Database.Models.Tile;
@@ -31,26 +31,26 @@ namespace TileExplorer.Presenters
         {
             base.LoadFormState();
 
-            presenterDataGridView.SortColumn = nameof(Track.DateTimeStart);
-            presenterDataGridView.SortOrder = ComparerSortOrder.Descending;
+            PresenterDataGridView.SortColumn = nameof(Track.DateTimeStart);
+            PresenterDataGridView.SortOrder = ComparerSortOrder.Descending;
         }
 
         protected override void UpdateColumns()
         {
-            foreach (DataGridViewColumn column in DataGridView.Columns)
+            foreach (DataGridViewColumn column in FrmList.DataGridView.Columns)
             {
                 column.Visible = false;
             }
 
-            DataGridView.Columns[nameof(Track.DateTimeStart)].Visible = true;
-            DataGridView.Columns[nameof(Track.DateTimeStart)].DisplayIndex = 0;
+            FrmList.DataGridView.Columns[nameof(Track.DateTimeStart)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.DateTimeStart)].DisplayIndex = 0;
 
-            DataGridView.Columns[nameof(Track.Text)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.Text)].Visible = true;
         }
 
         public override void UpdateSettings()
         {
-            DataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle = DataGridViewCellStyles.DateTime;
+            FrmList.DataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle = DataGridViewCellStyles.DateTime;
         }
 
         public override int Compare(Track x, Track y, string dataPropertyName, ComparerSortOrder sortOrder)
@@ -74,12 +74,12 @@ namespace TileExplorer.Presenters
             return result;
         }
 
-        protected override async Task<IEnumerable<Track>> ListLoadAsync()
+        protected override async Task<IEnumerable<Track>> ListLoadAsync(CancellationToken token)
         {
             return await Database.Default.ListLoadAsync<Track>(Tile);
         }
 
-        private void PresenterFrmListMarkers_OnPositionChanged()
+        private void BindingSource_PositionChanged(object sender, EventArgs e)
         {
             MainForm.SelectMapItemAsync(this, Selected);
         }

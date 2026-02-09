@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using P3tr0viCh.Utils;
-using P3tr0viCh.Utils.Comparers;
+﻿using P3tr0viCh.Utils.Comparers;
+using P3tr0viCh.Utils.EventArguments;
 using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
@@ -15,18 +16,16 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListTracks : PresenterFrmListBase<Track>
     {
-        public override FrmListType ListType => FrmListType.TrackList;
-
         public override ChildFormType FormType => ChildFormType.TrackList;
 
         public PresenterFrmListTracks(IFrmListBase frmList) : base(frmList)
         {
             Grants = Grants.AddFlag(FrmListGrant.MultiChange);
 
-            OnPositionChanged += PresenterFrmListTracks_OnPositionChanged;
+            BindingSource.PositionChanged += BindingSource_PositionChanged;
 
             ItemChangeDialog += PresenterFrmListTracks_ItemChangeDialog;
-            
+
             ItemListChangeDialog += PresenterFrmListTracks_ItemListChangeDialog;
 
             ItemListDeleteDialog += PresenterFrmListTracks_ItemListDeleteDialog;
@@ -38,11 +37,11 @@ namespace TileExplorer.Presenters
         {
             base.LoadFormState();
 
-            presenterDataGridView.SortColumn = nameof(Track.DateTimeStart);
-            presenterDataGridView.SortOrder = ComparerSortOrder.Descending;
+            PresenterDataGridView.SortColumn = nameof(Track.DateTimeStart);
+            PresenterDataGridView.SortOrder = ComparerSortOrder.Descending;
         }
 
-        private async void PresenterFrmListTracks_ItemChangeDialog(object sender, ItemDialogEventArgs e)
+        private async void PresenterFrmListTracks_ItemChangeDialog(object sender, ItemDialogEventArgs<Track> e)
         {
             if (e.Value.IsNew)
             {
@@ -54,12 +53,12 @@ namespace TileExplorer.Presenters
             }
         }
 
-        private async void PresenterFrmListTracks_ItemListChangeDialog(object sender, ItemListDialogEventArgs e)
+        private async void PresenterFrmListTracks_ItemListChangeDialog(object sender, ItemListDialogEventArgs<Track> e)
         {
             e.Ok = await MainForm.ListItemChangeAsync(e.Values);
         }
 
-        private void PresenterFrmListTracks_ItemListDeleteDialog(object sender, ItemListDialogEventArgs e)
+        private void PresenterFrmListTracks_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Track> e)
         {
             e.Ok = Utils.ShowItemDeleteDialog(e.Values,
                Resources.QuestionTrackDelete, Resources.QuestionTrackListDelete);
@@ -82,23 +81,23 @@ namespace TileExplorer.Presenters
 
         protected override void UpdateColumns()
         {
-            DataGridView.Columns[nameof(Track.Text)].DisplayIndex = 0;
+            FrmList.DataGridView.Columns[nameof(Track.Text)].DisplayIndex = 0;
 
-            DataGridView.Columns[nameof(Track.Text)].Visible = true;
-            DataGridView.Columns[nameof(Track.DateTimeStart)].Visible = true;
-            DataGridView.Columns[nameof(Track.DateTimeFinish)].Visible = true;
-            DataGridView.Columns[nameof(Track.DurationAsString)].Visible = true;
-            DataGridView.Columns[nameof(Track.DurationInMoveAsString)].Visible = true;
-            DataGridView.Columns[nameof(Track.Distance)].Visible = true;
-            DataGridView.Columns[nameof(Track.AverageSpeed)].Visible = true;
-            DataGridView.Columns[nameof(Track.EleAscent)].Visible = true;
-            DataGridView.Columns[nameof(Track.EleDescent)].Visible = true;
-            DataGridView.Columns[nameof(Track.NewTilesCount)].Visible = true;
-            DataGridView.Columns[nameof(Track.EquipmentText)].Visible = true;
-            DataGridView.Columns[nameof(Track.TagsAsString)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.Text)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.DateTimeStart)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.DateTimeFinish)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.DurationAsString)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.DurationInMoveAsString)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.Distance)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.AverageSpeed)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.EleAscent)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.EleDescent)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.NewTilesCount)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.EquipmentText)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Track.TagsAsString)].Visible = true;
 
-            DataGridView.Columns[nameof(Track.Equipment)].Visible = false;
-            DataGridView.Columns[nameof(Track.Tags)].Visible = false;
+            FrmList.DataGridView.Columns[nameof(Track.Equipment)].Visible = false;
+            FrmList.DataGridView.Columns[nameof(Track.Tags)].Visible = false;
 
             var visible =
 #if SHOW_ALL_COLUMNS
@@ -106,18 +105,18 @@ namespace TileExplorer.Presenters
 #else
                 false;
 #endif
-            DataGridView.Columns[nameof(Track.Duration)].Visible = visible;
-            DataGridView.Columns[nameof(Track.DurationInMove)].Visible = visible;
-            DataGridView.Columns[nameof(Track.EquipmentId)].Visible = visible;
-            DataGridView.Columns[nameof(Track.EquipmentBrand)].Visible = visible;
-            DataGridView.Columns[nameof(Track.EquipmentModel)].Visible = visible;
+            FrmList.DataGridView.Columns[nameof(Track.Duration)].Visible = visible;
+            FrmList.DataGridView.Columns[nameof(Track.DurationInMove)].Visible = visible;
+            FrmList.DataGridView.Columns[nameof(Track.EquipmentId)].Visible = visible;
+            FrmList.DataGridView.Columns[nameof(Track.EquipmentBrand)].Visible = visible;
+            FrmList.DataGridView.Columns[nameof(Track.EquipmentModel)].Visible = visible;
 
             columnFormattingIndex = new int[2];
 
-            columnFormattingIndex[0] = DataGridView.Columns[nameof(Track.Distance)].Index;
-            columnFormattingIndex[1] = DataGridView.Columns[nameof(Track.AverageSpeed)].Index;
+            columnFormattingIndex[0] = FrmList.DataGridView.Columns[nameof(Track.Distance)].Index;
+            columnFormattingIndex[1] = FrmList.DataGridView.Columns[nameof(Track.AverageSpeed)].Index;
 
-            DataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
+            FrmList.DataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
         }
 
         private int[] columnFormattingIndex;
@@ -139,22 +138,22 @@ namespace TileExplorer.Presenters
 
         public override void UpdateSettings()
         {
-            DataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle = DataGridViewCellStyles.DateTime;
-            DataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle = DataGridViewCellStyles.DateTime;
+            FrmList.DataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle = DataGridViewCellStyles.DateTime;
+            FrmList.DataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle = DataGridViewCellStyles.DateTime;
 
-            DataGridView.Columns[nameof(Track.DurationAsString)].DefaultCellStyle =
+            FrmList.DataGridView.Columns[nameof(Track.DurationAsString)].DefaultCellStyle =
                 DataGridViewCellStyles.DurationAsString;
-            DataGridView.Columns[nameof(Track.DurationInMoveAsString)].DefaultCellStyle =
+            FrmList.DataGridView.Columns[nameof(Track.DurationInMoveAsString)].DefaultCellStyle =
                 DataGridViewCellStyles.DurationAsString;
 
-            DataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle = DataGridViewCellStyles.Distance;
+            FrmList.DataGridView.Columns[nameof(Track.Distance)].DefaultCellStyle = DataGridViewCellStyles.Distance;
 
-            DataGridView.Columns[nameof(Track.AverageSpeed)].DefaultCellStyle = DataGridViewCellStyles.Speed;
+            FrmList.DataGridView.Columns[nameof(Track.AverageSpeed)].DefaultCellStyle = DataGridViewCellStyles.Speed;
 
-            DataGridView.Columns[nameof(Track.EleAscent)].DefaultCellStyle = DataGridViewCellStyles.EleAscent;
-            DataGridView.Columns[nameof(Track.EleDescent)].DefaultCellStyle = DataGridViewCellStyles.EleAscent;
+            FrmList.DataGridView.Columns[nameof(Track.EleAscent)].DefaultCellStyle = DataGridViewCellStyles.EleAscent;
+            FrmList.DataGridView.Columns[nameof(Track.EleDescent)].DefaultCellStyle = DataGridViewCellStyles.EleAscent;
 
-            DataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle = DataGridViewCellStyles.Count;
+            FrmList.DataGridView.Columns[nameof(Track.NewTilesCount)].DefaultCellStyle = DataGridViewCellStyles.Count;
         }
 
         public override int Compare(Track x, Track y, string dataPropertyName, ComparerSortOrder sortOrder)
@@ -228,19 +227,23 @@ namespace TileExplorer.Presenters
             return result;
         }
 
-        protected override async Task<IEnumerable<Track>> ListLoadAsync()
+        protected override async Task<IEnumerable<Track>> ListLoadAsync(CancellationToken token)
         {
             var tracks = await Database.Default.ListLoadAsync<Track>();
 
+            if (token.IsCancellationRequested) return Enumerable.Empty<Track>();
+
             foreach (var track in tracks)
             {
+                if (token.IsCancellationRequested) return Enumerable.Empty<Track>();
+
                 track.Tags = await Database.Default.ListLoadAsync<TagModel>(track);
             }
 
             return tracks;
         }
 
-        private void PresenterFrmListTracks_OnPositionChanged()
+        private void BindingSource_PositionChanged(object sender, EventArgs e)
         {
             MainForm.SelectMapItemAsync(this, Selected);
         }

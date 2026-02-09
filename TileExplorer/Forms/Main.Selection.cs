@@ -143,6 +143,8 @@ namespace TileExplorer
             {
                 if (value is Track track)
                 {
+                    var status = ProgramStatus.Default.Start(ProgramStatus.Status.LoadData);
+
                     try
                     {
                         var trackPoints = await Database.Default.ListLoadAsync<TrackPoint>(track);
@@ -154,6 +156,10 @@ namespace TileExplorer
                     catch (Exception e)
                     {
                         DebugWrite.Error(e);
+                    }
+                    finally
+                    {
+                        ProgramStatus.Default.Stop(status);
                     }
                 }
             }

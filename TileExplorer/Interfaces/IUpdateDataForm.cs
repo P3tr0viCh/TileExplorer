@@ -2,7 +2,7 @@
 
 namespace TileExplorer.Interfaces
 {
-    public interface IUpdateDataForm : IChildForm
+    public interface IUpdateDataForm2 : IChildForm
     {
         Task UpdateDataAsync();
     }

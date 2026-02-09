@@ -51,13 +51,6 @@ namespace TileExplorer
             mapZoomRuler = new MapZoomRuler(gMapControl);
         }
 
-        private async void Filter_OnChangedAsync()
-        {
-            Selected = null;
-
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
-        }
-
         private bool AbnormalExit
         {
             get => Tag != null && (bool)Tag;
@@ -309,6 +302,15 @@ namespace TileExplorer
         private void ProgramStatus_StatusChanged(object sender, Status status)
         {
             statusStripPresenter.Status = status;
+
+            Application.DoEvents();
+        }
+
+        private async void Filter_OnChangedAsync()
+        {
+            Selected = null;
+
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
         }
 
         private void UpdateApp_StatusChanged(object sender, UpdateStatus status)

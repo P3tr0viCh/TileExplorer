@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Utils.Comparers;
+﻿using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,8 +11,6 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListEquipments : PresenterFrmListBase<Equipment>
     {
-        public override FrmListType ListType => FrmListType.EquipmentList;
-
         public override ChildFormType FormType => ChildFormType.EquipmentList;
 
         public PresenterFrmListEquipments(IFrmListBase frmList) : base(frmList)
@@ -92,6 +91,16 @@ namespace TileExplorer.Presenters
             }
 
             return result;
+        }
+
+        public override void ListItemChange(IBaseId value)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void ListItemDelete(IBaseId value)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

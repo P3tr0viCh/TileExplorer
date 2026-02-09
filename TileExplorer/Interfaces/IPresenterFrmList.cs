@@ -3,15 +3,9 @@ using P3tr0viCh.Utils.Interfaces;
 
 namespace TileExplorer.Interfaces
 {
-    public delegate void PositionChanged();
-
-    internal interface IPresenterFrmListBase : IUpdateDataForm, IPresenterFrmList
+    internal interface IPresenterFrmListBase : IPresenterFrmList, IChildForm, IFrmUpdateData
     {
-        FrmListType ListType { get; }
-
         object Value { get; set; }
-
-//        event PositionChanged OnPositionChanged;
 
         void ListItemChange(IBaseId value);
 

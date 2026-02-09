@@ -12,8 +12,6 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListMarkers : PresenterFrmListBase<Marker>
     {
-        public override FrmListType ListType => FrmListType.MarkerList;
-
         public override ChildFormType FormType => ChildFormType.MarkerList;
 
         public PresenterFrmListMarkers(IFrmListBase frmList) : base(frmList)

@@ -24,6 +24,8 @@ namespace TileExplorer
 
         public ChildFormType FormType => PresenterFrmList.FormType;
 
+        public object Value => PresenterFrmList.Value;
+
         public DataGridView DataGridView => dataGridView;
 
         public ToolStrip ToolStrip => toolStrip;
@@ -34,8 +36,6 @@ namespace TileExplorer
 
         private readonly PresenterStatusStripList statusStripPresenter;
 
-        public object Value => PresenterFrmList.Value;
-
         public FrmList()
         {
             InitializeComponent();
@@ -45,45 +45,16 @@ namespace TileExplorer
             statusStripPresenter = new PresenterStatusStripList(this);
         }
 
-        public static FrmList ShowFrm(Form owner, ChildFormType childFormType, object value = default)
+        public static FrmList ShowFrm(Form owner, ChildFormType frmType, object value = default)
         {
             var frm = new FrmList()
             {
                 Owner = owner
             };
 
-            DebugWrite.Line($"ChildFormType = {childFormType}");
+            DebugWrite.Line($"ChildFormType = {frmType}");
 
-            var listType = FrmListType.None;
-
-            switch (childFormType)
-            {
-                case ChildFormType.TagList:
-                    listType = FrmListType.TagList;
-                    break;
-                case ChildFormType.TrackList:
-                    listType = FrmListType.TrackList;
-                    break;
-                case ChildFormType.MarkerList:
-                    listType = FrmListType.MarkerList;
-                    break;
-                case ChildFormType.EquipmentList:
-                    listType = FrmListType.EquipmentList;
-                    break;
-                case ChildFormType.TileInfo:
-                    listType = FrmListType.TileInfo;
-                    break;
-                case ChildFormType.ResultYears:
-                    listType = FrmListType.ResultYears;
-                    break;
-                case ChildFormType.ResultEquipments:
-                    listType = FrmListType.ResultEquipments;
-                    break;
-            }
-
-            DebugWrite.Line($"ListType = {listType}");
-
-            frm.PresenterFrmList = PresenterFrmListFactory.PresenterFrmListInstance(frm, listType);
+            frm.PresenterFrmList = PresenterFrmListFactory.PresenterFrmListInstance(frm, frmType);
 
             frm.PresenterFrmList.Value = value;
 
@@ -135,7 +106,12 @@ namespace TileExplorer
         public BaseId Selected
         {
             get => dataGridView.GetSelected<BaseId>();
-            set => dataGridView.SetSelected(value);
+            set
+            {
+                if (value?.Id == Selected?.Id) return;
+
+                dataGridView.SetSelected(value);
+            }
         }
 
         public IEnumerable<BaseId> SelectedList

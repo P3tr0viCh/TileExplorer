@@ -1,5 +1,6 @@
 ﻿using P3tr0viCh.Database;
 using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,12 +8,11 @@ using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using static TileExplorer.Database;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmFilter : Form, IChildForm, IUpdateDataForm
+    public partial class FrmFilter : Form, IChildForm, IFrmUpdateData
     {
         public IMainForm MainForm => Owner as IMainForm;
 

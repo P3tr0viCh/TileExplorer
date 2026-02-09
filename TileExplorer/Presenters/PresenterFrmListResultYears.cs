@@ -9,8 +9,6 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListResultYears : PresenterFrmListBase<ResultYears>
     {
-        public override FrmListType ListType => FrmListType.ResultYears;
-
         public override ChildFormType FormType => ChildFormType.ResultYears;
 
         public PresenterFrmListResultYears(IFrmListBase frmList) : base(frmList)

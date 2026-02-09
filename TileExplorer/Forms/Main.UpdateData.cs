@@ -1,9 +1,11 @@
 ﻿using P3tr0viCh.Database;
 using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -91,14 +93,14 @@ namespace TileExplorer
 
             Selected = null;
 
-            await Task.Delay(100);
+            Application.DoEvents();
 
             await InternalUpdateDataAsync(load, value);
 
-            var selected = value is BaseId ? value as BaseId: savedSelected?.Model;
+            var selected = value is BaseId ? value as BaseId : savedSelected?.Model;
 
             var item = FindMapItem(selected);
-            
+
             Selected = item;
         }
 
@@ -106,7 +108,7 @@ namespace TileExplorer
         {
             Selected = null;
 
-            await Task.Delay(100);
+            Application.DoEvents();
 
             foreach (var value in list)
             {
@@ -139,11 +141,13 @@ namespace TileExplorer
         {
             DataUpdate dataUpdate;
 
-            foreach (var frm in Utils.Forms.GetChildForms<IUpdateDataForm>())
+            foreach (var frm in Utils.Forms.GetChildForms<IFrmUpdateData>())
             {
                 dataUpdate = DataUpdate.None;
 
-                switch (frm.FormType)
+                var frmType = ((IChildForm)frm).FormType;
+
+                switch (frmType)
                 {
                     case ChildFormType.Filter:
                         if (load.HasFlag(DataLoad.Tracks) ||
@@ -291,13 +295,13 @@ namespace TileExplorer
 
                         break;
                     case DataUpdate.ObjectChange:
-                        ((IFrmList)frm).ListItemChange((BaseId)value);
+                        ((IFrmListBase)frm).ListItemChange((BaseId)value);
 
                         break;
                     case DataUpdate.ObjectDelete:
-                        ((IFrmList)frm).ListItemDelete((BaseId)value);
+                        ((IFrmListBase)frm).ListItemDelete((BaseId)value);
 
-                        if (frm.FormType == ChildFormType.TileInfo)
+                        if (frmType == ChildFormType.TileInfo)
                         {
                             if (((FrmList)frm).Count == 0)
                             {
