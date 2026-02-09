@@ -25,9 +25,9 @@ namespace TileExplorer.Presenters
             BindingSource.PositionChanged += BindingSource_PositionChanged;
 
             ItemChangeDialog += PresenterFrmListTracks_ItemChangeDialog;
-
             ItemListChangeDialog += PresenterFrmListTracks_ItemListChangeDialog;
 
+            ItemDeleteDialog += PresenterFrmListTracks_ItemDeleteDialog;
             ItemListDeleteDialog += PresenterFrmListTracks_ItemListDeleteDialog;
         }
 
@@ -58,23 +58,27 @@ namespace TileExplorer.Presenters
             e.Ok = await MainForm.ListItemChangeAsync(e.Values);
         }
 
+        private void PresenterFrmListTracks_ItemDeleteDialog(object sender, ItemDialogEventArgs<Track> e)
+        {
+            e.Ok = Utils.ShowItemDeleteDialog(e.Value, Resources.QuestionTrackDelete);
+        }
+
         private void PresenterFrmListTracks_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Track> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
-               Resources.QuestionTrackDelete, Resources.QuestionTrackListDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionTrackListDelete);
         }
 
-        protected override async Task ListItemSaveAsync(Track value)
+        protected override async Task DatabaseListItemSaveAsync(Track value)
         {
             await Task.CompletedTask;
         }
 
-        protected override async Task ListItemSaveAsync(IEnumerable<Track> list)
+        protected override async Task DatabaseListItemSaveAsync(IEnumerable<Track> list)
         {
             await Task.CompletedTask;
         }
 
-        protected override async Task ListItemDeleteAsync(IEnumerable<Track> list)
+        protected override async Task DatabaseListItemDeleteAsync(IEnumerable<Track> list)
         {
             await Database.Actions.TrackDeleteAsync(list);
         }
@@ -227,7 +231,7 @@ namespace TileExplorer.Presenters
             return result;
         }
 
-        protected override async Task<IEnumerable<Track>> ListLoadAsync(CancellationToken token)
+        protected override async Task<IEnumerable<Track>> DatabaseListLoadAsync(CancellationToken token)
         {
             var tracks = await Database.Default.ListLoadAsync<Track>();
 

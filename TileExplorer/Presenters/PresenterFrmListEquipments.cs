@@ -1,5 +1,4 @@
-﻿using P3tr0viCh.Utils;
-using P3tr0viCh.Utils.Comparers;
+﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,6 +16,7 @@ namespace TileExplorer.Presenters
         {
             ItemChangeDialog += PresenterFrmListEquipments_ItemChangeDialog;
 
+            ItemDeleteDialog += PresenterFrmListEquipments_ItemDeleteDialog; ;
             ItemListDeleteDialog += PresenterFrmListEquipments_ItemListDeleteDialog;
         }
 
@@ -33,19 +33,22 @@ namespace TileExplorer.Presenters
         {
             e.Ok = FrmEquipment.ShowDlg(Form, e.Value);
         }
+        private void PresenterFrmListEquipments_ItemDeleteDialog(object sender, ItemDialogEventArgs<Equipment> e)
+        {
+            e.Ok = Utils.ShowItemDeleteDialog(e.Value, Resources.QuestionEquipmentDelete);
+        }
 
         private void PresenterFrmListEquipments_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Equipment> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
-                Resources.QuestionEquipmentDelete, Resources.QuestionEquipmentListDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionEquipmentListDelete);
         }
 
-        protected override async Task ListItemSaveAsync(Equipment value)
+        protected override async Task DatabaseListItemSaveAsync(Equipment value)
         {
             await Task.CompletedTask;
         }
 
-        protected override async Task ListItemDeleteAsync(IEnumerable<Equipment> list)
+        protected override async Task DatabaseListItemDeleteAsync(IEnumerable<Equipment> list)
         {
             await Database.Actions.EquipmentDeleteAsync(list);
         }
@@ -91,16 +94,6 @@ namespace TileExplorer.Presenters
             }
 
             return result;
-        }
-
-        public override void ListItemChange(IBaseId value)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void ListItemDelete(IBaseId value)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -74,7 +74,7 @@ namespace TileExplorer.Presenters
             return result;
         }
 
-        protected override async Task<IEnumerable<Track>> ListLoadAsync(CancellationToken token)
+        protected override async Task<IEnumerable<Track>> DatabaseListLoadAsync(CancellationToken token)
         {
             return await Database.Default.ListLoadAsync<Track>(Tile);
         }

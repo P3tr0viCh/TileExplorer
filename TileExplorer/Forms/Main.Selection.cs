@@ -90,10 +90,7 @@ namespace TileExplorer
                         SelectedTrackTiles = selected.Model as Track;
 
                         Utils.Forms.GetChildForms<FrmList>(ChildFormType.TrackList | ChildFormType.TileInfo)
-                            .ForEach(frm =>
-                            {
-                                frm.SetSelected(selected.Model);
-                            });
+                            .ForEach(frm => frm.SetSelected(selected.Model));
 
                         break;
                 }

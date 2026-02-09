@@ -20,6 +20,7 @@ namespace TileExplorer.Presenters
 
             ItemChangeDialog += PresenterFrmListMarkers_ItemChangeDialog;
 
+            ItemDeleteDialog += PresenterFrmListMarkers_ItemDeleteDialog;
             ItemListDeleteDialog += PresenterFrmListMarkers_ItemListDeleteDialog;
         }
 
@@ -44,18 +45,22 @@ namespace TileExplorer.Presenters
             }
         }
 
-        private void PresenterFrmListMarkers_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Marker> e)
+        private void PresenterFrmListMarkers_ItemDeleteDialog(object sender, ItemDialogEventArgs<Marker> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
-                Resources.QuestionMarkerDelete, Resources.QuestionMarkerListDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Value, Resources.QuestionMarkerDelete);
         }
 
-        protected override async Task ListItemSaveAsync(Marker value)
+        private void PresenterFrmListMarkers_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Marker> e)
+        {
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionMarkerListDelete);
+        }
+
+        protected override async Task DatabaseListItemSaveAsync(Marker value)
         {
             await Task.CompletedTask;
         }
 
-        protected override async Task ListItemDeleteAsync(IEnumerable<Marker> list)
+        protected override async Task DatabaseListItemDeleteAsync(IEnumerable<Marker> list)
         {
             await Database.Actions.MarkerDeleteAsync(list);
         }

@@ -2,6 +2,8 @@
 using P3tr0viCh.Database.Extensions;
 using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.EventArguments;
+using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Forms;
 using P3tr0viCh.Utils.Presenters;
 using System;
 using System.Collections.Generic;
@@ -23,6 +25,8 @@ namespace TileExplorer.Presenters
 
         public PresenterFrmListBase(IFrmListBase frmList) : base(frmList)
         {
+            Grants = Grants.AddFlag(FrmListGrant.MultiDelete);
+
             ItemChanged += PresenterFrmListBase_ItemChanged;
             ItemListChanged += PresenterFrmListBase_ItemListChanged;
             ItemListDeleted += PresenterFrmListBase_ItemListDeleted;
@@ -73,22 +77,22 @@ namespace TileExplorer.Presenters
             return Find(value as T);
         }
 
-        private async void PresenterFrmListBase_ItemChanged(object sender, ItemChangedEventArgs<T> e)
+        private async void PresenterFrmListBase_ItemChanged(object sender, ItemEventArgs<T> e)
         {
             await MainForm.UpdateDataAsync(DataLoad.ObjectChange, e.Value);
         }
 
-        private async void PresenterFrmListBase_ItemListChanged(object sender, ItemListChangedEventArgs<T> e)
+        private async void PresenterFrmListBase_ItemListChanged(object sender, ItemListEventArgs<T> e)
         {
             await MainForm.UpdateDataAsync(DataLoad.ObjectChange, e.Values);
         }
 
-        private async void PresenterFrmListBase_ItemListDeleted(object sender, ItemListDeletedEventArgs<T> e)
+        private async void PresenterFrmListBase_ItemListDeleted(object sender, ItemListEventArgs<T> e)
         {
             await MainForm.UpdateDataAsync(DataLoad.ObjectDelete, e.Values);
         }
 
-        private void PerformListLoadException(Exception e)
+        private void DatabaseListException(Exception e)
         {
             DebugWrite.Line(e.GetQuery());
 
@@ -97,36 +101,26 @@ namespace TileExplorer.Presenters
             Msg.Error(e.Message);
         }
 
-        protected override void ListLoadException(Exception e)
+        protected override void DatabaseListLoadException(Exception e)
         {
-            PerformListLoadException(e);
+            DatabaseListException(e);
         }
 
-        protected override void ListItemChangeException(Exception e)
+        protected override void DatabaseListItemChangeException(Exception e)
         {
-            PerformListLoadException(e);
+            DatabaseListException(e);
         }
 
-        protected override void ListItemDeleteException(Exception e)
+        protected override void DatabaseListItemDeleteException(Exception e)
         {
-            PerformListLoadException(e);
+            DatabaseListException(e);
         }
 
-        protected override Task<IEnumerable<T>> ListLoadAsync(CancellationToken cancellationToken)
+        protected override Task<IEnumerable<T>> DatabaseListLoadAsync(CancellationToken cancellationToken)
         {
             Application.DoEvents();
 
             return Database.Default.ListLoadAsync<T>();
-        }
-
-        public virtual void ListItemChange(IBaseId value)
-        {
-
-        }
-
-        public virtual void ListItemDelete(IBaseId value)
-        {
-
         }
     }
 }

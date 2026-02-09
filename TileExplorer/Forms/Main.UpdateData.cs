@@ -185,7 +185,6 @@ namespace TileExplorer
                             IsObjectChangedOrDeleted(load, value, typeof(Equipment)))
                         {
                             dataUpdate = DataUpdate.Full;
-
                             break;
                         }
 

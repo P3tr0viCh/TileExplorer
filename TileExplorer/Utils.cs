@@ -115,8 +115,14 @@ namespace TileExplorer
             return x.CompareTo(y) * (descending ? -1 : 1);
         }
 
-        public static bool ShowItemDeleteDialog<T>(IEnumerable<T> list,
-            string questionItem, string questionItemList) where T : IBaseText
+        public static bool ShowItemDeleteDialog<T>(T value, string question) where T : IBaseText
+        {
+            var text = value.Text;
+
+            return Msg.Question(question, text);
+        }
+
+        public static bool ShowItemDeleteDialog<T>(IEnumerable<T> list, string question) where T : IBaseText
         {
             var count = list?.Count();
 
@@ -125,8 +131,6 @@ namespace TileExplorer
             var first = list.FirstOrDefault();
 
             var text = first.Text;
-
-            var question = count == 1 ? questionItem : questionItemList;
 
             return Msg.Question(question, text, count - 1);
         }

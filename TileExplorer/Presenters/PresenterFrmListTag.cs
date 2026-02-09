@@ -16,6 +16,7 @@ namespace TileExplorer.Presenters
         {
             ItemChangeDialog += PresenterFrmListTags_ItemChangeDialog;
 
+            ItemDeleteDialog += PresenterFrmListTags_ItemDeleteDialog;
             ItemListDeleteDialog += PresenterFrmListTags_ItemListDeleteDialog;
         }
 
@@ -33,13 +34,17 @@ namespace TileExplorer.Presenters
             e.Ok = FrmTag.ShowDlg(Form, e.Value);
         }
 
-        private void PresenterFrmListTags_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<TagModel> e)
+        private void PresenterFrmListTags_ItemDeleteDialog(object sender, ItemDialogEventArgs<TagModel> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
-                Resources.QuestionTagDelete, Resources.QuestionTagListDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Value, Resources.QuestionTagDelete);
         }
 
-        protected override async Task ListItemDeleteAsync(IEnumerable<TagModel> list)
+        private void PresenterFrmListTags_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<TagModel> e)
+        {
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionTagListDelete);
+        }
+
+        protected override async Task DatabaseListItemDeleteAsync(IEnumerable<TagModel> list)
         {
             await Database.Actions.TagDeleteAsync(list);
         }
