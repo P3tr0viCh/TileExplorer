@@ -26,14 +26,35 @@ namespace TileExplorer
 
                 public Marker(PointLatLng point)
                 {
-                    Lat = point.Lat;
-                    Lng = point.Lng;
+                    pointLatLng = point;
                 }
 
                 [DisplayName("Широта")]
-                public double Lat { get; set; }
+                public double Lat
+                {
+                    get => pointLatLng.Lat;
+                    set => pointLatLng.Lat = value;
+                }
+
                 [DisplayName("Долгота")]
-                public double Lng { get; set; }
+                public double Lng
+                {
+                    get => pointLatLng.Lng;
+                    set => pointLatLng.Lng = value;
+                }
+
+                private PointLatLng pointLatLng = new PointLatLng();
+
+                [Write(false)]
+                public PointLatLng LatLng
+                {
+                    get => pointLatLng;
+                    set
+                    {
+                        pointLatLng.Lat = value.Lat;
+                        pointLatLng.Lng = value.Lng;
+                    }
+                }
 
                 public bool IsTextVisible { get; set; } = true;
 
@@ -185,7 +206,7 @@ namespace TileExplorer
                 [DisplayName("Время")]
                 public string DurationSumAsString => TimeSpan.FromDays(DurationSum).ToHoursMinutesString();
             }
-            
+
             [Table(Tables.tags)]
             public class TagModel : BaseText
             {

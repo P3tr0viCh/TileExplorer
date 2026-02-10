@@ -601,7 +601,7 @@ namespace TileExplorer
             {
                 if (Selected == null)
                 {
-                    MarkerAdd(new Marker(gMapControl.FromLocalToLatLng(e.X, e.Y)));
+                    await MarkerChangeAsync(new Marker(gMapControl.FromLocalToLatLng(e.X, e.Y)));
                 }
                 else
                 {
@@ -719,9 +719,9 @@ namespace TileExplorer
             UpdateCopyCoords();
         }
 
-        private void MiMapMarkerAdd_Click(object sender, EventArgs e)
+        private async void MiMapMarkerAdd_Click(object sender, EventArgs e)
         {
-            MarkerAdd(new Marker(MenuPopupPointLatLng));
+            await MarkerChangeAsync(new Marker(MenuPopupPointLatLng));
         }
 
         private async void MiMarkerChange_Click(object sender, EventArgs e)
@@ -979,16 +979,10 @@ namespace TileExplorer
             return items.Cast<IMapItem>().FirstOrDefault(i => i.Model.Id == value.Id);
         }
 
+        public PointLatLng MapCenter => gMapControl.Position;
+
         public async Task<bool> ListItemAddAsync(BaseId value)
         {
-            if (value is Marker marker)
-            {
-                marker.Lat = gMapControl.Position.Lat;
-                marker.Lng = gMapControl.Position.Lng;
-
-                return MarkerAdd(marker);
-            }
-
             if (value is Track)
             {
                 var result = await OpenTracksAsync(null);
@@ -1003,31 +997,9 @@ namespace TileExplorer
         {
             var value = list.FirstOrDefault();
 
-            if (value is Marker marker)
-            {
-                return await MarkerChangeAsync(marker);
-            }
-
             if (value is Track)
             {
                 return await TrackChangeAsync(list.Cast<Track>());
-            }
-
-            return false;
-        }
-
-        public async Task<bool> ListItemDeleteAsync(IEnumerable<BaseId> list)
-        {
-            var value = list.FirstOrDefault();
-
-            if (value is Marker)
-            {
-                return await MarkerDeleteAsync(list.Cast<Marker>().ToList());
-            }
-
-            if (value is Track)
-            {
-                return await TrackDeleteAsync(list.Cast<Track>().ToList());
             }
 
             return false;
@@ -1191,12 +1163,12 @@ namespace TileExplorer
 
         private void MiMainOsmOpen_Click(object sender, EventArgs e)
         {
-            Utils.Osm.StartUrlOpen((int)gMapControl.Zoom, gMapControl.Position);
+            Utils.Osm.StartUrlOpen((int)gMapControl.Zoom, MapCenter);
         }
 
         private void MiMainOsmEdit_Click(object sender, EventArgs e)
         {
-            Utils.Osm.StartUrlEdit((int)gMapControl.Zoom, gMapControl.Position);
+            Utils.Osm.StartUrlEdit((int)gMapControl.Zoom, MapCenter);
         }
 
         private void MiMapOsmOpen_Click(object sender, EventArgs e)
@@ -1345,13 +1317,6 @@ namespace TileExplorer
             mapZoomRuler.Paint(e.Graphics);
         }
 
-        public void ShowMarkerPosition(object sender, PointLatLng value)
-        {
-            markerPosition.Position = value;
-
-            markerPosition.IsVisible = value != default;
-        }
-
         private void MiTrackShowChartTrackEle_Click(object sender, EventArgs e)
         {
             FrmChartTrackEle.OpenFrm(this, SelectedTrack.Model);
@@ -1369,22 +1334,7 @@ namespace TileExplorer
 
         private void MiMainDataChartTracks_Click(object sender, EventArgs e)
         {
-            if (Years.Count == 0)
-            {
-                return;
-            }
-
-            var frmList = Utils.Forms.GetChildForms<FrmChartTracksByYear>(ChildFormType.ChartTracksByYear);
-
-            var year = Years.Last();
-
-            if (frmList != null && frmList.Count == 1 && frmList.First().Year == year)
-            {
-                frmList.First().Close();
-                return;
-            }
-
-            Utils.Forms.OpenChartTracksByYear(this, year);
+            FrmChartTracksByYear.OpenFrm(this, 0);
         }
 
         private void MiMainTilesHeatmap_Click(object sender, EventArgs e)

@@ -120,6 +120,7 @@
     <Compile Include="AppBackup\Backup.Equipment.cs" />
     <Compile Include="AppBackup\Backup.Markers.cs" />
     <Compile Include="AppBackup\Backup.Tracks.cs" />
+    <Compile Include="Lists.cs" />
     <Compile Include="Forms\ChildFormType.cs" />
     <Compile Include="Database\Database.Models.Track.cs" />
     <Compile Include="Database\Database.Actions.cs" />
@@ -176,7 +177,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Interfaces\IChildForm.cs" />
-    <Compile Include="Interfaces\IFrmList.cs" />
     <Compile Include="Interfaces\IMapItem.cs" />
     <Compile Include="Interfaces\IPresenterFrmList.cs" />
     <Compile Include="Models\MapItemMarkerCircle.cs" />

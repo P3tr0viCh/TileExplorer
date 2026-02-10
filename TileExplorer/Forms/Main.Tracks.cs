@@ -18,8 +18,6 @@ namespace TileExplorer
     {
         private bool tracksLoaded = false;
 
-        public List<int> Years { get; private set; }
-
         private IMapItem OverlayAddTrack(Track track)
         {
             var item = new MapItemTrack(track);
@@ -330,7 +328,7 @@ namespace TileExplorer
         {
             DebugWrite.Line("start");
 
-            Years?.Clear();
+            Lists.Default.Years.Clear();
 
             ctsYears.Start();
 
@@ -340,9 +338,9 @@ namespace TileExplorer
             {
                 var years = await Database.Default.LoadYearsAsync();
 
-                Years = years.ToList();
+                Lists.Default.Years = years.ToList();
 
-                DebugWrite.Line(string.Join(", ", Years));
+                DebugWrite.Line(string.Join(", ", Lists.Default.Years));
             }
             catch (TaskCanceledException e)
             {

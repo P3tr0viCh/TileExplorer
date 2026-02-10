@@ -36,22 +36,21 @@ namespace TileExplorer.Presenters
 
         private void PresenterFrmListEquipments_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Equipment> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
-                Resources.QuestionEquipmentDelete, Resources.QuestionEquipmentListDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionEquipmentDelete, Resources.QuestionEquipmentListDelete);
         }
 
         private async void PresenterFrmListEquipments_ItemsChanged(object sender, ItemsEventArgs<Equipment> e)
         {
-            Utils.Forms.GetFrmList(ChildFormType.TrackList)?.ListItemsChange(e.Values);
+            Utils.Forms.ChildFormsListItemsChange(ChildFormType.TrackList, e.Values);
 
-            await Utils.Forms.GetFrmList(ChildFormType.ResultEquipments)?.UpdateDataAsync();
+            await Utils.Forms.ChildFormsUpdateDataAsync(ChildFormType.ResultEquipments | ChildFormType.Filter);
         }
 
         private async void PresenterFrmListEquipments_ItemsDeleted(object sender, ItemsEventArgs<Equipment> e)
         {
-            Utils.Forms.GetFrmList(ChildFormType.TrackList)?.ListItemsDelete(e.Values);
+            Utils.Forms.ChildFormsListItemsDelete(ChildFormType.TrackList, e.Values);
 
-            await Utils.Forms.GetFrmList(ChildFormType.ResultEquipments)?.UpdateDataAsync();
+            await Utils.Forms.ChildFormsUpdateDataAsync(ChildFormType.ResultEquipments | ChildFormType.Filter);
         }
 
         protected override void UpdateColumns()

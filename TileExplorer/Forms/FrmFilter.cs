@@ -161,7 +161,7 @@ namespace TileExplorer
 
         private void UpdateDataYears()
         {
-            clbYears.DataSource = MainForm.Years;
+            clbYears.DataSource = Lists.Default.Years;
 
             if (Filter.Default.Years is null) return;
 

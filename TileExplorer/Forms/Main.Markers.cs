@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
@@ -86,29 +85,21 @@ namespace TileExplorer
             }
         }
 
-        private bool MarkerAdd(Marker marker)
+        public void ShowMarkerPosition(PointLatLng value)
         {
-            var prevMarkersVisible = overlayMarkers.IsVisibile;
+            markerPosition.Position = value;
 
-            overlayMarkers.IsVisibile = true;
-
-#if DEBUG
-            marker.Text = DateTime.Now.ToString();
-#endif
-
-            markerNewPosition.Position = new PointLatLng(marker.Lat, marker.Lng);
-            markerNewPosition.IsVisible = true;
-
-            var result = FrmMarker.ShowDlg(this, marker);
-
-            markerNewPosition.IsVisible = false;
-
-            overlayMarkers.IsVisibile = prevMarkersVisible;
-
-            return result;
+            markerPosition.IsVisible = value != default;
         }
 
-        private async Task<bool> MarkerChangeAsync(Marker marker)
+        public void ShowMarkerNewPosition(PointLatLng value)
+        {
+            markerNewPosition.Position = value;
+
+            markerNewPosition.IsVisible = value != default;
+        }
+
+        public async Task<bool> MarkerChangeAsync(Marker marker)
         {
             if (marker == null) return false;
 
@@ -125,8 +116,6 @@ namespace TileExplorer
 
             if (mapItem == null)
             {
-                markerNewPosition.IsVisible = false;
-
                 overlayMarkers.Markers.Add(MapItemMarkerNewInstance(marker));
             }
             else
@@ -138,7 +127,7 @@ namespace TileExplorer
                 gMapControl.Invalidate();
             }
 
-            //await UpdateDataAsync(DataLoad.ObjectChange, marker);
+            Utils.Forms.ChildFormsListItemsChange(ChildFormType.MarkerList, new List<Marker>() { marker });
 
             await SelectMapItemAsync(this, marker);
         }

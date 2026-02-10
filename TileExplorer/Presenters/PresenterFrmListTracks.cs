@@ -55,8 +55,7 @@ namespace TileExplorer.Presenters
 
         private void PresenterFrmListTracks_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Track> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
-                Resources.QuestionTrackDelete, Resources.QuestionTrackListDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionTrackDelete, Resources.QuestionTrackListDelete);
         }
 
         protected override async Task DatabaseListItemsSaveAsync(IEnumerable<Track> list)
@@ -257,6 +256,27 @@ namespace TileExplorer.Presenters
 
                 return;
             }
+
+            if (list is IEnumerable<TagModel> tags)
+            {
+                for (var i = 0; i < List.Count; i++)
+                {
+                    foreach (var tag in tags)
+                    {
+                        var exists = List[i].Tags.Where(item => item.Id == tag.Id).FirstOrDefault();
+                        
+                        if (exists == default) continue;
+
+                        exists.Assign(tag);
+
+                        BindingSource.ResetItem(i);
+
+                        break;
+                    }
+                }
+
+                return;
+            }
         }
 
         public override void ListItemsDelete(IEnumerable<IBaseId> list)
@@ -279,6 +299,31 @@ namespace TileExplorer.Presenters
                     List[i].Equipment = null;
 
                     BindingSource.ResetItem(i);
+                }
+
+                return;
+            }
+
+            if (list is IEnumerable<TagModel> tags)
+            {
+                for (var i = 0; i < List.Count; i++)
+                {
+                    foreach (var tag in tags)
+                    {
+                        var exists = List[i].Tags.Where(item => item.Id == tag.Id).FirstOrDefault();
+
+                        if (exists == default) continue;
+
+                        var newTags = List[i].Tags.ToList();
+
+                        newTags.Remove(exists);
+
+                        List[i].Tags = newTags;
+
+                        BindingSource.ResetItem(i);
+
+                        break;
+                    }
                 }
 
                 return;

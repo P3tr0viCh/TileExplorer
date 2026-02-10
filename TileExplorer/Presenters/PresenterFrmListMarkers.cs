@@ -32,22 +32,23 @@ namespace TileExplorer.Presenters
             PresenterDataGridView.SortColumn = nameof(Marker.Text);
         }
 
+        protected override Marker GetNewItem()
+        {
+            var item = base.GetNewItem();
+
+            item.LatLng = MainForm.MapCenter;
+
+            return item;
+        }
+
         private async void PresenterFrmListMarkers_ItemsChangeDialog(object sender, ItemsDialogEventArgs<Marker> e)
         {
-            if (e.Values.First().IsNew)
-            {
-                e.Ok = await MainForm.ListItemAddAsync(e.Values.First());
-            }
-            else
-            {
-                e.Ok = await MainForm.ListItemChangeAsync(e.Values);
-            }
+            e.Ok = await MainForm.MarkerChangeAsync(e.Values.First());
         }
 
         private void PresenterFrmListMarkers_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Marker> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
-                Resources.QuestionMarkerDelete, Resources.QuestionMarkerListDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionMarkerDelete, Resources.QuestionMarkerListDelete);
         }
 
         protected override async Task DatabaseListItemsSaveAsync(IEnumerable<Marker> list)
@@ -63,6 +64,7 @@ namespace TileExplorer.Presenters
 
             FrmList.DataGridView.Columns[nameof(Marker.Text)].Visible = true;
 
+            FrmList.DataGridView.Columns[nameof(Marker.LatLng)].Visible = false;
             FrmList.DataGridView.Columns[nameof(Marker.IsTextVisible)].Visible = false;
             FrmList.DataGridView.Columns[nameof(Marker.OffsetX)].Visible = false;
             FrmList.DataGridView.Columns[nameof(Marker.OffsetY)].Visible = false;

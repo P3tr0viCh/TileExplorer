@@ -52,6 +52,24 @@ namespace TileExplorer
             return frm;
         }
 
+        private static FrmChartTracksByMonth Exists(int year, int month)
+        {
+            return Utils.Forms.GetChildForms<FrmChartTracksByMonth>(ChildFormType.ChartTracksByMonth)
+                .Where(frm => frm.Year == year && frm.Month == month).FirstOrDefault();
+        }
+
+        public static void OpenFrm(Form owner, int year, int month)
+        {
+            if (Exists(year, month) is FrmChartTracksByMonth frm)
+            {
+                frm.BringToFront();
+
+                return;
+            }
+
+            ShowFrm(owner, year, month);
+        }
+
         private async void FrmChartTracksByMonth_Load(object sender, EventArgs e)
         {
             Text = Resources.TitleTracksByMonth;
@@ -127,7 +145,7 @@ namespace TileExplorer
 
                 selfChange = true;
 
-                cboxYear.ComboBox.DataSource = MainForm.Years;
+                cboxYear.ComboBox.DataSource = Lists.Default.Years;
 
                 cboxYear.SelectedItem = Year;
 

@@ -60,6 +60,43 @@ namespace TileExplorer
             return frm;
         }
 
+        private static FrmChartTracksByYear Exists(int year)
+        {
+            return Utils.Forms.GetChildForms<FrmChartTracksByYear>(ChildFormType.ChartTracksByYear)
+                .Where(frm => frm.Year == year).FirstOrDefault();
+        }
+
+        public static void OpenFrm(Form owner, int year)
+        {
+            if (Lists.Default.Years.Count == 0)
+            {
+                return;
+            }
+
+            if (year == 0)
+            {
+                var frmList = Utils.Forms.GetChildForms<FrmChartTracksByYear>(ChildFormType.ChartTracksByYear);
+
+                year = Lists.Default.Years.Last();
+
+                if (frmList != null && frmList.Count == 1 && frmList.First().Year == year)
+                {
+                    frmList.First().Close();
+
+                    return;
+                }
+            }
+
+            if (Exists(year) is FrmChartTracksByYear frm)
+            {
+                frm.BringToFront();
+
+                return;
+            }
+
+            ShowFrm(owner, year);
+        }
+
         private async void FrmChartTracksByYear_Load(object sender, EventArgs e)
         {
             Text = Resources.TitleTracksByYear;
@@ -204,7 +241,7 @@ namespace TileExplorer
 
         public async Task UpdateDataAsync()
         {
-            if (MainForm.Years.Count == 0)
+            if (Lists.Default.Years.Count == 0)
             {
                 return;
             }
@@ -221,11 +258,11 @@ namespace TileExplorer
 
                 Application.DoEvents();
 
-                cboxYear.ComboBox.DataSource = MainForm.Years;
+                cboxYear.ComboBox.DataSource = Lists.Default.Years;
 
-                if (!MainForm.Years.Contains(Year))
+                if (!Lists.Default.Years.Contains(Year))
                 {
-                    Year = MainForm.Years.Last();
+                    Year = Lists.Default.Years.Last();
                 }
 
                 cboxYear.SelectedItem = Year;
@@ -342,9 +379,11 @@ namespace TileExplorer
             ctsChartTracksByYear.Cancel();
         }
 
+        private int GetChartMonth(Chart chart) => (int)chart.Tag;
+
         private void FrmChartTracksByYear_ChartDoubleClick(object sender, EventArgs e)
         {
-            Utils.Forms.OpenChartTracksByMonth((Form)MainForm, Year, (int)((Chart)sender).Tag);
+            FrmChartTracksByMonth.OpenFrm(MainForm as Form, Year, GetChartMonth((Chart)sender));
         }
 
         private void MiOpenChartTracksByMonth_Click(object sender, EventArgs e)
@@ -353,7 +392,7 @@ namespace TileExplorer
             var contextMenu = (ContextMenuStrip)menuItem.Owner;
             var chart = (Chart)contextMenu.SourceControl;
 
-            Utils.Forms.OpenChartTracksByMonth((Form)MainForm, Year, (int)chart.Tag);
+            FrmChartTracksByMonth.OpenFrm(MainForm as Form, Year, GetChartMonth(chart));
         }
     }
 }

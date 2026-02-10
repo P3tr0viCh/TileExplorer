@@ -36,12 +36,11 @@ namespace TileExplorer
             {
                 var result = frm.ShowDialog(owner);
 
-                if (result == DialogResult.OK)
-                {
-                    tag.Assign(frm.TagModel);
-                }
+                if (result != DialogResult.OK) return false;
 
-                return result == DialogResult.OK;
+                tag.Assign(frm.TagModel);
+
+                return true;
             }
         }
 

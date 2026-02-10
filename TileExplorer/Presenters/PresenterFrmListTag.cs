@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using P3tr0viCh.Utils.Comparers;
+﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
 using P3tr0viCh.Utils.Interfaces;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -18,6 +15,9 @@ namespace TileExplorer.Presenters
         {
             ItemsChangeDialog += PresenterFrmListTags_ItemsChangeDialog;
             ItemsDeleteDialog += PresenterFrmListTags_ItemsDeleteDialog;
+
+            ItemsChanged += PresenterFrmListTags_ItemsChanged;
+            ItemsDeleted += PresenterFrmListTags_ItemsDeleted;
         }
 
         protected override string FormTitle => Resources.TitleListTags;
@@ -31,13 +31,26 @@ namespace TileExplorer.Presenters
 
         private void PresenterFrmListTags_ItemsChangeDialog(object sender, ItemsDialogEventArgs<TagModel> e)
         {
-            e.Ok = FrmTag.ShowDlg(Form, e.Values.FirstOrDefault());
+            e.Ok = FrmTag.ShowDlg(Form, e.Values.First());
         }
 
         private void PresenterFrmListTags_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<TagModel> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
-                Resources.QuestionTagDelete, Resources.QuestionTagListDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionTagDelete, Resources.QuestionTagListDelete);
+        }
+
+        private async void PresenterFrmListTags_ItemsChanged(object sender, ItemsEventArgs<TagModel> e)
+        {
+            Utils.Forms.ChildFormsListItemsChange(ChildFormType.TrackList, e.Values);
+
+            await Utils.Forms.ChildFormsUpdateDataAsync(ChildFormType.Filter);
+        }
+
+        private async void PresenterFrmListTags_ItemsDeleted(object sender, ItemsEventArgs<TagModel> e)
+        {
+            Utils.Forms.ChildFormsListItemsDelete(ChildFormType.TrackList, e.Values);
+
+            await Utils.Forms.ChildFormsUpdateDataAsync(ChildFormType.Filter);
         }
 
         protected override void UpdateColumns()

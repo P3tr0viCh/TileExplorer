@@ -219,7 +219,7 @@ namespace TileExplorer
                 statusStripPresenter.DateTime = default;
                 statusStripPresenter.TimeSpan = default;
 
-                MainForm.ShowMarkerPosition(this, default);
+                MainForm.ShowMarkerPosition(default);
 
                 return;
             }
@@ -239,7 +239,7 @@ namespace TileExplorer
 
                 CursorPoint = new PointLatLng(point.Lat, point.Lng);
 
-                MainForm.ShowMarkerPosition(this, CursorPoint);
+                MainForm.ShowMarkerPosition(CursorPoint);
 
                 return;
             }
@@ -255,7 +255,7 @@ namespace TileExplorer
 
                 CursorPoint = new PointLatLng(point.Lat, point.Lng);
 
-                MainForm.ShowMarkerPosition(this, CursorPoint);
+                MainForm.ShowMarkerPosition(CursorPoint);
 
                 return;
             }
@@ -284,7 +284,7 @@ namespace TileExplorer
             statusStripPresenter.DateTime = trackPoint.DateTime;
             statusStripPresenter.TimeSpan = trackPoint.DateTime - Track.DateTimeStart;
 
-            MainForm.ShowMarkerPosition(this, CursorPoint);
+            MainForm.ShowMarkerPosition(CursorPoint);
         }
 
         private void Chart_MouseMove(object sender, MouseEventArgs e)
@@ -312,21 +312,21 @@ namespace TileExplorer
 
         private void FrmChartTrackEle_FormClosed(object sender, FormClosedEventArgs e)
         {
-            MainForm.ShowMarkerPosition(this, default);
+            MainForm.ShowMarkerPosition(default);
 
             ctsChartTrackEle.Cancel();
         }
 
         private void Chart_MouseLeave(object sender, EventArgs e)
         {
-            MainForm.ShowMarkerPosition(this, default);
+            MainForm.ShowMarkerPosition(default);
         }
 
         private void Chart_MouseEnter(object sender, EventArgs e)
         {
             MainForm.SelectMapItemAsync(this, Track);
 
-            MainForm.ShowMarkerPosition(this, CursorPoint);
+            MainForm.ShowMarkerPosition(CursorPoint);
         }
 
         private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)

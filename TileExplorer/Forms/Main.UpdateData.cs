@@ -1,11 +1,8 @@
-﻿using P3tr0viCh.Database;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Enums;
@@ -64,7 +61,6 @@ namespace TileExplorer
             }
 
             //await UpdateDataChildFormsAsync(load, value);
-            await ChildFormsUpdateDataAsync();
 
             if (load.HasFlag(DataLoad.ObjectDelete))
             {
@@ -137,15 +133,7 @@ namespace TileExplorer
                 await LoadTracksInfoAsync();
             }
 
-            await ChildFormsUpdateDataAsync();
-        }
-
-        private async Task ChildFormsUpdateDataAsync()
-        {
-            foreach (var frm in Utils.Forms.GetChildForms<IFrmUpdateData>())
-            {
-                await frm.UpdateDataAsync();
-            }
+            await Utils.Forms.ChildFormsUpdateDataAsync();
         }
 
         public async Task UpdateDataAsync(DataLoad load = default)
@@ -153,8 +141,6 @@ namespace TileExplorer
             var selected = Selected?.Model;
 
             Selected = null;
-
- //           Application.DoEvents();
 
             await InternalUpdateDataAsync(load);
 

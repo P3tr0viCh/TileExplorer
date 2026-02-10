@@ -56,6 +56,8 @@ namespace TileExplorer.Presenters
         {
             AppSettings.Local.SaveFormState(Form, FormType.ToString(), AppSettings.Local.Default.FormStates);
             AppSettings.Local.SaveDataGridColumns(FrmList.DataGridView, FormType.ToString(), AppSettings.Local.Default.ColumnStates);
+
+            AppSettings.LocalSave();
         }
 
         protected override void UpdateColumns()

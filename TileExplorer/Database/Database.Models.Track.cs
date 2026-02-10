@@ -166,7 +166,6 @@ namespace TileExplorer
                         TrackPoints = new List<TrackPoint>();
 
                         TrackPoints.AddRange(source.TrackPoints);
-
                     }
 
                     NewTilesCount = source.NewTilesCount;

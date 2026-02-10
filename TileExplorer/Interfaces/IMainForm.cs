@@ -15,18 +15,19 @@ namespace TileExplorer.Interfaces
         Task SelectMapItemAsync(object sender, BaseId value);
 
         Task UpdateDataAsync(DataLoad load = default);
-        //Task UpdateDataAsync(DataLoad load, IEnumerable<object> list);
 
         Task<bool> ListItemAddAsync(BaseId value);
         Task<bool> ListItemChangeAsync(IEnumerable<BaseId> list);
-        Task<bool> ListItemDeleteAsync(IEnumerable<BaseId> list);
+
+        PointLatLng MapCenter { get; }
+
+        Task<bool> MarkerChangeAsync(Marker marker);
 
         Task TrackChangedAsync(Track track);
         Task TrackChangedAsync(IEnumerable<Track> tracks);
         Task MarkerChangedAsync(Marker marker);
 
-        void ShowMarkerPosition(object sender, PointLatLng value);
-
-        List<int> Years { get; }
+        void ShowMarkerPosition(PointLatLng value);
+        void ShowMarkerNewPosition(PointLatLng value);
     }
 }

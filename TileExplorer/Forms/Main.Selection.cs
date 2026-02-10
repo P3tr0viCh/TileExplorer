@@ -78,7 +78,7 @@ namespace TileExplorer
                         overlayMarkers.Markers.Remove((GMapMarker)selected);
                         overlayMarkers.Markers.Add((GMapMarker)selected);
 
-                        Utils.Forms.GetFrmList(ChildFormType.MarkerList)?.SetSelected(selected.Model);
+                        Utils.Forms.GetChildForm<FrmList>(ChildFormType.MarkerList)?.SetSelected(selected.Model);
 
                         break;
                     case MapItemType.Track:

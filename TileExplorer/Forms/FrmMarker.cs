@@ -1,10 +1,10 @@
-﻿using P3tr0viCh.Utils;
+﻿using GMap.NET;
+using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
@@ -41,6 +41,12 @@ namespace TileExplorer
 
         public static bool ShowDlg(Form owner, Marker marker)
         {
+#if DEBUG
+            if (marker.IsNew)
+            {
+                marker.Text = DateTime.Now.ToString();
+            }
+#endif
             using (var frm = new FrmMarker()
             {
                 Owner = owner,
@@ -48,14 +54,20 @@ namespace TileExplorer
                 Marker = marker
             })
             {
-                var result = frm.ShowDialog(owner);
-
-                if (result == DialogResult.OK)
+                if (marker.IsNew)
                 {
-                    marker.Assign(frm.Marker);
+                    frm.MainForm.ShowMarkerNewPosition(marker.LatLng);
                 }
 
-                return result == DialogResult.OK;
+                var result = frm.ShowDialog(owner);
+
+                frm.MainForm.ShowMarkerNewPosition(default);
+
+                if (result != DialogResult.OK) return false;
+
+                marker.Assign(frm.Marker);
+
+                return true;
             }
         }
 
@@ -91,6 +103,8 @@ namespace TileExplorer
 
             if (result)
             {
+                MainForm.ShowMarkerNewPosition(default);
+
                 await MainForm.MarkerChangedAsync(Marker);
             }
 

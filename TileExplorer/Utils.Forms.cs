@@ -1,8 +1,10 @@
 ﻿using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
@@ -29,39 +31,31 @@ namespace TileExplorer
                 return forms;
             }
 
-            public static FrmList GetFrmList(ChildFormType type)
+            public static T GetChildForm<T>(ChildFormType type)
             {
-                return GetChildForms<FrmList>(type).FirstOrDefault();
+                var forms = GetChildForms<T>(type);
+
+                return forms.Count == 1 ? forms.First() : default;
             }
 
-            public static void OpenChartTracksByYear(Form owner, int year)
+            public static async Task ChildFormsUpdateDataAsync(ChildFormType type = default)
             {
-                foreach (var frm in GetChildForms<FrmChartTracksByYear>(ChildFormType.ChartTracksByYear))
-                {
-                    if (frm.Year == year)
-                    {
-                        frm.BringToFront();
-                        return;
-                    }
-                }
-                ;
+                var forms = GetChildForms<IFrmUpdateData>(type);
 
-                FrmChartTracksByYear.ShowFrm(owner, year);
+                foreach (var form in forms)
+                {
+                    await form.UpdateDataAsync();
+                }
             }
 
-            public static void OpenChartTracksByMonth(Form owner, int year, int month)
+            public static void ChildFormsListItemsChange(ChildFormType type, IEnumerable<IBaseId> values)
             {
-                foreach (var frm in GetChildForms<FrmChartTracksByMonth>(ChildFormType.ChartTracksByMonth))
-                {
-                    if (frm.Year == year && frm.Month == month)
-                    {
-                        frm.BringToFront();
-                        return;
-                    }
-                }
-                ;
+                GetChildForms<IFrmUpdateDataList>(type).ForEach(frm => frm.ListItemsChange(values));
+            }
 
-                FrmChartTracksByMonth.ShowFrm(owner, year, month);
+            public static void ChildFormsListItemsDelete(ChildFormType type, IEnumerable<IBaseId> values)
+            {
+                GetChildForms<IFrmUpdateDataList>(type).ForEach(frm => frm.ListItemsDelete(values));
             }
 
             public static void TextBoxWrongValue(TextBox textBox, string error)
@@ -70,11 +64,6 @@ namespace TileExplorer
                 textBox.SelectAll();
 
                 Msg.Error(error);
-            }
-
-            public static void TextBoxWrongValue(TextBox textBox, string error, object arg0)
-            {
-                TextBoxWrongValue(textBox, string.Format(error, arg0));
             }
 
             public static bool TextBoxIsWrongValue(Func<bool> check, TextBox textBox, string error)
@@ -91,7 +80,7 @@ namespace TileExplorer
 
             public static bool TextBoxIsWrongValue(Func<bool> check, TextBox textBox, string error, object arg0)
             {
-                 return TextBoxIsWrongValue(check, textBox, string.Format(error, arg0));
+                return TextBoxIsWrongValue(check, textBox, string.Format(error, arg0));
             }
 
             public static bool TextBoxIsEmpty(TextBox textBox, string error)
