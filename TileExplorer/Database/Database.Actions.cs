@@ -74,26 +74,6 @@ namespace TileExplorer
             {
                 return await ListItemDeleteAsync(tracks);
             }
-
-            public static async Task<bool> TagSaveAsync(TagModel tag)
-            {
-                return await ListItemSaveAsync(tag);
-            }
-
-            public static async Task<bool> TagDeleteAsync(IEnumerable<TagModel> tags)
-            {
-                return await ListItemDeleteAsync(tags);
-            }
-
-            public static async Task<bool> EquipmentSaveAsync(Equipment equipment)
-            {
-                return await ListItemSaveAsync(equipment);
-            }
-
-            public static async Task<bool> EquipmentDeleteAsync(IEnumerable<Equipment> equipments)
-            {
-                return await ListItemDeleteAsync(equipments);
-            }
         }
     }
 }

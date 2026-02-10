@@ -1,6 +1,5 @@
 ﻿using GMap.NET;
 using P3tr0viCh.Utils;
-using P3tr0viCh.Utils.Interfaces;
 using P3tr0viCh.Utils.Presenters;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,7 @@ using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTrackEle : Form, IChildForm, IFrmUpdateData, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
+    public partial class FrmChartTrackEle : Form, IChildForm, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -58,6 +57,24 @@ namespace TileExplorer
             frm.Show(owner);
 
             return frm;
+        }
+
+        private static FrmChartTrackEle Exists(Track track)
+        {
+            return Utils.Forms.GetChildForms<FrmChartTrackEle>(ChildFormType.ChartTrackEle)
+                .Where(frm => frm.Track.Id == track.Id).FirstOrDefault();
+        }
+
+        public static void OpenFrm(Form owner, Track track)
+        {
+            if (Exists(track) is FrmChartTrackEle frm)
+            {
+                frm.BringToFront();
+
+                return;
+            }
+
+            ShowFrm(owner, track);
         }
 
         private async void FrmTrackEleChart_Load(object sender, EventArgs e)
@@ -101,7 +118,7 @@ namespace TileExplorer
                 case StatusLabel.Ele: return slEle;
                 case StatusLabel.Distance: return slDistance;
                 case StatusLabel.DateTime: return slDateTime;
-                case StatusLabel.DateTimeSpan: return slDateTimeSpan;
+                case StatusLabel.TimeSpan: return slDateTimeSpan;
                 case StatusLabel.IsSelection: return slIsSelection;
                 case StatusLabel.SelectedEleAscent: return slSelectedEleAscent;
                 case StatusLabel.SelectedEleDescent: return slSelectedEleDescent;
@@ -120,11 +137,13 @@ namespace TileExplorer
 
             try
             {
+                Application.DoEvents();
+
                 ChartSerial.Points.Clear();
 
                 ChartArea.CursorX.Position = double.NaN;
 
-                // await Task.Delay(3000, ctsChartTrackEle.Token);
+                 await Task.Delay(3000, ctsChartTrackEle.Token);
 
                 var trackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track = Track, full = true });
 
@@ -198,7 +217,7 @@ namespace TileExplorer
                 statusStripPresenter.Ele = 0;
                 statusStripPresenter.Distance = 0;
                 statusStripPresenter.DateTime = default;
-                statusStripPresenter.DateTimeSpan = default;
+                statusStripPresenter.TimeSpan = default;
 
                 MainForm.ShowMarkerPosition(this, default);
 
@@ -216,11 +235,11 @@ namespace TileExplorer
                 statusStripPresenter.Ele = point.Ele;
                 statusStripPresenter.Distance = 0;
                 statusStripPresenter.DateTime = point.DateTime;
-                statusStripPresenter.DateTimeSpan = default;
+                statusStripPresenter.TimeSpan = default;
 
                 CursorPoint = new PointLatLng(point.Lat, point.Lng);
 
-                MainForm?.ShowMarkerPosition(this, CursorPoint);
+                MainForm.ShowMarkerPosition(this, CursorPoint);
 
                 return;
             }
@@ -232,11 +251,11 @@ namespace TileExplorer
                 statusStripPresenter.Ele = point.Ele;
                 statusStripPresenter.Distance = Track.Distance;
                 statusStripPresenter.DateTime = point.DateTime;
-                statusStripPresenter.DateTimeSpan = Track.DateTimeFinish - Track.DateTimeStart;
+                statusStripPresenter.TimeSpan = Track.DateTimeFinish - Track.DateTimeStart;
 
                 CursorPoint = new PointLatLng(point.Lat, point.Lng);
 
-                MainForm?.ShowMarkerPosition(this, CursorPoint);
+                MainForm.ShowMarkerPosition(this, CursorPoint);
 
                 return;
             }
@@ -263,9 +282,9 @@ namespace TileExplorer
             statusStripPresenter.Ele = ele;
             statusStripPresenter.Distance = distanceFromStart;
             statusStripPresenter.DateTime = trackPoint.DateTime;
-            statusStripPresenter.DateTimeSpan = trackPoint.DateTime - Track.DateTimeStart;
+            statusStripPresenter.TimeSpan = trackPoint.DateTime - Track.DateTimeStart;
 
-            MainForm?.ShowMarkerPosition(this, CursorPoint);
+            MainForm.ShowMarkerPosition(this, CursorPoint);
         }
 
         private void Chart_MouseMove(object sender, MouseEventArgs e)
@@ -293,21 +312,21 @@ namespace TileExplorer
 
         private void FrmChartTrackEle_FormClosed(object sender, FormClosedEventArgs e)
         {
-            MainForm?.ShowMarkerPosition(this, default);
+            MainForm.ShowMarkerPosition(this, default);
 
             ctsChartTrackEle.Cancel();
         }
 
         private void Chart_MouseLeave(object sender, EventArgs e)
         {
-            MainForm?.ShowMarkerPosition(this, default);
+            MainForm.ShowMarkerPosition(this, default);
         }
 
         private void Chart_MouseEnter(object sender, EventArgs e)
         {
-            MainForm?.SelectMapItemAsync(this, Track);
+            MainForm.SelectMapItemAsync(this, Track);
 
-            MainForm?.ShowMarkerPosition(this, CursorPoint);
+            MainForm.ShowMarkerPosition(this, CursorPoint);
         }
 
         private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)

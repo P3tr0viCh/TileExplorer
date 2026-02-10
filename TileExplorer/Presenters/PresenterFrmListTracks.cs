@@ -1,34 +1,34 @@
-﻿using P3tr0viCh.Utils.Comparers;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
 using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
+using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer.Presenters
 {
-    internal class PresenterFrmListTracks : PresenterFrmListBase<Track>
+    internal class PresenterFrmListTracks : PresenterFrmList<Track>
     {
         public override ChildFormType FormType => ChildFormType.TrackList;
 
-        public PresenterFrmListTracks(IFrmListBase frmList) : base(frmList)
+        public PresenterFrmListTracks(IFrmList frmList) : base(frmList)
         {
             Grants = Grants.AddFlag(FrmListGrant.MultiChange);
 
             BindingSource.PositionChanged += BindingSource_PositionChanged;
 
-            ItemChangeDialog += PresenterFrmListTracks_ItemChangeDialog;
-            ItemListChangeDialog += PresenterFrmListTracks_ItemListChangeDialog;
-
-            ItemDeleteDialog += PresenterFrmListTracks_ItemDeleteDialog;
-            ItemListDeleteDialog += PresenterFrmListTracks_ItemListDeleteDialog;
+            ItemsChangeDialog += PresenterFrmListTracks_ItemsChangeDialog;
+            ItemsDeleteDialog += PresenterFrmListTracks_ItemsDeleteDialog;
         }
 
         protected override string FormTitle => Resources.TitleListTracks;
@@ -41,46 +41,27 @@ namespace TileExplorer.Presenters
             PresenterDataGridView.SortOrder = ComparerSortOrder.Descending;
         }
 
-        private async void PresenterFrmListTracks_ItemChangeDialog(object sender, ItemDialogEventArgs<Track> e)
+        private async void PresenterFrmListTracks_ItemsChangeDialog(object sender, ItemsDialogEventArgs<Track> e)
         {
-            if (e.Value.IsNew)
+            if (e.Values.First().IsNew)
             {
-                e.Ok = await MainForm.ListItemAddAsync(e.Value);
+                e.Ok = await MainForm.ListItemAddAsync(e.Values.First());
             }
             else
             {
-                e.Ok = await MainForm.ListItemChangeAsync(new List<Track>() { e.Value });
+                e.Ok = await MainForm.ListItemChangeAsync(e.Values);
             }
         }
 
-        private async void PresenterFrmListTracks_ItemListChangeDialog(object sender, ItemListDialogEventArgs<Track> e)
+        private void PresenterFrmListTracks_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Track> e)
         {
-            e.Ok = await MainForm.ListItemChangeAsync(e.Values);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
+                Resources.QuestionTrackDelete, Resources.QuestionTrackListDelete);
         }
 
-        private void PresenterFrmListTracks_ItemDeleteDialog(object sender, ItemDialogEventArgs<Track> e)
-        {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Value, Resources.QuestionTrackDelete);
-        }
-
-        private void PresenterFrmListTracks_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Track> e)
-        {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionTrackListDelete);
-        }
-
-        protected override async Task DatabaseListItemSaveAsync(Track value)
+        protected override async Task DatabaseListItemsSaveAsync(IEnumerable<Track> list)
         {
             await Task.CompletedTask;
-        }
-
-        protected override async Task DatabaseListItemSaveAsync(IEnumerable<Track> list)
-        {
-            await Task.CompletedTask;
-        }
-
-        protected override async Task DatabaseListItemDeleteAsync(IEnumerable<Track> list)
-        {
-            await Database.Actions.TrackDeleteAsync(list);
         }
 
         protected override void UpdateColumns()
@@ -250,6 +231,58 @@ namespace TileExplorer.Presenters
         private void BindingSource_PositionChanged(object sender, EventArgs e)
         {
             MainForm.SelectMapItemAsync(this, Selected);
+        }
+
+        public override void ListItemsChange(IEnumerable<IBaseId> list)
+        {
+            if (list is IEnumerable<Track> tracks)
+            {
+                base.ListItemsChange(tracks);
+
+                return;
+            }
+
+            if (list is IEnumerable<Equipment> equipments)
+            {
+                for (var i = 0; i < List.Count; i++)
+                {
+                    var equipment = equipments.Where(e => List[i].EquipmentId == e.Id).FirstOrDefault();
+
+                    if (equipment == default) continue;
+
+                    List[i].Equipment = equipment;
+
+                    BindingSource.ResetItem(i);
+                }
+
+                return;
+            }
+        }
+
+        public override void ListItemsDelete(IEnumerable<IBaseId> list)
+        {
+            if (list is IEnumerable<Track> tracks)
+            {
+                base.ListItemsChange(tracks);
+
+                return;
+            }
+
+            if (list is IEnumerable<Equipment> equipments)
+            {
+                for (var i = 0; i < List.Count; i++)
+                {
+                    var equipment = equipments.Where(e => List[i].EquipmentId == e.Id).FirstOrDefault();
+
+                    if (equipment == default) continue;
+
+                    List[i].Equipment = null;
+
+                    BindingSource.ResetItem(i);
+                }
+
+                return;
+            }
         }
     }
 }

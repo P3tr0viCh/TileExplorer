@@ -1,4 +1,5 @@
 ﻿using GMap.NET.WindowsForms;
+using P3tr0viCh.Utils.Interfaces;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -65,13 +66,7 @@ namespace TileExplorer
 
                 UpdateSettings();
 
-                foreach (var frm in Application.OpenForms)
-                {
-                    if (frm is IChildForm form)
-                    {
-                        form.UpdateSettings();
-                    }
-                }
+                Utils.Forms.GetChildForms<IFrmUpdateSettings>().ForEach(frm => frm.UpdateSettings());
 
                 await UpdateDataAsync();
             }

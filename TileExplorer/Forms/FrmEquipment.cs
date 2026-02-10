@@ -1,6 +1,5 @@
 ﻿using P3tr0viCh.Utils.Extensions;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
@@ -65,25 +64,20 @@ namespace TileExplorer
         private bool UpdateData()
         {
             equipment.Text = tbText.GetTrimText();
-            equipment.Brand = tbBrand.GetTrimText();
-            equipment.Model = tbModel.GetTrimText();
+            equipment.Brand = tbBrand.GetTrimTextNullable();
+            equipment.Model = tbModel.GetTrimTextNullable();
 
             return true;
         }
 
-        private async Task<bool> SaveDataAsync()
+        private bool ApplyData()
         {
-            return await Database.Actions.EquipmentSaveAsync(Equipment);
+            return CheckData() && UpdateData();
         }
 
-        private async Task<bool> ApplyDataAsync()
+        private void BtnOk_Click(object sender, EventArgs e)
         {
-            return CheckData() && UpdateData() && await SaveDataAsync();
-        }
-
-        private async void BtnOk_Click(object sender, EventArgs e)
-        {
-            if (await ApplyDataAsync())
+            if (ApplyData())
             {
                 DialogResult = DialogResult.OK;
             }

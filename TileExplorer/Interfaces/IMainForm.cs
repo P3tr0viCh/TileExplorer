@@ -14,8 +14,8 @@ namespace TileExplorer.Interfaces
 
         Task SelectMapItemAsync(object sender, BaseId value);
 
-        Task UpdateDataAsync(DataLoad load = default, object value = null);
-        Task UpdateDataAsync(DataLoad load, IEnumerable<object> list);
+        Task UpdateDataAsync(DataLoad load = default);
+        //Task UpdateDataAsync(DataLoad load, IEnumerable<object> list);
 
         Task<bool> ListItemAddAsync(BaseId value);
         Task<bool> ListItemChangeAsync(IEnumerable<BaseId> list);
@@ -24,8 +24,6 @@ namespace TileExplorer.Interfaces
         Task TrackChangedAsync(Track track);
         Task TrackChangedAsync(IEnumerable<Track> tracks);
         Task MarkerChangedAsync(Marker marker);
-
-        void ShowChartTrackEle(object sender, Track value);
 
         void ShowMarkerPosition(object sender, PointLatLng value);
 

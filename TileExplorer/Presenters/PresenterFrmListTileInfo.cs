@@ -1,22 +1,22 @@
 ﻿using GMap.NET.Internals;
 using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Forms;
+using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer.Presenters
 {
-    internal class PresenterFrmListTileInfo : PresenterFrmListBase<Track>
+    internal class PresenterFrmListTileInfo : PresenterFrmList<Track>
     {
         public override ChildFormType FormType => ChildFormType.TileInfo;
 
-        public PresenterFrmListTileInfo(IFrmListBase frmList) : base(frmList)
+        public PresenterFrmListTileInfo(IFrmList frmList) : base(frmList)
         {
             Grants = FrmListGrant.Sort;
 

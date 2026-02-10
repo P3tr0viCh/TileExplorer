@@ -15,6 +15,7 @@ namespace TileExplorer
             Markers = Tracks << 1,
             ObjectChange = Markers << 1,
             ObjectDelete = ObjectChange << 1,
+            TrackListChanged = ObjectDelete << 1,
         }
 
         public enum DataUpdate

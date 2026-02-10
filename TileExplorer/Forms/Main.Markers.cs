@@ -138,7 +138,7 @@ namespace TileExplorer
                 gMapControl.Invalidate();
             }
 
-            await UpdateDataAsync(DataLoad.ObjectChange, marker);
+            //await UpdateDataAsync(DataLoad.ObjectChange, marker);
 
             await SelectMapItemAsync(this, marker);
         }
@@ -168,7 +168,7 @@ namespace TileExplorer
                     overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?
                         .Cast<MapItemMarker>().FirstOrDefault());
 
-                await UpdateDataAsync(DataLoad.ObjectDelete, marker);
+                //await UpdateDataAsync(DataLoad.ObjectDelete, marker);
             }
 
             Selected = null;

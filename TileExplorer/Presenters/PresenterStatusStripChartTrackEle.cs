@@ -12,7 +12,7 @@ namespace TileExplorer.Presenters
             Ele,
             Distance,
             DateTime,
-            DateTimeSpan,
+            TimeSpan,
             IsSelection,
             SelectedDistance,
             SelectedEleAscent,
@@ -44,22 +44,12 @@ namespace TileExplorer.Presenters
 
         public DateTime DateTime
         {
-            set => View.GetLabel(StatusLabel.DateTime).Text = value.ToString(AppSettings.Roaming.Default.FormatDateTime);
+            set => View.GetLabel(StatusLabel.DateTime).Text = Utils.DateTimeToString(value);
         }
 
-        public TimeSpan DateTimeSpan
+        public TimeSpan TimeSpan
         {
-            set
-            {
-                if (value != default)
-                {
-                    View.GetLabel(StatusLabel.DateTimeSpan).Text = value.ToHoursMinutesString();
-                }
-                else
-                {
-                    View.GetLabel(StatusLabel.DateTimeSpan).Text = string.Empty;
-                }
-            }
+            set => View.GetLabel(StatusLabel.TimeSpan).Text = Utils.TimeSpanToString(value);
         }
 
         public bool IsSelection

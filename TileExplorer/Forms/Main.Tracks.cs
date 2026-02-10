@@ -142,7 +142,7 @@ namespace TileExplorer
 
         public async Task TrackChangedAsync(Track track)
         {
-            await UpdateDataAsync(DataLoad.ObjectChange, track);
+            //await UpdateDataAsync(DataLoad.ObjectChange, track);
 
             await SelectMapItemAsync(this, track);
         }
@@ -181,7 +181,7 @@ namespace TileExplorer
                 overlayTracks.Routes.Cast<IMapItem>().Where(i => i.Model.Id == track.Id)?
                     .Cast<MapItemTrack>().FirstOrDefault());
 
-                await UpdateDataAsync(DataLoad.Tiles | DataLoad.ObjectDelete, track);
+                //await UpdateDataAsync(DataLoad.Tiles | DataLoad.ObjectDelete, track);
             }
             
             return true;
@@ -245,7 +245,7 @@ namespace TileExplorer
 
                     OverlayAddTrack(track);
 
-                    await UpdateDataAsync(DataLoad.ObjectChange, track);
+                    //await UpdateDataAsync(DataLoad.ObjectChange, track);
 
                     loadedCount++;
                 }

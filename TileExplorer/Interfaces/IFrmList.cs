@@ -3,7 +3,7 @@ using P3tr0viCh.Utils.Interfaces;
 
 namespace TileExplorer.Interfaces
 {
-    internal interface IFrmListBase : IChildForm, IFrmUpdateData, IFrmList
+    internal interface IFrmListBase2 : IChildForm, IFrmUpdateData, IFrmList
     {
         object Value { get; }
 

@@ -1,27 +1,26 @@
 ﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
+using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer.Presenters
 {
-    internal class PresenterFrmListMarkers : PresenterFrmListBase<Marker>
+    internal class PresenterFrmListMarkers : PresenterFrmList<Marker>
     {
         public override ChildFormType FormType => ChildFormType.MarkerList;
 
-        public PresenterFrmListMarkers(IFrmListBase frmList) : base(frmList)
+        public PresenterFrmListMarkers(IFrmList frmList) : base(frmList)
         {
             BindingSource.PositionChanged += BindingSource_PositionChanged;
 
-            ItemChangeDialog += PresenterFrmListMarkers_ItemChangeDialog;
-
-            ItemDeleteDialog += PresenterFrmListMarkers_ItemDeleteDialog;
-            ItemListDeleteDialog += PresenterFrmListMarkers_ItemListDeleteDialog;
+            ItemsChangeDialog += PresenterFrmListMarkers_ItemsChangeDialog;
+            ItemsDeleteDialog += PresenterFrmListMarkers_ItemsDeleteDialog;
         }
 
         protected override string FormTitle => Resources.TitleListMarkers;
@@ -33,42 +32,33 @@ namespace TileExplorer.Presenters
             PresenterDataGridView.SortColumn = nameof(Marker.Text);
         }
 
-        private async void PresenterFrmListMarkers_ItemChangeDialog(object sender, ItemDialogEventArgs<Marker> e)
+        private async void PresenterFrmListMarkers_ItemsChangeDialog(object sender, ItemsDialogEventArgs<Marker> e)
         {
-            if (e.Value.IsNew)
+            if (e.Values.First().IsNew)
             {
-                e.Ok = await MainForm.ListItemAddAsync(e.Value);
+                e.Ok = await MainForm.ListItemAddAsync(e.Values.First());
             }
             else
             {
-                e.Ok = await MainForm.ListItemChangeAsync(new List<Marker>() { e.Value });
+                e.Ok = await MainForm.ListItemChangeAsync(e.Values);
             }
         }
 
-        private void PresenterFrmListMarkers_ItemDeleteDialog(object sender, ItemDialogEventArgs<Marker> e)
+        private void PresenterFrmListMarkers_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Marker> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Value, Resources.QuestionMarkerDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
+                Resources.QuestionMarkerDelete, Resources.QuestionMarkerListDelete);
         }
 
-        private void PresenterFrmListMarkers_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Marker> e)
-        {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionMarkerListDelete);
-        }
-
-        protected override async Task DatabaseListItemSaveAsync(Marker value)
+        protected override async Task DatabaseListItemsSaveAsync(IEnumerable<Marker> list)
         {
             await Task.CompletedTask;
-        }
-
-        protected override async Task DatabaseListItemDeleteAsync(IEnumerable<Marker> list)
-        {
-            await Database.Actions.MarkerDeleteAsync(list);
         }
 
         protected override void UpdateColumns()
         {
             base.UpdateColumns();
-            
+
             FrmList.DataGridView.Columns[nameof(Marker.Text)].DisplayIndex = 0;
 
             FrmList.DataGridView.Columns[nameof(Marker.Text)].Visible = true;

@@ -4,18 +4,17 @@ using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.EventArguments;
 using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
+using P3tr0viCh.Utils.Interfaces;
 using P3tr0viCh.Utils.Presenters;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
-using static TileExplorer.Enums;
 
 namespace TileExplorer.Presenters
 {
-    internal abstract class PresenterFrmListBase<T> : PresenterFrmList<T>, IPresenterFrmListBase where T : BaseId, new()
+    internal abstract class PresenterFrmList<T> : PresenterFrmListBase<T>, IPresenterFrmList where T : BaseId, new()
     {
         public IMainForm MainForm => Form.Owner as IMainForm;
 
@@ -23,13 +22,13 @@ namespace TileExplorer.Presenters
 
         public abstract ChildFormType FormType { get; }
 
-        public PresenterFrmListBase(IFrmListBase frmList) : base(frmList)
+        public PresenterFrmList(IFrmList frmList) : base(frmList)
         {
             Grants = Grants.AddFlag(FrmListGrant.MultiDelete);
 
-            ItemChanged += PresenterFrmListBase_ItemChanged;
-            ItemListChanged += PresenterFrmListBase_ItemListChanged;
-            ItemListDeleted += PresenterFrmListBase_ItemListDeleted;
+            ItemsExceptionLoad += PresenterFrmListBase_Exception;
+            ItemsExceptionChange += PresenterFrmListBase_Exception;
+            ItemsExceptionDelete += PresenterFrmListBase_Exception;
         }
 
         protected override void FormOpened()
@@ -72,55 +71,28 @@ namespace TileExplorer.Presenters
             AppSettings.LocalSave();
         }
 
-        public IBaseId Find(IBaseId value)
+        private void PresenterFrmListBase_Exception(object sender, ExceptionEventArgs e)
         {
-            return Find(value as T);
-        }
+            DebugWrite.Line(e.Exception.GetQuery());
 
-        private async void PresenterFrmListBase_ItemChanged(object sender, ItemEventArgs<T> e)
-        {
-            await MainForm.UpdateDataAsync(DataLoad.ObjectChange, e.Value);
-        }
+            DebugWrite.Error(e.Exception);
 
-        private async void PresenterFrmListBase_ItemListChanged(object sender, ItemListEventArgs<T> e)
-        {
-            await MainForm.UpdateDataAsync(DataLoad.ObjectChange, e.Values);
-        }
-
-        private async void PresenterFrmListBase_ItemListDeleted(object sender, ItemListEventArgs<T> e)
-        {
-            await MainForm.UpdateDataAsync(DataLoad.ObjectDelete, e.Values);
-        }
-
-        private void DatabaseListException(Exception e)
-        {
-            DebugWrite.Line(e.GetQuery());
-
-            DebugWrite.Error(e);
-
-            Msg.Error(e.Message);
-        }
-
-        protected override void DatabaseListLoadException(Exception e)
-        {
-            DatabaseListException(e);
-        }
-
-        protected override void DatabaseListItemChangeException(Exception e)
-        {
-            DatabaseListException(e);
-        }
-
-        protected override void DatabaseListItemDeleteException(Exception e)
-        {
-            DatabaseListException(e);
+            Msg.Error(e.Exception.Message);
         }
 
         protected override Task<IEnumerable<T>> DatabaseListLoadAsync(CancellationToken cancellationToken)
         {
-            Application.DoEvents();
-
             return Database.Default.ListLoadAsync<T>();
+        }
+
+        protected override async Task DatabaseListItemsSaveAsync(IEnumerable<T> list)
+        {
+            await Database.Default.ListItemSaveAsync(list);
+        }
+
+        protected override async Task DatabaseListItemsDeleteAsync(IEnumerable<T> list)
+        {
+            await Database.Default.ListItemDeleteAsync(list);
         }
     }
 }

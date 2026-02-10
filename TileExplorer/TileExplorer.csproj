@@ -179,7 +179,6 @@
     <Compile Include="Interfaces\IFrmList.cs" />
     <Compile Include="Interfaces\IMapItem.cs" />
     <Compile Include="Interfaces\IPresenterFrmList.cs" />
-    <Compile Include="Interfaces\IUpdateDataForm.cs" />
     <Compile Include="Models\MapItemMarkerCircle.cs" />
     <Compile Include="Presenters\PresenterChildForm.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />
@@ -214,7 +213,7 @@
     </Compile>
     <Compile Include="MapZoomRuler.cs" />
     <Compile Include="Presenters\PresenterDataGridViewFrmList.cs" />
-    <Compile Include="Presenters\PresenterFrmListBase.cs" />
+    <Compile Include="Presenters\PresenterFrmList.cs" />
     <Compile Include="Presenters\PresenterFrmListFactory.cs" />
     <Compile Include="Presenters\PresenterFrmListEquipments.cs" />
     <Compile Include="Presenters\PresenterFrmListResultEquipments.cs" />

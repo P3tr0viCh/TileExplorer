@@ -1,23 +1,23 @@
 ﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TileExplorer.Interfaces;
+using P3tr0viCh.Utils.Interfaces;
+using System.Linq;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer.Presenters
 {
-    internal class PresenterFrmListEquipments : PresenterFrmListBase<Equipment>
+    internal class PresenterFrmListEquipments : PresenterFrmList<Equipment>
     {
         public override ChildFormType FormType => ChildFormType.EquipmentList;
 
-        public PresenterFrmListEquipments(IFrmListBase frmList) : base(frmList)
+        public PresenterFrmListEquipments(IFrmList frmList) : base(frmList)
         {
-            ItemChangeDialog += PresenterFrmListEquipments_ItemChangeDialog;
+            ItemsChangeDialog += PresenterFrmListEquipments_ItemsChangeDialog;
+            ItemsDeleteDialog += PresenterFrmListEquipments_ItemsDeleteDialog;
 
-            ItemDeleteDialog += PresenterFrmListEquipments_ItemDeleteDialog; ;
-            ItemListDeleteDialog += PresenterFrmListEquipments_ItemListDeleteDialog;
+            ItemsChanged += PresenterFrmListEquipments_ItemsChanged;
+            ItemsDeleted += PresenterFrmListEquipments_ItemsDeleted;
         }
 
         protected override string FormTitle => Resources.TitleListEquipments;
@@ -29,28 +29,29 @@ namespace TileExplorer.Presenters
             PresenterDataGridView.SortColumn = nameof(Equipment.Text);
         }
 
-        private void PresenterFrmListEquipments_ItemChangeDialog(object sender, ItemDialogEventArgs<Equipment> e)
+        private void PresenterFrmListEquipments_ItemsChangeDialog(object sender, ItemsDialogEventArgs<Equipment> e)
         {
-            e.Ok = FrmEquipment.ShowDlg(Form, e.Value);
-        }
-        private void PresenterFrmListEquipments_ItemDeleteDialog(object sender, ItemDialogEventArgs<Equipment> e)
-        {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Value, Resources.QuestionEquipmentDelete);
+            e.Ok = FrmEquipment.ShowDlg(Form, e.Values.First());
         }
 
-        private void PresenterFrmListEquipments_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<Equipment> e)
+        private void PresenterFrmListEquipments_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Equipment> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionEquipmentListDelete);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
+                Resources.QuestionEquipmentDelete, Resources.QuestionEquipmentListDelete);
         }
 
-        protected override async Task DatabaseListItemSaveAsync(Equipment value)
+        private async void PresenterFrmListEquipments_ItemsChanged(object sender, ItemsEventArgs<Equipment> e)
         {
-            await Task.CompletedTask;
+            Utils.Forms.GetFrmList(ChildFormType.TrackList)?.ListItemsChange(e.Values);
+
+            await Utils.Forms.GetFrmList(ChildFormType.ResultEquipments)?.UpdateDataAsync();
         }
 
-        protected override async Task DatabaseListItemDeleteAsync(IEnumerable<Equipment> list)
+        private async void PresenterFrmListEquipments_ItemsDeleted(object sender, ItemsEventArgs<Equipment> e)
         {
-            await Database.Actions.EquipmentDeleteAsync(list);
+            Utils.Forms.GetFrmList(ChildFormType.TrackList)?.ListItemsDelete(e.Values);
+
+            await Utils.Forms.GetFrmList(ChildFormType.ResultEquipments)?.UpdateDataAsync();
         }
 
         protected override void UpdateColumns()
@@ -62,10 +63,6 @@ namespace TileExplorer.Presenters
             FrmList.DataGridView.Columns[nameof(Equipment.Text)].Visible = true;
 
             FrmList.DataGridView.Columns[nameof(Equipment.Text)].HeaderText = ResourcesColumnHeader.Name;
-        }
-
-        public override void UpdateSettings()
-        {
         }
 
         public override int Compare(Equipment x, Equipment y, string dataPropertyName, ComparerSortOrder sortOrder)

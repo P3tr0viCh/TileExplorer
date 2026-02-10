@@ -1,11 +1,12 @@
-﻿using System;
+﻿using P3tr0viCh.Utils.Interfaces;
+using System;
 using TileExplorer.Interfaces;
 
 namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListFactory
     {
-        public static IPresenterFrmListBase PresenterFrmListInstance(IFrmListBase frmList, ChildFormType frmType)
+        public static IPresenterFrmList PresenterFrmListInstance(IFrmList frmList, ChildFormType frmType)
         {
             switch (frmType)
             {

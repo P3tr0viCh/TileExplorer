@@ -1,17 +1,17 @@
 ﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Forms;
+using P3tr0viCh.Utils.Interfaces;
 using System.Windows.Forms;
-using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer.Presenters
 {
-    internal class PresenterFrmListResultYears : PresenterFrmListBase<ResultYears>
+    internal class PresenterFrmListResultYears : PresenterFrmList<ResultYears>
     {
         public override ChildFormType FormType => ChildFormType.ResultYears;
 
-        public PresenterFrmListResultYears(IFrmListBase frmList) : base(frmList)
+        public PresenterFrmListResultYears(IFrmList frmList) : base(frmList)
         {
             Grants = FrmListGrant.None;
         }

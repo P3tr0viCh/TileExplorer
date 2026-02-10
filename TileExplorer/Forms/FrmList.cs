@@ -5,6 +5,7 @@
 using P3tr0viCh.Database;
 using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Interfaces;
 using P3tr0viCh.Utils.Presenters;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,9 @@ using static TileExplorer.Presenters.PresenterStatusStripList;
 
 namespace TileExplorer
 {
-    public partial class FrmList : Form, IFrmListBase, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
+    public partial class FrmList : Form, IFrmList, IChildForm,
+        IFrmUpdateSettings, IFrmUpdateData, IFrmUpdateDataList,
+        PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -32,7 +35,7 @@ namespace TileExplorer
 
         public StatusStrip StatusStrip => statusStrip;
 
-        private IPresenterFrmListBase PresenterFrmList { get; set; }
+        private IPresenterFrmList PresenterFrmList { get; set; }
 
         private readonly PresenterStatusStripList statusStripPresenter;
 
@@ -58,14 +61,14 @@ namespace TileExplorer
 
             frm.PresenterFrmList.Value = value;
 
-            frm.PresenterFrmList.FrmListChanged += frm.PresenterFrmList_FrmListChanged;
+            frm.PresenterFrmList.ListChanged += frm.PresenterFrmList_ListChanged;
 
             frm.Show(owner);
 
             return frm;
         }
 
-        private void PresenterFrmList_FrmListChanged(object sender)
+        private void PresenterFrmList_ListChanged(object sender)
         {
             tsbtnChange.Enabled = tsbtnDelete.Enabled = tsbtnChartTrackEle.Enabled = !DataGridView.IsEmpty();
 
@@ -128,24 +131,24 @@ namespace TileExplorer
 
         private async void TsbtnAdd_Click(object sender, EventArgs e)
         {
-            await PresenterFrmList.ListItemAddNewAsync();
+            await PresenterFrmList.AddNewItemAsync();
         }
 
         private async void TsbtnChange_Click(object sender, EventArgs e)
         {
-            await PresenterFrmList.ListItemChangeSelectedAsync();
+            await PresenterFrmList.SelectedChangeAsync();
         }
 
         private async void TsbtnDelete_Click(object sender, EventArgs e)
         {
-            await PresenterFrmList.ListItemDeleteSelectedAsync();
+            await PresenterFrmList.SelectedDeleteAsync();
         }
 
         private void ShowTrackEleChart()
         {
             if (Selected == null) return;
 
-            MainForm.ShowChartTrackEle(this, Selected as Track);
+            FrmChartTrackEle.OpenFrm(MainForm as Form, Selected as Track);
         }
 
         private void TsbtnTrackEleChart_Click(object sender, EventArgs e)
@@ -170,8 +173,8 @@ namespace TileExplorer
             }
         }
 
-        public void ListItemChange(IBaseId value) => PresenterFrmList.ListItemChange(value);
+        public void ListItemsChange(IEnumerable<IBaseId> list) => PresenterFrmList.ListItemsChange(list);
 
-        public void ListItemDelete(IBaseId value) => PresenterFrmList.ListItemDelete(value);
+        public void ListItemsDelete(IEnumerable<IBaseId> list) => PresenterFrmList.ListItemsDelete(list);
     }
 }

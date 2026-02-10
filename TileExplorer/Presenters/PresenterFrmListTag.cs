@@ -1,23 +1,23 @@
-﻿using P3tr0viCh.Utils.Comparers;
+﻿using Newtonsoft.Json.Linq;
+using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
+using P3tr0viCh.Utils.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer.Presenters
 {
-    internal class PresenterFrmListTags : PresenterFrmListBase<TagModel>
+    internal class PresenterFrmListTags : PresenterFrmList<TagModel>
     {
         public override ChildFormType FormType => ChildFormType.TagList;
 
-        public PresenterFrmListTags(IFrmListBase frmList) : base(frmList)
+        public PresenterFrmListTags(IFrmList frmList) : base(frmList)
         {
-            ItemChangeDialog += PresenterFrmListTags_ItemChangeDialog;
-
-            ItemDeleteDialog += PresenterFrmListTags_ItemDeleteDialog;
-            ItemListDeleteDialog += PresenterFrmListTags_ItemListDeleteDialog;
+            ItemsChangeDialog += PresenterFrmListTags_ItemsChangeDialog;
+            ItemsDeleteDialog += PresenterFrmListTags_ItemsDeleteDialog;
         }
 
         protected override string FormTitle => Resources.TitleListTags;
@@ -29,24 +29,15 @@ namespace TileExplorer.Presenters
             PresenterDataGridView.SortColumn = nameof(TagModel.Text);
         }
 
-        private void PresenterFrmListTags_ItemChangeDialog(object sender, ItemDialogEventArgs<TagModel> e)
+        private void PresenterFrmListTags_ItemsChangeDialog(object sender, ItemsDialogEventArgs<TagModel> e)
         {
-            e.Ok = FrmTag.ShowDlg(Form, e.Value);
+            e.Ok = FrmTag.ShowDlg(Form, e.Values.FirstOrDefault());
         }
 
-        private void PresenterFrmListTags_ItemDeleteDialog(object sender, ItemDialogEventArgs<TagModel> e)
+        private void PresenterFrmListTags_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<TagModel> e)
         {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Value, Resources.QuestionTagDelete);
-        }
-
-        private void PresenterFrmListTags_ItemListDeleteDialog(object sender, ItemListDialogEventArgs<TagModel> e)
-        {
-            e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionTagListDelete);
-        }
-
-        protected override async Task DatabaseListItemDeleteAsync(IEnumerable<TagModel> list)
-        {
-            await Database.Actions.TagDeleteAsync(list);
+            e.Ok = Utils.ShowItemDeleteDialog(e.Values,
+                Resources.QuestionTagDelete, Resources.QuestionTagListDelete);
         }
 
         protected override void UpdateColumns()

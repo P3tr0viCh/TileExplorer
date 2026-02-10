@@ -1,18 +1,18 @@
 ﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
+using P3tr0viCh.Utils.Interfaces;
 using System.Windows.Forms;
-using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer.Presenters
 {
-    internal class PresenterFrmListResultEquipments : PresenterFrmListBase<ResultEquipments>
+    internal class PresenterFrmListResultEquipments : PresenterFrmList<ResultEquipments>
     {
         public override ChildFormType FormType => ChildFormType.ResultEquipments;
 
-        public PresenterFrmListResultEquipments(IFrmListBase frmList) : base(frmList)
+        public PresenterFrmListResultEquipments(IFrmList frmList) : base(frmList)
         {
             Grants = FrmListGrant.None;
         }
@@ -36,17 +36,16 @@ namespace TileExplorer.Presenters
 
             FrmList.DataGridView.Columns[nameof(ResultEquipments.Text)].HeaderText = ResourcesColumnHeader.Name;
 
-            columnFormattingIndex = new int[1];
-            columnFormattingIndex[0] = FrmList.DataGridView.Columns[nameof(ResultEquipments.Text)].Index;
+            columnFormattingIndex = FrmList.DataGridView.Columns[nameof(ResultEquipments.Text)].Index;
 
             FrmList.DataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
         }
 
-        private int[] columnFormattingIndex;
+        private int columnFormattingIndex;
 
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == columnFormattingIndex[0])
+            if (e.ColumnIndex == columnFormattingIndex)
             {
                 if ((e.Value as string).IsEmpty()) e.Value = Resources.TextOther;
             }

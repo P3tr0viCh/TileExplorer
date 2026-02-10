@@ -1,7 +1,5 @@
 ﻿using P3tr0viCh.Utils.Extensions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -64,19 +62,14 @@ namespace TileExplorer
             return true;
         }
 
-        private async Task<bool> SaveDataAsync()
+        private bool ApplyData()
         {
-            return await Database.Actions.TagSaveAsync(TagModel);
+            return CheckData() && UpdateData();
         }
 
-        private async Task<bool> ApplyDataAsync()
+        private void BtnOk_Click(object sender, System.EventArgs e)
         {
-            return CheckData() && UpdateData() && await SaveDataAsync();
-        }
-
-        private async void BtnOk_Click(object sender, System.EventArgs e)
-        {
-            if (await ApplyDataAsync())
+            if (ApplyData())
             {
                 DialogResult = DialogResult.OK;
             }

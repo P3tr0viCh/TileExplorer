@@ -14,7 +14,7 @@ namespace TileExplorer
 {
     public partial class Main
     {
-        private async Task InternalUpdateDataAsync(DataLoad load = default, object value = null)
+        private async Task InternalUpdateDataAsync2(DataLoad load = default, object value = null)
         {
             if (load == default)
             {
@@ -63,7 +63,8 @@ namespace TileExplorer
                 await LoadTracksInfoAsync();
             }
 
-            await UpdateDataChildFormsAsync(load, value);
+            //await UpdateDataChildFormsAsync(load, value);
+            await ChildFormsUpdateDataAsync();
 
             if (load.HasFlag(DataLoad.ObjectDelete))
             {
@@ -86,25 +87,83 @@ namespace TileExplorer
                 }
             }
         }
-
-        public async Task UpdateDataAsync(DataLoad load = default, object value = null)
+        
+        private async Task InternalUpdateDataAsync(DataLoad load = default)
         {
-            var savedSelected = Selected;
+            if (load == default)
+            {
+                load = DataLoad.Tiles |
+                       DataLoad.Tracks |
+                       DataLoad.Markers | 
+                       DataLoad.TrackListChanged;
+            }
+
+            DebugWrite.Line($"Loading data {load}");
+
+            if (load.HasFlag(DataLoad.Tiles))
+            {
+                tilesLoaded = false;
+
+                if (miMainShowTiles.Checked)
+                {
+                    await LoadTilesAsync();
+                }
+            }
+
+            if (load.HasFlag(DataLoad.Tracks))
+            {
+                tracksLoaded = false;
+
+                if (miMainShowTracks.Checked)
+                {
+                    await LoadTracksAsync();
+                }
+            }
+
+            if (load.HasFlag(DataLoad.Markers))
+            {
+                markersLoaded = false;
+
+                if (miMainShowMarkers.Checked)
+                {
+                    await LoadMarkersAsync();
+                }
+            }
+
+            if (load.HasFlag(DataLoad.TrackListChanged))
+            {
+                await LoadYearsAsync();
+
+                await LoadTracksInfoAsync();
+            }
+
+            await ChildFormsUpdateDataAsync();
+        }
+
+        private async Task ChildFormsUpdateDataAsync()
+        {
+            foreach (var frm in Utils.Forms.GetChildForms<IFrmUpdateData>())
+            {
+                await frm.UpdateDataAsync();
+            }
+        }
+
+        public async Task UpdateDataAsync(DataLoad load = default)
+        {
+            var selected = Selected?.Model;
 
             Selected = null;
 
-            Application.DoEvents();
+ //           Application.DoEvents();
 
-            await InternalUpdateDataAsync(load, value);
-
-            var selected = value is BaseId ? value as BaseId : savedSelected?.Model;
+            await InternalUpdateDataAsync(load);
 
             var item = FindMapItem(selected);
 
             Selected = item;
         }
 
-        public async Task UpdateDataAsync(DataLoad load, IEnumerable<object> list)
+ /*       public async Task UpdateDataAsync(DataLoad load, IEnumerable<object> list)
         {
             Selected = null;
 
@@ -114,7 +173,7 @@ namespace TileExplorer
             {
                 await InternalUpdateDataAsync(load, value);
             }
-        }
+        }*/
 
         private bool IsObjectChanged(DataLoad load, object value, Type type)
         {
@@ -141,7 +200,7 @@ namespace TileExplorer
         {
             DataUpdate dataUpdate;
 
-            foreach (var frm in Utils.Forms.GetChildForms<IFrmUpdateData>())
+            foreach (var frm in Utils.Forms.GetChildForms<IChildForm>())
             {
                 dataUpdate = DataUpdate.None;
 
@@ -290,15 +349,15 @@ namespace TileExplorer
                 switch (dataUpdate)
                 {
                     case DataUpdate.Full:
-                        await frm.UpdateDataAsync();
+                        //await frm.UpdateDataAsync();
 
                         break;
                     case DataUpdate.ObjectChange:
-                        ((IFrmListBase)frm).ListItemChange((BaseId)value);
+                        //frm.ListItemChange((BaseId)value);
 
                         break;
                     case DataUpdate.ObjectDelete:
-                        ((IFrmListBase)frm).ListItemDelete((BaseId)value);
+                        //((IFrmListBase)frm).ListItemDelete((BaseId)value);
 
                         if (frmType == ChildFormType.TileInfo)
                         {

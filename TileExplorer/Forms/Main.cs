@@ -302,8 +302,6 @@ namespace TileExplorer
         private void ProgramStatus_StatusChanged(object sender, Status status)
         {
             statusStripPresenter.Status = status;
-
-            Application.DoEvents();
         }
 
         private async void Filter_OnChangedAsync()
@@ -613,7 +611,7 @@ namespace TileExplorer
                             await MarkerChangeAsync(SelectedMarker.Model);
                             break;
                         case MapItemType.Track:
-                            OpenChartTrackEle(SelectedTrack.Model);
+                            FrmChartTrackEle.OpenFrm(this, SelectedTrack.Model);
                             break;
                     }
                 }
@@ -1347,25 +1345,6 @@ namespace TileExplorer
             mapZoomRuler.Paint(e.Graphics);
         }
 
-        private void OpenChartTrackEle(Track value)
-        {
-            foreach (var frm in Utils.Forms.GetChildForms<FrmChartTrackEle>(ChildFormType.ChartTrackEle))
-            {
-                if (frm.Track.Id == value.Id)
-                {
-                    frm.BringToFront();
-                    return;
-                }
-            }
-
-            FrmChartTrackEle.ShowFrm(this, value);
-        }
-
-        public void ShowChartTrackEle(object sender, Track value)
-        {
-            OpenChartTrackEle(value);
-        }
-
         public void ShowMarkerPosition(object sender, PointLatLng value)
         {
             markerPosition.Position = value;
@@ -1375,7 +1354,7 @@ namespace TileExplorer
 
         private void MiTrackShowChartTrackEle_Click(object sender, EventArgs e)
         {
-            OpenChartTrackEle(SelectedTrack.Model);
+            FrmChartTrackEle.OpenFrm(this, SelectedTrack.Model);
         }
 
         private async void MiMainDataCheckDirectoryTracks_Click(object sender, EventArgs e)
