@@ -149,18 +149,6 @@ namespace TileExplorer
             Selected = item;
         }
 
- /*       public async Task UpdateDataAsync(DataLoad load, IEnumerable<object> list)
-        {
-            Selected = null;
-
-            Application.DoEvents();
-
-            foreach (var value in list)
-            {
-                await InternalUpdateDataAsync(load, value);
-            }
-        }*/
-
         private bool IsObjectChanged(DataLoad load, object value, Type type)
         {
             if (!load.HasFlag(DataLoad.ObjectChange)) return false;

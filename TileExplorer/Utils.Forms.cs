@@ -58,6 +58,11 @@ namespace TileExplorer
                 GetChildForms<IFrmUpdateDataList>(type).ForEach(frm => frm.ListItemsDelete(values));
             }
 
+            public static T FindForm<T>(ChildFormType formType, Func<T, bool> predicate) where T : Form
+            {
+                return GetChildForms<T>(formType).Where(predicate).FirstOrDefault();
+            }
+
             public static void TextBoxWrongValue(TextBox textBox, string error)
             {
                 textBox.Focus();

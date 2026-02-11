@@ -59,17 +59,14 @@ namespace TileExplorer
             return frm;
         }
 
-        private static FrmChartTrackEle Exists(Track track)
-        {
-            return Utils.Forms.GetChildForms<FrmChartTrackEle>(ChildFormType.ChartTrackEle)
-                .Where(frm => frm.Track.Id == track.Id).FirstOrDefault();
-        }
-
         public static void OpenFrm(Form owner, Track track)
         {
-            if (Exists(track) is FrmChartTrackEle frm)
+            var existsFrm = Utils.Forms.FindForm<FrmChartTrackEle>(ChildFormType.ChartTrackEle,
+                frm => frm.Track.Id == track.Id);
+
+            if (existsFrm != null)
             {
-                frm.BringToFront();
+                existsFrm.BringToFront();
 
                 return;
             }

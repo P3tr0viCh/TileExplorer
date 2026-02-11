@@ -42,7 +42,7 @@ namespace TileExplorer
             PresenterChildForm.LinkTo(this);
         }
 
-        public static FrmChartTracksByYear ShowFrm(Form owner, int year)
+        private static FrmChartTracksByYear ShowFrm(Form owner, int year)
         {
             Debug.Assert(owner is IMainForm);
 
@@ -58,12 +58,6 @@ namespace TileExplorer
             frm.Show(owner);
 
             return frm;
-        }
-
-        private static FrmChartTracksByYear Exists(int year)
-        {
-            return Utils.Forms.GetChildForms<FrmChartTracksByYear>(ChildFormType.ChartTracksByYear)
-                .Where(frm => frm.Year == year).FirstOrDefault();
         }
 
         public static void OpenFrm(Form owner, int year)
@@ -87,9 +81,12 @@ namespace TileExplorer
                 }
             }
 
-            if (Exists(year) is FrmChartTracksByYear frm)
+            var existsFrm = Utils.Forms.FindForm<FrmChartTracksByYear>(ChildFormType.ChartTracksByYear,
+                frm => frm.Year == year);
+
+            if (existsFrm != null)
             {
-                frm.BringToFront();
+                existsFrm.BringToFront();
 
                 return;
             }

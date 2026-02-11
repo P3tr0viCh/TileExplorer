@@ -232,6 +232,50 @@ namespace TileExplorer.Presenters
             MainForm.SelectMapItemAsync(this, Selected);
         }
 
+        private void EquipmentsChange(IEnumerable<Equipment> equipments, bool delete)
+        {
+            for (var i = 0; i < List.Count; i++)
+            {
+                var equipment = equipments.Where(e => List[i].EquipmentId == e.Id).FirstOrDefault();
+
+                if (equipment == default) continue;
+
+                List[i].Equipment = delete ? null : equipment;
+
+                BindingSource.ResetItem(i);
+            }
+        }
+
+        private void TagsChange(IEnumerable<TagModel> tags, bool delete)
+        {
+            for (var i = 0; i < List.Count; i++)
+            {
+                foreach (var tag in tags)
+                {
+                    var exists = List[i].Tags.Where(item => item.Id == tag.Id).FirstOrDefault();
+
+                    if (exists == default) continue;
+
+                    if (delete)
+                    {
+                        var newTags = List[i].Tags.ToList();
+
+                        newTags.Remove(exists);
+
+                        List[i].Tags = newTags;
+                    }
+                    else
+                    {
+                        exists.Assign(tag);
+                    }
+
+                    BindingSource.ResetItem(i);
+
+                    break;
+                }
+            }
+        }
+
         public override void ListItemsChange(IEnumerable<IBaseId> list)
         {
             if (list is IEnumerable<Track> tracks)
@@ -243,37 +287,14 @@ namespace TileExplorer.Presenters
 
             if (list is IEnumerable<Equipment> equipments)
             {
-                for (var i = 0; i < List.Count; i++)
-                {
-                    var equipment = equipments.Where(e => List[i].EquipmentId == e.Id).FirstOrDefault();
-
-                    if (equipment == default) continue;
-
-                    List[i].Equipment = equipment;
-
-                    BindingSource.ResetItem(i);
-                }
+                EquipmentsChange(equipments, false);
 
                 return;
             }
 
             if (list is IEnumerable<TagModel> tags)
             {
-                for (var i = 0; i < List.Count; i++)
-                {
-                    foreach (var tag in tags)
-                    {
-                        var exists = List[i].Tags.Where(item => item.Id == tag.Id).FirstOrDefault();
-                        
-                        if (exists == default) continue;
-
-                        exists.Assign(tag);
-
-                        BindingSource.ResetItem(i);
-
-                        break;
-                    }
-                }
+                TagsChange(tags, false);
 
                 return;
             }
@@ -283,48 +304,21 @@ namespace TileExplorer.Presenters
         {
             if (list is IEnumerable<Track> tracks)
             {
-                base.ListItemsChange(tracks);
+                base.ListItemsDelete(tracks);
 
                 return;
             }
 
             if (list is IEnumerable<Equipment> equipments)
             {
-                for (var i = 0; i < List.Count; i++)
-                {
-                    var equipment = equipments.Where(e => List[i].EquipmentId == e.Id).FirstOrDefault();
-
-                    if (equipment == default) continue;
-
-                    List[i].Equipment = null;
-
-                    BindingSource.ResetItem(i);
-                }
+                EquipmentsChange(equipments, true);
 
                 return;
             }
 
             if (list is IEnumerable<TagModel> tags)
             {
-                for (var i = 0; i < List.Count; i++)
-                {
-                    foreach (var tag in tags)
-                    {
-                        var exists = List[i].Tags.Where(item => item.Id == tag.Id).FirstOrDefault();
-
-                        if (exists == default) continue;
-
-                        var newTags = List[i].Tags.ToList();
-
-                        newTags.Remove(exists);
-
-                        List[i].Tags = newTags;
-
-                        BindingSource.ResetItem(i);
-
-                        break;
-                    }
-                }
+                TagsChange(tags, true);
 
                 return;
             }

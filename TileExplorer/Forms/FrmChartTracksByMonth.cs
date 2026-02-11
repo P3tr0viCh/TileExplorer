@@ -52,17 +52,14 @@ namespace TileExplorer
             return frm;
         }
 
-        private static FrmChartTracksByMonth Exists(int year, int month)
-        {
-            return Utils.Forms.GetChildForms<FrmChartTracksByMonth>(ChildFormType.ChartTracksByMonth)
-                .Where(frm => frm.Year == year && frm.Month == month).FirstOrDefault();
-        }
-
         public static void OpenFrm(Form owner, int year, int month)
         {
-            if (Exists(year, month) is FrmChartTracksByMonth frm)
+            var existsFrm = Utils.Forms.FindForm<FrmChartTracksByMonth>(ChildFormType.ChartTracksByMonth,
+                frm => frm.Year == year && frm.Month == month);
+
+            if (existsFrm != null)
             {
-                frm.BringToFront();
+                existsFrm.BringToFront();
 
                 return;
             }
