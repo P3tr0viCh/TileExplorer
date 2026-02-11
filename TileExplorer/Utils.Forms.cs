@@ -15,7 +15,7 @@ namespace TileExplorer
     {
         public static class Forms
         {
-            public static List<T> GetChildForms<T>(ChildFormType type = default)
+            public static List<T> GetChildForms<T>(ChildFormType type)
             {
                 var forms = new List<T>();
 
@@ -38,7 +38,7 @@ namespace TileExplorer
                 return forms.Count == 1 ? forms.First() : default;
             }
 
-            public static async Task ChildFormsUpdateDataAsync(ChildFormType type = default)
+            public static async Task ChildFormsUpdateDataAsync(ChildFormType type)
             {
                 var forms = GetChildForms<IFrmUpdateData>(type);
 

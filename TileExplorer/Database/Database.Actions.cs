@@ -1,9 +1,7 @@
 ﻿using P3tr0viCh.Database;
 using P3tr0viCh.Utils;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using static TileExplorer.Database.Models;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
@@ -12,7 +10,7 @@ namespace TileExplorer
     {
         internal static class Actions
         {
-            private static async Task<bool> ListItemSaveAsync<T>(T value) where T : BaseId
+            public static async Task<bool> ListItemSaveAsync<T>(T value) where T : BaseId
             {
                 var status = ProgramStatus.Default.Start(Status.SaveData);
 
@@ -36,13 +34,13 @@ namespace TileExplorer
                 }
             }
 
-            private static async Task<bool> ListItemDeleteAsync<T>(IEnumerable<T> values) where T : BaseId
+            public static async Task<bool> ListItemDeleteAsync<T>(T value) where T : BaseId
             {
                 var status = ProgramStatus.Default.Start(Status.SaveData);
 
                 try
                 {
-                    await Default.ListItemDeleteAsync(values);
+                    await Default.ListItemDeleteAsync(value);
 
                     return true;
                 }
@@ -58,21 +56,6 @@ namespace TileExplorer
                 {
                     ProgramStatus.Default.Stop(status);
                 }
-            }
-
-            public static async Task<bool> MarkerSaveAsync(Marker marker)
-            {
-                return await ListItemSaveAsync(marker);
-            }
-
-            public static async Task<bool> MarkerDeleteAsync(IEnumerable<Marker> markers)
-            {
-                return await ListItemDeleteAsync(markers);
-            }
-
-            public static async Task<bool> TrackDeleteAsync(IEnumerable<Track> tracks)
-            {
-                return await ListItemDeleteAsync(tracks);
             }
         }
     }

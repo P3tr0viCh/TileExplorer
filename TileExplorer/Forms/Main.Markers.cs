@@ -132,42 +132,38 @@ namespace TileExplorer
             await SelectMapItemAsync(this, marker);
         }
 
-        private async Task<bool> MarkerDeleteAsync(List<Marker> markers)
+        private async Task<bool> MarkerDeleteAsync(Marker marker)
         {
-            if (markers?.Count == 0) return false;
-
-            var firstMarker = markers.FirstOrDefault();
-
-            var name = firstMarker.Text;
+            var name = marker.Text;
 
             if (name.IsEmpty())
             {
-                name = $"{firstMarker.Lat}:{firstMarker.Lng}";
+                name = $"{marker.Lat}:{marker.Lng}";
             }
 
-            var question = markers.Count == 1 ? Resources.QuestionMarkerDelete : Resources.QuestionMarkerListDelete;
+            if (!Msg.Question(Resources.QuestionMarkerDelete, name)) return false;
 
-            if (!Msg.Question(question, name, markers.Count - 1)) return false;
+            if (!await Database.Actions.ListItemDeleteAsync(marker)) return false;
 
-            if (!await Database.Actions.MarkerDeleteAsync(markers)) return false;
+            var markers = new List<Marker>() { marker };
 
-            foreach (var marker in markers)
-            {
-                overlayMarkers.Markers.Remove(
-                    overlayMarkers.Markers.Cast<IMapItem>().Where(i => i.Model.Id == marker.Id)?
-                        .Cast<MapItemMarker>().FirstOrDefault());
+            MarkersDeleted(markers);
 
-                //await UpdateDataAsync(DataLoad.ObjectDelete, marker);
-            }
-
-            Selected = null;
+            Utils.Forms.ChildFormsListItemsDelete(ChildFormType.MarkerList, markers);
 
             return true;
         }
 
-        private async Task MarkerDeleteAsync(Marker marker)
+        public void MarkersDeleted(IEnumerable<Marker> markers)
         {
-            await MarkerDeleteAsync(new List<Marker>() { marker });
+            foreach (var marker in markers)
+            {
+                overlayMarkers.Markers.Remove(
+                    overlayMarkers.Markers.Cast<MapItemMarker>().Where(i => i.Model.Id == marker.Id)?
+                        .FirstOrDefault());
+            }
+
+            Selected = null;
         }
     }
 }

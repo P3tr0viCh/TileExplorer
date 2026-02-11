@@ -187,7 +187,7 @@ namespace TileExplorer
 
                 if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
-                if (!files.Any())
+                if (files.IsEmpty())
                 {
                     DebugWrite.Line("no new files");
 

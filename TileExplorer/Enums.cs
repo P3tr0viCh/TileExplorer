@@ -13,17 +13,7 @@ namespace TileExplorer
             Tiles = 1,
             Tracks = Tiles << 1,
             Markers = Tracks << 1,
-            ObjectChange = Markers << 1,
-            ObjectDelete = ObjectChange << 1,
-            TrackListChanged = ObjectDelete << 1,
-        }
-
-        public enum DataUpdate
-        {
-            None,
-            Full,
-            ObjectChange,
-            ObjectDelete,
+            TrackListChanged = Markers << 1,
         }
 
         public enum TileStatus

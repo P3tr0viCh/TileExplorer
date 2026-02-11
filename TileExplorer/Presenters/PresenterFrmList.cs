@@ -26,19 +26,19 @@ namespace TileExplorer.Presenters
         {
             Grants = Grants.AddFlag(FrmListGrant.MultiDelete);
 
-            ItemsExceptionLoad += PresenterFrmListBase_Exception;
-            ItemsExceptionChange += PresenterFrmListBase_Exception;
-            ItemsExceptionDelete += PresenterFrmListBase_Exception;
+            ItemsExceptionLoad += PresenterFrmList_Exception;
+            ItemsExceptionChange += PresenterFrmList_Exception;
+            ItemsExceptionDelete += PresenterFrmList_Exception;
         }
 
         protected override void FormOpened()
         {
-            DebugWrite.Line($"ListType = {FormType}");
+            DebugWrite.Line($"{FormType}");
         }
 
         protected override void FormClosed()
         {
-            DebugWrite.Line("closed");
+            DebugWrite.Line($"{FormType}");
         }
 
         private void FrmList_FormClosing(object sender, FormClosingEventArgs e)
@@ -73,7 +73,7 @@ namespace TileExplorer.Presenters
             AppSettings.LocalSave();
         }
 
-        private void PresenterFrmListBase_Exception(object sender, ExceptionEventArgs e)
+        private void PresenterFrmList_Exception(object sender, ExceptionEventArgs e)
         {
             DebugWrite.Line(e.Exception.GetQuery());
 

@@ -116,20 +116,13 @@ namespace TileExplorer
                 public string EquipmentModel { get => Equipment.Model; set => Equipment.Model = value; }
 
                 [Write(false)]
-                public IEnumerable<TagModel> Tags { get; set; } = null;
+                public IEnumerable<TagModel> Tags { get; set; } = Enumerable.Empty<TagModel>();
 
                 [DisplayName("Теги")]
                 [Write(false)]
                 [Computed]
-                public string TagsAsString
-                {
-                    get
-                    {
-                        if (Tags == null) return string.Empty;
-                        
-                        return string.Join(", ", Tags.Select(tag => tag.Text));
-                    }
-                }
+                public string TagsAsString =>
+                    Tags.Any() ? string.Join(", ", Tags.Select(tag => tag.Text)) : string.Empty;
 
                 public override void Clear()
                 {
@@ -141,7 +134,7 @@ namespace TileExplorer
 
                     Equipment = null;
 
-                    Tags = null;
+                    Tags = Enumerable.Empty<TagModel>(); ;
                 }
 
                 public void Assign(Track source)
@@ -172,14 +165,7 @@ namespace TileExplorer
 
                     Equipment = source.Equipment;
 
-                    if (source.Tags == null)
-                    {
-                        Tags = null;
-                    }
-                    else
-                    {
-                        Tags = source.Tags.ToList();
-                    }
+                    Tags = source.Tags;
                 }
             }
         }

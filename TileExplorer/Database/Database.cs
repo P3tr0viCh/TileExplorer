@@ -150,11 +150,19 @@ namespace TileExplorer
             }
         }
 
-        public async Task ListItemDeleteAsync<T>(IEnumerable<T> values) where T : BaseId
+        public async Task ListItemDeleteAsync<T>(T value) where T : BaseId
         {
             using (var connection = GetConnection())
             {
-                await connection.ListItemDeleteAsync(values);
+                await connection.ListItemDeleteAsync(value);
+            }
+        }
+
+        public async Task ListItemDeleteAsync<T>(IEnumerable<T> list) where T : BaseId
+        {
+            using (var connection = GetConnection())
+            {
+                await connection.ListItemDeleteAsync(list);
             }
         }
 
@@ -453,7 +461,7 @@ namespace TileExplorer
         {
             DebugWrite.Line("TrackExtsSaveAsync");
 
-            if (!tracks.Any()) return;
+            if (tracks.IsEmpty()) return;
 
             using (var connection = GetConnection())
             {

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
+using static TileExplorer.Enums;
 
 namespace TileExplorer.Presenters
 {
@@ -29,6 +30,9 @@ namespace TileExplorer.Presenters
 
             ItemsChangeDialog += PresenterFrmListTracks_ItemsChangeDialog;
             ItemsDeleteDialog += PresenterFrmListTracks_ItemsDeleteDialog;
+
+            ItemsChanged += PresenterFrmListTracks_ItemsChanged;
+            ItemsDeleted += PresenterFrmListTracks_ItemsDeleted;
         }
 
         protected override string FormTitle => Resources.TitleListTracks;
@@ -56,6 +60,26 @@ namespace TileExplorer.Presenters
         private void PresenterFrmListTracks_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Track> e)
         {
             e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionTrackDelete, Resources.QuestionTrackListDelete);
+        }
+
+        private async void PresenterFrmListTracks_ItemsChanged(object sender, ItemsEventArgs<Track> e)
+        {
+            await Utils.Forms.ChildFormsUpdateDataAsync(ChildFormType.ResultEquipments);
+        }
+
+        private async void PresenterFrmListTracks_ItemsDeleted(object sender, ItemsEventArgs<Track> e)
+        {
+            await MainForm.UpdateDataAsync(DataLoad.Tiles | DataLoad.TrackListChanged);
+
+            Utils.Forms.ChildFormsListItemsDelete(
+                ChildFormType.TileInfo | 
+                ChildFormType.ChartTrackEle,
+                e.Values);
+
+            await Utils.Forms.ChildFormsUpdateDataAsync(
+                ChildFormType.Filter | 
+                ChildFormType.ResultYears |
+                ChildFormType.ResultEquipments);
         }
 
         protected override async Task DatabaseListItemsSaveAsync(IEnumerable<Track> list)
@@ -236,7 +260,7 @@ namespace TileExplorer.Presenters
         {
             for (var i = 0; i < List.Count; i++)
             {
-                var equipment = equipments.Where(e => List[i].EquipmentId == e.Id).FirstOrDefault();
+                var equipment = equipments.WhereId(List[i].EquipmentId).FirstOrDefault();
 
                 if (equipment == default) continue;
 
@@ -252,7 +276,7 @@ namespace TileExplorer.Presenters
             {
                 foreach (var tag in tags)
                 {
-                    var exists = List[i].Tags.Where(item => item.Id == tag.Id).FirstOrDefault();
+                    var exists = List[i].Tags.WhereId(tag.Id).FirstOrDefault();
 
                     if (exists == default) continue;
 

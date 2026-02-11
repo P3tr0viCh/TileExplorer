@@ -66,7 +66,7 @@ namespace TileExplorer
 
                 UpdateSettings();
 
-                Utils.Forms.GetChildForms<IFrmUpdateSettings>().ForEach(frm => frm.UpdateSettings());
+                Utils.Forms.GetChildForms<IFrmUpdateSettings>(default).ForEach(frm => frm.UpdateSettings());
 
                 await UpdateDataAsync();
             }

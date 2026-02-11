@@ -1,5 +1,4 @@
-﻿using P3tr0viCh.Utils.Extensions;
-using P3tr0viCh.Utils.Presenters;
+﻿using P3tr0viCh.Utils.Presenters;
 using System;
 using TileExplorer.Properties;
 
@@ -30,6 +29,19 @@ namespace TileExplorer.Presenters
             SelectedEleAscent = 0;
             SelectedEleDescent = 0;
             SelectedDistance = 0;
+        }
+
+        public bool Loading
+        {
+            set
+            {
+                foreach (StatusLabel item in Enum.GetValues(typeof(StatusLabel)))
+                {
+                    View.GetLabel(item).Visible = !value;
+                }
+
+                IsSelection = false;
+            }
         }
 
         public double Ele

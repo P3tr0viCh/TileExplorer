@@ -22,10 +22,11 @@ namespace TileExplorer.Interfaces
         PointLatLng MapCenter { get; }
 
         Task<bool> MarkerChangeAsync(Marker marker);
+        Task MarkerChangedAsync(Marker marker);
+        void MarkersDeleted(IEnumerable<Marker> markers);
 
         Task TrackChangedAsync(Track track);
         Task TrackChangedAsync(IEnumerable<Track> tracks);
-        Task MarkerChangedAsync(Marker marker);
 
         void ShowMarkerPosition(PointLatLng value);
         void ShowMarkerNewPosition(PointLatLng value);

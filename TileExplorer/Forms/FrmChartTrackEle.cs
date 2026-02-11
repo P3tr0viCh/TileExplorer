@@ -1,5 +1,7 @@
 ﻿using GMap.NET;
 using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Interfaces;
 using P3tr0viCh.Utils.Presenters;
 using System;
 using System.Collections.Generic;
@@ -18,7 +20,7 @@ using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTrackEle : Form, IChildForm, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
+    public partial class FrmChartTrackEle : Form, IChildForm, IFrmUpdateDataList, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -51,9 +53,6 @@ namespace TileExplorer
                 Track = track
             };
 
-            frm.Location = new Point(owner.Location.X + owner.Width / 2 - frm.Width / 2,
-                                     owner.Location.Y + owner.Height / 2 - frm.Height / 2);
-
             frm.Show(owner);
 
             return frm;
@@ -74,8 +73,21 @@ namespace TileExplorer
             ShowFrm(owner, track);
         }
 
+        private bool Loading
+        {
+            set
+            {
+                lblLoading.Visible = value;
+
+                statusStripPresenter.Loading = value;
+            }
+        }
+
         private async void FrmTrackEleChart_Load(object sender, EventArgs e)
         {
+            lblLoading.Text = Resources.TextLoading;
+            lblLoading.BackColor = chart.BackColor;
+
             ChartArea.AxisX.ScaleView.Zoomable = false;
 
             ChartArea.AxisX.LabelStyle.Format = Resources.TextChartTrackEleAxisX;
@@ -132,6 +144,8 @@ namespace TileExplorer
 
             var status = ProgramStatus.Default.Start(Status.LoadData);
 
+            Loading = true;
+
             try
             {
                 Application.DoEvents();
@@ -140,7 +154,7 @@ namespace TileExplorer
 
                 ChartArea.CursorX.Position = double.NaN;
 
-                 await Task.Delay(3000, ctsChartTrackEle.Token);
+                await Task.Delay(3000, ctsChartTrackEle.Token);
 
                 var trackPoints = await Database.Default.ListLoadAsync<TrackPoint>(new { track = Track, full = true });
 
@@ -196,6 +210,8 @@ namespace TileExplorer
                 ctsChartTrackEle.Finally();
 
                 CursorXPositionChanged();
+
+                Loading = false;
 
                 ProgramStatus.Default.Stop(status);
             }
@@ -316,14 +332,14 @@ namespace TileExplorer
 
         private void Chart_MouseLeave(object sender, EventArgs e)
         {
-            MainForm.ShowMarkerPosition(default);
+            MainForm?.ShowMarkerPosition(default);
         }
 
         private void Chart_MouseEnter(object sender, EventArgs e)
         {
-            MainForm.SelectMapItemAsync(this, Track);
+            MainForm?.SelectMapItemAsync(this, Track);
 
-            MainForm.ShowMarkerPosition(CursorPoint);
+            MainForm?.ShowMarkerPosition(CursorPoint);
         }
 
         private void Chart_SelectionRangeChanging(object sender, CursorEventArgs e)
@@ -380,6 +396,21 @@ namespace TileExplorer
             statusStripPresenter.SelectedEleAscent = selected.EleAscent;
             statusStripPresenter.SelectedEleDescent = selected.EleDescent;
             statusStripPresenter.SelectedDistance = selected.Distance;
+        }
+
+        public void ListItemsChange(IEnumerable<IBaseId> list)
+        {
+        }
+
+        public void ListItemsDelete(IEnumerable<IBaseId> list)
+        {
+            if (list is IEnumerable<Track> tracks)
+            {
+                if (tracks.ContainsId(Track.Id))
+                {
+                    Close();
+                }
+            }
         }
     }
 }

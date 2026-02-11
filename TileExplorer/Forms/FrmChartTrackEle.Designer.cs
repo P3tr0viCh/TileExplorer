@@ -46,6 +46,7 @@
             this.slSelectedDistance = new System.Windows.Forms.ToolStripStatusLabel();
             this.slSelectedEleAscent = new System.Windows.Forms.ToolStripStatusLabel();
             this.slSelectedEleDescent = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblLoading = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -110,7 +111,7 @@
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(664, 22);
             this.statusStrip.TabIndex = 1;
-            this.statusStrip.Text = "statusStrip1";
+            this.statusStrip.Text = "statusStrip";
             // 
             // slDistance
             // 
@@ -160,11 +161,21 @@
             this.slSelectedEleDescent.Size = new System.Drawing.Size(121, 17);
             this.slSelectedEleDescent.Text = "Selected Ele Desc: 666";
             // 
+            // lblLoading
+            // 
+            this.lblLoading.AutoSize = true;
+            this.lblLoading.Location = new System.Drawing.Point(296, 87);
+            this.lblLoading.Name = "lblLoading";
+            this.lblLoading.Size = new System.Drawing.Size(67, 19);
+            this.lblLoading.TabIndex = 2;
+            this.lblLoading.Text = "Loading...";
+            // 
             // FrmChartTrackEle
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(664, 241);
+            this.Controls.Add(this.lblLoading);
             this.Controls.Add(this.chart);
             this.Controls.Add(this.statusStrip);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -176,7 +187,6 @@
             this.Name = "FrmChartTrackEle";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "FrmTrackEleChart";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmChartTrackEle_FormClosed);
             this.Load += new System.EventHandler(this.FrmTrackEleChart_Load);
@@ -200,5 +210,6 @@
         private System.Windows.Forms.ToolStripStatusLabel slSelectedDistance;
         private System.Windows.Forms.ToolStripStatusLabel slSelectedEleAscent;
         private System.Windows.Forms.ToolStripStatusLabel slSelectedEleDescent;
+        private System.Windows.Forms.Label lblLoading;
     }
 }

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Presenters;
+using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 using static TileExplorer.Presenters.PresenterStatusStripList;
 
@@ -123,8 +124,6 @@ namespace TileExplorer
             set => dataGridView.SetSelectedList(value);
         }
 
-        public int Count => dataGridView.Count();
-
         public void SetSelected(BaseId value) => Selected = value;
 
         public void SetSelected(IEnumerable<BaseId> values) => SelectedList = values;
@@ -146,9 +145,19 @@ namespace TileExplorer
 
         private void ShowTrackEleChart()
         {
-            if (Selected == null) return;
+            var selectedCount = SelectedList.Count();
 
-            FrmChartTrackEle.OpenFrm(MainForm as Form, Selected as Track);
+            if (selectedCount == 0) return;
+
+            if (selectedCount > 5)
+            {
+                if (!Msg.Question(Resources.QuestionOpenManyForms, selectedCount)) return;
+            }
+
+            foreach (var track in SelectedList.Cast<Track>())
+            {
+                FrmChartTrackEle.OpenFrm(MainForm as Form, track);
+            }
         }
 
         private void TsbtnTrackEleChart_Click(object sender, EventArgs e)

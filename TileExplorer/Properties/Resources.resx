@@ -484,4 +484,10 @@ ddd</value>
   <data name="TitleListTags" xml:space="preserve">
     <value>Теги</value>
   </data>
+  <data name="TextLoading" xml:space="preserve">
+    <value>Загрузка...</value>
+  </data>
+  <data name="QuestionOpenManyForms" xml:space="preserve">
+    <value>Открыть {0} окон?</value>
+  </data>
 </root>

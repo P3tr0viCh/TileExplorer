@@ -99,7 +99,7 @@ namespace TileExplorer
 
         private async Task<bool> SaveDataAsync()
         {
-            var result = await Database.Actions.MarkerSaveAsync(Marker);
+            var result = await Database.Actions.ListItemSaveAsync(Marker);
 
             if (result)
             {

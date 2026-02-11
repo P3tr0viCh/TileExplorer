@@ -486,7 +486,7 @@ namespace TileExplorer
 
                 if (SelectedMarker != null)
                 {
-                    if (await Database.Actions.MarkerSaveAsync(SelectedMarker.Model))
+                    if (await Database.Actions.ListItemSaveAsync(SelectedMarker.Model))
                     {
                         await MarkerChangedAsync(SelectedMarker.Model);
                     }

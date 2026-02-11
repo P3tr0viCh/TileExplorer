@@ -152,42 +152,50 @@ namespace TileExplorer
             SelectTrackList(tracks);
         }
 
-        private async Task<bool> TrackDeleteAsync(List<Track> tracks)
+        private async Task<bool> TrackDeleteAsync(Track track)
         {
-            if (tracks?.Count == 0) return false;
-
-            var firstTrack = tracks.FirstOrDefault();
-
-            var name = firstTrack.Text;
+            var name = track.Text;
 
             if (name.IsEmpty())
             {
-                name = firstTrack.DateTimeStart.ToString();
+                name = Utils.DateTimeToString(track.DateTimeStart);
             }
 
-            var question = tracks.Count == 1 ? Resources.QuestionTrackDelete : Resources.QuestionTrackListDelete;
+            if (!Msg.Question(Resources.QuestionTrackDelete, name)) return false;
 
-            if (!Msg.Question(question, name, tracks.Count - 1)) return false;
-
-            if (!await Database.Actions.TrackDeleteAsync(tracks)) return false;
+            if (!await Database.Actions.ListItemDeleteAsync(track)) return false;
 
             Selected = null;
 
-            foreach (var track in tracks)
-            {
-                overlayTracks.Routes.Remove(
-                overlayTracks.Routes.Cast<IMapItem>().Where(i => i.Model.Id == track.Id)?
-                    .Cast<MapItemTrack>().FirstOrDefault());
+            var tracks = new List<Track>() { track };
 
-                //await UpdateDataAsync(DataLoad.Tiles | DataLoad.ObjectDelete, track);
-            }
-            
+            TracksDeleted(tracks);
+
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.TrackListChanged);
+
+            Utils.Forms.ChildFormsListItemsDelete(
+                ChildFormType.TileInfo |
+                ChildFormType.ChartTrackEle,
+                tracks);
+
+            await Utils.Forms.ChildFormsUpdateDataAsync(
+                ChildFormType.Filter |
+                ChildFormType.ResultYears |
+                ChildFormType.ResultEquipments);
+
             return true;
         }
 
-        private async Task TrackDeleteAsync(Track track)
+        public void TracksDeleted(IEnumerable<Track> tracks)
         {
-            await TrackDeleteAsync(new List<Track>() { track });
+            foreach (var track in tracks)
+            {
+                overlayTracks.Routes.Remove(
+                    overlayTracks.Routes.Cast<MapItemTrack>().Where(i => i.Model.Id == track.Id)?
+                        .FirstOrDefault());
+            }
+
+            Selected = null;
         }
 
         private async Task<bool> InternalOpenTracksAsync(string[] files)

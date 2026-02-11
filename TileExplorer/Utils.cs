@@ -98,21 +98,6 @@ namespace TileExplorer
             return side * side;
         }
 
-        public static int CompareTo(string x, string y, bool descending)
-        {
-            if (string.IsNullOrEmpty(x))
-            {
-                return string.IsNullOrEmpty(y) ? 0 : 1;
-            }
-
-            if (string.IsNullOrEmpty(y))
-            {
-                return -1;
-            }
-
-            return x.CompareTo(y) * (descending ? -1 : 1);
-        }
-
         public static bool ShowItemDeleteDialog<T>(IEnumerable<T> list,
             string questionItem, string questionItemList) where T : IBaseText
         {

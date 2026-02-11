@@ -1,4 +1,5 @@
 ﻿using GMap.NET.Internals;
+using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Forms;
 using P3tr0viCh.Utils.Interfaces;
@@ -82,6 +83,16 @@ namespace TileExplorer.Presenters
         private void BindingSource_PositionChanged(object sender, EventArgs e)
         {
             MainForm.SelectMapItemAsync(this, Selected);
+        }
+
+        public override void ListItemsDelete(IEnumerable<IBaseId> list)
+        {
+            base.ListItemsDelete(list);
+
+            if (List.Count == 0)
+            {
+                Form.Close();
+            }
         }
     }
 }

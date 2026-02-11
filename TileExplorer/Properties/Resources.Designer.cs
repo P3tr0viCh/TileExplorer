@@ -655,6 +655,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Открыть {0} окон?.
+        /// </summary>
+        internal static string QuestionOpenManyForms {
+            get {
+                return ResourceManager.GetString("QuestionOpenManyForms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Приблизить для редактирования?.
         /// </summary>
         internal static string QuestionOsmSetEditZoom {
@@ -922,6 +931,15 @@ namespace TileExplorer.Properties {
         internal static string TextChartTracksByYearCounts {
             get {
                 return ResourceManager.GetString("TextChartTracksByYearCounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Загрузка....
+        /// </summary>
+        internal static string TextLoading {
+            get {
+                return ResourceManager.GetString("TextLoading", resourceCulture);
             }
         }
         

@@ -21,6 +21,8 @@ namespace TileExplorer.Presenters
 
             ItemsChangeDialog += PresenterFrmListMarkers_ItemsChangeDialog;
             ItemsDeleteDialog += PresenterFrmListMarkers_ItemsDeleteDialog;
+
+            ItemsDeleted += PresenterFrmListMarkers_ItemsDeleted;
         }
 
         protected override string FormTitle => Resources.TitleListMarkers;
@@ -49,6 +51,11 @@ namespace TileExplorer.Presenters
         private void PresenterFrmListMarkers_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Marker> e)
         {
             e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionMarkerDelete, Resources.QuestionMarkerListDelete);
+        }
+
+        private void PresenterFrmListMarkers_ItemsDeleted(object sender, ItemsEventArgs<Marker> e)
+        {
+            MainForm.MarkersDeleted(e.Values);
         }
 
         protected override async Task DatabaseListItemsSaveAsync(IEnumerable<Marker> list)
