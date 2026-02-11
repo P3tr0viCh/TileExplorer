@@ -160,7 +160,7 @@ namespace TileExplorer
 
             ProgramStatus.Default.Stop(starting);
 
-            await UpdateDataAsync();
+            await UpdateDataAsync(DataLoad.All);
 
             await CheckDirectoryTracksAsync(false);
         }
@@ -808,7 +808,7 @@ namespace TileExplorer
 
         private async void MiMainDataUpdate_Click(object sender, EventArgs e)
         {
-            await UpdateDataAsync();
+            await UpdateDataAsync(DataLoad.All);
         }
 
 #if DEBUG
@@ -889,7 +889,11 @@ namespace TileExplorer
 
         private async void MiMainDataOpenTrack_Click(object sender, EventArgs e)
         {
-            await OpenTracksAsync(null);
+            var tracks = await OpenTracksAsync(null);
+
+            if (tracks.IsEmpty()) return;
+
+            await TrackChangedAsync(tracks);
         }
 
         private void ShowChildForm(ChildFormType childFormType, bool show)
@@ -980,30 +984,6 @@ namespace TileExplorer
         }
 
         public PointLatLng MapCenter => gMapControl.Position;
-
-        public async Task<bool> ListItemAddAsync(BaseId value)
-        {
-            if (value is Track)
-            {
-                var result = await OpenTracksAsync(null);
-
-                return result;
-            }
-
-            return false;
-        }
-
-        public async Task<bool> ListItemChangeAsync(IEnumerable<BaseId> list)
-        {
-            var value = list.FirstOrDefault();
-
-            if (value is Track)
-            {
-                return await TrackChangeAsync(list.Cast<Track>());
-            }
-
-            return false;
-        }
 
         public void UpdateGrid()
         {

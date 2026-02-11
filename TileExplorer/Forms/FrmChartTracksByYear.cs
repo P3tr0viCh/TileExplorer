@@ -1,6 +1,8 @@
 ﻿using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,11 +13,12 @@ using System.Windows.Forms.DataVisualization.Charting;
 using TileExplorer.Interfaces;
 using TileExplorer.Presenters;
 using TileExplorer.Properties;
+using static TileExplorer.Database.Models;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTracksByYear : Form, IChildForm, IFrmUpdateData 
+    public partial class FrmChartTracksByYear : Form, IChildForm, IFrmUpdateData, IFrmUpdateDataList
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -295,7 +298,7 @@ namespace TileExplorer
                         });
                     }
 
-                    var distances = await Database.Default.ListLoadAsync<Database.Models.TracksDistanceByMonth>(
+                    var distances = await Database.Default.ListLoadAsync<TracksDistanceByMonth>(
                         new { year = Year, month });
 
                     var counts = string.Empty;
@@ -390,6 +393,29 @@ namespace TileExplorer
             var chart = (Chart)contextMenu.SourceControl;
 
             FrmChartTracksByMonth.OpenFrm(MainForm as Form, Year, GetChartMonth(chart));
+        }
+
+        private async Task CheckUpdateDataAsync(IEnumerable<IBaseId> list)
+        {
+            if (list is IEnumerable<Track> tracks)
+            {
+                var update = tracks.FirstOrDefault(track => track.DateTimeStart.Year == Year);
+
+                if (update != null)
+                {
+                    await UpdateDataAsync();
+                }
+            }
+        }
+
+        public async void ListItemsChange(IEnumerable<IBaseId> list)
+        {
+            await CheckUpdateDataAsync(list);
+        }
+
+        public async void ListItemsDelete(IEnumerable<IBaseId> list)
+        {
+            await CheckUpdateDataAsync(list);
         }
     }
 }

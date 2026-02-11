@@ -24,6 +24,11 @@ namespace TileExplorer
 
                 public Track(string path)
                 {
+                    OpenFromFile(path);
+                }
+
+                private void OpenFromFile(string path)
+                {
                     DebugWrite.Line(path);
 
                     gpx.OpenFromFile(path);

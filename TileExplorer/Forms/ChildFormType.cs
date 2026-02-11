@@ -17,5 +17,9 @@ namespace TileExplorer
         ChartTrackEle = TileInfo << 1,
         ChartTracksByYear = ChartTrackEle << 1,
         ChartTracksByMonth = ChartTracksByYear << 1,
+
+        All = Filter | TrackList | MarkerList | TagList | EquipmentList |
+            ResultYears | ResultEquipments | TileInfo |
+            ChartTrackEle | ChartTracksByYear | ChartTracksByMonth
     }
 }

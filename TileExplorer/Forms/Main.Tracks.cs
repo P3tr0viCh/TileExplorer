@@ -109,19 +109,32 @@ namespace TileExplorer
             }
         }
 
-        private async Task<bool> TrackChangeAsync(IEnumerable<Track> tracks)
+        public async Task<bool> TrackChangeAsync(List<Track> tracks)
         {
             var count = tracks?.Count();
 
             if (count == 0) return false;
 
-            var track = tracks.FirstOrDefault();
-
             if (count == 1)
             {
-                if (!FrmTrack.ShowDlg(this, track)) return false;
+                var track = tracks.First();
 
-                await SelectMapItemAsync(this, track);
+                if (track.IsNew)
+                {
+                    var opened = await OpenTracksAsync(null);
+
+                    if (opened.IsEmpty()) return false;
+
+                    tracks.Clear();
+
+                    tracks.AddRange(opened);
+                }
+                else
+                {
+                    if (!FrmTrack.ShowDlg(this, track)) return false;
+
+                    await SelectMapItemAsync(this, track);
+                }
             }
             else
             {
@@ -136,20 +149,6 @@ namespace TileExplorer
         private async Task TrackChangeAsync(Track track)
         {
             await TrackChangeAsync(new List<Track>() { track });
-        }
-
-        public async Task TrackChangedAsync(Track track)
-        {
-            //await UpdateDataAsync(DataLoad.ObjectChange, track);
-
-            await SelectMapItemAsync(this, track);
-        }
-
-        public async Task TrackChangedAsync(IEnumerable<Track> tracks)
-        {
-            await UpdateDataAsync(DataLoad.Tracks);
-
-            SelectTrackList(tracks);
         }
 
         private async Task<bool> TrackDeleteAsync(Track track)
@@ -169,13 +168,18 @@ namespace TileExplorer
 
             var tracks = new List<Track>() { track };
 
-            TracksDeleted(tracks);
+            await TracksDeletedAsync(tracks);
 
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.TrackListChanged);
+            return true;
+        }
 
-            Utils.Forms.ChildFormsListItemsDelete(
+        public async Task TrackChangedAsync(IEnumerable<Track> tracks)
+        {
+            Utils.Forms.ChildFormsListItemsChange(
                 ChildFormType.TileInfo |
-                ChildFormType.ChartTrackEle,
+                ChildFormType.ChartTrackEle |
+                ChildFormType.ChartTracksByYear |
+                ChildFormType.ChartTracksByMonth,
                 tracks);
 
             await Utils.Forms.ChildFormsUpdateDataAsync(
@@ -183,10 +187,12 @@ namespace TileExplorer
                 ChildFormType.ResultYears |
                 ChildFormType.ResultEquipments);
 
-            return true;
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo);
+
+            SelectTrackList(tracks);
         }
 
-        public void TracksDeleted(IEnumerable<Track> tracks)
+        public async Task TracksDeletedAsync(IEnumerable<Track> tracks)
         {
             foreach (var track in tracks)
             {
@@ -195,16 +201,29 @@ namespace TileExplorer
                         .FirstOrDefault());
             }
 
+            Utils.Forms.ChildFormsListItemsDelete(
+                ChildFormType.TrackList |
+                ChildFormType.TileInfo |
+                ChildFormType.ChartTrackEle |
+                ChildFormType.ChartTracksByYear |
+                ChildFormType.ChartTracksByMonth,
+                tracks);
+
+            await Utils.Forms.ChildFormsUpdateDataAsync(
+                ChildFormType.Filter |
+                ChildFormType.ResultYears |
+                ChildFormType.ResultEquipments);
+
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo);
+
             Selected = null;
         }
 
-        private async Task<bool> InternalOpenTracksAsync(string[] files)
+        private async Task<List<Track>> InternalOpenTracksAsync(string[] files)
         {
             var status = ProgramStatus.Default.Start(Status.LoadGpx);
 
-            Track track;
-
-            var loadedCount = 0;
+            var tracks = new List<Track>();
 
             try
             {
@@ -216,9 +235,7 @@ namespace TileExplorer
 
                 foreach (var file in files)
                 {
-                    track = await Utils.Tracks.OpenTrackFromFileAsync(file);
-
-                    DebugWrite.Line("OpenTrackFromFile done");
+                    var track = await Utils.Tracks.OpenTrackFromFileAsync(file);
 
                     // await Task.Delay(1000);
 
@@ -231,12 +248,14 @@ namespace TileExplorer
                             case DialogResult.Cancel:
                                 continue;
                             case DialogResult.Abort:
-                                return loadedCount > 0;
+                                return tracks;
                             case DialogResult.Yes:
                                 showDlg = false;
 
                                 equipmentToAll = track.Equipment;
 
+                                break;
+                            case DialogResult.OK:
                                 break;
                         }
                     }
@@ -249,32 +268,30 @@ namespace TileExplorer
 
                     DebugWrite.Line("TrackSaveNewAsync done");
 
+                    tracks.Add(track);
+
                     OverlayAddTrack(track);
-
-                    //await UpdateDataAsync(DataLoad.ObjectChange, track);
-
-                    loadedCount++;
                 }
-
-                return true;
             }
             catch (Exception e)
             {
                 DebugWrite.Error(e);
 
                 Msg.Error(e.Message);
-
-                return loadedCount > 0;
             }
             finally
             {
                 ProgramStatus.Default.Stop(status);
             }
+
+            return tracks;
         }
 
-        private async Task<bool> OpenTracksAsync(string[] files)
+        private async Task<List<Track>> OpenTracksAsync(string[] files)
         {
             Selected = null;
+
+            var tracks = new List<Track>();
 
             if (files == null || files.Length == 0)
             {
@@ -282,25 +299,23 @@ namespace TileExplorer
 
                 openFileDialog.InitialDirectory = AppSettings.Local.Default.DirectoryLastTracks;
 
-                if (openFileDialog.ShowDialog(this) != DialogResult.OK) return false;
+                if (openFileDialog.ShowDialog(this) != DialogResult.OK) return tracks;
 
                 AppSettings.Local.Default.DirectoryLastTracks = Directory.GetParent(openFileDialog.FileName).FullName;
 
                 files = openFileDialog.FileNames;
             }
 
-            var opened = await InternalOpenTracksAsync(files);
-
-            if (!opened) return false;
+            tracks = await InternalOpenTracksAsync(files);
 
             foreach (var track in overlayTracks.Routes)
             {
                 track.IsVisible = miMainShowTracks.Checked;
             }
 
-            await UpdateDataAsync(DataLoad.Tiles);
+            //await UpdateDataAsync(DataLoad.Tiles);
 
-            return true;
+            return tracks;
         }
 
         private readonly WrapperCancellationTokenSource ctsTracksInfo = new WrapperCancellationTokenSource();

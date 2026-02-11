@@ -1,6 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -10,11 +11,12 @@ using System.Windows.Forms.DataVisualization.Charting;
 using TileExplorer.Interfaces;
 using TileExplorer.Presenters;
 using TileExplorer.Properties;
+using static TileExplorer.Database.Models;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTracksByMonth : Form, IChildForm, IFrmUpdateData
+    public partial class FrmChartTracksByMonth : Form, IChildForm, IFrmUpdateData, IFrmUpdateDataList
     {
         public IMainForm MainForm => Owner as IMainForm;
 
@@ -250,6 +252,30 @@ namespace TileExplorer
         private void FrmChartTracksByMonth_FormClosed(object sender, FormClosedEventArgs e)
         {
             ctsChartTracksByMonth.Cancel();
+        }
+
+        private async Task CheckUpdateDataAsync(IEnumerable<IBaseId> list)
+        {
+            if (list is IEnumerable<Track> tracks)
+            {
+                var update = tracks.FirstOrDefault(track => 
+                    track.DateTimeStart.Year == Year && track.DateTimeStart.Month == Month);
+
+                if (update != null)
+                {
+                    await UpdateDataAsync();
+                }
+            }
+        }
+
+        public async void ListItemsChange(IEnumerable<IBaseId> list)
+        {
+            await CheckUpdateDataAsync(list);
+        }
+
+        public async void ListItemsDelete(IEnumerable<IBaseId> list)
+        {
+            await CheckUpdateDataAsync(list);
         }
     }
 }

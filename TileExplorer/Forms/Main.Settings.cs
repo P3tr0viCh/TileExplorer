@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
+using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
@@ -66,9 +67,9 @@ namespace TileExplorer
 
                 UpdateSettings();
 
-                Utils.Forms.GetChildForms<IFrmUpdateSettings>(default).ForEach(frm => frm.UpdateSettings());
+                Utils.Forms.GetChildForms<IFrmUpdateSettings>(ChildFormType.All).ForEach(frm => frm.UpdateSettings());
 
-                await UpdateDataAsync();
+                await UpdateDataAsync(DataLoad.All);
             }
         }
     }

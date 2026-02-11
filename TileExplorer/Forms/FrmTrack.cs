@@ -145,16 +145,6 @@ namespace TileExplorer
             return item.Id;
         }
 
-        private bool EnumerableContainsId<T>(IEnumerable<T> items, long id) where T : IBaseId
-        {
-            foreach (var item in items)
-            {
-                if (item.Id == id) return true;
-            }
-
-            return false;
-        }
-
         private void CheckedListBoxSetChecked<T>(CheckedListBox checkedListBox, IEnumerable<T> items) where T : IBaseId
         {
             if (items is null) return;
@@ -163,7 +153,7 @@ namespace TileExplorer
             {
                 var id = CheckedListBoxGetItemId(checkedListBox, i);
 
-                var exists = EnumerableContainsId(items, id);
+                var exists = items.ContainsId(id);
 
                 clbTags.SetItemChecked(i, exists);
             }
@@ -212,7 +202,7 @@ namespace TileExplorer
             {
                 await Database.Default.TrackSaveAsync(Track);
 
-                await MainForm.TrackChangedAsync(Track);
+                //await MainForm.TrackChangedAsync(Track);
 
                 return true;
             }

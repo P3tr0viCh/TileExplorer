@@ -10,34 +10,31 @@ namespace TileExplorer
     {
         public static class Tracks
         {
-            public static async Task UpdateTrackMinDistancePointAsync(Track track)
+            public static void UpdateTrackMinDistancePoint(Track track)
             {
-                await Task.Factory.StartNew(() =>
+                if (track.TrackPoints.Count < 2) return;
+
+                var distance = 0D;
+
+                track.TrackPoints.First().ShowOnMap = true;
+
+                for (var i = 1; i < track.TrackPoints.Count - 1; i++)
                 {
-                    if (track.TrackPoints.Count < 2) return;
-
-                    var distance = 0D;
-
-                    track.TrackPoints.First().ShowOnMap = true;
-
-                    for (var i = 1; i < track.TrackPoints.Count - 1; i++)
+                    if (distance >= Const.TrackMinDistancePoint)
                     {
-                        if (distance >= Const.TrackMinDistancePoint)
-                        {
-                            distance = 0;
+                        distance = 0;
 
-                            track.TrackPoints[i].ShowOnMap = true;
-                        }
-                        else
-                        {
-                            distance += track.TrackPoints[i].Distance;
-
-                            track.TrackPoints[i].ShowOnMap = false;
-                        }
+                        track.TrackPoints[i].ShowOnMap = true;
                     }
+                    else
+                    {
+                        distance += track.TrackPoints[i].Distance;
 
-                    track.TrackPoints.Last().ShowOnMap = true;
-                });
+                        track.TrackPoints[i].ShowOnMap = false;
+                    }
+                }
+
+                track.TrackPoints.Last().ShowOnMap = true;
             }
 
             public static async Task CalcTrackTilesAsync(Track track)
@@ -63,20 +60,23 @@ namespace TileExplorer
                 });
             }
 
-            public static async Task<Track> OpenTrackFromFileAsync(string path)
+            private static Track OpenTrackFromFile(string path)
             {
-                var result = await Task.Factory.StartNew(() =>
-                {
-                    var track = new Track(path);
+                var track = new Track(path);
 
-                    return track;
-                });
-
-                await UpdateTrackMinDistancePointAsync(result);
+                UpdateTrackMinDistancePoint(track);
 
                 DebugWrite.Line("end open file");
 
-                return result;
+                return track;
+            }
+
+            public static async Task<Track> OpenTrackFromFileAsync(string path)
+            {
+                return await Task.Factory.StartNew(() =>
+                {
+                    return OpenTrackFromFile(path);
+                });
             }
         }
     }

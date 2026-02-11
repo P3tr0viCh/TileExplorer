@@ -13,7 +13,9 @@ namespace TileExplorer
             Tiles = 1,
             Tracks = Tiles << 1,
             Markers = Tracks << 1,
-            TrackListChanged = Markers << 1,
+            TracksInfo = Markers << 1,
+
+            All = Tiles | Tracks | Markers | TracksInfo
         }
 
         public enum TileStatus

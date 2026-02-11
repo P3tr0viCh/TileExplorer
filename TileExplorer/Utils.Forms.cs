@@ -21,8 +21,7 @@ namespace TileExplorer
 
                 foreach (var frm in Application.OpenForms)
                 {
-                    if (frm is IChildForm childFrm && frm is T childFrmT &&
-                        (type == default || type.HasFlag(childFrm.FormType)))
+                    if (frm is IChildForm childFrm && frm is T childFrmT && type.HasFlag(childFrm.FormType))
                     {
                         forms.Add(childFrmT);
                     }

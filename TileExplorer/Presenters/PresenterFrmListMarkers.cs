@@ -43,14 +43,16 @@ namespace TileExplorer.Presenters
             return item;
         }
 
-        private async void PresenterFrmListMarkers_ItemsChangeDialog(object sender, ItemsDialogEventArgs<Marker> e)
+        private async Task PresenterFrmListMarkers_ItemsChangeDialog(object sender, ItemsDialogEventArgs<Marker> e)
         {
             e.Ok = await MainForm.MarkerChangeAsync(e.Values.First());
         }
 
-        private void PresenterFrmListMarkers_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Marker> e)
+        private async Task PresenterFrmListMarkers_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Marker> e)
         {
             e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionMarkerDelete, Resources.QuestionMarkerListDelete);
+
+            await Task.CompletedTask;
         }
 
         private void PresenterFrmListMarkers_ItemsDeleted(object sender, ItemsEventArgs<Marker> e)

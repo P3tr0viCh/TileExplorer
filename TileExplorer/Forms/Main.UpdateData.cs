@@ -7,19 +7,9 @@ namespace TileExplorer
 {
     public partial class Main
     {
-        private async Task PerformUpdateDataAsync(DataLoad load = default)
+        private async Task PerformUpdateDataAsync(DataLoad load)
         {
-            var childFormType = ChildFormType.None;
-
-            if (load == default)
-            {
-                load = DataLoad.Tiles |
-                       DataLoad.Tracks |
-                       DataLoad.Markers | 
-                       DataLoad.TrackListChanged;
-
-                childFormType = default;
-            }
+            var childFormType = load == DataLoad.All ? ChildFormType.All : ChildFormType.None;
 
             DebugWrite.Line($"Loading data {load}");
 
@@ -55,7 +45,7 @@ namespace TileExplorer
                 }
             }
 
-            if (load.HasFlag(DataLoad.TrackListChanged))
+            if (load.HasFlag(DataLoad.TracksInfo))
             {
                 await LoadYearsAsync();
 
@@ -65,7 +55,7 @@ namespace TileExplorer
             await Utils.Forms.ChildFormsUpdateDataAsync(childFormType);
         }
 
-        public async Task UpdateDataAsync(DataLoad load = default)
+        public async Task UpdateDataAsync(DataLoad load)
         {
             var selected = Selected?.Model;
 

@@ -45,41 +45,26 @@ namespace TileExplorer.Presenters
             PresenterDataGridView.SortOrder = ComparerSortOrder.Descending;
         }
 
-        private async void PresenterFrmListTracks_ItemsChangeDialog(object sender, ItemsDialogEventArgs<Track> e)
+        private async Task PresenterFrmListTracks_ItemsChangeDialog(object sender, ItemsDialogEventArgs<Track> e)
         {
-            if (e.Values.First().IsNew)
-            {
-                e.Ok = await MainForm.ListItemAddAsync(e.Values.First());
-            }
-            else
-            {
-                e.Ok = await MainForm.ListItemChangeAsync(e.Values);
-            }
+            e.Ok = await MainForm.TrackChangeAsync(e.Values);
         }
 
-        private void PresenterFrmListTracks_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Track> e)
+        private async Task PresenterFrmListTracks_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<Track> e)
         {
             e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionTrackDelete, Resources.QuestionTrackListDelete);
+
+            await Task.CompletedTask;
         }
 
         private async void PresenterFrmListTracks_ItemsChanged(object sender, ItemsEventArgs<Track> e)
         {
-            await Utils.Forms.ChildFormsUpdateDataAsync(ChildFormType.ResultEquipments);
+            await MainForm.TrackChangedAsync(e.Values);
         }
 
         private async void PresenterFrmListTracks_ItemsDeleted(object sender, ItemsEventArgs<Track> e)
         {
-            await MainForm.UpdateDataAsync(DataLoad.Tiles | DataLoad.TrackListChanged);
-
-            Utils.Forms.ChildFormsListItemsDelete(
-                ChildFormType.TileInfo | 
-                ChildFormType.ChartTrackEle,
-                e.Values);
-
-            await Utils.Forms.ChildFormsUpdateDataAsync(
-                ChildFormType.Filter | 
-                ChildFormType.ResultYears |
-                ChildFormType.ResultEquipments);
+            await MainForm.TracksDeletedAsync(e.Values);
         }
 
         protected override async Task DatabaseListItemsSaveAsync(IEnumerable<Track> list)

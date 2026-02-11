@@ -2,6 +2,7 @@
 using P3tr0viCh.Utils.EventArguments;
 using P3tr0viCh.Utils.Interfaces;
 using System.Linq;
+using System.Threading.Tasks;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -29,14 +30,18 @@ namespace TileExplorer.Presenters
             PresenterDataGridView.SortColumn = nameof(TagModel.Text);
         }
 
-        private void PresenterFrmListTags_ItemsChangeDialog(object sender, ItemsDialogEventArgs<TagModel> e)
+        private async Task PresenterFrmListTags_ItemsChangeDialog(object sender, ItemsDialogEventArgs<TagModel> e)
         {
             e.Ok = FrmTag.ShowDlg(Form, e.Values.First());
+            
+            await Task.CompletedTask;
         }
 
-        private void PresenterFrmListTags_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<TagModel> e)
+        private async Task PresenterFrmListTags_ItemsDeleteDialog(object sender, ItemsDialogEventArgs<TagModel> e)
         {
             e.Ok = Utils.ShowItemDeleteDialog(e.Values, Resources.QuestionTagDelete, Resources.QuestionTagListDelete);
+
+            await Task.CompletedTask;
         }
 
         private async void PresenterFrmListTags_ItemsChanged(object sender, ItemsEventArgs<TagModel> e)

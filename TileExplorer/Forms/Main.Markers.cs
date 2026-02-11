@@ -149,8 +149,6 @@ namespace TileExplorer
 
             MarkersDeleted(markers);
 
-            Utils.Forms.ChildFormsListItemsDelete(ChildFormType.MarkerList, markers);
-
             return true;
         }
 
@@ -162,6 +160,8 @@ namespace TileExplorer
                     overlayMarkers.Markers.Cast<MapItemMarker>().Where(i => i.Model.Id == marker.Id)?
                         .FirstOrDefault());
             }
+
+            Utils.Forms.ChildFormsListItemsDelete(ChildFormType.MarkerList, markers);
 
             Selected = null;
         }
