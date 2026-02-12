@@ -9,8 +9,6 @@
 
         public const int OsmEditMinZoom = 16;
 
-        public const string MapRefererUrl = "https://github.com/P3tr0viCh/TileExplorer";
-
         public const int TrackMinDistancePoint = 100;
     }
 }

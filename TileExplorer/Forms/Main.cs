@@ -222,7 +222,7 @@ namespace TileExplorer
             DebugWrite.Line($"useragent: {GMap.NET.MapProviders.GMapProvider.UserAgent}");
 
             gMapControl.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
-            gMapControl.MapProvider.RefererUrl = Const.MapRefererUrl;
+            gMapControl.MapProvider.RefererUrl = Resources.GitHubLink;
 
             gMapControl.ShowCenter = false;
 
