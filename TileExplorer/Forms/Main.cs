@@ -123,6 +123,8 @@ namespace TileExplorer
 
             StartUpdateGrid();
 
+            await UpdateDataAsync(DataLoad.All, ChildFormType.None);
+
             if (AppSettings.Local.Default.VisibleResultYears)
             {
                 ShowChildForm(ChildFormType.ResultYears, true);
@@ -154,8 +156,6 @@ namespace TileExplorer
             {
                 ShowChildForm(ChildFormType.Filter, true);
             }
-
-            await UpdateDataAsync(DataLoad.All, ChildFormType.None);
 
             await CheckDirectoryTracksAsync(false);
         }
@@ -885,8 +885,6 @@ namespace TileExplorer
         private async void MiMainDataOpenTrack_Click(object sender, EventArgs e)
         {
             var tracks = await OpenTracksAsync(null);
-
-            if (tracks.IsEmpty()) return;
 
             await TrackChangedAsync(tracks);
         }

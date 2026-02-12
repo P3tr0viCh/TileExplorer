@@ -94,6 +94,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FrmTrackList";
+            this.ShowInTaskbar = false;
             this.Text = "Треки";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTrackList_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).EndInit();

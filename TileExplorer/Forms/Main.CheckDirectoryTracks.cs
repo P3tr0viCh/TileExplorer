@@ -208,7 +208,9 @@ namespace TileExplorer
 
                 if (ctsCheckDirectoryTracks.IsCancellationRequested) return;
 
-                await OpenTracksAsync(files.ToArray());
+                var tracks = await OpenTracksAsync(files.ToArray());
+
+                await TrackChangedAsync(tracks);
             }
             catch (TaskCanceledException e)
             {

@@ -131,8 +131,6 @@ namespace TileExplorer
                 else
                 {
                     if (!FrmTrack.ShowDlg(this, track)) return false;
-
-                    await SelectMapItemAsync(this, track);
                 }
             }
             else
@@ -141,6 +139,8 @@ namespace TileExplorer
 
                 await UpdateTracksAsync(tracks);
             }
+
+            await TrackChangedAsync(tracks);
 
             return true;
         }
@@ -174,6 +174,8 @@ namespace TileExplorer
 
         public async Task TrackChangedAsync(IEnumerable<Track> tracks)
         {
+            if (tracks.IsEmpty()) return;
+
             Utils.Forms.ChildFormsListItemsChange(
                 ChildFormType.TileInfo |
                 ChildFormType.ChartTrackEle |
@@ -190,6 +192,8 @@ namespace TileExplorer
 
         public async Task TracksDeletedAsync(IEnumerable<Track> tracks)
         {
+            if (tracks.IsEmpty()) return;
+
             foreach (var track in tracks)
             {
                 overlayTracks.Routes.Remove(
@@ -306,8 +310,6 @@ namespace TileExplorer
                 track.IsVisible = miMainShowTracks.Checked;
             }
 
-            //await UpdateDataAsync(DataLoad.Tiles);
-
             return tracks;
         }
 
@@ -392,8 +394,6 @@ namespace TileExplorer
                 {
                     ProgramStatus.Default.Stop(status);
                 }
-
-                await TrackChangedAsync(tracks);
             }
             catch (Exception e)
             {

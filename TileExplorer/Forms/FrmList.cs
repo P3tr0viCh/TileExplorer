@@ -69,7 +69,7 @@ namespace TileExplorer
             return frm;
         }
 
-        private void PresenterFrmList_ListChanged(object sender)
+        private void PresenterFrmList_ListChanged(object sender, EventArgs e)
         {
             tsbtnChange.Enabled = tsbtnDelete.Enabled = tsbtnChartTrackEle.Enabled = !DataGridView.IsEmpty();
 

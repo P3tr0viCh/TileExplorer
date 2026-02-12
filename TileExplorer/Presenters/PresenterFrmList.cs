@@ -26,24 +26,36 @@ namespace TileExplorer.Presenters
         {
             Grants = Grants.AddFlag(FrmListGrant.MultiDelete);
 
+            FormOpened += PresenterFrmList_FormOpened;
+            FormClosed += PresenterFrmList_FormClosed;
+
+            StatusStart += PresenterFrmList_StatusStart;
+            StatusStop += PresenterFrmList_StatusStop;
+
             ItemsExceptionLoad += PresenterFrmList_Exception;
             ItemsExceptionChange += PresenterFrmList_Exception;
             ItemsExceptionDelete += PresenterFrmList_Exception;
         }
 
-        protected override void FormOpened()
+
+        private void FormOpen()
         {
             DebugWrite.Line($"{FormType}");
         }
 
-        protected override void FormClosed()
+        private void FormClose()
         {
             DebugWrite.Line($"{FormType}");
         }
 
-        private void FrmList_FormClosing(object sender, FormClosingEventArgs e)
+        private void PresenterFrmList_FormOpened(object sender, System.EventArgs e)
         {
-            FormClosing();
+            FormOpen();
+        }
+
+        private void PresenterFrmList_FormClosed(object sender, System.EventArgs e)
+        {
+            FormClose();
         }
 
         protected override void LoadFormState()
@@ -66,11 +78,27 @@ namespace TileExplorer.Presenters
             FrmList.DataGridView.Columns[nameof(BaseId.IsNew)].Visible = false;
         }
 
-        public void FormClosing()
+        private void PresenterFrmList_StatusStart(object sender, StatusEventArgs e)
         {
-            SaveFormState();
+            var status = ProgramStatus.Status.Idle;
 
-            AppSettings.LocalSave();
+            switch (e.Status)
+            {
+                case Status.Load:
+                    status = ProgramStatus.Status.LoadData;
+                    break;
+                case Status.Save:
+                case Status.Delete:
+                    status = ProgramStatus.Status.SaveData;
+                    break;
+            }
+
+            e.Object = ProgramStatus.Default.Start(status);
+        }
+
+        private void PresenterFrmList_StatusStop(object sender, StatusEventArgs e)
+        {
+            ProgramStatus.Default.Stop((ProgramStatus<ProgramStatus.Status>.Status)e.Object);
         }
 
         private void PresenterFrmList_Exception(object sender, ExceptionEventArgs e)
