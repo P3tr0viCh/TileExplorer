@@ -1,7 +1,9 @@
 ﻿using P3tr0viCh.Database;
 using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using static TileExplorer.Database.Models;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
@@ -51,6 +53,26 @@ namespace TileExplorer
                     Msg.Error(e.Message);
 
                     return false;
+                }
+                finally
+                {
+                    ProgramStatus.Default.Stop(status);
+                }
+            }
+
+            public static async Task UpdateTracksAsync(IEnumerable<Track> tracks)
+            {
+                var status = ProgramStatus.Default.Start(Status.SaveData);
+
+                try
+                {
+                    await Default.TrackSaveAsync(tracks);
+                }
+                catch (Exception e)
+                {
+                    DebugWrite.Error(e);
+
+                    Msg.Error(e.Message);
                 }
                 finally
                 {

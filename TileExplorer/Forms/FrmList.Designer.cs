@@ -197,7 +197,7 @@
             this.ShowInTaskbar = false;
             this.Text = "FrmList";
             this.Activated += new System.EventHandler(this.FrmList_Activated);
-            this.Load += new System.EventHandler(this.FrmListNew_Load);
+            this.Load += new System.EventHandler(this.FrmList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStripContainer.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer.BottomToolStripPanel.PerformLayout();

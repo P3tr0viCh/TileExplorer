@@ -28,6 +28,8 @@ namespace TileExplorer.Presenters
 
         protected override void UpdateColumns()
         {
+            base.UpdateColumns();
+
             FrmList.DataGridView.Columns[nameof(ResultEquipments.Text)].DisplayIndex = 0;
 
             FrmList.DataGridView.Columns[nameof(ResultEquipments.Text)].Visible = true;

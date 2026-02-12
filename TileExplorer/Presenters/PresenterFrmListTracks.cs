@@ -71,6 +71,8 @@ namespace TileExplorer.Presenters
 
         protected override void UpdateColumns()
         {
+            base.UpdateColumns();
+
             FrmList.DataGridView.Columns[nameof(Track.Text)].DisplayIndex = 0;
 
             FrmList.DataGridView.Columns[nameof(Track.Text)].Visible = true;

@@ -27,6 +27,8 @@ namespace TileExplorer.Presenters
 
         protected override void UpdateColumns()
         {
+            base.UpdateColumns();
+
             FrmList.DataGridView.Columns[nameof(ResultYears.DurationSum)].Visible = false;
             FrmList.DataGridView.Columns[nameof(ResultYears.DurationSumAsString)].Visible = true;
             FrmList.DataGridView.Columns[nameof(ResultYears.DistanceSum)].Visible = true;

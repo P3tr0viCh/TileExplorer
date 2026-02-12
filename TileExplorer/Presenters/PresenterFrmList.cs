@@ -6,6 +6,7 @@ using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
 using P3tr0viCh.Utils.Interfaces;
 using P3tr0viCh.Utils.Presenters;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,7 +38,6 @@ namespace TileExplorer.Presenters
             ItemsExceptionDelete += PresenterFrmList_Exception;
         }
 
-
         private void FormOpen()
         {
             DebugWrite.Line($"{FormType}");
@@ -48,12 +48,12 @@ namespace TileExplorer.Presenters
             DebugWrite.Line($"{FormType}");
         }
 
-        private void PresenterFrmList_FormOpened(object sender, System.EventArgs e)
+        private void PresenterFrmList_FormOpened(object sender, EventArgs e)
         {
             FormOpen();
         }
 
-        private void PresenterFrmList_FormClosed(object sender, System.EventArgs e)
+        private void PresenterFrmList_FormClosed(object sender, EventArgs e)
         {
             FormClose();
         }
@@ -110,9 +110,9 @@ namespace TileExplorer.Presenters
             Msg.Error(e.Exception.Message);
         }
 
-        protected override Task<IEnumerable<T>> DatabaseListLoadAsync(CancellationToken cancellationToken)
+        protected override async Task<IEnumerable<T>> DatabaseListLoadAsync(CancellationToken cancellationToken)
         {
-            return Database.Default.ListLoadAsync<T>();
+            return await Database.Default.ListLoadAsync<T>();
         }
 
         protected override async Task DatabaseListItemsSaveAsync(IEnumerable<T> list)

@@ -137,7 +137,7 @@ namespace TileExplorer
             {
                 if (!FrmTrackList.ShowDlg(this, tracks)) return false;
 
-                await UpdateTracksAsync(tracks);
+                await Database.Actions.UpdateTracksAsync(tracks);
             }
 
             await TrackChangedAsync(tracks);
@@ -377,29 +377,6 @@ namespace TileExplorer
                 ProgramStatus.Default.Stop(status);
 
                 DebugWrite.Line("end");
-            }
-        }
-
-        private async Task UpdateTracksAsync(IEnumerable<Track> tracks)
-        {
-            try
-            {
-                var status = ProgramStatus.Default.Start(Status.SaveData);
-
-                try
-                {
-                    await Database.Default.TrackSaveAsync(tracks);
-                }
-                finally
-                {
-                    ProgramStatus.Default.Stop(status);
-                }
-            }
-            catch (Exception e)
-            {
-                DebugWrite.Error(e);
-
-                Msg.Error(e.Message);
             }
         }
     }

@@ -81,7 +81,7 @@ namespace TileExplorer
             statusStripPresenter.SelectedCount = DataGridView.SelectedCount();
         }
 
-        private void FrmListNew_Load(object sender, EventArgs e)
+        private void FrmList_Load(object sender, EventArgs e)
         {
             switch (FormType)
             {
@@ -89,7 +89,7 @@ namespace TileExplorer
                     toolStripSeparator1.Visible = true;
                     tsbtnChartTrackEle.Visible = true;
 
-                    return;
+                    break;
             }
         }
 
