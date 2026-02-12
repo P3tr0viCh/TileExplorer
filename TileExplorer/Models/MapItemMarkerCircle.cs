@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using TileExplorer.Interfaces;
 using static TileExplorer.Database;
-using static TileExplorer.Enums;
 
 namespace TileExplorer
 {

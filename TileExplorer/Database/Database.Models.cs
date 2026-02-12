@@ -6,7 +6,6 @@ using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
 using System;
 using System.ComponentModel;
-using static TileExplorer.Enums;
 
 namespace TileExplorer
 {

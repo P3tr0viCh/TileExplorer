@@ -4,7 +4,6 @@ using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
@@ -35,16 +34,6 @@ namespace TileExplorer
                 var forms = GetChildForms<T>(type);
 
                 return forms.Count == 1 ? forms.First() : default;
-            }
-
-            public static async Task ChildFormsUpdateDataAsync(ChildFormType type)
-            {
-                var forms = GetChildForms<IFrmUpdateData>(type);
-
-                foreach (var form in forms)
-                {
-                    await form.UpdateDataAsync();
-                }
             }
 
             public static void ChildFormsListItemsChange(ChildFormType type, IEnumerable<IBaseId> values)

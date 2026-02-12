@@ -1,4 +1,5 @@
-﻿using P3tr0viCh.Utils.Presenters;
+﻿using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Presenters;
 using System;
 using TileExplorer.Properties;
 
@@ -35,7 +36,7 @@ namespace TileExplorer.Presenters
         {
             set
             {
-                foreach (StatusLabel item in Enum.GetValues(typeof(StatusLabel)))
+                foreach (var item in EnumExtensions.GetValues<StatusLabel>())
                 {
                     View.GetLabel(item).Visible = !value;
                 }

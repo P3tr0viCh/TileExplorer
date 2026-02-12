@@ -164,7 +164,7 @@
             // lblLoading
             // 
             this.lblLoading.AutoSize = true;
-            this.lblLoading.Location = new System.Drawing.Point(296, 87);
+            this.lblLoading.Location = new System.Drawing.Point(12, 20);
             this.lblLoading.Name = "lblLoading";
             this.lblLoading.Size = new System.Drawing.Size(67, 19);
             this.lblLoading.TabIndex = 2;
@@ -190,6 +190,7 @@
             this.Text = "FrmTrackEleChart";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmChartTrackEle_FormClosed);
             this.Load += new System.EventHandler(this.FrmTrackEleChart_Load);
+            this.Resize += new System.EventHandler(this.FrmChartTrackEle_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();

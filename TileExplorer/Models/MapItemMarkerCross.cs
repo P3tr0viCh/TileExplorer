@@ -3,7 +3,6 @@ using GMap.NET.WindowsForms.Markers;
 using P3tr0viCh.Database;
 using TileExplorer.Interfaces;
 using static TileExplorer.Database;
-using static TileExplorer.Enums;
 
 namespace TileExplorer
 {

@@ -48,14 +48,14 @@ namespace TileExplorer.Presenters
         {
             Utils.Forms.ChildFormsListItemsChange(ChildFormType.TrackList, e.Values);
 
-            await Utils.Forms.ChildFormsUpdateDataAsync(ChildFormType.ResultEquipments | ChildFormType.Filter);
+            await MainForm.UpdateDataAsync(DataLoad.None, ChildFormType.ResultEquipments | ChildFormType.Filter);
         }
 
         private async void PresenterFrmListEquipments_ItemsDeleted(object sender, ItemsEventArgs<Equipment> e)
         {
             Utils.Forms.ChildFormsListItemsDelete(ChildFormType.TrackList, e.Values);
 
-            await Utils.Forms.ChildFormsUpdateDataAsync(ChildFormType.ResultEquipments | ChildFormType.Filter);
+            await MainForm.UpdateDataAsync(DataLoad.None, ChildFormType.ResultEquipments | ChildFormType.Filter);
         }
 
         protected override void UpdateColumns()

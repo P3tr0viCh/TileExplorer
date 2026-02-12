@@ -1,5 +1,4 @@
 ﻿using P3tr0viCh.Database;
-using static TileExplorer.Enums;
 
 namespace TileExplorer.Interfaces
 {

@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
@@ -182,12 +181,9 @@ namespace TileExplorer
                 ChildFormType.ChartTracksByMonth,
                 tracks);
 
-            await Utils.Forms.ChildFormsUpdateDataAsync(
-                ChildFormType.Filter |
-                ChildFormType.ResultYears |
-                ChildFormType.ResultEquipments);
-
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo);
+            await UpdateDataAsync(
+                DataLoad.Tiles | DataLoad.TracksInfo,
+                ChildFormType.Filter | ChildFormType.ResultYears | ChildFormType.ResultEquipments);
 
             SelectTrackList(tracks);
         }
@@ -209,12 +205,9 @@ namespace TileExplorer
                 ChildFormType.ChartTracksByMonth,
                 tracks);
 
-            await Utils.Forms.ChildFormsUpdateDataAsync(
-                ChildFormType.Filter |
-                ChildFormType.ResultYears |
-                ChildFormType.ResultEquipments);
-
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.TracksInfo);
+            await UpdateDataAsync(
+                DataLoad.Tiles | DataLoad.TracksInfo,
+                ChildFormType.Filter | ChildFormType.ResultYears | ChildFormType.ResultEquipments);
 
             Selected = null;
         }

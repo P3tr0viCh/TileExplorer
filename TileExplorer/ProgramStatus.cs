@@ -12,8 +12,6 @@ namespace TileExplorer
         {
             [Description("")]
             Idle,
-            [Description("")]
-            Starting,
             [Description("Загрузка...")]
             LoadData,
             [Description("Чтение файла gpx...")]

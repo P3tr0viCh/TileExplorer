@@ -88,6 +88,8 @@ namespace TileExplorer
             lblLoading.Text = Resources.TextLoading;
             lblLoading.BackColor = chart.BackColor;
 
+            LabelLoadingUpdatePosition();
+
             ChartArea.AxisX.ScaleView.Zoomable = false;
 
             ChartArea.AxisX.LabelStyle.Format = Resources.TextChartTrackEleAxisX;
@@ -411,6 +413,17 @@ namespace TileExplorer
                     Close();
                 }
             }
+        }
+
+        private void LabelLoadingUpdatePosition()
+        {
+            lblLoading.SetBounds((chart.Width - lblLoading.Width) / 2, (chart.Height - lblLoading.Height) / 2,
+                lblLoading.Width, lblLoading.Height);
+        }
+
+        private void FrmChartTrackEle_Resize(object sender, EventArgs e)
+        {
+            LabelLoadingUpdatePosition();
         }
     }
 }

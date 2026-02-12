@@ -2,7 +2,6 @@
 using System;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
-using static TileExplorer.Enums;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
@@ -113,7 +112,7 @@ namespace TileExplorer
                 ProgramStatus.Default.Stop(status);
             }
 
-            await UpdateDataAsync(DataLoad.All);
+            await UpdateDataAsync(DataLoad.All, ChildFormType.All);
 
             Utils.MsgResult(result, resultMessage);
         }

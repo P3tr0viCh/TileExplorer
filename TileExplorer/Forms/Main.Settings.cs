@@ -3,8 +3,6 @@ using P3tr0viCh.Utils.Interfaces;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TileExplorer.Interfaces;
-using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
@@ -69,7 +67,7 @@ namespace TileExplorer
 
                 Utils.Forms.GetChildForms<IFrmUpdateSettings>(ChildFormType.All).ForEach(frm => frm.UpdateSettings());
 
-                await UpdateDataAsync(DataLoad.All);
+                await UpdateDataAsync(DataLoad.All, ChildFormType.All);
             }
         }
     }

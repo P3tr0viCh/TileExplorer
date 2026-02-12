@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TileExplorer.Interfaces;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 
 namespace TileExplorer
 {

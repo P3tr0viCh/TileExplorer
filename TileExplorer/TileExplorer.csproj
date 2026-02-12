@@ -120,8 +120,9 @@
     <Compile Include="AppBackup\Backup.Equipment.cs" />
     <Compile Include="AppBackup\Backup.Markers.cs" />
     <Compile Include="AppBackup\Backup.Tracks.cs" />
+    <Compile Include="Enums\DataLoad.cs" />
     <Compile Include="Lists.cs" />
-    <Compile Include="Forms\ChildFormType.cs" />
+    <Compile Include="Enums\ChildFormType.cs" />
     <Compile Include="Database\Database.Models.Track.cs" />
     <Compile Include="Database\Database.Actions.cs" />
     <Compile Include="Database\Database.Tables.cs" />
@@ -182,7 +183,7 @@
     <Compile Include="Models\MapItemMarkerCircle.cs" />
     <Compile Include="Presenters\PresenterChildForm.cs" />
     <Compile Include="DataGridViewCellStyles.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="Enums\Enums.cs" />
     <Compile Include="Forms\FrmBackup.cs">
       <SubType>Form</SubType>
     </Compile>

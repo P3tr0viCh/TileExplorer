@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using P3tr0viCh.Utils;
+﻿using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
 using P3tr0viCh.Utils.Extensions;
@@ -14,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 
 namespace TileExplorer.Presenters
 {

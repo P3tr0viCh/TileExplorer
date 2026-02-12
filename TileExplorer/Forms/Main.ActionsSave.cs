@@ -10,7 +10,6 @@ using System.Linq;
 using System.Windows.Forms;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer

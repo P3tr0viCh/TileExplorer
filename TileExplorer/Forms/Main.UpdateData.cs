@@ -1,15 +1,18 @@
 ﻿using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
+using P3tr0viCh.Utils.Interfaces;
 using System.Threading.Tasks;
-using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
     public partial class Main
     {
-        private async Task PerformUpdateDataAsync(DataLoad load)
+        private async Task MainUpdateDataAsync(DataLoad load)
         {
-            var childFormType = load == DataLoad.All ? ChildFormType.All : ChildFormType.None;
+            if (load.HasFlag(DataLoad.All))
+            {
+                load = EnumExtensions.All<DataLoad>();
+            }
 
             DebugWrite.Line($"Loading data {load}");
 
@@ -31,8 +34,6 @@ namespace TileExplorer
                 {
                     await LoadTracksAsync();
                 }
-
-                childFormType = childFormType.AddFlag(ChildFormType.TrackList);
             }
 
             if (load.HasFlag(DataLoad.Markers))
@@ -51,17 +52,34 @@ namespace TileExplorer
 
                 await LoadTracksInfoAsync();
             }
-
-            await Utils.Forms.ChildFormsUpdateDataAsync(childFormType);
         }
 
-        public async Task UpdateDataAsync(DataLoad load)
+        private static async Task ChildFormsUpdateDataAsync(ChildFormType type)
+        {
+            if (type.HasFlag(ChildFormType.All))
+            {
+                type = EnumExtensions.All<ChildFormType>();
+            }
+
+            DebugWrite.Line($"Loading data {type}");
+
+            var forms = Utils.Forms.GetChildForms<IFrmUpdateData>(type);
+
+            foreach (var form in forms)
+            {
+                await form.UpdateDataAsync();
+            }
+        }
+
+        public async Task UpdateDataAsync(DataLoad load, ChildFormType childFormType)
         {
             var selected = Selected?.Model;
 
             Selected = null;
 
-            await PerformUpdateDataAsync(load);
+            await MainUpdateDataAsync(load);
+
+            await ChildFormsUpdateDataAsync(childFormType);
 
             var item = FindMapItem(selected);
 

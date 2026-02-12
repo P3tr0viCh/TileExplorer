@@ -3,7 +3,6 @@ using P3tr0viCh.Database;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 
 namespace TileExplorer.Interfaces
 {
@@ -14,7 +13,7 @@ namespace TileExplorer.Interfaces
 
         Task SelectMapItemAsync(object sender, BaseId value);
 
-        Task UpdateDataAsync(DataLoad load);
+        Task UpdateDataAsync(DataLoad load, ChildFormType childFormType);
 
         PointLatLng MapCenter { get; }
 

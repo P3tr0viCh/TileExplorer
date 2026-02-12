@@ -6,7 +6,8 @@ namespace TileExplorer
     public enum ChildFormType
     {
         None = 0,
-        Filter = 1,
+        All = 1,
+        Filter = All << 1,
         TrackList = Filter << 1,
         MarkerList = TrackList << 1,
         TagList = MarkerList << 1,
@@ -17,9 +18,5 @@ namespace TileExplorer
         ChartTrackEle = TileInfo << 1,
         ChartTracksByYear = ChartTrackEle << 1,
         ChartTracksByMonth = ChartTracksByYear << 1,
-
-        All = Filter | TrackList | MarkerList | TagList | EquipmentList |
-            ResultYears | ResultEquipments | TileInfo |
-            ChartTrackEle | ChartTracksByYear | ChartTracksByMonth
     }
 }

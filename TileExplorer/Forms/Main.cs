@@ -24,7 +24,6 @@ using TileExplorer.Interfaces;
 using TileExplorer.Presenters;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
-using static TileExplorer.Enums;
 using static TileExplorer.Presenters.PresenterStatusStripMain;
 using static TileExplorer.ProgramStatus;
 
@@ -124,8 +123,6 @@ namespace TileExplorer
 
             StartUpdateGrid();
 
-            var starting = ProgramStatus.Default.Start(Status.Starting);
-
             if (AppSettings.Local.Default.VisibleResultYears)
             {
                 ShowChildForm(ChildFormType.ResultYears, true);
@@ -158,9 +155,7 @@ namespace TileExplorer
                 ShowChildForm(ChildFormType.Filter, true);
             }
 
-            ProgramStatus.Default.Stop(starting);
-
-            await UpdateDataAsync(DataLoad.All);
+            await UpdateDataAsync(DataLoad.All, ChildFormType.None);
 
             await CheckDirectoryTracksAsync(false);
         }
@@ -308,7 +303,7 @@ namespace TileExplorer
         {
             Selected = null;
 
-            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks);
+            await UpdateDataAsync(DataLoad.Tiles | DataLoad.Tracks, ChildFormType.TrackList);
         }
 
         private void UpdateApp_StatusChanged(object sender, UpdateStatus status)
@@ -808,7 +803,7 @@ namespace TileExplorer
 
         private async void MiMainDataUpdate_Click(object sender, EventArgs e)
         {
-            await UpdateDataAsync(DataLoad.All);
+            await UpdateDataAsync(DataLoad.All, ChildFormType.All);
         }
 
 #if DEBUG
@@ -830,7 +825,7 @@ namespace TileExplorer
                 {
                     await Database.Default.TileSaveAsync(tile);
 
-                    await UpdateDataAsync(DataLoad.Tiles);
+                    await UpdateDataAsync(DataLoad.Tiles, ChildFormType.None);
                 }
             }
             finally
@@ -858,7 +853,7 @@ namespace TileExplorer
 
                 await Database.Default.TileDeleteAsync(tile);
 
-                await UpdateDataAsync(DataLoad.Tiles);
+                await UpdateDataAsync(DataLoad.Tiles, ChildFormType.None);
             }
             finally
             {

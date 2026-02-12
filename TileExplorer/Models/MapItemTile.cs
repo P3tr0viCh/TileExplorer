@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using TileExplorer.Interfaces;
 using static TileExplorer.Database;
-using static TileExplorer.Enums;
 
 namespace TileExplorer
 {
