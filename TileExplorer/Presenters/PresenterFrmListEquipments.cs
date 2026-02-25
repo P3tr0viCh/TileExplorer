@@ -1,8 +1,8 @@
 ﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
-using P3tr0viCh.Utils.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -12,7 +12,7 @@ namespace TileExplorer.Presenters
     {
         public override ChildFormType FormType => ChildFormType.EquipmentList;
 
-        public PresenterFrmListEquipments(IFrmList frmList) : base(frmList)
+        public PresenterFrmListEquipments(IChildFormList frmList) : base(frmList)
         {
             ItemsChangeDialog += PresenterFrmListEquipments_ItemsChangeDialog;
             ItemsDeleteDialog += PresenterFrmListEquipments_ItemsDeleteDialog;

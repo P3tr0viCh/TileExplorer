@@ -4,7 +4,6 @@ using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.EventArguments;
 using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
-using P3tr0viCh.Utils.Interfaces;
 using P3tr0viCh.Utils.Presenters;
 using System;
 using System.Collections.Generic;
@@ -19,11 +18,13 @@ namespace TileExplorer.Presenters
     {
         public IMainForm MainForm => Form.Owner as IMainForm;
 
+        public new IChildFormList FrmList => base.FrmList as IChildFormList;
+
         public object Value { get; set; }
 
         public abstract ChildFormType FormType { get; }
 
-        public PresenterFrmList(IFrmList frmList) : base(frmList)
+        public PresenterFrmList(IChildFormList frmList) : base(frmList)
         {
             Grants = Grants.AddFlag(FrmListGrant.MultiDelete);
 
@@ -86,6 +87,9 @@ namespace TileExplorer.Presenters
             {
                 case FrmListDatabaseActionStatus.Load:
                     status = ProgramStatus.Status.LoadData;
+
+                    FrmList.Loading = true;
+
                     break;
                 case FrmListDatabaseActionStatus.Save:
                 case FrmListDatabaseActionStatus.Delete:
@@ -98,6 +102,11 @@ namespace TileExplorer.Presenters
 
         private void PresenterFrmList_StatusStop(object sender, StatusEventArgs e)
         {
+            if (e.Status == FrmListDatabaseActionStatus.Load)
+            {
+                FrmList.Loading = false;
+            }
+
             ProgramStatus.Default.Stop((ProgramStatus<ProgramStatus.Status>.Status)e.Object);
         }
 

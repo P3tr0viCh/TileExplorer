@@ -121,6 +121,7 @@
     <Compile Include="AppBackup\Backup.Markers.cs" />
     <Compile Include="AppBackup\Backup.Tracks.cs" />
     <Compile Include="Enums\DataLoad.cs" />
+    <Compile Include="Interfaces\IChildFormList.cs" />
     <Compile Include="Lists.cs" />
     <Compile Include="Enums\ChildFormType.cs" />
     <Compile Include="Database\Database.Models.Track.cs" />

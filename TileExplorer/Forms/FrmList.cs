@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using TileExplorer.Interfaces;
 using TileExplorer.Presenters;
 using TileExplorer.Properties;
@@ -20,7 +21,7 @@ using static TileExplorer.Presenters.PresenterStatusStripList;
 
 namespace TileExplorer
 {
-    public partial class FrmList : Form, IFrmList, IChildForm,
+    public partial class FrmList : Form, IChildFormList, IChildForm,
         IFrmUpdateSettings, IFrmUpdateData, IFrmUpdateDataList,
         PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
@@ -83,6 +84,10 @@ namespace TileExplorer
 
         private void FrmList_Load(object sender, EventArgs e)
         {
+            lblLoading.Text = Resources.TextLoading;
+
+            LabelLoadingUpdatePosition();
+
             switch (FormType)
             {
                 case ChildFormType.TrackList:
@@ -122,6 +127,11 @@ namespace TileExplorer
         {
             get => dataGridView.GetSelectedList<BaseId>();
             set => dataGridView.SetSelectedList(value);
+        }
+        
+        public bool Loading
+        {
+            set => lblLoading.Visible = value;
         }
 
         public void SetSelected(BaseId value) => Selected = value;
@@ -185,5 +195,16 @@ namespace TileExplorer
         public void ListItemsChange(IEnumerable<IBaseId> list) => PresenterFrmList.ListItemsChange(list);
 
         public void ListItemsDelete(IEnumerable<IBaseId> list) => PresenterFrmList.ListItemsDelete(list);
+
+        private void LabelLoadingUpdatePosition()
+        {
+            lblLoading.SetBounds((dataGridView.Width - lblLoading.Width) / 2, (dataGridView.Height - lblLoading.Height) / 2,
+                lblLoading.Width, lblLoading.Height);
+        }
+
+        private void FrmList_Resize(object sender, EventArgs e)
+        {
+            LabelLoadingUpdatePosition();
+        }
     }
 }

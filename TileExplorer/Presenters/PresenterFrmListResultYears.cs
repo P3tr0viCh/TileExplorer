@@ -1,7 +1,7 @@
 ﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Forms;
-using P3tr0viCh.Utils.Interfaces;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -11,7 +11,7 @@ namespace TileExplorer.Presenters
     {
         public override ChildFormType FormType => ChildFormType.ResultYears;
 
-        public PresenterFrmListResultYears(IFrmList frmList) : base(frmList)
+        public PresenterFrmListResultYears(IChildFormList frmList) : base(frmList)
         {
             Grants = FrmListGrant.None;
         }
@@ -21,7 +21,7 @@ namespace TileExplorer.Presenters
         protected override void LoadFormState()
         {
             base.LoadFormState();
-
+            
             FrmList.StatusStrip.Visible = false;
         }
 

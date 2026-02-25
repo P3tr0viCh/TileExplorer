@@ -164,9 +164,10 @@
             // lblLoading
             // 
             this.lblLoading.AutoSize = true;
+            this.lblLoading.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblLoading.Location = new System.Drawing.Point(12, 20);
             this.lblLoading.Name = "lblLoading";
-            this.lblLoading.Size = new System.Drawing.Size(67, 19);
+            this.lblLoading.Size = new System.Drawing.Size(69, 21);
             this.lblLoading.TabIndex = 2;
             this.lblLoading.Text = "Loading...";
             // 

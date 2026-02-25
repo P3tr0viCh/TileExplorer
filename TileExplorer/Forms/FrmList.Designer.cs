@@ -40,6 +40,7 @@
             this.tsbtnDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbtnChartTrackEle = new System.Windows.Forms.ToolStripButton();
+            this.lblLoading = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -74,6 +75,7 @@
             // 
             // toolStripContainer.ContentPanel
             // 
+            this.toolStripContainer.ContentPanel.Controls.Add(this.lblLoading);
             this.toolStripContainer.ContentPanel.Controls.Add(this.dataGridView);
             this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(343, 218);
             this.toolStripContainer.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -180,6 +182,17 @@
             this.tsbtnChartTrackEle.Visible = false;
             this.tsbtnChartTrackEle.Click += new System.EventHandler(this.TsbtnTrackEleChart_Click);
             // 
+            // lblLoading
+            // 
+            this.lblLoading.AutoSize = true;
+            this.lblLoading.BackColor = System.Drawing.SystemColors.Control;
+            this.lblLoading.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblLoading.Location = new System.Drawing.Point(72, 68);
+            this.lblLoading.Name = "lblLoading";
+            this.lblLoading.Size = new System.Drawing.Size(69, 21);
+            this.lblLoading.TabIndex = 2;
+            this.lblLoading.Text = "Loading...";
+            // 
             // FrmList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -198,10 +211,12 @@
             this.Text = "FrmList";
             this.Activated += new System.EventHandler(this.FrmList_Activated);
             this.Load += new System.EventHandler(this.FrmList_Load);
+            this.Resize += new System.EventHandler(this.FrmList_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStripContainer.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer.BottomToolStripPanel.PerformLayout();
             this.toolStripContainer.ContentPanel.ResumeLayout(false);
+            this.toolStripContainer.ContentPanel.PerformLayout();
             this.toolStripContainer.LeftToolStripPanel.ResumeLayout(false);
             this.toolStripContainer.LeftToolStripPanel.PerformLayout();
             this.toolStripContainer.ResumeLayout(false);
@@ -226,5 +241,6 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel slCount;
         private System.Windows.Forms.ToolStripStatusLabel slSelectedCount;
+        private System.Windows.Forms.Label lblLoading;
     }
 }

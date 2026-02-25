@@ -1,11 +1,11 @@
 ﻿using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
-using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -15,7 +15,7 @@ namespace TileExplorer.Presenters
     {
         public override ChildFormType FormType => ChildFormType.MarkerList;
 
-        public PresenterFrmListMarkers(IFrmList frmList) : base(frmList)
+        public PresenterFrmListMarkers(IChildFormList frmList) : base(frmList)
         {
             BindingSource.PositionChanged += BindingSource_PositionChanged;
 

@@ -3,13 +3,13 @@ using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.EventArguments;
 using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
-using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -19,7 +19,7 @@ namespace TileExplorer.Presenters
     {
         public override ChildFormType FormType => ChildFormType.TrackList;
 
-        public PresenterFrmListTracks(IFrmList frmList) : base(frmList)
+        public PresenterFrmListTracks(IChildFormList frmList) : base(frmList)
         {
             Grants = Grants.AddFlag(FrmListGrant.MultiChange);
 

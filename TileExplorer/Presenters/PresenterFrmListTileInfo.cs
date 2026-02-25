@@ -2,12 +2,12 @@
 using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Comparers;
 using P3tr0viCh.Utils.Forms;
-using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TileExplorer.Interfaces;
 using TileExplorer.Properties;
 using static TileExplorer.Database.Models;
 
@@ -17,7 +17,7 @@ namespace TileExplorer.Presenters
     {
         public override ChildFormType FormType => ChildFormType.TileInfo;
 
-        public PresenterFrmListTileInfo(IFrmList frmList) : base(frmList)
+        public PresenterFrmListTileInfo(IChildFormList frmList) : base(frmList)
         {
             Grants = FrmListGrant.Sort;
 
