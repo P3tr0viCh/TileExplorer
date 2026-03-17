@@ -1107,6 +1107,24 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Формат скорости.
+        /// </summary>
+        internal static string FormatSpeed_Description {
+            get {
+                return ResourceManager.GetString("FormatSpeed.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Скорость.
+        /// </summary>
+        internal static string FormatSpeed_DisplayName {
+            get {
+                return ResourceManager.GetString("FormatSpeed.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Формат времени.
         /// </summary>
         internal static string FormatTime_Description {

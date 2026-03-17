@@ -22,7 +22,7 @@ using static TileExplorer.Presenters.PresenterStatusStripList;
 namespace TileExplorer
 {
     public partial class FrmList : Form, IChildFormList, IChildForm,
-        IFrmUpdateSettings, IFrmUpdateData, IFrmUpdateDataList,
+        IUpdateSettings, IUpdateData, IUpdateDataList,
         PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;

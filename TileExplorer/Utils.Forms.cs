@@ -20,7 +20,8 @@ namespace TileExplorer
 
                 foreach (var frm in Application.OpenForms)
                 {
-                    if (frm is IChildForm childFrm && frm is T childFrmT && type.HasFlag(childFrm.FormType))
+                    if (frm is IChildForm childFrm && frm is T childFrmT &&
+                        (type == ChildFormType.All || type.HasFlag(childFrm.FormType)))
                     {
                         forms.Add(childFrmT);
                     }
@@ -38,12 +39,12 @@ namespace TileExplorer
 
             public static void ChildFormsListItemsChange(ChildFormType type, IEnumerable<IBaseId> values)
             {
-                GetChildForms<IFrmUpdateDataList>(type).ForEach(frm => frm.ListItemsChange(values));
+                GetChildForms<IUpdateDataList>(type).ForEach(frm => frm.ListItemsChange(values));
             }
 
             public static void ChildFormsListItemsDelete(ChildFormType type, IEnumerable<IBaseId> values)
             {
-                GetChildForms<IFrmUpdateDataList>(type).ForEach(frm => frm.ListItemsDelete(values));
+                GetChildForms<IUpdateDataList>(type).ForEach(frm => frm.ListItemsDelete(values));
             }
 
             public static T FindForm<T>(ChildFormType formType, Func<T, bool> predicate) where T : Form

@@ -20,7 +20,7 @@ using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTrackEle : Form, IChildForm, IFrmUpdateDataList, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
+    public partial class FrmChartTrackEle : Form, IChildForm, IUpdateDataList, PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip
     {
         public IMainForm MainForm => Owner as IMainForm;
 

@@ -63,7 +63,7 @@ namespace TileExplorer
 
             DebugWrite.Line($"Loading data {type}");
 
-            var forms = Utils.Forms.GetChildForms<IFrmUpdateData>(type);
+            var forms = Utils.Forms.GetChildForms<IUpdateData>(type);
 
             foreach (var form in forms)
             {

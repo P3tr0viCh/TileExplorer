@@ -18,7 +18,7 @@ using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmChartTracksByYear : Form, IChildForm, IFrmUpdateData, IFrmUpdateDataList
+    public partial class FrmChartTracksByYear : Form, IChildForm, IUpdateData, IUpdateDataList
     {
         public IMainForm MainForm => Owner as IMainForm;
 

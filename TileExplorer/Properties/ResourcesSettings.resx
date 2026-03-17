@@ -467,6 +467,12 @@
   <data name="FormatLatLng.DisplayName" xml:space="preserve">
     <value>Координаты</value>
   </data>
+  <data name="FormatSpeed.Description" xml:space="preserve">
+    <value>Формат скорости</value>
+  </data>
+  <data name="FormatSpeed.DisplayName" xml:space="preserve">
+    <value>Скорость</value>
+  </data>
   <data name="FormatTime.Description" xml:space="preserve">
     <value>Формат времени</value>
   </data>

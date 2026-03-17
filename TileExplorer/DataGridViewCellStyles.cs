@@ -22,7 +22,6 @@ namespace TileExplorer
         public static readonly DataGridViewCellStyle Speed = new DataGridViewCellStyle()
         {
             Alignment = DataGridViewContentAlignment.TopRight,
-            Format = "0.0"
         };
 
         public static readonly DataGridViewCellStyle DistanceSum = new DataGridViewCellStyle()
@@ -80,6 +79,8 @@ namespace TileExplorer
 
             Date.Format = AppSettings.Roaming.Default.FormatDate;
             DateTime.Format = AppSettings.Roaming.Default.FormatDateTime;
+
+            Speed.Format = AppSettings.Roaming.Default.FormatSpeed;
         }
     }
 }

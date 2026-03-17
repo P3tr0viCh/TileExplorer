@@ -12,7 +12,7 @@ using static TileExplorer.ProgramStatus;
 
 namespace TileExplorer
 {
-    public partial class FrmFilter : Form, IChildForm, IFrmUpdateData
+    public partial class FrmFilter : Form, IChildForm, IUpdateData
     {
         public IMainForm MainForm => Owner as IMainForm;
 

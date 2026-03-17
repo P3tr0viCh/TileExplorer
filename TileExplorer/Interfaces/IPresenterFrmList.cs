@@ -2,8 +2,7 @@
 
 namespace TileExplorer.Interfaces
 {
-    internal interface IPresenterFrmList : IPresenterFrmListBase, IChildForm,
-        IFrmUpdateSettings, IFrmUpdateData, IFrmUpdateDataList
+    internal interface IPresenterFrmList : IPresenterFrmListBase, IChildForm
     {
         object Value { get; set; }
     }

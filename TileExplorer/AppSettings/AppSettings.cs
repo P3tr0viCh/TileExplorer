@@ -290,6 +290,11 @@ namespace TileExplorer
         [LocalizedDescription("FormatLatLng.Description", Resource)]
         public string FormatLatLng { get => Roaming.Default.FormatLatLng; set => Roaming.Default.FormatLatLng = value; }
 
+        [LocalizedCategory("Category.Format", Resource)]
+        [LocalizedDisplayName("FormatSpeed.DisplayName", Resource)]
+        [LocalizedDescription("FormatSpeed.Description", Resource)]
+        public string FormatSpeed { get => Roaming.Default.FormatSpeed; set => Roaming.Default.FormatSpeed = value; }
+
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.Osm", Resource)]
         [LocalizedDisplayName("OsmTileKey.DisplayName", Resource)]

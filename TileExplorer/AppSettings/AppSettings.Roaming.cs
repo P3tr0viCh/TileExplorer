@@ -112,6 +112,8 @@ namespace TileExplorer
 
             public string FormatLatLng { get; set; } = "0.000000";
 
+            public string FormatSpeed { get; set; } = "0";
+
             // ------------------------------------------------------------------------------------------------------------
             public string OsmTileKey { get; set; } = "boundary";
 
