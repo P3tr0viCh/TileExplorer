@@ -98,6 +98,8 @@ namespace TileExplorer
             miMapTileDelete.Visible = true;
 #endif
 
+            Utils.Forms.ToolStripActivateFormOnMouseEnter(this, toolStrip);
+
             AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
 
 #if DEBUG && DUMMY_TILES
@@ -228,6 +230,8 @@ namespace TileExplorer
 
             gMapControl.MinZoom = 2;
             gMapControl.MaxZoom = 16;
+
+            gMapControl.DisableFocusOnMouseEnter = true;
 
             HomeGoto();
 

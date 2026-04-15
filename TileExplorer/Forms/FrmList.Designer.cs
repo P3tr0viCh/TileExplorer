@@ -34,13 +34,13 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.slCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.slSelectedCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblLoading = new System.Windows.Forms.Label();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.tsbtnAdd = new System.Windows.Forms.ToolStripButton();
             this.tsbtnChange = new System.Windows.Forms.ToolStripButton();
             this.tsbtnDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbtnChartTrackEle = new System.Windows.Forms.ToolStripButton();
-            this.lblLoading = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -112,6 +112,17 @@
             this.slSelectedCount.Size = new System.Drawing.Size(68, 17);
             this.slSelectedCount.Text = "selected: 42";
             // 
+            // lblLoading
+            // 
+            this.lblLoading.AutoSize = true;
+            this.lblLoading.BackColor = System.Drawing.SystemColors.Control;
+            this.lblLoading.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblLoading.Location = new System.Drawing.Point(72, 68);
+            this.lblLoading.Name = "lblLoading";
+            this.lblLoading.Size = new System.Drawing.Size(69, 21);
+            this.lblLoading.TabIndex = 2;
+            this.lblLoading.Text = "Loading...";
+            // 
             // toolStrip
             // 
             this.toolStrip.Dock = System.Windows.Forms.DockStyle.None;
@@ -181,17 +192,6 @@
             this.tsbtnChartTrackEle.ToolTipText = "График высоты";
             this.tsbtnChartTrackEle.Visible = false;
             this.tsbtnChartTrackEle.Click += new System.EventHandler(this.TsbtnTrackEleChart_Click);
-            // 
-            // lblLoading
-            // 
-            this.lblLoading.AutoSize = true;
-            this.lblLoading.BackColor = System.Drawing.SystemColors.Control;
-            this.lblLoading.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLoading.Location = new System.Drawing.Point(72, 68);
-            this.lblLoading.Name = "lblLoading";
-            this.lblLoading.Size = new System.Drawing.Size(69, 21);
-            this.lblLoading.TabIndex = 2;
-            this.lblLoading.Text = "Loading...";
             // 
             // FrmList
             // 

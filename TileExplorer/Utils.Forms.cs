@@ -98,6 +98,22 @@ namespace TileExplorer
 
                 return false;
             }
+
+            public static void ToolStripActivateFormOnMouseEnter(Form form, ToolStrip toolStrip)
+            {
+                foreach (ToolStripItem item in toolStrip.Items)
+                {
+                    item.MouseEnter += (s, e) => Item_MouseEnter(form);
+                }
+            }
+
+            private static void Item_MouseEnter(Form form)
+            {
+                if (Form.ActiveForm != null)
+                {
+                    form.Activate();
+                }
+            }
         }
     }
 }

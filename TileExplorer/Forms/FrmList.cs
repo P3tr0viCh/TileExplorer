@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 using TileExplorer.Interfaces;
 using TileExplorer.Presenters;
 using TileExplorer.Properties;
@@ -86,7 +85,11 @@ namespace TileExplorer
         {
             lblLoading.Text = Resources.TextLoading;
 
+            Utils.Forms.ToolStripActivateFormOnMouseEnter(this, toolStrip);
+
             LabelLoadingUpdatePosition();
+
+            toolStripSeparator1.Visible = false;
 
             switch (FormType)
             {
@@ -177,7 +180,10 @@ namespace TileExplorer
 
         private void ToolStripLeft_MouseEnter(object sender, EventArgs e)
         {
-            Activate();
+            if (ActiveForm != null)
+            {
+ //               Activate();
+            }
         }
 
         private void FrmList_Activated(object sender, EventArgs e)

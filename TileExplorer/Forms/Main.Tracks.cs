@@ -177,6 +177,7 @@ namespace TileExplorer
             if (tracks.IsEmpty()) return;
 
             Utils.Forms.ChildFormsListItemsChange(
+                ChildFormType.TrackList |
                 ChildFormType.TileInfo |
                 ChildFormType.ChartTrackEle |
                 ChildFormType.ChartTracksByYear |
