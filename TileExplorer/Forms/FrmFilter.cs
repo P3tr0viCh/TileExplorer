@@ -41,6 +41,10 @@ namespace TileExplorer
         {
             AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
 
+            dtpDay.AddMenuDateTimeActions();
+            dtpDateFrom.AddMenuDateTimeActions();
+            dtpDateTo.AddMenuDateTimeActions();
+
             UpdateSettings();
 
             selfChange = true;
