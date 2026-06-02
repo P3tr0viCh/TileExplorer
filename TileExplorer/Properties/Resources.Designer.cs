@@ -880,6 +880,15 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ×.
+        /// </summary>
+        internal static string TextCellX {
+            get {
+                return ResourceManager.GetString("TextCellX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0:0,} км.
         /// </summary>
         internal static string TextChartTrackEleAxisX {

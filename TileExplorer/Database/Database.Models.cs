@@ -6,6 +6,7 @@ using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
 using System;
 using System.ComponentModel;
+using TileExplorer.Properties;
 
 namespace TileExplorer
 {
@@ -228,12 +229,25 @@ namespace TileExplorer
                 [DisplayName("Модель")]
                 public string Model { get; set; }
 
+                public bool State { get; set; } = false;
+
+                [Computed]
+                [Write(false)]
+                public bool AvailableForUse => State != true;
+
+                [Computed]
+                [Write(false)]
+                [DisplayName("Архив")]
+                public string StateAsString => State ? Resources.TextCellX : string.Empty;
+
                 public override void Clear()
                 {
                     base.Clear();
 
                     Brand = string.Empty;
                     Model = string.Empty;
+
+                    State = false;
                 }
 
                 public void Assign(Equipment source)
@@ -250,6 +264,8 @@ namespace TileExplorer
                     Text = source.Text;
                     Brand = source.Brand;
                     Model = source.Model;
+
+                    State = source.State;
                 }
             }
 

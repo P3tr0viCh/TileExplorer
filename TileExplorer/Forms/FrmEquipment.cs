@@ -23,6 +23,8 @@ namespace TileExplorer
                 tbText.SetText(equipment.Text);
                 tbBrand.SetText(equipment.Brand);
                 tbModel.SetText(equipment.Model);
+
+                cboxState.Checked = value.State;
             }
         }
 
@@ -66,6 +68,8 @@ namespace TileExplorer
             equipment.Text = tbText.GetTrimText();
             equipment.Brand = tbBrand.GetTrimTextNullable();
             equipment.Model = tbModel.GetTrimTextNullable();
+
+            equipment.State = cboxState.Checked;
 
             return true;
         }

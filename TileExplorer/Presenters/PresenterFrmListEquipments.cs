@@ -65,8 +65,12 @@ namespace TileExplorer.Presenters
             FrmList.DataGridView.Columns[nameof(Equipment.Text)].DisplayIndex = 0;
 
             FrmList.DataGridView.Columns[nameof(Equipment.Text)].Visible = true;
+            FrmList.DataGridView.Columns[nameof(Equipment.State)].Visible = false;
+            FrmList.DataGridView.Columns[nameof(Equipment.AvailableForUse)].Visible = false;
 
             FrmList.DataGridView.Columns[nameof(Equipment.Text)].HeaderText = ResourcesColumnHeader.Name;
+
+            FrmList.DataGridView.Columns[nameof(Equipment.StateAsString)].DefaultCellStyle = DataGridViewCellStyles.State;
         }
 
         public override int Compare(Equipment x, Equipment y, string dataPropertyName, ComparerSortOrder sortOrder)
@@ -89,6 +93,11 @@ namespace TileExplorer.Presenters
                     result = EmptyStringComparer.Default.Compare(x.Model, y.Model, sortOrder);
                     if (result == 0)
                         result = EmptyStringComparer.Default.Compare(x.Brand, y.Brand, ComparerSortOrder.Ascending);
+                    if (result == 0)
+                        result = EmptyStringComparer.Default.Compare(x.Text, y.Text, ComparerSortOrder.Ascending);
+                    break;
+                case nameof(Equipment.StateAsString):
+                    result = SortOrderComparer.Default.Compare(x.State, y.State, sortOrder);
                     if (result == 0)
                         result = EmptyStringComparer.Default.Compare(x.Text, y.Text, ComparerSortOrder.Ascending);
                     break;

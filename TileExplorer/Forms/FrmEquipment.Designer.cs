@@ -36,6 +36,7 @@
             this.lblBrand = new System.Windows.Forms.Label();
             this.tbModel = new System.Windows.Forms.TextBox();
             this.lblModel = new System.Windows.Forms.Label();
+            this.cboxState = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // tbText
@@ -59,19 +60,19 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(144, 184);
+            this.btnCancel.Location = new System.Drawing.Point(144, 208);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
-            this.btnCancel.TabIndex = 7;
+            this.btnCancel.TabIndex = 8;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(56, 184);
+            this.btnOk.Location = new System.Drawing.Point(56, 208);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(80, 32);
-            this.btnOk.TabIndex = 6;
+            this.btnOk.TabIndex = 7;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
@@ -112,12 +113,23 @@
             this.lblModel.TabIndex = 4;
             this.lblModel.Text = "Модель";
             // 
+            // cboxState
+            // 
+            this.cboxState.AutoSize = true;
+            this.cboxState.Location = new System.Drawing.Point(8, 176);
+            this.cboxState.Name = "cboxState";
+            this.cboxState.Size = new System.Drawing.Size(66, 23);
+            this.cboxState.TabIndex = 6;
+            this.cboxState.Text = "Архив";
+            this.cboxState.UseVisualStyleBackColor = true;
+            // 
             // FrmEquipment
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(232, 225);
+            this.ClientSize = new System.Drawing.Size(232, 249);
+            this.Controls.Add(this.cboxState);
             this.Controls.Add(this.tbModel);
             this.Controls.Add(this.lblModel);
             this.Controls.Add(this.tbBrand);
@@ -151,5 +163,6 @@
         private System.Windows.Forms.Label lblBrand;
         private System.Windows.Forms.TextBox tbModel;
         private System.Windows.Forms.Label lblModel;
+        private System.Windows.Forms.CheckBox cboxState;
     }
 }

@@ -76,12 +76,12 @@ namespace TileExplorer
         {
             AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
 
-            await LoadDataAsync();
+            await LoadDataAsync(track?.Equipment);
 
             Track = track;
         }
 
-        private async Task<bool> LoadDataAsync()
+        private async Task<bool> LoadDataAsync(Equipment equipment)
         {
             DebugWrite.Line("start");
 
@@ -91,7 +91,10 @@ namespace TileExplorer
 
                 try
                 {
-                    equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
+                    var equipments = await Database.Default.ListLoadAsync<Equipment>();
+
+                    equipmentBindingSource.DataSource = equipments.
+                        Where(e => e.AvailableForUse || e.Id == equipment?.Id);
 
                     await LoadDataTags();
                 }
@@ -149,19 +152,19 @@ namespace TileExplorer
         {
             if (items is null) return;
 
-            for (var i = 0; i < clbTags.Items.Count; i++)
+            for (var i = 0; i < checkedListBox.Items.Count; i++)
             {
                 var id = CheckedListBoxGetItemId(checkedListBox, i);
 
                 var exists = items.ContainsId(id);
 
-                clbTags.SetItemChecked(i, exists);
+                checkedListBox.SetItemChecked(i, exists);
             }
         }
 
         private IEnumerable<T> CheckedListBoxGetChecked<T>(CheckedListBox checkedListBox) where T : IBaseId
         {
-            var checkedItems = clbTags.CheckedItems;
+            var checkedItems = checkedListBox.CheckedItems;
 
             return checkedItems.Cast<T>();  
         }
@@ -201,8 +204,6 @@ namespace TileExplorer
             try
             {
                 await Database.Default.TrackSaveAsync(Track);
-
-                //await MainForm.TrackChangedAsync(Track);
 
                 return true;
             }

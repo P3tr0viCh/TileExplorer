@@ -490,4 +490,7 @@ ddd</value>
   <data name="QuestionOpenManyForms" xml:space="preserve">
     <value>Открыть {0} окон?</value>
   </data>
+  <data name="TextCellX" xml:space="preserve">
+    <value>×</value>
+  </data>
 </root>

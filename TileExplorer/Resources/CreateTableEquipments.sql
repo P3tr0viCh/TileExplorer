@@ -1,4 +1,7 @@
 CREATE TABLE equipments (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	text TEXT, brand TEXT, model TEXT
+	text TEXT,
+	brand TEXT,
+	model TEXT,
+	state INTEGER
 );

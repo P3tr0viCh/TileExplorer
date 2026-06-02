@@ -4,59 +4,64 @@ namespace TileExplorer
 {
     public static class DataGridViewCellStyles
     {
+        private class TopRight : DataGridViewCellStyle
+        {
+            public TopRight()
+            {
+                Alignment = DataGridViewContentAlignment.TopRight;
+            }
+        }
+
+        private class TopCenter : DataGridViewCellStyle
+        {
+            public TopCenter()
+            {
+                Alignment = DataGridViewContentAlignment.TopCenter;
+            }
+        }
         public static readonly DataGridViewCellStyle Year = new DataGridViewCellStyle()
         {
             Format = "####"
         };
 
-        public static readonly DataGridViewCellStyle Count = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle Count = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight
         };
 
-        public static readonly DataGridViewCellStyle Distance = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle Distance = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight,
         };
 
-        public static readonly DataGridViewCellStyle Speed = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle Speed = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight,
         };
 
-        public static readonly DataGridViewCellStyle DistanceSum = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle DistanceSum = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight,
         };
 
-        public static readonly DataGridViewCellStyle DistanceStep = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle DistanceStep = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight,
         };
 
-        public static readonly DataGridViewCellStyle EleAscentSum = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle EleAscentSum = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight,
         };
 
-        public static readonly DataGridViewCellStyle EleAscentStep = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle EleAscentStep = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight,
         };
 
-        public static readonly DataGridViewCellStyle EleAscent = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle EleAscent = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight,
         };
 
-        public static readonly DataGridViewCellStyle LatLng = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle LatLng = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight,
         };
 
-        public static readonly DataGridViewCellStyle DurationAsString = new DataGridViewCellStyle()
+        public static readonly DataGridViewCellStyle DurationAsString = new TopRight()
         {
-            Alignment = DataGridViewContentAlignment.TopRight
         };
 
         public static readonly DataGridViewCellStyle Date = new DataGridViewCellStyle()
@@ -64,6 +69,10 @@ namespace TileExplorer
         };
 
         public static readonly DataGridViewCellStyle DateTime = new DataGridViewCellStyle()
+        {
+        };
+
+        public static readonly DataGridViewCellStyle State = new TopCenter()
         {
         };
 
