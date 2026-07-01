@@ -28,76 +28,79 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29646D, 20000D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29647D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29648D, 50000D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29649D, 75000D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint5 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29650D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint6 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29651D, 25000D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint7 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29652D, 30000D);
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint8 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29646D, 20000D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint9 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29647D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint10 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29648D, 50000D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint11 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29649D, 75000D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint12 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29650D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint13 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29651D, 25000D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint14 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(29652D, 30000D);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmChartTracksByMonth));
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.cboxYear = new System.Windows.Forms.ToolStripComboBox();
             this.cboxMonth = new System.Windows.Forms.ToolStripComboBox();
+            this.tbtnPrevMonth = new System.Windows.Forms.ToolStripButton();
+            this.tbtnNextMonth = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // chart
             // 
-            chartArea1.AxisX.InterlacedColor = System.Drawing.Color.White;
-            chartArea1.AxisX.Interval = 1D;
-            chartArea1.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea1.AxisX.IntervalOffset = 1D;
-            chartArea1.AxisX.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
-            chartArea1.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
-            chartArea1.AxisX.IsStartedFromZero = false;
-            chartArea1.AxisX.LabelStyle.Font = new System.Drawing.Font("Segoe UI", 10F);
-            chartArea1.AxisX.LabelStyle.ForeColor = System.Drawing.Color.OrangeRed;
-            chartArea1.AxisX.LabelStyle.Format = "d\\\\ndddd";
-            chartArea1.AxisX.LineColor = System.Drawing.Color.Cyan;
-            chartArea1.AxisX.MajorGrid.Enabled = false;
-            chartArea1.AxisX.MajorTickMark.LineColor = System.Drawing.Color.SandyBrown;
-            chartArea1.AxisX.TitleFont = new System.Drawing.Font("Segoe UI", 10F);
-            chartArea1.AxisX2.Interval = 50000D;
-            chartArea1.AxisY.Interval = 50000D;
-            chartArea1.AxisY.IsLabelAutoFit = false;
-            chartArea1.AxisY.LabelStyle.Font = new System.Drawing.Font("Segoe UI", 10F);
-            chartArea1.AxisY.MajorGrid.Enabled = false;
-            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.IndianRed;
-            chartArea1.AxisY.TitleFont = new System.Drawing.Font("Segoe UI", 10F);
-            chartArea1.CursorX.Interval = 0D;
-            chartArea1.CursorX.LineColor = System.Drawing.Color.RosyBrown;
-            chartArea1.CursorY.Interval = 0D;
-            chartArea1.Name = "ChartArea";
-            this.chart.ChartAreas.Add(chartArea1);
+            chartArea2.AxisX.InterlacedColor = System.Drawing.Color.White;
+            chartArea2.AxisX.Interval = 1D;
+            chartArea2.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea2.AxisX.IntervalOffset = 1D;
+            chartArea2.AxisX.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
+            chartArea2.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
+            chartArea2.AxisX.IsStartedFromZero = false;
+            chartArea2.AxisX.LabelStyle.Font = new System.Drawing.Font("Segoe UI", 10F);
+            chartArea2.AxisX.LabelStyle.ForeColor = System.Drawing.Color.OrangeRed;
+            chartArea2.AxisX.LabelStyle.Format = "d\\\\ndddd";
+            chartArea2.AxisX.LineColor = System.Drawing.Color.Cyan;
+            chartArea2.AxisX.MajorGrid.Enabled = false;
+            chartArea2.AxisX.MajorTickMark.LineColor = System.Drawing.Color.SandyBrown;
+            chartArea2.AxisX.TitleFont = new System.Drawing.Font("Segoe UI", 10F);
+            chartArea2.AxisX2.Interval = 50000D;
+            chartArea2.AxisY.Interval = 50000D;
+            chartArea2.AxisY.IsLabelAutoFit = false;
+            chartArea2.AxisY.LabelStyle.Font = new System.Drawing.Font("Segoe UI", 10F);
+            chartArea2.AxisY.MajorGrid.Enabled = false;
+            chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.IndianRed;
+            chartArea2.AxisY.TitleFont = new System.Drawing.Font("Segoe UI", 10F);
+            chartArea2.CursorX.Interval = 0D;
+            chartArea2.CursorX.LineColor = System.Drawing.Color.RosyBrown;
+            chartArea2.CursorY.Interval = 0D;
+            chartArea2.Name = "ChartArea";
+            this.chart.ChartAreas.Add(chartArea2);
             this.chart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chart.Location = new System.Drawing.Point(0, 27);
+            this.chart.Location = new System.Drawing.Point(0, 31);
             this.chart.Name = "chart";
             this.chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.SemiTransparent;
-            series1.ChartArea = "ChartArea";
-            series1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            series1.Font = new System.Drawing.Font("Segoe UI", 10F);
-            series1.IsValueShownAsLabel = true;
-            series1.IsVisibleInLegend = false;
-            series1.LabelForeColor = System.Drawing.Color.IndianRed;
-            series1.Name = "TracksByMonth";
-            dataPoint1.IsValueShownAsLabel = false;
-            dataPoint1.LabelForeColor = System.Drawing.Color.Black;
-            dataPoint2.IsEmpty = true;
-            dataPoint5.IsEmpty = true;
-            series1.Points.Add(dataPoint1);
-            series1.Points.Add(dataPoint2);
-            series1.Points.Add(dataPoint3);
-            series1.Points.Add(dataPoint4);
-            series1.Points.Add(dataPoint5);
-            series1.Points.Add(dataPoint6);
-            series1.Points.Add(dataPoint7);
-            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
-            this.chart.Series.Add(series1);
-            this.chart.Size = new System.Drawing.Size(584, 214);
+            series2.ChartArea = "ChartArea";
+            series2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            series2.Font = new System.Drawing.Font("Segoe UI", 10F);
+            series2.IsValueShownAsLabel = true;
+            series2.IsVisibleInLegend = false;
+            series2.LabelForeColor = System.Drawing.Color.IndianRed;
+            series2.Name = "TracksByMonth";
+            dataPoint8.IsValueShownAsLabel = false;
+            dataPoint8.LabelForeColor = System.Drawing.Color.Black;
+            dataPoint9.IsEmpty = true;
+            dataPoint12.IsEmpty = true;
+            series2.Points.Add(dataPoint8);
+            series2.Points.Add(dataPoint9);
+            series2.Points.Add(dataPoint10);
+            series2.Points.Add(dataPoint11);
+            series2.Points.Add(dataPoint12);
+            series2.Points.Add(dataPoint13);
+            series2.Points.Add(dataPoint14);
+            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
+            this.chart.Series.Add(series2);
+            this.chart.Size = new System.Drawing.Size(584, 210);
             this.chart.TabIndex = 1;
             this.chart.Text = "chart";
             // 
@@ -105,12 +108,15 @@
             // 
             this.toolStrip.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cboxYear,
-            this.cboxMonth});
+            this.cboxMonth,
+            this.tbtnPrevMonth,
+            this.tbtnNextMonth});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(584, 27);
+            this.toolStrip.Size = new System.Drawing.Size(584, 31);
             this.toolStrip.TabIndex = 2;
             // 
             // cboxYear
@@ -118,7 +124,7 @@
             this.cboxYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxYear.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cboxYear.Name = "cboxYear";
-            this.cboxYear.Size = new System.Drawing.Size(120, 27);
+            this.cboxYear.Size = new System.Drawing.Size(120, 31);
             this.cboxYear.SelectedIndexChanged += new System.EventHandler(this.CboxYear_SelectedIndexChanged);
             // 
             // cboxMonth
@@ -126,8 +132,28 @@
             this.cboxMonth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxMonth.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cboxMonth.Name = "cboxMonth";
-            this.cboxMonth.Size = new System.Drawing.Size(120, 27);
+            this.cboxMonth.Size = new System.Drawing.Size(120, 31);
             this.cboxMonth.SelectedIndexChanged += new System.EventHandler(this.CboxMonth_SelectedIndexChanged);
+            // 
+            // tbtnPrevMonth
+            // 
+            this.tbtnPrevMonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnPrevMonth.Image = ((System.Drawing.Image)(resources.GetObject("tbtnPrevMonth.Image")));
+            this.tbtnPrevMonth.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbtnPrevMonth.Name = "tbtnPrevMonth";
+            this.tbtnPrevMonth.Size = new System.Drawing.Size(28, 28);
+            this.tbtnPrevMonth.Text = "Предыдущий месяц";
+            this.tbtnPrevMonth.Click += new System.EventHandler(this.TbtnPrevMonth_Click);
+            // 
+            // tbtnNextMonth
+            // 
+            this.tbtnNextMonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnNextMonth.Image = ((System.Drawing.Image)(resources.GetObject("tbtnNextMonth.Image")));
+            this.tbtnNextMonth.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbtnNextMonth.Name = "tbtnNextMonth";
+            this.tbtnNextMonth.Size = new System.Drawing.Size(28, 28);
+            this.tbtnNextMonth.Text = "Следующий месяц";
+            this.tbtnNextMonth.Click += new System.EventHandler(this.TbtnNextMonth_Click);
             // 
             // FrmChartTracksByMonth
             // 
@@ -161,5 +187,7 @@
         private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripComboBox cboxYear;
         private System.Windows.Forms.ToolStripComboBox cboxMonth;
+        private System.Windows.Forms.ToolStripButton tbtnPrevMonth;
+        private System.Windows.Forms.ToolStripButton tbtnNextMonth;
     }
 }

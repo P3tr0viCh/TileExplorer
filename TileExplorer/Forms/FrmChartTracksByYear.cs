@@ -269,6 +269,9 @@ namespace TileExplorer
 
                 selfChange = false;
 
+                tbtnNextYear.Enabled = Year < Lists.Default.Years.Last();
+                tbtnPrevYear.Enabled = Year > Lists.Default.Years.First();
+
                 var maxDistance = 0D;
 
                 for (var i = 0; i < 12; i++)
@@ -357,6 +360,13 @@ namespace TileExplorer
             }
         }
 
+        private async Task SetYearAsync(int year)
+        {
+            Year = year;
+
+            await UpdateDataAsync();
+        }
+
         private async void CboxYear_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (selfChange)
@@ -364,9 +374,7 @@ namespace TileExplorer
                 return;
             }
 
-            Year = (int)cboxYear.SelectedItem;
-
-            await UpdateDataAsync();
+            await SetYearAsync((int)cboxYear.SelectedItem);
         }
 
         private void FrmChartTracksByYear_ClientSizeChanged(object sender, EventArgs e)
@@ -416,6 +424,16 @@ namespace TileExplorer
         public async void ListItemsDelete(IEnumerable<IBaseId> list)
         {
             await CheckUpdateDataAsync(list);
+        }
+
+        private async void TbtnPrevYear_Click(object sender, EventArgs e)
+        {
+            await SetYearAsync(Lists.Default.Years.Prev(Year));
+        }
+
+        private async void TbtnNextYear_Click(object sender, EventArgs e)
+        {
+            await SetYearAsync(Lists.Default.Years.Next(Year));
         }
     }
 }

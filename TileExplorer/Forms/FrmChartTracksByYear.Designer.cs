@@ -29,8 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmChartTracksByYear));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.cboxYear = new System.Windows.Forms.ToolStripComboBox();
+            this.tbtnPrevYear = new System.Windows.Forms.ToolStripButton();
+            this.tbtnNextYear = new System.Windows.Forms.ToolStripButton();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miOpenChartTracksByMonth = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
@@ -41,11 +44,14 @@
             // 
             this.toolStrip.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cboxYear});
+            this.cboxYear,
+            this.tbtnPrevYear,
+            this.tbtnNextYear});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(784, 27);
+            this.toolStrip.Size = new System.Drawing.Size(784, 31);
             this.toolStrip.TabIndex = 3;
             // 
             // cboxYear
@@ -53,8 +59,28 @@
             this.cboxYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxYear.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cboxYear.Name = "cboxYear";
-            this.cboxYear.Size = new System.Drawing.Size(120, 27);
+            this.cboxYear.Size = new System.Drawing.Size(120, 31);
             this.cboxYear.SelectedIndexChanged += new System.EventHandler(this.CboxYear_SelectedIndexChanged);
+            // 
+            // tbtnPrevYear
+            // 
+            this.tbtnPrevYear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnPrevYear.Image = ((System.Drawing.Image)(resources.GetObject("tbtnPrevYear.Image")));
+            this.tbtnPrevYear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbtnPrevYear.Name = "tbtnPrevYear";
+            this.tbtnPrevYear.Size = new System.Drawing.Size(28, 28);
+            this.tbtnPrevYear.Text = "Предыдущий год";
+            this.tbtnPrevYear.Click += new System.EventHandler(this.TbtnPrevYear_Click);
+            // 
+            // tbtnNextYear
+            // 
+            this.tbtnNextYear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnNextYear.Image = ((System.Drawing.Image)(resources.GetObject("tbtnNextYear.Image")));
+            this.tbtnNextYear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbtnNextYear.Name = "tbtnNextYear";
+            this.tbtnNextYear.Size = new System.Drawing.Size(28, 28);
+            this.tbtnNextYear.Text = "Следующий год";
+            this.tbtnNextYear.Click += new System.EventHandler(this.TbtnNextYear_Click);
             // 
             // contextMenuStrip
             // 
@@ -103,5 +129,7 @@
         private System.Windows.Forms.ToolStripComboBox cboxYear;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem miOpenChartTracksByMonth;
+        private System.Windows.Forms.ToolStripButton tbtnPrevYear;
+        private System.Windows.Forms.ToolStripButton tbtnNextYear;
     }
 }

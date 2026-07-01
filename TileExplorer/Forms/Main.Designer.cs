@@ -788,7 +788,7 @@
             this.tsbtnFilter});
             this.toolStrip.Location = new System.Drawing.Point(0, 4);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(41, 191);
+            this.toolStrip.Size = new System.Drawing.Size(41, 210);
             this.toolStrip.TabIndex = 1;
             // 
             // tsbtnTrackList

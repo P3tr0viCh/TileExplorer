@@ -1,4 +1,5 @@
 ﻿using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -147,8 +148,12 @@ namespace TileExplorer
                 cboxYear.ComboBox.DataSource = Lists.Default.Years;
 
                 cboxYear.SelectedItem = Year;
+                cboxMonth.SelectedIndex = Month - 1;
 
                 selfChange = false;
+
+                tbtnNextMonth.Enabled = Year != Lists.Default.Years.Last() || Month != 12;
+                tbtnPrevMonth.Enabled = Year != Lists.Default.Years.First() || Month != 1;
 
                 var daysInMonth = DateTime.DaysInMonth(Year, Month);
 
@@ -225,6 +230,14 @@ namespace TileExplorer
             }
         }
 
+        private async Task SetDateAsync(int year, int month)
+        {
+            Year = year;
+            Month = month;
+
+            await UpdateDataAsync();
+        }
+
         private async void CboxYear_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (selfChange)
@@ -232,9 +245,7 @@ namespace TileExplorer
                 return;
             }
 
-            Year = (int)cboxYear.SelectedItem;
-
-            await UpdateDataAsync();
+            await SetDateAsync((int)cboxYear.SelectedItem, Month);
         }
 
         private async void CboxMonth_SelectedIndexChanged(object sender, EventArgs e)
@@ -244,9 +255,7 @@ namespace TileExplorer
                 return;
             }
 
-            Month = cboxMonth.SelectedIndex + 1;
-
-            await UpdateDataAsync();
+            await SetDateAsync(Year, cboxMonth.SelectedIndex + 1);
         }
 
         private void FrmChartTracksByMonth_FormClosed(object sender, FormClosedEventArgs e)
@@ -258,7 +267,7 @@ namespace TileExplorer
         {
             if (list is IEnumerable<Track> tracks)
             {
-                var update = tracks.FirstOrDefault(track => 
+                var update = tracks.FirstOrDefault(track =>
                     track.DateTimeStart.Year == Year && track.DateTimeStart.Month == Month);
 
                 if (update != null)
@@ -276,6 +285,46 @@ namespace TileExplorer
         public async void ListItemsDelete(IEnumerable<IBaseId> list)
         {
             await CheckUpdateDataAsync(list);
+        }
+
+        private async void TbtnPrevMonth_Click(object sender, EventArgs e)
+        {
+            int year, month;
+
+            if (Month == 1)
+            {
+                month = 12;
+                
+                year = Lists.Default.Years.Prev(Year);
+            }
+            else
+            {
+                month = Month - 1;
+
+                year = Year;
+            }
+
+            await SetDateAsync(year, month);
+        }
+
+        private async void TbtnNextMonth_Click(object sender, EventArgs e)
+        {
+            int year, month;
+
+            if (Month == 12)
+            {
+                month = 1;
+
+                year = Lists.Default.Years.Next(Year);
+            }
+            else
+            {
+                month = Month + 1;
+
+                year = Year;
+            }
+
+            await SetDateAsync(year, month);
         }
     }
 }
