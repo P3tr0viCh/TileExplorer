@@ -62,7 +62,9 @@ namespace TileExplorer
 
                 try
                 {
-                    equipmentBindingSource.DataSource = await Database.Default.ListLoadAsync<Equipment>();
+                    var equipments = await Database.Default.ListLoadAsync<Equipment>();
+
+                    equipmentBindingSource.DataSource = equipments.Where(e => e.AvailableForUse);
                 }
                 finally
                 {
