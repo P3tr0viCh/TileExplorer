@@ -56,12 +56,7 @@ namespace TileExplorer
 
             if (frmSettings.ShowDialog(this))
             {
-                if (!SetDatabaseFileName())
-                {
-                    AbnormalExit = true;
-                    Application.Exit();
-                    return;
-                }
+                SetDatabase();
 
                 UpdateSettings();
 

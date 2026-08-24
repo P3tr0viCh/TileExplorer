@@ -404,8 +404,6 @@ namespace TileExplorer
             Roaming.Directory = GetDirectory(Local.Default.DirectoryRoaming,
 #if DEBUG
                 Path.Combine(Files.ExecutableDirectory(), "roaming"));
-
-            Utils.DirectoryCreate(Roaming.Directory);
 #else
                 Files.AppDataRoamingDirectory());
 #endif

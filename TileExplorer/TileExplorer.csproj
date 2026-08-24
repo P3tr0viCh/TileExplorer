@@ -36,7 +36,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Projects.exe\TileExplorer\Debug\0.0.0.0\</OutputPath>
+    <OutputPath>..\..\..\..\Projects.exe\TileExplorer\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -121,6 +121,9 @@
     <Compile Include="AppBackup\Backup.Markers.cs" />
     <Compile Include="AppBackup\Backup.Tracks.cs" />
     <Compile Include="Enums\DataLoad.cs" />
+    <Compile Include="Forms\Main.Utils.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Interfaces\IChildFormList.cs" />
     <Compile Include="Lists.cs" />
     <Compile Include="Enums\ChildFormType.cs" />

@@ -256,14 +256,22 @@ namespace TileExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Каталог с базой данных «{0}» не существует.
-        ///Установить расположение по умолчанию «{1}»?
-        ///
-        ///Отказ приведёт к закрытию приложения..
+        ///   Looks up a localized string similar to Каталог с базой данных «{0}», указанный в настройках, не существует.
+        ///Установлено расположение по умолчанию «{1}»..
         /// </summary>
         internal static string ErrorDatabaseDirectoryNotExists {
             get {
                 return ResourceManager.GetString("ErrorDatabaseDirectoryNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Во время создания каталога данных произошла ошибка:
+        ///{0}.
+        /// </summary>
+        internal static string ErrorDirectoryCreateFail {
+            get {
+                return ResourceManager.GetString("ErrorDirectoryCreateFail", resourceCulture);
             }
         }
         

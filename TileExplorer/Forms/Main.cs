@@ -50,34 +50,16 @@ namespace TileExplorer
             mapZoomRuler = new MapZoomRuler(gMapControl);
         }
 
-        private bool AbnormalExit
-        {
-            get => Tag != null && (bool)Tag;
-            set => Tag = value;
-        }
-
         private async void Main_Load(object sender, EventArgs e)
         {
-#if DEBUG
-            AppSettings.Local.Directory = Path.Combine(Files.ExecutableDirectory(), "local");
-
-            Utils.DirectoryCreate(AppSettings.Local.Directory);
-#else
-            AppSettings.Local.Directory = Files.AppDataLocalDirectory();
-#endif
+            if (!SetDirectories()) return;
 
             AppSettings.LocalLoad();
             AppSettings.RoamingLoad();
 
-            GMapLoad();
+            SetDatabase();
 
-            if (!SetDatabaseFileName())
-            {
-                WindowState = FormWindowState.Minimized;
-                AbnormalExit = true;
-                Application.Exit();
-                return;
-            }
+            GMapLoad();
 
             ProgramStatus.Default.StatusChanged += ProgramStatus_StatusChanged;
 
@@ -208,11 +190,7 @@ namespace TileExplorer
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ctsTiles.Cancel();
-            ctsTracks.Cancel();
-            ctsMarkers.Cancel();
-            ctsTracksInfo.Cancel();
-            ctsCheckDirectoryTracks.Cancel();
+            CancelTokens();
         }
 
         private void GMapLoad()
@@ -1016,44 +994,6 @@ namespace TileExplorer
         private void MiMainShowGrid_Click(object sender, EventArgs e)
         {
             UpdateGrid();
-        }
-
-        private bool SetDatabaseFileName()
-        {
-            var directoryDatabase = AppSettings.Local.Default.DirectoryDatabase;
-
-            var defaultDirectoryDatabase =
-#if DEBUG
-                Files.ExecutableDirectory();
-#else
-                Files.AppDataRoamingDirectory();
-#endif
-            if (directoryDatabase.IsEmpty())
-            {
-                directoryDatabase = defaultDirectoryDatabase;
-            }
-
-            if (!Directory.Exists(directoryDatabase))
-            {
-                DebugWrite.Error($"database directory not exists: {directoryDatabase}");
-
-                if (Msg.Question(Resources.ErrorDatabaseDirectoryNotExists, directoryDatabase, defaultDirectoryDatabase))
-                {
-                    AppSettings.Local.Default.DirectoryDatabase = string.Empty;
-
-                    return SetDatabaseFileName();
-                }
-
-                return false;
-            }
-
-            var databaseFileName = Path.Combine(directoryDatabase, Files.DatabaseFileName());
-
-            DebugWrite.Line($"database: {databaseFileName}");
-
-            Database.Default.FileName = databaseFileName;
-
-            return true;
         }
 
         private async void MiMainSettings_Click(object sender, EventArgs e)

@@ -161,10 +161,8 @@
     <value>Архив сохранён в '{0}'.</value>
   </data>
   <data name="ErrorDatabaseDirectoryNotExists" xml:space="preserve">
-    <value>Каталог с базой данных «{0}» не существует.
-Установить расположение по умолчанию «{1}»?
-
-Отказ приведёт к закрытию приложения.</value>
+    <value>Каталог с базой данных «{0}», указанный в настройках, не существует.
+Установлено расположение по умолчанию «{1}».</value>
   </data>
   <data name="ErrorNeedDigit" xml:space="preserve">
     <value>Необходимо ввести число.</value>
@@ -492,5 +490,9 @@ ddd</value>
   </data>
   <data name="TextCellX" xml:space="preserve">
     <value>×</value>
+  </data>
+  <data name="ErrorDirectoryCreateFail" xml:space="preserve">
+    <value>Во время создания каталога данных произошла ошибка:
+{0}</value>
   </data>
 </root>
