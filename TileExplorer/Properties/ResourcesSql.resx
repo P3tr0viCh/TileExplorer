@@ -238,6 +238,9 @@
   <data name="SelectTracksOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectTracksOnly.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="SelectTracksTags" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectTracksTags.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
   <data name="SelectTrackTagsByTrackId" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectTrackTagsByTrackId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>

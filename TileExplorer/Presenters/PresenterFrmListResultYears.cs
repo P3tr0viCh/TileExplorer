@@ -1,4 +1,6 @@
-﻿using P3tr0viCh.Utils.Comparers;
+﻿using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Comparers;
+using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
@@ -14,6 +16,7 @@ namespace TileExplorer.Presenters
         public PresenterFrmListResultYears(IChildFormList frmList) : base(frmList)
         {
             Grants = FrmListGrant.None;
+            StatusStop += PresenterFrmList_StatusStop;
         }
 
         protected override string FormTitle => Resources.TitleListResultYears;
@@ -83,6 +86,14 @@ namespace TileExplorer.Presenters
                 DataGridViewCellStyles.EleAscentStep;
             FrmList.DataGridView.Columns[nameof(ResultYears.EleAscentStep2)].DefaultCellStyle =
                 DataGridViewCellStyles.EleAscentStep;
+        }
+
+        private void PresenterFrmList_StatusStop(object sender, StatusEventArgs e)
+        {
+            if (!FrmList.DataGridView.IsEmpty())
+            {
+                FrmList.DataGridView.SetPosition(FrmList.DataGridView.RowCount - 1);
+            }
         }
     }
 }

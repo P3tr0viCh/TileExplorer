@@ -13,7 +13,7 @@ namespace TileExplorer
         {
             var assemblyDecorator = new AssemblyDecorator();
 
-            return $"{assemblyDecorator.Assembly.GetName().Name}/{assemblyDecorator.VersionString()}";
+            return $"{assemblyDecorator.Assembly.GetName().Name}/{assemblyDecorator.InformationalVersion}";
         }
 
         public static void DirectoryCreate(string path)

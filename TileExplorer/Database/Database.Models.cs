@@ -20,6 +20,8 @@ namespace TileExplorer
             [Table(Tables.markers)]
             public class Marker : BaseText
             {
+                private PointLatLng pointLatLng = new PointLatLng();
+
                 public Marker()
                 {
                 }
@@ -43,8 +45,7 @@ namespace TileExplorer
                     set => pointLatLng.Lng = value;
                 }
 
-                private PointLatLng pointLatLng = new PointLatLng();
-
+                [Computed]
                 [Write(false)]
                 public PointLatLng LatLng
                 {
@@ -95,22 +96,23 @@ namespace TileExplorer
                 public int X { get; set; }
                 public int Y { get; set; }
 
+                [Computed]
                 [Write(false)]
                 public TileStatus Status { get; set; } = TileStatus.Unknown;
 
+                [Computed]
                 [Write(false)]
                 public int ClusterId { get; set; } = -1;
 
+                [Computed]
                 [Write(false)]
                 public int HeatmapValue { get; set; } = 0;
 
+                [Computed]
                 [Write(false)]
                 public int TrackCount { get; set; } = 0;
 
-                public override string ToString()
-                {
-                    return JsonConvert.SerializeObject(this);
-                }
+                public override string ToString() => JsonConvert.SerializeObject(this);
             }
 
             [Table(Tables.tracks_points)]
@@ -159,6 +161,9 @@ namespace TileExplorer
 
             public class ResultYears : BaseId
             {
+                private double durationSum = 0;
+                private string durationSumAsString = string.Empty;
+
                 [DisplayName("Год")]
                 public int Year { get => (int)Id; set => Id = value; }
 
@@ -166,18 +171,29 @@ namespace TileExplorer
                 public int Count { get; set; } = 0;
 
                 [DisplayName("Время в днях")]
-                public double DurationSum { get; set; } = 0;
+                public double DurationSum
+                {
+                    get => durationSum;
+                    set
+                    {
+                        durationSum = value;
+
+                        durationSumAsString = TimeSpan.FromDays(value).ToHoursMinutesString();
+                    }
+                }
 
                 [DisplayName("Время")]
-                public string DurationSumAsString => TimeSpan.FromDays(DurationSum).ToHoursMinutesString();
+                public string DurationSumAsString => durationSumAsString;
 
                 [DisplayName("Расстояние")]
                 public double DistanceSum { get; set; } = 0;
 
                 [DisplayName("50-")]
                 public int DistanceStep0 { get; set; } = 0;
+
                 [DisplayName("50+")]
                 public int DistanceStep1 { get; set; } = 0;
+
                 [DisplayName("100+")]
                 public int DistanceStep2 { get; set; } = 0;
 
@@ -186,14 +202,19 @@ namespace TileExplorer
 
                 [DisplayName("500-")]
                 public int EleAscentStep0 { get; set; } = 0;
+
                 [DisplayName("500+")]
                 public int EleAscentStep1 { get; set; } = 0;
+
                 [DisplayName("1000+")]
                 public int EleAscentStep2 { get; set; } = 0;
             }
 
             public class ResultEquipments : BaseText
             {
+                private double durationSum = 0;
+                private string durationSumAsString = string.Empty;
+
                 [DisplayName("Треки")]
                 public int Count { get; set; } = 0;
 
@@ -201,10 +222,19 @@ namespace TileExplorer
                 public double DistanceSum { get; set; } = 0;
 
                 [DisplayName("Время в днях")]
-                public double DurationSum { get; set; } = 0;
+                public double DurationSum
+                {
+                    get => durationSum;
+                    set
+                    {
+                        durationSum = value;
+
+                        durationSumAsString = TimeSpan.FromDays(value).ToHoursMinutesString();
+                    }
+                }
 
                 [DisplayName("Время")]
-                public string DurationSumAsString => TimeSpan.FromDays(DurationSum).ToHoursMinutesString();
+                public string DurationSumAsString => durationSumAsString;
             }
 
             [Table(Tables.tags)]
@@ -223,22 +253,39 @@ namespace TileExplorer
             [Table(Tables.equipments)]
             public class Equipment : BaseText
             {
+                private bool state = false;
+
+                private string stateAsString = string.Empty;
+
+                private bool availableForUse = true;
+
                 [DisplayName("Марка")]
                 public string Brand { get; set; }
 
                 [DisplayName("Модель")]
                 public string Model { get; set; }
 
-                public bool State { get; set; } = false;
+                public bool State
+                {
+                    get => state;
+                    set
+                    {
+                        state = value;
+
+                        stateAsString = value ? Resources.TextCellX : string.Empty;
+
+                        availableForUse = value != true;
+                    }
+                }
 
                 [Computed]
                 [Write(false)]
-                public bool AvailableForUse => State != true;
+                public bool AvailableForUse => availableForUse;
 
                 [Computed]
                 [Write(false)]
                 [DisplayName("Архив")]
-                public string StateAsString => State ? Resources.TextCellX : string.Empty;
+                public string StateAsString => stateAsString;
 
                 public override void Clear()
                 {

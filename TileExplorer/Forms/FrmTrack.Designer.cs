@@ -215,6 +215,7 @@
             this.MinimumSize = new System.Drawing.Size(440, 272);
             this.Name = "FrmTrack";
             this.ShowInTaskbar = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "Трек";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTrack_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.equipmentBindingSource)).EndInit();

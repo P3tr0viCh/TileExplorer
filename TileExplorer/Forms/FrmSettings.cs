@@ -4,6 +4,7 @@ using P3tr0viCh.Utils.Forms;
 using P3tr0viCh.Utils.Settings;
 using System;
 using System.IO;
+using System.Windows.Forms;
 using TileExplorer.Properties;
 
 namespace TileExplorer
@@ -14,6 +15,14 @@ namespace TileExplorer
 
         public FrmSettings(ISettingsBase settings) : base(settings)
         {
+        }
+        
+        public static bool ShowDlg(Form owner)
+        {
+            using (var frm = new FrmSettings(new AppSettings()))
+            {
+                return frm.ShowDialog(owner);
+            }
         }
 
         protected override void SaveFormState()

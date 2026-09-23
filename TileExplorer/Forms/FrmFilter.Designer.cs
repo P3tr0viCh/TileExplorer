@@ -216,6 +216,7 @@
             this.MinimumSize = new System.Drawing.Size(440, 352);
             this.Name = "FrmFilter";
             this.ShowInTaskbar = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "Фильтр";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmFilter_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmFilter_FormClosed);

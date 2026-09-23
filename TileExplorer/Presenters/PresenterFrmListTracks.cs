@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer.Presenters
@@ -221,18 +222,7 @@ namespace TileExplorer.Presenters
 
         protected override async Task<IEnumerable<Track>> DatabaseListLoadAsync(CancellationToken token)
         {
-            var tracks = await Database.Default.ListLoadAsync<Track>();
-
-            if (token.IsCancellationRequested) return Enumerable.Empty<Track>();
-
-            foreach (var track in tracks)
-            {
-                if (token.IsCancellationRequested) return Enumerable.Empty<Track>();
-
-                track.Tags = await Database.Default.ListLoadAsync<TagModel>(track);
-            }
-
-            return tracks;
+            return await Database.Default.LoadTracksWithTagsAsync(token);
         }
 
         private void BindingSource_PositionChanged(object sender, EventArgs e)

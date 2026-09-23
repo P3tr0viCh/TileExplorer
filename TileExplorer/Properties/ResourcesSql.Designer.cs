@@ -113,7 +113,10 @@ namespace TileExplorer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to CREATE TABLE equipments (
         ///	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        ///	text TEXT, brand TEXT, model TEXT
+        ///	text TEXT,
+        ///	brand TEXT,
+        ///	model TEXT,
+        ///	state INTEGER
         ///);.
         /// </summary>
         internal static string CreateTableEquipments {
@@ -555,6 +558,15 @@ namespace TileExplorer.Properties {
         internal static string SelectTracksOnly {
             get {
                 return ResourceManager.GetString("SelectTracksOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM tracks_tags;.
+        /// </summary>
+        internal static string SelectTracksTags {
+            get {
+                return ResourceManager.GetString("SelectTracksTags", resourceCulture);
             }
         }
         

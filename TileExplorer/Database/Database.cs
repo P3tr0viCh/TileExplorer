@@ -1,9 +1,6 @@
-﻿#if DEBUG
-#define SHOW_SQL
-#endif
-
-using Dapper;
+﻿using Dapper;
 using Dapper.Contrib.Extensions;
+using Newtonsoft.Json.Linq;
 using P3tr0viCh.Database;
 using P3tr0viCh.Database.Extensions;
 using P3tr0viCh.Utils;
@@ -13,25 +10,16 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TileExplorer.Properties;
+using static P3tr0viCh.Database.Utils;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer
 {
     public partial class Database : DefaultInstance<Database>
     {
-#if SHOW_SQL
-        private static void DebugWriteSql(string sql, object param, string memberName)
-        {
-            DebugWrite.Line(sql.SingleLine(), memberName);
-            if (param != null)
-            {
-                DebugWrite.Line($"params: {param}", memberName);
-            }
-        }
-#endif
-
         private ConnectionSQLite Connection { get; set; } = new ConnectionSQLite();
 
         public string FileName
@@ -85,9 +73,7 @@ namespace TileExplorer
         {
             var sql = string.Format(ResourcesSql.TruncateTable, Sql.TableName<T>());
 
-#if SHOW_SQL
-            DebugWriteSql(sql, null, "TruncateTableAsync");
-#endif
+            DebugWriteSql(sql.SingleLine(), null, "TruncateTableAsync");
 
             await connection.ExecuteAsync(sql, null, transaction);
         }
@@ -362,6 +348,10 @@ namespace TileExplorer
                     }
 
                     break;
+                case nameof(TracksTags):
+                    sql = ResourcesSql.SelectTracksTags;
+
+                    break;
                 case nameof(Equipment):
                     sql = ResourcesSql.SelectEquipments;
                     break;
@@ -375,12 +365,10 @@ namespace TileExplorer
                     throw new NotImplementedException();
             }
 
-#if SHOW_SQL
-            DebugWriteSql(sql, param, "GetQuery");
-#endif
+            DebugWriteSql(sql.SingleLine(), param, "GetQuery");
         }
 
-        public async Task<IEnumerable<T>> ListLoadAsync<T>(object filter = null)
+        public async Task<IEnumerable<T>> ListLoadAsync<T>(SQLiteConnection connection, object filter = null)
         {
             DebugWrite.Line(typeof(T).Name);
 
@@ -388,11 +376,16 @@ namespace TileExplorer
 
             // await Task.Delay(1000);
 
+            var list = await connection.QueryAsync<T>(sql, param);
+
+            return list;
+        }
+
+        public async Task<IEnumerable<T>> ListLoadAsync<T>(object filter = null)
+        {
             using (var connection = GetConnection())
             {
-                var list = await connection.QueryAsync<T>(sql, param);
-
-                return list;
+                return await ListLoadAsync<T>(connection, filter);
             }
         }
 
@@ -523,6 +516,54 @@ namespace TileExplorer
                 var list = await connection.QueryAsync<int>(sql);
 
                 return list;
+            }
+        }
+
+        public async Task<IEnumerable<Track>> LoadTracksWithTagsAsync(CancellationToken token)
+        {
+            using (var connection = GetConnection())
+            {
+                var tracks = await ListLoadAsync<Track>(connection);
+
+                if (token.IsCancellationRequested) return Enumerable.Empty<Track>();
+
+                var trackDict = new Dictionary<long, Track>();
+
+                var tagDict = new Dictionary<long, TagModel>();
+
+                foreach (var track in tracks)
+                {
+                    if (token.IsCancellationRequested) return Enumerable.Empty<Track>();
+
+                    trackDict[track.Id] = track;
+                }
+
+                var tags = await ListLoadAsync<TagModel>(connection);
+
+                foreach (var tag in tags)
+                {
+                    if (token.IsCancellationRequested) return Enumerable.Empty<Track>();
+
+                    tagDict[tag.Id] = tag;
+                }
+
+                var tracksTags = await ListLoadAsync<TracksTags>(connection);
+
+                foreach (var group in tracksTags.GroupBy(l => l.TrackId))
+                {
+                    if (token.IsCancellationRequested) return Enumerable.Empty<Track>();
+
+                    if (trackDict.TryGetValue(group.Key, out var track))
+                    {
+                        var trackTags = group.Select(l =>
+                            tagDict.TryGetValue(l.TagId, out var tag) ? tag : null)
+                            .Where(t => t != null);
+
+                        track.Tags = trackTags;
+                    }
+                }
+
+                return trackDict.Any() ? trackDict.Values : Enumerable.Empty<Track>();
             }
         }
     }

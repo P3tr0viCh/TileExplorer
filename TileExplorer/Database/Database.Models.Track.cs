@@ -18,6 +18,14 @@ namespace TileExplorer
             {
                 private readonly Gpx.Track gpx = new Gpx.Track();
 
+                private readonly Equipment equipment = new Equipment();
+
+                private string durationAsString = string.Empty;
+                private string durationInMoveAsString = string.Empty;
+
+                private IEnumerable<TagModel> tags = Enumerable.Empty<TagModel>();
+                private string tagsAsString = string.Empty;
+
                 public Track()
                 {
                 }
@@ -27,53 +35,55 @@ namespace TileExplorer
                     OpenFromFile(path);
                 }
 
-                private void OpenFromFile(string path)
-                {
-                    DebugWrite.Line(path);
-
-                    gpx.OpenFromFile(path);
-
-                    DebugWrite.Line("xml loaded");
-
-                    TrackPoints = new List<TrackPoint>();
-
-                    foreach (var point in gpx.Points)
-                    {
-                        TrackPoints.Add(new TrackPoint(point));
-                    }
-
-                    DebugWrite.Line($"point count: {TrackPoints.Count}");
-                }
-
                 [DisplayName("Название")]
                 public string Text { get => gpx.Text; set => gpx.Text = value; }
 
                 [DisplayName("Начало")]
                 public DateTime DateTimeStart { get => gpx.DateTimeStart; set => gpx.DateTimeStart = value; }
+
                 [DisplayName("Окончание")]
                 public DateTime DateTimeFinish { get => gpx.DateTimeFinish; set => gpx.DateTimeFinish = value; }
 
                 [DisplayName("Время")]
-                public long Duration { get => gpx.Duration; set => gpx.Duration = value; }
+                public long Duration
+                {
+                    get => gpx.Duration;
+                    set
+                    {
+                        gpx.Duration = value;
 
+                        durationAsString = TimeSpan.FromSeconds(value).ToHoursMinutesString();
+                    }
+                }
+
+                [Computed]
+                [Write(false)]
                 [DisplayName("Время")]
-                [Write(false)]
-                [Computed]
-                public string DurationAsString => TimeSpan.FromSeconds(Duration).ToHoursMinutesString();
+                public string DurationAsString => durationAsString;
 
                 [DisplayName("Время в движении")]
-                public long DurationInMove { get => gpx.DurationInMove; set => gpx.DurationInMove = value; }
+                public long DurationInMove
+                {
+                    get => gpx.DurationInMove;
+                    set
+                    {
+                        gpx.DurationInMove = value;
 
-                [DisplayName("Время в движении")]
-                [Write(false)]
+                        durationInMoveAsString = TimeSpan.FromSeconds(value).ToHoursMinutesString();
+                    }
+                }
+
                 [Computed]
-                public string DurationInMoveAsString => TimeSpan.FromSeconds(DurationInMove).ToHoursMinutesString();
+                [Write(false)]
+                [DisplayName("Время в движении")]
+                public string DurationInMoveAsString => durationInMoveAsString;
 
                 [DisplayName("Расстояние")]
                 public double Distance { get => gpx.Distance; set => gpx.Distance = value; }
 
-                [DisplayName("Скорость")]
+                [Computed]
                 [Write(false)]
+                [DisplayName("Скорость")]
                 public double AverageSpeed { get => gpx.AverageSpeed; }
 
                 [DisplayName("Подъём")]
@@ -82,21 +92,22 @@ namespace TileExplorer
                 [DisplayName("Спуск")]
                 public double EleDescent { get => gpx.EleDescent; set => gpx.EleDescent = value; }
 
+                [Computed]
                 [Write(false)]
                 public List<TrackPoint> TrackPoints { get; set; } = null;
 
+                [Computed]
                 [Write(false)]
                 public List<Tile> TrackTiles { get; set; } = null;
 
-                [DisplayName("Плитки +")]
+                [Computed]
                 [Write(false)]
+                [DisplayName("Плитки +")]
                 public int NewTilesCount { get; set; } = 0;
 
-                private readonly Equipment equipment = new Equipment();
-
-                [DisplayName("Снаряжение")]
-                [Write(false)]
                 [Computed]
+                [Write(false)]
+                [DisplayName("Снаряжение")]
                 public Equipment Equipment
                 {
                     get => equipment; set => equipment.Assign(value);
@@ -105,29 +116,39 @@ namespace TileExplorer
                 [DisplayName("Снаряжение: ID")]
                 public long EquipmentId { get => Equipment.Id; set => Equipment.Id = value; }
 
-                [DisplayName("Снаряжение")]
-                [Write(false)]
                 [Computed]
+                [Write(false)]
+                [DisplayName("Снаряжение")]
                 public string EquipmentText { get => Equipment.Text; set => Equipment.Text = value; }
 
-                [DisplayName("Снаряжение: марка")]
-                [Write(false)]
                 [Computed]
+                [Write(false)]
+                [DisplayName("Снаряжение: марка")]
                 public string EquipmentBrand { get => Equipment.Brand; set => Equipment.Brand = value; }
 
-                [DisplayName("Снаряжение: модель")]
-                [Write(false)]
                 [Computed]
+                [Write(false)]
+                [DisplayName("Снаряжение: модель")]
                 public string EquipmentModel { get => Equipment.Model; set => Equipment.Model = value; }
 
-                [Write(false)]
-                public IEnumerable<TagModel> Tags { get; set; } = Enumerable.Empty<TagModel>();
-
-                [DisplayName("Теги")]
-                [Write(false)]
                 [Computed]
-                public string TagsAsString =>
-                    Tags.Any() ? string.Join(", ", Tags.Select(tag => tag.Text)) : string.Empty;
+                [Write(false)]
+                public IEnumerable<TagModel> Tags
+                {
+                    get => tags;
+                    set
+                    {
+                        tags = value;
+
+                        tagsAsString = value.Any() ? 
+                            string.Join(", ", value.Select(tag => tag.Text)) : string.Empty;
+                    }
+                }
+
+                [Computed]
+                [Write(false)]
+                [DisplayName("Теги")]
+                public string TagsAsString => tagsAsString;
 
                 public override void Clear()
                 {
@@ -139,7 +160,7 @@ namespace TileExplorer
 
                     Equipment = null;
 
-                    Tags = Enumerable.Empty<TagModel>(); ;
+                    Tags = Enumerable.Empty<TagModel>();
                 }
 
                 public void Assign(Track source)
@@ -171,6 +192,24 @@ namespace TileExplorer
                     Equipment = source.Equipment;
 
                     Tags = source.Tags;
+                }
+
+                private void OpenFromFile(string path)
+                {
+                    DebugWrite.Line(path);
+
+                    gpx.OpenFromFile(path);
+
+                    DebugWrite.Line("xml loaded");
+
+                    TrackPoints = new List<TrackPoint>();
+
+                    foreach (var point in gpx.Points)
+                    {
+                        TrackPoints.Add(new TrackPoint(point));
+                    }
+
+                    DebugWrite.Line($"point count: {TrackPoints.Count}");
                 }
             }
         }

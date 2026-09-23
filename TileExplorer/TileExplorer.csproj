@@ -390,6 +390,7 @@
     <None Include="Resources\SelectTags.sql" />
     <None Include="Resources\SelectTrackTagsByTrackId.sql" />
     <None Include="Resources\DeleteTrackTagsByTrackId.sql" />
+    <None Include="Resources\SelectTracksTags.sql" />
     <Content Include="TileExplorer.ico" />
     <None Include="Resources\SelectTracksOnly.sql" />
     <None Include="Resources\SelectTrackPointsByTrackIdFull.sql" />

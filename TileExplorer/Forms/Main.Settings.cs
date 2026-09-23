@@ -52,9 +52,7 @@ namespace TileExplorer
 
         private async Task ShowSettingsAsync()
         {
-            var frmSettings = new FrmSettings(new AppSettings());
-
-            if (frmSettings.ShowDialog(this))
+            if (FrmSettings.ShowDlg(this))
             {
                 SetDatabase();
 
