@@ -219,19 +219,19 @@ namespace TileExplorer
         {
             for (var i = 0; i < 12; i++)
             {
-                ChartAreas[i].AxisX.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
-                ChartAreas[i].AxisY.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
+                ChartAreas[i].AxisX.LineColor = AppSettings.Roaming.ColorChartAxis;
+                ChartAreas[i].AxisY.LineColor = AppSettings.Roaming.ColorChartAxis;
 
-                ChartAreas[i].AxisX.MajorTickMark.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
-                ChartAreas[i].AxisY.MajorTickMark.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
+                ChartAreas[i].AxisX.MajorTickMark.LineColor = AppSettings.Roaming.ColorChartAxis;
+                ChartAreas[i].AxisY.MajorTickMark.LineColor = AppSettings.Roaming.ColorChartAxis;
 
-                ChartAreas[i].AxisX.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartText;
-                ChartAreas[i].AxisY.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartText;
+                ChartAreas[i].AxisX.LabelStyle.ForeColor = AppSettings.Roaming.ColorChartText;
+                ChartAreas[i].AxisY.LabelStyle.ForeColor = AppSettings.Roaming.ColorChartText;
 
-                ChartSerial[i].LabelForeColor = AppSettings.Roaming.Default.ColorChartText;
+                ChartSerial[i].LabelForeColor = AppSettings.Roaming.ColorChartText;
 
-                ChartSerial[i].Color = Color.FromArgb(AppSettings.Roaming.Default.ColorChartTracksByYearSerialAlpha,
-                    AppSettings.Roaming.Default.ColorChartTracksByYearSerial);
+                ChartSerial[i].Color = Color.FromArgb(AppSettings.Roaming.ColorChartTracksByYearSerialAlpha,
+                    AppSettings.Roaming.ColorChartTracksByYearSerial);
             }
         }
 

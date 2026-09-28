@@ -47,8 +47,8 @@ namespace TileExplorer
                 CreateProgramDirectory(appDataLocalDirectory);
                 CreateProgramDirectory(appDataRoamingDirectory);
 
-                AppSettings.Local.Directory = appDataLocalDirectory;
-                AppSettings.Roaming.Directory = appDataRoamingDirectory;
+                AppSettings.StoreLocal.Directory = appDataLocalDirectory;
+                AppSettings.StoreRoaming.Directory = appDataRoamingDirectory;
 
                 return true;
             }
@@ -68,7 +68,7 @@ namespace TileExplorer
 
         private void SetDatabase()
         {
-            var directoryDatabase = AppSettings.Local.Default.DirectoryDatabase;
+            var directoryDatabase = AppSettings.Local.DirectoryDatabase;
 
             var defaultDirectoryDatabase =
 #if DEBUG
@@ -89,7 +89,7 @@ namespace TileExplorer
 
                     Msg.Error(Resources.ErrorDatabaseDirectoryNotExists, directoryDatabase, defaultDirectoryDatabase);
 
-                    AppSettings.Local.Default.DirectoryDatabase = string.Empty;
+                    AppSettings.Local.DirectoryDatabase = string.Empty;
 
                     directoryDatabase = defaultDirectoryDatabase;
                 }

@@ -104,22 +104,22 @@ namespace TileExplorer
 
         public void UpdateSettings()
         {
-            ChartArea.AxisX.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
-            ChartArea.AxisY.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
+            ChartArea.AxisX.LineColor = AppSettings.Roaming.ColorChartAxis;
+            ChartArea.AxisY.LineColor = AppSettings.Roaming.ColorChartAxis;
 
-            ChartArea.AxisX.MajorGrid.LineColor = AppSettings.Roaming.Default.ColorChartGrid;
-            ChartArea.AxisY.MajorGrid.LineColor = AppSettings.Roaming.Default.ColorChartGrid;
+            ChartArea.AxisX.MajorGrid.LineColor = AppSettings.Roaming.ColorChartGrid;
+            ChartArea.AxisY.MajorGrid.LineColor = AppSettings.Roaming.ColorChartGrid;
 
-            ChartArea.AxisX.MajorTickMark.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
-            ChartArea.AxisY.MajorTickMark.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
+            ChartArea.AxisX.MajorTickMark.LineColor = AppSettings.Roaming.ColorChartAxis;
+            ChartArea.AxisY.MajorTickMark.LineColor = AppSettings.Roaming.ColorChartAxis;
 
-            ChartArea.AxisX.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartText;
-            ChartArea.AxisY.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartText;
+            ChartArea.AxisX.LabelStyle.ForeColor = AppSettings.Roaming.ColorChartText;
+            ChartArea.AxisY.LabelStyle.ForeColor = AppSettings.Roaming.ColorChartText;
 
-            ChartArea.CursorX.LineColor = AppSettings.Roaming.Default.ColorChartCursor;
+            ChartArea.CursorX.LineColor = AppSettings.Roaming.ColorChartCursor;
 
-            ChartSerial.Color = Color.FromArgb(AppSettings.Roaming.Default.ColorChartSerialAlpha,
-                AppSettings.Roaming.Default.ColorChartSerial);
+            ChartSerial.Color = Color.FromArgb(AppSettings.Roaming.ColorChartSerialAlpha,
+                AppSettings.Roaming.ColorChartSerial);
         }
 
         ToolStripStatusLabel PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip.GetLabel(StatusLabel label)

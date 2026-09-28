@@ -121,7 +121,7 @@ namespace TileExplorer
 
         public static string DateTimeToString(DateTime value)
         {
-            return value != default ? value.ToString(AppSettings.Roaming.Default.FormatDateTime) : string.Empty;
+            return value != default ? value.ToString(AppSettings.Roaming.FormatDateTime) : string.Empty;
         }
     }
 }

@@ -78,18 +78,18 @@ namespace TileExplorer
 
         public static void UpdateSettings()
         {
-            Distance.Format = AppSettings.Roaming.Default.FormatDistance;
-            DistanceSum.Format = AppSettings.Roaming.Default.FormatDistanceRound;
+            Distance.Format = AppSettings.Roaming.FormatDistance;
+            DistanceSum.Format = AppSettings.Roaming.FormatDistanceRound;
 
-            EleAscent.Format = AppSettings.Roaming.Default.FormatEleAscent;
-            EleAscentSum.Format = AppSettings.Roaming.Default.FormatEleAscentRound;
+            EleAscent.Format = AppSettings.Roaming.FormatEleAscent;
+            EleAscentSum.Format = AppSettings.Roaming.FormatEleAscentRound;
 
-            LatLng.Format = AppSettings.Roaming.Default.FormatLatLng;
+            LatLng.Format = AppSettings.Roaming.FormatLatLng;
 
-            Date.Format = AppSettings.Roaming.Default.FormatDate;
-            DateTime.Format = AppSettings.Roaming.Default.FormatDateTime;
+            Date.Format = AppSettings.Roaming.FormatDate;
+            DateTime.Format = AppSettings.Roaming.FormatDateTime;
 
-            Speed.Format = AppSettings.Roaming.Default.FormatSpeed;
+            Speed.Format = AppSettings.Roaming.FormatSpeed;
         }
     }
 }

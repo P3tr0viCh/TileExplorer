@@ -19,9 +19,17 @@ namespace TileExplorer
 {
     public partial class Main
     {
-        internal class GpxFiles : SettingsBase<GpxFiles>
+        internal class GpxFiles : SettingsBase
         {
             public IEnumerable<string> Files { get; set; } = Enumerable.Empty<string>();
+
+            public override void Check()
+            {
+            }
+        }
+
+        internal class GpxFilesStore : DefaultInstance<SettingsStore<GpxFiles>>
+        {
         }
 
         private readonly WrapperCancellationTokenSource ctsCheckDirectoryTracks = new WrapperCancellationTokenSource();
@@ -53,19 +61,19 @@ namespace TileExplorer
 
         private IEnumerable<string> ExceptNewFiles(IEnumerable<string> files)
         {
-            GpxFiles.Directory = Path.GetDirectoryName(Database.Default.FileName);
+            GpxFilesStore.Default.Directory = Path.GetDirectoryName(Database.Default.FileName);
 
-            GpxFiles.FileName = $"{Files.ExecutableName()}.GpxFiles.{Files.ExtConfig}";
+            GpxFilesStore.Default.FileName = $"{Files.ExecutableName()}.GpxFiles.{Files.ExtConfig}";
 
-            DebugWrite.Line($"GpxFiles: {GpxFiles.FilePath}");
+            DebugWrite.Line($"GpxFiles: {GpxFilesStore.Default.FilePath}");
 
-            GpxFiles.Default.Load();
+            GpxFilesStore.Default.Load();
 
-            var newFiles = files.Except(GpxFiles.Default.Files, new PathComparer());
+            var newFiles = files.Except(GpxFilesStore.Default.Settings.Files, new PathComparer());
 
-            GpxFiles.Default.Files = files;
+            GpxFilesStore.Default.Settings.Files = files;
 
-            GpxFiles.Default.Save();
+            GpxFilesStore.Default.Save();
 
 #if SHOW_FILES
             DebugWrite.Line($"new files count: {newFiles.Count()}");
@@ -151,7 +159,7 @@ namespace TileExplorer
 
         private async Task CheckDirectoryTracksAsync(bool showMessage)
         {
-            var directoryTracks = AppSettings.Local.Default.DirectoryTracks;
+            var directoryTracks = AppSettings.Local.DirectoryTracks;
 
             if (directoryTracks.IsEmpty())
             {

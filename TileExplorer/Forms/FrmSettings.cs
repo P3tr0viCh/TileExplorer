@@ -13,7 +13,7 @@ namespace TileExplorer
     {
         private AppSettings AppSettings => Settings as AppSettings;
 
-        public FrmSettings(ISettingsBase settings) : base(settings)
+        public FrmSettings(ISettingsStore settings) : base(settings)
         {
         }
         
@@ -27,30 +27,30 @@ namespace TileExplorer
 
         protected override void SaveFormState()
         {
-            AppSettings.Local.SaveFormState(this, AppSettings.Local.Default.FormStates);
+            AppSettings.StoreLocal.SaveFormState(this, AppSettings.Local.FormStates);
         }
 
         protected override void LoadFormState()
         {
-            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
+            AppSettings.StoreLocal.LoadFormState(this, AppSettings.Local.FormStates);
         }
 
         private string prevDirectoryRoaming;
 
         protected override void BeforeOpen()
         {
-            prevDirectoryRoaming = AppSettings.Local.Default.DirectoryRoaming;
+            prevDirectoryRoaming = AppSettings.Local.DirectoryRoaming;
         }
 
         protected override void BeforeSave()
         {
             AppSettings.UpdateDirectoryRoaming();
 
-            if (AppSettings.Local.Default.DirectoryRoaming != prevDirectoryRoaming)
+            if (AppSettings.Local.DirectoryRoaming != prevDirectoryRoaming)
             {
-                if (File.Exists(AppSettings.Roaming.FilePath))
+                if (File.Exists(AppSettings.StoreRoaming.FilePath))
                 {
-                    AppSettings.RoamingLoad();
+                    AppSettings.StoreRoaming.Load();
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace TileExplorer
         {
             if (!AppSettings.DirectoryRoaming.IsEmpty())
             {
-                if (Files.PathEquals(AppSettings.DirectoryRoaming, AppSettings.Local.Directory))
+                if (Files.PathEquals(AppSettings.DirectoryRoaming, AppSettings.StoreLocal.Directory))
                 {
                     throw new ArgumentException(
                         string.Format(Resources.ErrorDirectoryRoamingWrongLocation,

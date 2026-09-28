@@ -28,8 +28,8 @@ namespace TileExplorer
 
                 cboxEquipment.SelectedValue = track.EquipmentId;
 
-                tbEleAscent.SetDouble(track.EleAscent, AppSettings.Roaming.Default.FormatEleAscent);
-                tbEleDescent.SetDouble(track.EleDescent, AppSettings.Roaming.Default.FormatEleAscent);
+                tbEleAscent.SetDouble(track.EleAscent, AppSettings.Roaming.FormatEleAscent);
+                tbEleDescent.SetDouble(track.EleDescent, AppSettings.Roaming.FormatEleAscent);
 
                 CheckedListBoxSetChecked(clbTags, track.Tags);
             }
@@ -74,7 +74,7 @@ namespace TileExplorer
 
         private async void FrmTrack_Load(Track track)
         {
-            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
+            AppSettings.StoreLocal.LoadFormState(this, AppSettings.Local.FormStates);
 
             await LoadDataAsync(track?.Equipment);
 
@@ -274,9 +274,9 @@ namespace TileExplorer
 
         private void FrmTrack_FormClosing(object sender, FormClosingEventArgs e)
         {
-            AppSettings.Local.SaveFormState(this, AppSettings.Local.Default.FormStates);
+            AppSettings.StoreLocal.SaveFormState(this, AppSettings.Local.FormStates);
 
-            AppSettings.LocalSave();
+            AppSettings.StoreLocal.Save();
         }
     }
 }

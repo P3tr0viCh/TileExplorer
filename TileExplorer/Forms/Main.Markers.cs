@@ -31,7 +31,7 @@ namespace TileExplorer
         {
             var item = new MapItemMarker(marker);
 
-            item.ToolTip.Font = AppSettings.Roaming.Default.FontMarker;
+            item.ToolTip.Font = AppSettings.Roaming.FontMarker;
 
             return item;
         }

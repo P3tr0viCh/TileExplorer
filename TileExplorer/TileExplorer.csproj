@@ -115,11 +115,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSettings\AppSettings.Local.cs" />
-    <Compile Include="AppSettings\AppSettings.Roaming.cs" />
+    <Compile Include="AppSettings\SettingsLocal.cs" />
+    <Compile Include="AppSettings\SettingsRoaming.cs" />
     <Compile Include="AppBackup\Backup.Equipment.cs" />
     <Compile Include="AppBackup\Backup.Markers.cs" />
     <Compile Include="AppBackup\Backup.Tracks.cs" />
+    <Compile Include="AppSettings\SettingsStoreLocal.cs" />
+    <Compile Include="AppSettings\SettingsStoreRoaming.cs" />
     <Compile Include="Enums\DataLoad.cs" />
     <Compile Include="Forms\Main.Utils.cs">
       <SubType>Form</SubType>

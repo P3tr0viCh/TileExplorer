@@ -149,13 +149,13 @@ namespace TileExplorer
                 {
                     if (tile.TrackCount == minTrackCount)
                     {
-                        tile.HeatmapValue = AppSettings.Roaming.Default.ColorTileHeatmapMinAlpha;
+                        tile.HeatmapValue = AppSettings.Roaming.ColorTileHeatmapMinAlpha;
                     }
                     else
                     {
                         if (tile.TrackCount == maxTrackCount)
                         {
-                            tile.HeatmapValue = AppSettings.Roaming.Default.ColorTileHeatmapMaxAlpha;
+                            tile.HeatmapValue = AppSettings.Roaming.ColorTileHeatmapMaxAlpha;
                         }
                         else
                         {
@@ -163,7 +163,7 @@ namespace TileExplorer
 
                             tile.HeatmapValue = Scale(i,
                                 0, trackCounts.Count - 1,
-                                AppSettings.Roaming.Default.ColorTileHeatmapMinAlpha, AppSettings.Roaming.Default.ColorTileHeatmapMaxAlpha);
+                                AppSettings.Roaming.ColorTileHeatmapMinAlpha, AppSettings.Roaming.ColorTileHeatmapMaxAlpha);
                         }
                     }
 

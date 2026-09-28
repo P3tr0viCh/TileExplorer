@@ -9,433 +9,398 @@ using System.Windows.Forms.Design;
 
 namespace TileExplorer
 {
-    internal partial class AppSettings : ISettingsBase
+    internal class AppSettings : DefaultInstance<AppSettings>, ISettingsStore
     {
         private const string Resource = "Properties.ResourcesSettings";
 
+        private static readonly SettingsStoreLocal storeLocal = new SettingsStoreLocal();
+        private static readonly SettingsStoreRoaming storeRoaming = new SettingsStoreRoaming();
+
+        public static SettingsStoreLocal StoreLocal => storeLocal;
+        public static SettingsStoreRoaming StoreRoaming => storeRoaming;
+
+        public static SettingsLocal Local => StoreLocal.Settings;
+        public static SettingsRoaming Roaming => StoreRoaming.Settings;
+
+        // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.Directories", Resource)]
         [LocalizedDisplayName("DirectoryDatabase.DisplayName", Resource)]
         [LocalizedDescription("DirectoryDatabase.Description", Resource)]
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
         [CheckDirectory]
-        public string DirectoryDatabase { get => Local.Default.DirectoryDatabase; set => Local.Default.DirectoryDatabase = value; }
+        public string DirectoryDatabase { get => Local.DirectoryDatabase; set => Local.DirectoryDatabase = value; }
 
         [LocalizedCategory("Category.Directories", Resource)]
         [LocalizedDisplayName("DirectoryTracks.DisplayName", Resource)]
         [LocalizedDescription("DirectoryTracks.Description", Resource)]
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
         [CheckDirectory]
-        public string DirectoryTracks { get => Local.Default.DirectoryTracks; set => Local.Default.DirectoryTracks = value; }
+        public string DirectoryTracks { get => Local.DirectoryTracks; set => Local.DirectoryTracks = value; }
 
         [LocalizedCategory("Category.Directories", Resource)]
         [LocalizedDisplayName("DirectoryRoaming.DisplayName", Resource)]
         [LocalizedDescription("DirectoryRoaming.Description", Resource)]
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
         [CheckDirectory]
-        public string DirectoryRoaming { get => Local.Default.DirectoryRoaming; set => Local.Default.DirectoryRoaming = value; }
+        public string DirectoryRoaming { get => Local.DirectoryRoaming; set => Local.DirectoryRoaming = value; }
 
         [LocalizedCategory("Category.Directories", Resource)]
         [LocalizedDisplayName("DirectoryBackups.DisplayName", Resource)]
         [LocalizedDescription("DirectoryBackups.Description", Resource)]
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
         [CheckDirectory(CheckExists = false)]
-        public string DirectoryBackups { get => Local.Default.DirectoryBackups; set => Local.Default.DirectoryBackups = value; }
+        public string DirectoryBackups { get => Local.DirectoryBackups; set => Local.DirectoryBackups = value; }
 
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerFill.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerFill.Description", Resource)]
-        public Color ColorMarkerFill { get => Roaming.Default.ColorMarkerFill; set => Roaming.Default.ColorMarkerFill = value; }
+        public Color ColorMarkerFill { get => Roaming.ColorMarkerFill; set => Roaming.ColorMarkerFill = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerFillAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerFillAlpha.Description", Resource)]
-        public byte ColorMarkerFillAlpha { get => Roaming.Default.ColorMarkerFillAlpha; set => Roaming.Default.ColorMarkerFillAlpha = value; }
+        public byte ColorMarkerFillAlpha { get => Roaming.ColorMarkerFillAlpha; set => Roaming.ColorMarkerFillAlpha = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerText.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerText.Description", Resource)]
-        public Color ColorMarkerText { get => Roaming.Default.ColorMarkerText; set => Roaming.Default.ColorMarkerText = value; }
+        public Color ColorMarkerText { get => Roaming.ColorMarkerText; set => Roaming.ColorMarkerText = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerTextAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerTextAlpha.Description", Resource)]
-        public byte ColorMarkerTextAlpha { get => Roaming.Default.ColorMarkerTextAlpha; set => Roaming.Default.ColorMarkerTextAlpha = value; }
+        public byte ColorMarkerTextAlpha { get => Roaming.ColorMarkerTextAlpha; set => Roaming.ColorMarkerTextAlpha = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerTextFill.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerTextFill.Description", Resource)]
-        public Color ColorMarkerTextFill { get => Roaming.Default.ColorMarkerTextFill; set => Roaming.Default.ColorMarkerTextFill = value; }
+        public Color ColorMarkerTextFill { get => Roaming.ColorMarkerTextFill; set => Roaming.ColorMarkerTextFill = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerTextFillAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerTextFillAlpha.Description", Resource)]
-        public byte ColorMarkerTextFillAlpha { get => Roaming.Default.ColorMarkerTextFillAlpha; set => Roaming.Default.ColorMarkerTextFillAlpha = value; }
+        public byte ColorMarkerTextFillAlpha { get => Roaming.ColorMarkerTextFillAlpha; set => Roaming.ColorMarkerTextFillAlpha = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerLine.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerLine.Description", Resource)]
-        public Color ColorMarkerLine { get => Roaming.Default.ColorMarkerLine; set => Roaming.Default.ColorMarkerLine = value; }
+        public Color ColorMarkerLine { get => Roaming.ColorMarkerLine; set => Roaming.ColorMarkerLine = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerSelectedFill.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerSelectedFill.Description", Resource)]
-        public Color ColorMarkerSelectedFill { get => Roaming.Default.ColorMarkerSelectedFill; set => Roaming.Default.ColorMarkerSelectedFill = value; }
+        public Color ColorMarkerSelectedFill { get => Roaming.ColorMarkerSelectedFill; set => Roaming.ColorMarkerSelectedFill = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerSelectedFillAlphaDisplayName", Resource)]
         [LocalizedDescription("ColorMarkerSelectedFillAlpha.Description", Resource)]
-        public byte ColorMarkerSelectedFillAlpha { get => Roaming.Default.ColorMarkerSelectedFillAlpha; set => Roaming.Default.ColorMarkerSelectedFillAlpha = value; }
+        public byte ColorMarkerSelectedFillAlpha { get => Roaming.ColorMarkerSelectedFillAlpha; set => Roaming.ColorMarkerSelectedFillAlpha = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerLineAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerLineAlpha.Description", Resource)]
-        public byte ColorMarkerLineAlpha { get => Roaming.Default.ColorMarkerLineAlpha; set => Roaming.Default.ColorMarkerLineAlpha = value; }
+        public byte ColorMarkerLineAlpha { get => Roaming.ColorMarkerLineAlpha; set => Roaming.ColorMarkerLineAlpha = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerSelectedLine.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerSelectedLine.Description", Resource)]
-        public Color ColorMarkerSelectedLine { get => Roaming.Default.ColorMarkerSelectedLine; set => Roaming.Default.ColorMarkerSelectedLine = value; }
+        public Color ColorMarkerSelectedLine { get => Roaming.ColorMarkerSelectedLine; set => Roaming.ColorMarkerSelectedLine = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerSelectedLineAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerSelectedLineAlpha.Description", Resource)]
-        public byte ColorMarkerSelectedLineAlpha { get => Roaming.Default.ColorMarkerSelectedLineAlpha; set => Roaming.Default.ColorMarkerSelectedLineAlpha = value; }
+        public byte ColorMarkerSelectedLineAlpha { get => Roaming.ColorMarkerSelectedLineAlpha; set => Roaming.ColorMarkerSelectedLineAlpha = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerPosition.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerPosition.Description", Resource)]
-        public Color ColorMarkerPosition { get => Roaming.Default.ColorMarkerPosition; set => Roaming.Default.ColorMarkerPosition = value; }
+        public Color ColorMarkerPosition { get => Roaming.ColorMarkerPosition; set => Roaming.ColorMarkerPosition = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("WidthMarkerLine.DisplayName", Resource)]
         [LocalizedDescription("WidthMarkerLine.Description", Resource)]
-        public int WidthMarkerLine { get => Roaming.Default.WidthMarkerLine; set => Roaming.Default.WidthMarkerLine = value; }
+        public int WidthMarkerLine { get => Roaming.WidthMarkerLine; set => Roaming.WidthMarkerLine = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("WidthMarkerLineSelected.DisplayName", Resource)]
         [LocalizedDescription("WidthMarkerLineSelected.Description", Resource)]
-        public int WidthMarkerLineSelected { get => Roaming.Default.WidthMarkerLineSelected; set => Roaming.Default.WidthMarkerLineSelected = value; }
+        public int WidthMarkerLineSelected { get => Roaming.WidthMarkerLineSelected; set => Roaming.WidthMarkerLineSelected = value; }
 
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("FontMarker.DisplayName", Resource)]
         [LocalizedDescription("FontMarker.Description", Resource)]
-        public Font FontMarker { get => Roaming.Default.FontMarker; set => Roaming.Default.FontMarker = value; }
+        public Font FontMarker { get => Roaming.FontMarker; set => Roaming.FontMarker = value; }
 
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileCluster.DisplayName", Resource)]
         [LocalizedDescription("ColorTileCluster.Description", Resource)]
-        public Color ColorTileCluster { get => Roaming.Default.ColorTileCluster; set => Roaming.Default.ColorTileCluster = value; }
+        public Color ColorTileCluster { get => Roaming.ColorTileCluster; set => Roaming.ColorTileCluster = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileClusterAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileClusterAlpha.Description", Resource)]
-        public byte ColorTileClusterAlpha { get => Roaming.Default.ColorTileClusterAlpha; set => Roaming.Default.ColorTileClusterAlpha = value; }
+        public byte ColorTileClusterAlpha { get => Roaming.ColorTileClusterAlpha; set => Roaming.ColorTileClusterAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileClusterLineAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileClusterLineAlpha.Description", Resource)]
-        public byte ColorTileClusterLineAlpha { get => Roaming.Default.ColorTileClusterLineAlpha; set => Roaming.Default.ColorTileClusterLineAlpha = value; }
+        public byte ColorTileClusterLineAlpha { get => Roaming.ColorTileClusterLineAlpha; set => Roaming.ColorTileClusterLineAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileMaxCluster.DisplayName", Resource)]
         [LocalizedDescription("ColorTileMaxCluster.Description", Resource)]
-        public Color ColorTileMaxCluster { get => Roaming.Default.ColorTileMaxCluster; set => Roaming.Default.ColorTileMaxCluster = value; }
+        public Color ColorTileMaxCluster { get => Roaming.ColorTileMaxCluster; set => Roaming.ColorTileMaxCluster = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileMaxClusterAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileMaxClusterAlpha.Description", Resource)]
-        public byte ColorTileMaxClusterAlpha { get => Roaming.Default.ColorTileMaxClusterAlpha; set => Roaming.Default.ColorTileMaxClusterAlpha = value; }
+        public byte ColorTileMaxClusterAlpha { get => Roaming.ColorTileMaxClusterAlpha; set => Roaming.ColorTileMaxClusterAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileMaxClusterLineAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileMaxClusterLineAlpha.Description", Resource)]
-        public byte ColorTileMaxClusterLineAlpha { get => Roaming.Default.ColorTileMaxClusterLineAlpha; set => Roaming.Default.ColorTileMaxClusterLineAlpha = value; }
+        public byte ColorTileMaxClusterLineAlpha { get => Roaming.ColorTileMaxClusterLineAlpha; set => Roaming.ColorTileMaxClusterLineAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileMaxSquare.DisplayName", Resource)]
         [LocalizedDescription("ColorTileMaxSquare.Description", Resource)]
-        public Color ColorTileMaxSquare { get => Roaming.Default.ColorTileMaxSquare; set => Roaming.Default.ColorTileMaxSquare = value; }
+        public Color ColorTileMaxSquare { get => Roaming.ColorTileMaxSquare; set => Roaming.ColorTileMaxSquare = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileMaxSquareAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileMaxSquareAlpha.Description", Resource)]
-        public byte ColorTileMaxSquareAlpha { get => Roaming.Default.ColorTileMaxSquareAlpha; set => Roaming.Default.ColorTileMaxSquareAlpha = value; }
+        public byte ColorTileMaxSquareAlpha { get => Roaming.ColorTileMaxSquareAlpha; set => Roaming.ColorTileMaxSquareAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileMaxSquareLineAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileMaxSquareLineAlpha.Description", Resource)]
-        public byte ColorTileMaxSquareLineAlpha { get => Roaming.Default.ColorTileMaxSquareLineAlpha; set => Roaming.Default.ColorTileMaxSquareLineAlpha = value; }
+        public byte ColorTileMaxSquareLineAlpha { get => Roaming.ColorTileMaxSquareLineAlpha; set => Roaming.ColorTileMaxSquareLineAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileVisited.DisplayName", Resource)]
         [LocalizedDescription("ColorTileVisited.Description", Resource)]
-        public Color ColorTileVisited { get => Roaming.Default.ColorTileVisited; set => Roaming.Default.ColorTileVisited = value; }
+        public Color ColorTileVisited { get => Roaming.ColorTileVisited; set => Roaming.ColorTileVisited = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileVisitedAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileVisitedAlpha.Description", Resource)]
-        public byte ColorTileVisitedAlpha { get => Roaming.Default.ColorTileVisitedAlpha; set => Roaming.Default.ColorTileVisitedAlpha = value; }
+        public byte ColorTileVisitedAlpha { get => Roaming.ColorTileVisitedAlpha; set => Roaming.ColorTileVisitedAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileVisitedLineAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileVisitedLineAlpha.Description", Resource)]
-        public byte ColorTileVisitedLineAlpha { get => Roaming.Default.ColorTileVisitedLineAlpha; set => Roaming.Default.ColorTileVisitedLineAlpha = value; }
+        public byte ColorTileVisitedLineAlpha { get => Roaming.ColorTileVisitedLineAlpha; set => Roaming.ColorTileVisitedLineAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileTrackSelected.DisplayName", Resource)]
         [LocalizedDescription("ColorTileTrackSelected.Description", Resource)]
-        public Color ColorTileTrackSelected { get => Roaming.Default.ColorTileTrackSelected; set => Roaming.Default.ColorTileTrackSelected = value; }
+        public Color ColorTileTrackSelected { get => Roaming.ColorTileTrackSelected; set => Roaming.ColorTileTrackSelected = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileTrackSelectedAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileTrackSelectedAlpha.Description", Resource)]
-        public byte ColorTileTrackSelectedAlpha { get => Roaming.Default.ColorTileTrackSelectedAlpha; set => Roaming.Default.ColorTileTrackSelectedAlpha = value; }
+        public byte ColorTileTrackSelectedAlpha { get => Roaming.ColorTileTrackSelectedAlpha; set => Roaming.ColorTileTrackSelectedAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileTrackSelectedLineAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileTrackSelectedLineAlpha.Description", Resource)]
-        public byte ColorTileTrackSelectedLineAlpha { get => Roaming.Default.ColorTileTrackSelectedLineAlpha; set => Roaming.Default.ColorTileTrackSelectedLineAlpha = value; }
+        public byte ColorTileTrackSelectedLineAlpha { get => Roaming.ColorTileTrackSelectedLineAlpha; set => Roaming.ColorTileTrackSelectedLineAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileHeatmap.DisplayName", Resource)]
         [LocalizedDescription("ColorTileHeatmap.Description", Resource)]
-        public Color ColorTileHeatmap { get => Roaming.Default.ColorTileHeatmap; set => Roaming.Default.ColorTileHeatmap = value; }
+        public Color ColorTileHeatmap { get => Roaming.ColorTileHeatmap; set => Roaming.ColorTileHeatmap = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileHeatmapLineAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileHeatmapLineAlpha.Description", Resource)]
-        public byte ColorTileHeatmapLineAlpha { get => Roaming.Default.ColorTileHeatmapLineAlpha; set => Roaming.Default.ColorTileHeatmapLineAlpha = value; }
+        public byte ColorTileHeatmapLineAlpha { get => Roaming.ColorTileHeatmapLineAlpha; set => Roaming.ColorTileHeatmapLineAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileHeatmapMinAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileHeatmapMinAlpha.Description", Resource)]
-        public byte ColorTileHeatmapMinAlpha { get => Roaming.Default.ColorTileHeatmapMinAlpha; set => Roaming.Default.ColorTileHeatmapMinAlpha = value; }
+        public byte ColorTileHeatmapMinAlpha { get => Roaming.ColorTileHeatmapMinAlpha; set => Roaming.ColorTileHeatmapMinAlpha = value; }
 
         [LocalizedCategory("Category.DesignTiles", Resource)]
         [LocalizedDisplayName("ColorTileHeatmapMaxAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTileHeatmapMaxAlpha.Description", Resource)]
-        public byte ColorTileHeatmapMaxAlpha { get => Roaming.Default.ColorTileHeatmapMaxAlpha; set => Roaming.Default.ColorTileHeatmapMaxAlpha = value; }
+        public byte ColorTileHeatmapMaxAlpha { get => Roaming.ColorTileHeatmapMaxAlpha; set => Roaming.ColorTileHeatmapMaxAlpha = value; }
 
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.DesignTracks", Resource)]
         [LocalizedDisplayName("ColorTrack.DisplayName", Resource)]
         [LocalizedDescription("ColorTrack.Description", Resource)]
-        public Color ColorTrack { get => Roaming.Default.ColorTrack; set => Roaming.Default.ColorTrack = value; }
+        public Color ColorTrack { get => Roaming.ColorTrack; set => Roaming.ColorTrack = value; }
 
         [LocalizedCategory("Category.DesignTracks", Resource)]
         [LocalizedDisplayName("ColorTrackAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTrackAlpha.Description", Resource)]
-        public byte ColorTrackAlpha { get => Roaming.Default.ColorTrackAlpha; set => Roaming.Default.ColorTrackAlpha = value; }
+        public byte ColorTrackAlpha { get => Roaming.ColorTrackAlpha; set => Roaming.ColorTrackAlpha = value; }
 
         [LocalizedCategory("Category.DesignTracks", Resource)]
         [LocalizedDisplayName("ColorTrackSelected.DisplayName", Resource)]
         [LocalizedDescription("ColorTrackSelected.Description", Resource)]
-        public Color ColorTrackSelected { get => Roaming.Default.ColorTrackSelected; set => Roaming.Default.ColorTrackSelected = value; }
+        public Color ColorTrackSelected { get => Roaming.ColorTrackSelected; set => Roaming.ColorTrackSelected = value; }
 
         [LocalizedCategory("Category.DesignTracks", Resource)]
         [LocalizedDisplayName("ColorTrackSelectedAlpha.DisplayName", Resource)]
         [LocalizedDescription("ColorTrackSelectedAlpha.Description", Resource)]
-        public byte ColorTrackSelectedAlpha { get => Roaming.Default.ColorTrackSelectedAlpha; set => Roaming.Default.ColorTrackSelectedAlpha = value; }
+        public byte ColorTrackSelectedAlpha { get => Roaming.ColorTrackSelectedAlpha; set => Roaming.ColorTrackSelectedAlpha = value; }
 
         [LocalizedCategory("Category.DesignTracks", Resource)]
         [LocalizedDisplayName("WidthTrack.DisplayName", Resource)]
         [LocalizedDescription("WidthTrack.Description", Resource)]
-        public int WidthTrack { get => Roaming.Default.WidthTrack; set => Roaming.Default.WidthTrack = value; }
+        public int WidthTrack { get => Roaming.WidthTrack; set => Roaming.WidthTrack = value; }
 
         [LocalizedCategory("Category.DesignTracks", Resource)]
         [LocalizedDisplayName("WidthTrackSelected.DisplayName", Resource)]
         [LocalizedDescription("WidthTrackSelected.Description", Resource)]
-        public int WidthTrackSelected { get => Roaming.Default.WidthTrackSelected; set => Roaming.Default.WidthTrackSelected = value; }
+        public int WidthTrackSelected { get => Roaming.WidthTrackSelected; set => Roaming.WidthTrackSelected = value; }
 
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.Format", Resource)]
         [LocalizedDisplayName("FormatDate.DisplayName", Resource)]
         [LocalizedDescription("FormatDate.Description", Resource)]
-        public string FormatDate { get => Roaming.Default.FormatDate; set => Roaming.Default.FormatDate = value; }
+        public string FormatDate { get => Roaming.FormatDate; set => Roaming.FormatDate = value; }
 
         [LocalizedCategory("Category.Format", Resource)]
         [LocalizedDisplayName("FormatTime.DisplayName", Resource)]
         [LocalizedDescription("FormatTime.Description", Resource)]
-        public string FormatTime { get => Roaming.Default.FormatTime; set => Roaming.Default.FormatTime = value; }
+        public string FormatTime { get => Roaming.FormatTime; set => Roaming.FormatTime = value; }
 
         [LocalizedCategory("Category.Format", Resource)]
         [LocalizedDisplayName("FormatDateTime.DisplayName", Resource)]
         [LocalizedDescription("FormatDateTime.Description", Resource)]
-        public string FormatDateTime { get => Roaming.Default.FormatDateTime; set => Roaming.Default.FormatDateTime = value; }
+        public string FormatDateTime { get => Roaming.FormatDateTime; set => Roaming.FormatDateTime = value; }
 
         [LocalizedCategory("Category.Format", Resource)]
         [LocalizedDisplayName("FormatDistance.DisplayName", Resource)]
         [LocalizedDescription("FormatDistance.Description", Resource)]
-        public string FormatDistance { get => Roaming.Default.FormatDistance; set => Roaming.Default.FormatDistance = value; }
+        public string FormatDistance { get => Roaming.FormatDistance; set => Roaming.FormatDistance = value; }
 
         [LocalizedCategory("Category.Format", Resource)]
         [LocalizedDisplayName("FormatDistanceRound.DisplayName", Resource)]
         [LocalizedDescription("FormatDistanceRound.Description", Resource)]
-        public string FormatDistanceRound { get => Roaming.Default.FormatDistanceRound; set => Roaming.Default.FormatDistanceRound = value; }
+        public string FormatDistanceRound { get => Roaming.FormatDistanceRound; set => Roaming.FormatDistanceRound = value; }
 
         [LocalizedCategory("Category.Format", Resource)]
         [LocalizedDisplayName("FormatEleAscent.DisplayName", Resource)]
         [LocalizedDescription("FormatEleAscent.Description", Resource)]
-        public string FormatEleAscent { get => Roaming.Default.FormatEleAscent; set => Roaming.Default.FormatEleAscent = value; }
+        public string FormatEleAscent { get => Roaming.FormatEleAscent; set => Roaming.FormatEleAscent = value; }
 
         [LocalizedCategory("Category.Format", Resource)]
         [LocalizedDisplayName("FormatEleAscentRound.DisplayName", Resource)]
         [LocalizedDescription("FormatEleAscentRound.Description", Resource)]
-        public string FormatEleAscentRound { get => Roaming.Default.FormatEleAscentRound; set => Roaming.Default.FormatEleAscentRound = value; }
+        public string FormatEleAscentRound { get => Roaming.FormatEleAscentRound; set => Roaming.FormatEleAscentRound = value; }
 
         [LocalizedCategory("Category.Format", Resource)]
         [LocalizedDisplayName("FormatLatLng.DisplayName", Resource)]
         [LocalizedDescription("FormatLatLng.Description", Resource)]
-        public string FormatLatLng { get => Roaming.Default.FormatLatLng; set => Roaming.Default.FormatLatLng = value; }
+        public string FormatLatLng { get => Roaming.FormatLatLng; set => Roaming.FormatLatLng = value; }
 
         [LocalizedCategory("Category.Format", Resource)]
         [LocalizedDisplayName("FormatSpeed.DisplayName", Resource)]
         [LocalizedDescription("FormatSpeed.Description", Resource)]
-        public string FormatSpeed { get => Roaming.Default.FormatSpeed; set => Roaming.Default.FormatSpeed = value; }
+        public string FormatSpeed { get => Roaming.FormatSpeed; set => Roaming.FormatSpeed = value; }
 
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.Osm", Resource)]
         [LocalizedDisplayName("OsmTileKey.DisplayName", Resource)]
         [LocalizedDescription("OsmTileKey.Description", Resource)]
-        public string OsmTileKey { get => Roaming.Default.OsmTileKey; set => Roaming.Default.OsmTileKey = value; }
+        public string OsmTileKey { get => Roaming.OsmTileKey; set => Roaming.OsmTileKey = value; }
 
         [LocalizedCategory("Category.Osm", Resource)]
         [LocalizedDisplayName("OsmTileValue.DisplayName", Resource)]
         [LocalizedDescription("OsmTileValue.Description", Resource)]
-        public string OsmTileValue { get => Roaming.Default.OsmTileValue; set => Roaming.Default.OsmTileValue = value; }
+        public string OsmTileValue { get => Roaming.OsmTileValue; set => Roaming.OsmTileValue = value; }
 
         [LocalizedCategory("Category.Osm", Resource)]
         [LocalizedDisplayName("SaveOsmTileMinZoom.DisplayName", Resource)]
         [LocalizedDescription("SaveOsmTileMinZoom.Description", Resource)]
-        public int SaveOsmTileMinZoom { get => Roaming.Default.SaveOsmTileMinZoom; set => Roaming.Default.SaveOsmTileMinZoom = value; }
+        public int SaveOsmTileMinZoom { get => Roaming.SaveOsmTileMinZoom; set => Roaming.SaveOsmTileMinZoom = value; }
 
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.TileStatus", Resource)]
         [LocalizedDisplayName("TileStatusFileWptType.DisplayName", Resource)]
         [LocalizedDescription("TileStatusFileWptType.Description", Resource)]
-        public string TileStatusFileWptType { get => Roaming.Default.TileStatusFileWptType; set => Roaming.Default.TileStatusFileWptType = value; }
+        public string TileStatusFileWptType { get => Roaming.TileStatusFileWptType; set => Roaming.TileStatusFileWptType = value; }
 
         [LocalizedCategory("Category.TileStatusOsmand", Resource)]
         [LocalizedDisplayName("TileStatusFileUseOsmand.DisplayName", Resource)]
         [LocalizedDescription("TileStatusFileUseOsmand.Description", Resource)]
-        public bool TileStatusFileUseOsmand { get => Roaming.Default.TileStatusFileUseOsmand; set => Roaming.Default.TileStatusFileUseOsmand = value; }
+        public bool TileStatusFileUseOsmand { get => Roaming.TileStatusFileUseOsmand; set => Roaming.TileStatusFileUseOsmand = value; }
 
         [LocalizedCategory("Category.TileStatusOsmand", Resource)]
         [LocalizedDisplayName("TileStatusFileOsmandIcon.DisplayName", Resource)]
         [LocalizedDescription("TileStatusFileOsmandIcon.Description", Resource)]
-        public string TileStatusFileOsmandIcon { get => Roaming.Default.TileStatusFileOsmandIcon; set => Roaming.Default.TileStatusFileOsmandIcon = value; }
+        public string TileStatusFileOsmandIcon { get => Roaming.TileStatusFileOsmandIcon; set => Roaming.TileStatusFileOsmandIcon = value; }
 
         [LocalizedCategory("Category.TileStatusOsmand", Resource)]
         [LocalizedDisplayName("TileStatusFileOsmandIconBackground.DisplayName", Resource)]
         [LocalizedDescription("TileStatusFileOsmandIconBackground.Description", Resource)]
-        public OsmandIconBackgroud TileStatusFileOsmandIconBackground { get => Roaming.Default.TileStatusFileOsmandIconBackground; set => Roaming.Default.TileStatusFileOsmandIconBackground = value; }
+        public OsmandIconBackgroud TileStatusFileOsmandIconBackground { get => Roaming.TileStatusFileOsmandIconBackground; set => Roaming.TileStatusFileOsmandIconBackground = value; }
 
         [LocalizedCategory("Category.TileStatusOsmand", Resource)]
         [LocalizedDisplayName("TileStatusFileOsmandIconColor.DisplayName", Resource)]
         [LocalizedDescription("TileStatusFileOsmandIconColor.Description", Resource)]
-        public Color TileStatusFileOsmandIconColor { get => Roaming.Default.TileStatusFileOsmandIconColor; set => Roaming.Default.TileStatusFileOsmandIconColor = value; }
+        public Color TileStatusFileOsmandIconColor { get => Roaming.TileStatusFileOsmandIconColor; set => Roaming.TileStatusFileOsmandIconColor = value; }
 
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.Chart", Resource)]
         [LocalizedDisplayName("ColorChartSerial.DisplayName", Resource)]
-        public Color ColorChartSerial { get => Roaming.Default.ColorChartSerial; set => Roaming.Default.ColorChartSerial = value; }
+        public Color ColorChartSerial { get => Roaming.ColorChartSerial; set => Roaming.ColorChartSerial = value; }
 
         [LocalizedCategory("Category.Chart", Resource)]
         [LocalizedDisplayName("ColorChartSerialAlpha.DisplayName", Resource)]
-        public byte ColorChartSerialAlpha { get => Roaming.Default.ColorChartSerialAlpha; set => Roaming.Default.ColorChartSerialAlpha = value; }
+        public byte ColorChartSerialAlpha { get => Roaming.ColorChartSerialAlpha; set => Roaming.ColorChartSerialAlpha = value; }
 
         [LocalizedCategory("Category.Chart", Resource)]
         [LocalizedDisplayName("ColorChartTracksByYearSerial.DisplayName", Resource)]
-        public Color ColorChartTracksByYearSerial { get => Roaming.Default.ColorChartTracksByYearSerial; set => Roaming.Default.ColorChartTracksByYearSerial = value; }
+        public Color ColorChartTracksByYearSerial { get => Roaming.ColorChartTracksByYearSerial; set => Roaming.ColorChartTracksByYearSerial = value; }
 
         [LocalizedCategory("Category.Chart", Resource)]
         [LocalizedDisplayName("ColorChartTracksByYearSerialAlpha.DisplayName", Resource)]
-        public byte ColorChartTracksByYearSerialAlpha { get => Roaming.Default.ColorChartTracksByYearSerialAlpha; set => Roaming.Default.ColorChartTracksByYearSerialAlpha = value; }
+        public byte ColorChartTracksByYearSerialAlpha { get => Roaming.ColorChartTracksByYearSerialAlpha; set => Roaming.ColorChartTracksByYearSerialAlpha = value; }
 
         [LocalizedCategory("Category.Chart", Resource)]
         [LocalizedDisplayName("ColorChartCursor.DisplayName", Resource)]
-        public Color ColorChartCursor { get => Roaming.Default.ColorChartCursor; set => Roaming.Default.ColorChartCursor = value; }
+        public Color ColorChartCursor { get => Roaming.ColorChartCursor; set => Roaming.ColorChartCursor = value; }
 
         [LocalizedCategory("Category.Chart", Resource)]
         [LocalizedDisplayName("ColorChartAxis.DisplayName", Resource)]
-        public Color ColorChartAxis { get => Roaming.Default.ColorChartAxis; set => Roaming.Default.ColorChartAxis = value; }
+        public Color ColorChartAxis { get => Roaming.ColorChartAxis; set => Roaming.ColorChartAxis = value; }
 
         [LocalizedCategory("Category.Chart", Resource)]
         [LocalizedDisplayName("ColorChartGrid.DisplayName", Resource)]
-        public Color ColorChartGrid { get => Roaming.Default.ColorChartGrid; set => Roaming.Default.ColorChartGrid = value; }
+        public Color ColorChartGrid { get => Roaming.ColorChartGrid; set => Roaming.ColorChartGrid = value; }
 
         [LocalizedCategory("Category.Chart", Resource)]
         [LocalizedDisplayName("ColorChartText.DisplayName", Resource)]
         [LocalizedDescription("ColorChartText.Description", Resource)]
-        public Color ColorChartText { get => Roaming.Default.ColorChartText; set => Roaming.Default.ColorChartText = value; }
+        public Color ColorChartText { get => Roaming.ColorChartText; set => Roaming.ColorChartText = value; }
 
         // ------------------------------------------------------------------------------------------------------------
-        public static bool LocalSave()
-        {
-            if (Local.Default.Save()) return true;
+        public bool Save() => StoreLocal.Save() && StoreRoaming.Save();
 
-            DebugWrite.Error(Local.LastError);
+        public bool Load() => StoreLocal.Load() && StoreRoaming.Load();
 
-            return false;
-        }
-
-        public static bool RoamingSave()
-        {
-            if (Roaming.Default.Save()) return true;
-
-            DebugWrite.Error(Roaming.LastError);
-
-            return false;
-        }
-
-        public bool Save() => LocalSave() && RoamingSave();
-
-        private static string GetDirectory(string directory, string defDirectory)
+        private string GetDirectory(string directory, string defDirectory)
         {
             if (Directory.Exists(directory)) return directory;
 
             return defDirectory;
         }
 
-        public static void UpdateDirectoryRoaming()
+        public void UpdateDirectoryRoaming()
         {
-            Roaming.Directory = GetDirectory(Local.Default.DirectoryRoaming,
+            StoreRoaming.Directory = GetDirectory(Local.DirectoryRoaming,
 #if DEBUG
                 Path.Combine(Files.ExecutableDirectory(), "roaming"));
 #else
                 Files.AppDataRoamingDirectory());
 #endif
         }
-
-        public static bool LocalLoad()
-        {
-            DebugWrite.Line($"Settings Local: {Local.FilePath}");
-
-            if (!Local.Default.Load())
-            {
-                DebugWrite.Error(Local.LastError);
-
-                return false;
-            }
-
-            UpdateDirectoryRoaming();
-
-            return true;
-        }
-
-        public static bool RoamingLoad()
-        {
-            DebugWrite.Line($"Settings Roaming: {Roaming.FilePath}");
-
-            if (Roaming.Default.Load()) return true;
-
-            DebugWrite.Error(Roaming.LastError);
-
-            return false;
-        }
-
-        public bool Load() => LocalLoad() && RoamingLoad();
     }
 }

@@ -43,8 +43,8 @@ namespace TileExplorer
 
         public Backup(BackupSettings settings) => Settings = settings;
 
-
         private string fullPath = string.Empty;
+
         public string FullPath
         {
             get
@@ -107,14 +107,14 @@ namespace TileExplorer
                 {
                     DebugWrite.Line("save local");
 
-                    Utils.FileCopy(AppSettings.Local.FilePath, GetFullFileName(FileName.LocalSettings));
+                    Utils.FileCopy(AppSettings.StoreLocal.FilePath, GetFullFileName(FileName.LocalSettings));
                 }
 
                 if (Settings.FileNames.HasFlag(FileName.RoamingSettings))
                 {
                     DebugWrite.Line("save roaming");
 
-                    Utils.FileCopy(AppSettings.Roaming.FilePath, GetFullFileName(FileName.RoamingSettings));
+                    Utils.FileCopy(AppSettings.StoreRoaming.FilePath, GetFullFileName(FileName.RoamingSettings));
                 }
             });
 
@@ -125,7 +125,7 @@ namespace TileExplorer
         {
             Utils.DirectoryCreate(FullPath);
 
-//            await Task.Delay(3000);
+            //            await Task.Delay(3000);
 
             await SaveMarkersAsync();
             await SaveEquipmentsAsync();
@@ -137,7 +137,7 @@ namespace TileExplorer
         {
             Files.CheckDirectoryExists(FullPath);
 
-//            await Task.Delay(3000);
+            //            await Task.Delay(3000);
 
             await LoadMarkersAsync();
             await LoadEquipmentsAsync();

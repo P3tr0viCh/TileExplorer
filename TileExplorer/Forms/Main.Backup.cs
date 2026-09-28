@@ -19,7 +19,7 @@ namespace TileExplorer
 
             var settings = new Backup.BackupSettings()
             {
-                Directory = AppSettings.Local.Default.DirectoryBackups,
+                Directory = AppSettings.Local.DirectoryBackups,
                 NameUseDate = true,
                 FileNames = Backup.FileName.SaveAll,
             };
@@ -72,7 +72,7 @@ namespace TileExplorer
 #if DEBUG
                 Name = DateTime.Now.ToString("yyyy-MM-dd"),
 #endif
-                Directory = AppSettings.Local.Default.DirectoryBackups,
+                Directory = AppSettings.Local.DirectoryBackups,
                 FileNames =
 #if DEBUG
                     Backup.FileName.TrackExts,

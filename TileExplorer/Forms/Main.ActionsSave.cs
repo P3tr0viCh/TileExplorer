@@ -87,9 +87,9 @@ namespace TileExplorer
         {
             try
             {
-                if (!ShowSaveFileDialog(SaveFileDialogType.Png, AppSettings.Local.Default.DirectoryLastMapImage)) return;
+                if (!ShowSaveFileDialog(SaveFileDialogType.Png, AppSettings.Local.DirectoryLastMapImage)) return;
 
-                AppSettings.Local.Default.DirectoryLastMapImage = Directory.GetParent(saveFileDialog.FileName).FullName;
+                AppSettings.Local.DirectoryLastMapImage = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                 SaveToImage(saveFileDialog.FileName);
             }
@@ -120,9 +120,9 @@ namespace TileExplorer
 
                 try
                 {
-                    if (!ShowSaveFileDialog(SaveFileDialogType.Osm, AppSettings.Local.Default.DirectoryLastTileBoundary)) return;
+                    if (!ShowSaveFileDialog(SaveFileDialogType.Osm, AppSettings.Local.DirectoryLastTileBoundary)) return;
 
-                    AppSettings.Local.Default.DirectoryLastTileBoundary = Directory.GetParent(saveFileDialog.FileName).FullName;
+                    AppSettings.Local.DirectoryLastTileBoundary = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                     Utils.Osm.SaveTilesToFile(saveFileDialog.FileName, tiles);
                 }
@@ -156,11 +156,11 @@ namespace TileExplorer
 
             try
             {
-                saveFileDialog.FileName = AppSettings.Roaming.Default.TileStatusFileWptType;
+                saveFileDialog.FileName = AppSettings.Roaming.TileStatusFileWptType;
 
-                if (!ShowSaveFileDialog(SaveFileDialogType.Gpx, AppSettings.Local.Default.DirectoryLastTileStatus)) return;
+                if (!ShowSaveFileDialog(SaveFileDialogType.Gpx, AppSettings.Local.DirectoryLastTileStatus)) return;
 
-                AppSettings.Local.Default.DirectoryLastTileStatus = Directory.GetParent(saveFileDialog.FileName).FullName;
+                AppSettings.Local.DirectoryLastTileStatus = Directory.GetParent(saveFileDialog.FileName).FullName;
 
                 Utils.Gpx.SaveTileStatusToFile(saveFileDialog.FileName, boudaryTiles);
             }

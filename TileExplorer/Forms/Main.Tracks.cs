@@ -295,11 +295,11 @@ namespace TileExplorer
             {
                 openFileDialog.FileName = string.Empty;
 
-                openFileDialog.InitialDirectory = AppSettings.Local.Default.DirectoryLastTracks;
+                openFileDialog.InitialDirectory = AppSettings.Local.DirectoryLastTracks;
 
                 if (openFileDialog.ShowDialog(this) != DialogResult.OK) return tracks;
 
-                AppSettings.Local.Default.DirectoryLastTracks = Directory.GetParent(openFileDialog.FileName).FullName;
+                AppSettings.Local.DirectoryLastTracks = Directory.GetParent(openFileDialog.FileName).FullName;
 
                 files = openFileDialog.FileNames;
             }

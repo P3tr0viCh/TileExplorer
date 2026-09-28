@@ -2,7 +2,6 @@
 using P3tr0viCh.Utils.Interfaces;
 using System.Drawing;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace TileExplorer
 {
@@ -10,42 +9,42 @@ namespace TileExplorer
     {
         private void UpdateSettings()
         {
-            MapItemMarkerCircle.DefaultFill.Color = AppSettings.Roaming.Default.ColorMarkerPosition;
+            MapItemMarkerCircle.DefaultFill.Color = AppSettings.Roaming.ColorMarkerPosition;
 
             MapItemMarker.DefaultFill.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerFillAlpha,
-                AppSettings.Roaming.Default.ColorMarkerFill);
+                AppSettings.Roaming.ColorMarkerFillAlpha,
+                AppSettings.Roaming.ColorMarkerFill);
             MapItemMarker.DefaultSelectedFill.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerSelectedFillAlpha,
-                AppSettings.Roaming.Default.ColorMarkerSelectedFill);
+                AppSettings.Roaming.ColorMarkerSelectedFillAlpha,
+                AppSettings.Roaming.ColorMarkerSelectedFill);
 
             MapItemMarker.DefaultStroke.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerLineAlpha,
-                AppSettings.Roaming.Default.ColorMarkerLine);
-            MapItemMarker.DefaultStroke.Width = AppSettings.Roaming.Default.WidthMarkerLine;
+                AppSettings.Roaming.ColorMarkerLineAlpha,
+                AppSettings.Roaming.ColorMarkerLine);
+            MapItemMarker.DefaultStroke.Width = AppSettings.Roaming.WidthMarkerLine;
 
             MapItemMarker.DefaultSelectedStroke.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerSelectedLineAlpha,
-                AppSettings.Roaming.Default.ColorMarkerSelectedLine);
-            MapItemMarker.DefaultSelectedStroke.Width = AppSettings.Roaming.Default.WidthMarkerLineSelected;
+                AppSettings.Roaming.ColorMarkerSelectedLineAlpha,
+                AppSettings.Roaming.ColorMarkerSelectedLine);
+            MapItemMarker.DefaultSelectedStroke.Width = AppSettings.Roaming.WidthMarkerLineSelected;
 
             ((SolidBrush)GMapToolTip.DefaultFill).Color = Color.FromArgb(
-                   AppSettings.Roaming.Default.ColorMarkerTextFillAlpha,
-                   AppSettings.Roaming.Default.ColorMarkerTextFill);
+                   AppSettings.Roaming.ColorMarkerTextFillAlpha,
+                   AppSettings.Roaming.ColorMarkerTextFill);
 
             ((SolidBrush)GMapToolTip.DefaultForeground).Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorMarkerTextAlpha,
-                AppSettings.Roaming.Default.ColorMarkerText);
+                AppSettings.Roaming.ColorMarkerTextAlpha,
+                AppSettings.Roaming.ColorMarkerText);
 
             GMapRoute.DefaultStroke.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorTrackAlpha,
-                AppSettings.Roaming.Default.ColorTrack);
-            GMapRoute.DefaultStroke.Width = AppSettings.Roaming.Default.WidthTrack;
+                AppSettings.Roaming.ColorTrackAlpha,
+                AppSettings.Roaming.ColorTrack);
+            GMapRoute.DefaultStroke.Width = AppSettings.Roaming.WidthTrack;
 
             MapItemTrack.DefaultSelectedStroke.Color = Color.FromArgb(
-                AppSettings.Roaming.Default.ColorTrackSelectedAlpha,
-                AppSettings.Roaming.Default.ColorTrackSelected);
-            MapItemTrack.DefaultSelectedStroke.Width = AppSettings.Roaming.Default.WidthTrackSelected;
+                AppSettings.Roaming.ColorTrackSelectedAlpha,
+                AppSettings.Roaming.ColorTrackSelected);
+            MapItemTrack.DefaultSelectedStroke.Width = AppSettings.Roaming.WidthTrackSelected;
 
             DataGridViewCellStyles.UpdateSettings();
         }

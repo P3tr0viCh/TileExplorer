@@ -47,7 +47,7 @@ namespace TileExplorer
 
                 if (result)
                 {
-                    AppSettings.Local.Default.DirectoryBackups = frm.Settings.Directory;
+                    AppSettings.Local.DirectoryBackups = frm.Settings.Directory;
                 }
 
                 return result;

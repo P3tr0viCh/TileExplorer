@@ -98,19 +98,19 @@ namespace TileExplorer
 
         public void UpdateSettings()
         {
-            ChartArea.AxisX.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
-            ChartArea.AxisY.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
+            ChartArea.AxisX.LineColor = AppSettings.Roaming.ColorChartAxis;
+            ChartArea.AxisY.LineColor = AppSettings.Roaming.ColorChartAxis;
 
-            ChartArea.AxisX.MajorTickMark.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
-            ChartArea.AxisY.MajorTickMark.LineColor = AppSettings.Roaming.Default.ColorChartAxis;
+            ChartArea.AxisX.MajorTickMark.LineColor = AppSettings.Roaming.ColorChartAxis;
+            ChartArea.AxisY.MajorTickMark.LineColor = AppSettings.Roaming.ColorChartAxis;
 
-            ChartArea.AxisX.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartText;
-            ChartArea.AxisY.LabelStyle.ForeColor = AppSettings.Roaming.Default.ColorChartText;
+            ChartArea.AxisX.LabelStyle.ForeColor = AppSettings.Roaming.ColorChartText;
+            ChartArea.AxisY.LabelStyle.ForeColor = AppSettings.Roaming.ColorChartText;
 
-            ChartSerial.LabelForeColor = AppSettings.Roaming.Default.ColorChartText;
+            ChartSerial.LabelForeColor = AppSettings.Roaming.ColorChartText;
 
-            ChartSerial.Color = Color.FromArgb(AppSettings.Roaming.Default.ColorChartSerialAlpha,
-                AppSettings.Roaming.Default.ColorChartSerial);
+            ChartSerial.Color = Color.FromArgb(AppSettings.Roaming.ColorChartSerialAlpha,
+                AppSettings.Roaming.ColorChartSerial);
         }
 
         private bool selfChange = true;
@@ -125,7 +125,7 @@ namespace TileExplorer
                 case DayOfWeek.Saturday:
                     return Color.Red;
                 default:
-                    return AppSettings.Roaming.Default.ColorChartText;
+                    return AppSettings.Roaming.ColorChartText;
             }
         }
 
@@ -294,7 +294,7 @@ namespace TileExplorer
             if (Month == 1)
             {
                 month = 12;
-                
+
                 year = Lists.Default.Years.Prev(Year);
             }
             else

@@ -54,8 +54,7 @@ namespace TileExplorer
         {
             if (!SetDirectories()) return;
 
-            AppSettings.LocalLoad();
-            AppSettings.RoamingLoad();
+            AppSettings.Default.Load();
 
             SetDatabase();
 
@@ -63,7 +62,7 @@ namespace TileExplorer
 
             ProgramStatus.Default.StatusChanged += ProgramStatus_StatusChanged;
 
-            Database.Filter.Default.Assign(AppSettings.Local.Default.Filter);
+            Database.Filter.Default.Assign(AppSettings.Local.Filter);
             Database.Filter.Default.DateType = Database.Filter.FilterDateType.AllDate;
             Database.Filter.Default.UseTags = false;
             Database.Filter.Default.UseEquipments = false;
@@ -82,25 +81,25 @@ namespace TileExplorer
 
             Utils.Forms.ToolStripActivateFormOnMouseEnter(this, toolStrip);
 
-            AppSettings.Local.LoadFormState(this, AppSettings.Local.Default.FormStates);
+            AppSettings.StoreLocal.LoadFormState(this, AppSettings.Local.FormStates);
 
 #if DEBUG && DUMMY_TILES
             DummyTiles();
 #endif
 
-            miMainShowGrid.Checked = AppSettings.Local.Default.VisibleGrid;
-            miMainTilesHeatmap.Checked = AppSettings.Local.Default.MapTilesHeatmap;
-            miMainShowTiles.Checked = AppSettings.Local.Default.VisibleTiles;
+            miMainShowGrid.Checked = AppSettings.Local.VisibleGrid;
+            miMainTilesHeatmap.Checked = AppSettings.Local.MapTilesHeatmap;
+            miMainShowTiles.Checked = AppSettings.Local.VisibleTiles;
             miMainTilesHeatmap.Enabled = miMainShowTiles.Checked;
-            miMainShowTracks.Checked = AppSettings.Local.Default.VisibleTracks;
-            miMainShowMarkers.Checked = AppSettings.Local.Default.VisibleMarkers;
+            miMainShowTracks.Checked = AppSettings.Local.VisibleTracks;
+            miMainShowMarkers.Checked = AppSettings.Local.VisibleMarkers;
 
-            miMainGrayScale.Checked = AppSettings.Local.Default.MapGrayScale;
+            miMainGrayScale.Checked = AppSettings.Local.MapGrayScale;
             gMapControl.GrayScaleMode = miMainGrayScale.Checked;
 
             overlayGrid.IsVisibile = miMainShowGrid.Checked;
 
-            miMainLeftPanel.Checked = AppSettings.Local.Default.VisibleLeftPanel;
+            miMainLeftPanel.Checked = AppSettings.Local.VisibleLeftPanel;
             toolStripContainer.LeftToolStripPanelVisible = miMainLeftPanel.Checked;
 
             UpdateSettings();
@@ -109,34 +108,34 @@ namespace TileExplorer
 
             await UpdateDataAsync(DataLoad.All, ChildFormType.None);
 
-            if (AppSettings.Local.Default.VisibleResultYears)
+            if (AppSettings.Local.VisibleResultYears)
             {
                 ShowChildForm(ChildFormType.ResultYears, true);
             }
-            if (AppSettings.Local.Default.VisibleResultEquipments)
+            if (AppSettings.Local.VisibleResultEquipments)
             {
                 ShowChildForm(ChildFormType.ResultEquipments, true);
             }
 
-            if (AppSettings.Local.Default.VisibleTrackList)
+            if (AppSettings.Local.VisibleTrackList)
             {
                 ShowChildForm(ChildFormType.TrackList, true);
             }
-            if (AppSettings.Local.Default.VisibleMarkerList)
+            if (AppSettings.Local.VisibleMarkerList)
             {
                 ShowChildForm(ChildFormType.MarkerList, true);
             }
 
-            if (AppSettings.Local.Default.VisibleTagList)
+            if (AppSettings.Local.VisibleTagList)
             {
                 ShowChildForm(ChildFormType.TagList, true);
             }
-            if (AppSettings.Local.Default.VisibleEquipmentList)
+            if (AppSettings.Local.VisibleEquipmentList)
             {
                 ShowChildForm(ChildFormType.EquipmentList, true);
             }
 
-            if (AppSettings.Local.Default.VisibleFilter)
+            if (AppSettings.Local.VisibleFilter)
             {
                 ShowChildForm(ChildFormType.Filter, true);
             }
@@ -160,32 +159,32 @@ namespace TileExplorer
 
             FullScreen = false;
 
-            AppSettings.Local.SaveFormState(this, AppSettings.Local.Default.FormStates);
+            AppSettings.StoreLocal.SaveFormState(this, AppSettings.Local.FormStates);
 
-            AppSettings.Local.Default.MapGrayScale = miMainGrayScale.Checked;
-            AppSettings.Local.Default.MapTilesHeatmap = miMainTilesHeatmap.Checked;
+            AppSettings.Local.MapGrayScale = miMainGrayScale.Checked;
+            AppSettings.Local.MapTilesHeatmap = miMainTilesHeatmap.Checked;
 
-            AppSettings.Local.Default.VisibleGrid = miMainShowGrid.Checked;
-            AppSettings.Local.Default.VisibleTiles = miMainShowTiles.Checked;
-            AppSettings.Local.Default.VisibleTracks = miMainShowTracks.Checked;
-            AppSettings.Local.Default.VisibleMarkers = miMainShowMarkers.Checked;
+            AppSettings.Local.VisibleGrid = miMainShowGrid.Checked;
+            AppSettings.Local.VisibleTiles = miMainShowTiles.Checked;
+            AppSettings.Local.VisibleTracks = miMainShowTracks.Checked;
+            AppSettings.Local.VisibleMarkers = miMainShowMarkers.Checked;
 
-            AppSettings.Local.Default.VisibleFilter = GetChildFormMenuItemState(ChildFormType.Filter);
+            AppSettings.Local.VisibleFilter = GetChildFormMenuItemState(ChildFormType.Filter);
 
-            AppSettings.Local.Default.VisibleResultYears = GetChildFormMenuItemState(ChildFormType.ResultYears);
-            AppSettings.Local.Default.VisibleResultEquipments = GetChildFormMenuItemState(ChildFormType.ResultEquipments);
+            AppSettings.Local.VisibleResultYears = GetChildFormMenuItemState(ChildFormType.ResultYears);
+            AppSettings.Local.VisibleResultEquipments = GetChildFormMenuItemState(ChildFormType.ResultEquipments);
 
-            AppSettings.Local.Default.VisibleTrackList = GetChildFormMenuItemState(ChildFormType.TrackList);
-            AppSettings.Local.Default.VisibleMarkerList = GetChildFormMenuItemState(ChildFormType.MarkerList);
+            AppSettings.Local.VisibleTrackList = GetChildFormMenuItemState(ChildFormType.TrackList);
+            AppSettings.Local.VisibleMarkerList = GetChildFormMenuItemState(ChildFormType.MarkerList);
 
-            AppSettings.Local.Default.VisibleTagList = GetChildFormMenuItemState(ChildFormType.TagList);
-            AppSettings.Local.Default.VisibleEquipmentList = GetChildFormMenuItemState(ChildFormType.EquipmentList);
+            AppSettings.Local.VisibleTagList = GetChildFormMenuItemState(ChildFormType.TagList);
+            AppSettings.Local.VisibleEquipmentList = GetChildFormMenuItemState(ChildFormType.EquipmentList);
 
-            AppSettings.Local.Default.VisibleLeftPanel = miMainLeftPanel.Checked;
+            AppSettings.Local.VisibleLeftPanel = miMainLeftPanel.Checked;
 
-            AppSettings.Local.Default.Filter.Assign(Database.Filter.Default);
+            AppSettings.Local.Filter.Assign(Database.Filter.Default);
 
-            AppSettings.LocalSave();
+            AppSettings.StoreLocal.Save();
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
@@ -213,7 +212,7 @@ namespace TileExplorer
 
             HomeGoto();
 
-            gMapControl.MouseWheelZoomType = AppSettings.Roaming.Default.MouseWheelZoomType;
+            gMapControl.MouseWheelZoomType = AppSettings.Roaming.MouseWheelZoomType;
 
             gMapControl.CanDragMap = true;
             gMapControl.DragButton = MouseButtons.Left;
@@ -254,7 +253,7 @@ namespace TileExplorer
         {
             statusStripPresenter.Zoom = gMapControl.Zoom;
 
-            miMainSaveTileBoundaryToFile.Enabled = gMapControl.Zoom >= AppSettings.Roaming.Default.SaveOsmTileMinZoom;
+            miMainSaveTileBoundaryToFile.Enabled = gMapControl.Zoom >= AppSettings.Roaming.SaveOsmTileMinZoom;
 
             StartUpdateGrid();
         }
@@ -661,15 +660,15 @@ namespace TileExplorer
 
         private void HomeGoto()
         {
-            gMapControl.Zoom = AppSettings.Local.Default.HomeZoom;
-            gMapControl.Position = new PointLatLng(AppSettings.Local.Default.HomeLat, AppSettings.Local.Default.HomeLng);
+            gMapControl.Zoom = AppSettings.Local.HomeZoom;
+            gMapControl.Position = new PointLatLng(AppSettings.Local.HomeLat, AppSettings.Local.HomeLng);
         }
 
         private void HomeSave()
         {
-            AppSettings.Local.Default.HomeZoom = (int)gMapControl.Zoom;
-            AppSettings.Local.Default.HomeLat = gMapControl.Position.Lat;
-            AppSettings.Local.Default.HomeLng = gMapControl.Position.Lng;
+            AppSettings.Local.HomeZoom = (int)gMapControl.Zoom;
+            AppSettings.Local.HomeLat = gMapControl.Position.Lat;
+            AppSettings.Local.HomeLng = gMapControl.Position.Lng;
         }
 
         private void MiMainHomeGoto_Click(object sender, EventArgs e)
@@ -962,7 +961,7 @@ namespace TileExplorer
 
         public void UpdateGrid()
         {
-            if (gMapControl.Zoom < AppSettings.Roaming.Default.SaveOsmTileMinZoom || !miMainShowGrid.Checked)
+            if (gMapControl.Zoom < AppSettings.Roaming.SaveOsmTileMinZoom || !miMainShowGrid.Checked)
             {
                 overlayGrid.IsVisibile = false;
 
@@ -1167,16 +1166,16 @@ namespace TileExplorer
         private void UpdateCopyCoords()
         {
             miMapCopyCoordsFloatLat.Text =
-                MenuPopupPointLatLng.Lat.ToString(AppSettings.Roaming.Default.FormatLatLng);
+                MenuPopupPointLatLng.Lat.ToString(AppSettings.Roaming.FormatLatLng);
             miMapCopyCoordsFloatLng.Text =
-                MenuPopupPointLatLng.Lng.ToString(AppSettings.Roaming.Default.FormatLatLng);
+                MenuPopupPointLatLng.Lng.ToString(AppSettings.Roaming.FormatLatLng);
             miMapCopyCoordsFloat.Text = miMapCopyCoordsFloatLat.Text + ", " +
                 miMapCopyCoordsFloatLng.Text;
 
             miMapCopyCoordsFloat2Lat.Text =
-                MenuPopupPointLatLng.Lat.ToString(AppSettings.Roaming.Default.FormatLatLng, CultureInfo.InvariantCulture);
+                MenuPopupPointLatLng.Lat.ToString(AppSettings.Roaming.FormatLatLng, CultureInfo.InvariantCulture);
             miMapCopyCoordsFloat2Lng.Text =
-                MenuPopupPointLatLng.Lng.ToString(AppSettings.Roaming.Default.FormatLatLng, CultureInfo.InvariantCulture);
+                MenuPopupPointLatLng.Lng.ToString(AppSettings.Roaming.FormatLatLng, CultureInfo.InvariantCulture);
             miMapCopyCoordsFloat2.Text = miMapCopyCoordsFloat2Lat.Text + " " +
                 miMapCopyCoordsFloat2Lng.Text;
         }
