@@ -81,7 +81,7 @@ namespace TileExplorer
 
             Utils.Forms.ToolStripActivateFormOnMouseEnter(this, toolStrip);
 
-            AppSettings.StoreLocal.LoadFormState(this, AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.LoadFormState(this, AppSettings.Local.FormStates);
 
 #if DEBUG && DUMMY_TILES
             DummyTiles();
@@ -159,7 +159,7 @@ namespace TileExplorer
 
             FullScreen = false;
 
-            AppSettings.StoreLocal.SaveFormState(this, AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.SaveFormState(this, AppSettings.Local.FormStates);
 
             AppSettings.Local.MapGrayScale = miMainGrayScale.Checked;
             AppSettings.Local.MapTilesHeatmap = miMainTilesHeatmap.Checked;
@@ -184,7 +184,7 @@ namespace TileExplorer
 
             AppSettings.Local.Filter.Assign(Database.Filter.Default);
 
-            AppSettings.StoreLocal.Save();
+            AppSettings.StorageLocal.Save();
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)

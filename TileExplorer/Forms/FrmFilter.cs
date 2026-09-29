@@ -39,7 +39,7 @@ namespace TileExplorer
 
         private async void FrmFilter_Load(object sender, EventArgs e)
         {
-            AppSettings.StoreLocal.LoadFormState(this, AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.LoadFormState(this, AppSettings.Local.FormStates);
 
             dtpDay.AddMenuDateTimeActions();
             dtpDateFrom.AddMenuDateTimeActions();
@@ -71,9 +71,9 @@ namespace TileExplorer
 
         private void FrmFilter_FormClosing(object sender, FormClosingEventArgs e)
         {
-            AppSettings.StoreLocal.SaveFormState(this, AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.SaveFormState(this, AppSettings.Local.FormStates);
 
-            AppSettings.StoreLocal.Save();
+            AppSettings.StorageLocal.Save();
         }
 
         private void FrmFilter_FormClosed(object sender, FormClosedEventArgs e)

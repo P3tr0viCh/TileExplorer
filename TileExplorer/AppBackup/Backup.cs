@@ -107,14 +107,14 @@ namespace TileExplorer
                 {
                     DebugWrite.Line("save local");
 
-                    Utils.FileCopy(AppSettings.StoreLocal.FilePath, GetFullFileName(FileName.LocalSettings));
+                    Utils.FileCopy(AppSettings.StorageLocal.FilePath, GetFullFileName(FileName.LocalSettings));
                 }
 
                 if (Settings.FileNames.HasFlag(FileName.RoamingSettings))
                 {
                     DebugWrite.Line("save roaming");
 
-                    Utils.FileCopy(AppSettings.StoreRoaming.FilePath, GetFullFileName(FileName.RoamingSettings));
+                    Utils.FileCopy(AppSettings.StorageRoaming.FilePath, GetFullFileName(FileName.RoamingSettings));
                 }
             });
 

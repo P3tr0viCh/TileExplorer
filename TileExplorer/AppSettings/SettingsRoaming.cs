@@ -1,10 +1,10 @@
 ﻿using GMap.NET;
-using P3tr0viCh.Utils.Settings;
+using P3tr0viCh.Utils.Storage;
 using System.Drawing;
 
 namespace TileExplorer
 {
-    internal class SettingsRoaming : SettingsBase
+    internal class SettingsRoaming : ObjectPersistenceBase
     {
         // ------------------------------------------------------------------------------------------------------------
         public MouseWheelZoomType MouseWheelZoomType { get; set; } = MouseWheelZoomType.MousePositionWithoutCenter;
@@ -144,10 +144,5 @@ namespace TileExplorer
         public Color ColorChartGrid { get; set; } = Color.FromArgb(217, 217, 217);
 
         public Color ColorChartText { get; set; } = Color.FromArgb(80, 80, 80);
-
-        // ------------------------------------------------------------------------------------------------------------
-        public override void Check()
-        {
-        }
     }
 }

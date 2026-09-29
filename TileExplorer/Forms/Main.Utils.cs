@@ -47,8 +47,8 @@ namespace TileExplorer
                 CreateProgramDirectory(appDataLocalDirectory);
                 CreateProgramDirectory(appDataRoamingDirectory);
 
-                AppSettings.StoreLocal.Directory = appDataLocalDirectory;
-                AppSettings.StoreRoaming.Directory = appDataRoamingDirectory;
+                AppSettings.StorageLocal.Directory = appDataLocalDirectory;
+                AppSettings.StorageRoaming.Directory = appDataRoamingDirectory;
 
                 return true;
             }

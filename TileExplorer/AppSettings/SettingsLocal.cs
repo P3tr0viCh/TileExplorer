@@ -1,8 +1,9 @@
 ﻿using P3tr0viCh.Utils.Settings;
+using P3tr0viCh.Utils.Storage;
 
 namespace TileExplorer
 {
-    internal class SettingsLocal : SettingsBase
+    internal class SettingsLocal : ObjectPersistenceBase
     {
         public readonly Database.Filter Filter = new Database.Filter();
 

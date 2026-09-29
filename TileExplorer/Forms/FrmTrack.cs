@@ -74,7 +74,7 @@ namespace TileExplorer
 
         private async void FrmTrack_Load(Track track)
         {
-            AppSettings.StoreLocal.LoadFormState(this, AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.LoadFormState(this, AppSettings.Local.FormStates);
 
             await LoadDataAsync(track?.Equipment);
 
@@ -274,9 +274,9 @@ namespace TileExplorer
 
         private void FrmTrack_FormClosing(object sender, FormClosingEventArgs e)
         {
-            AppSettings.StoreLocal.SaveFormState(this, AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.SaveFormState(this, AppSettings.Local.FormStates);
 
-            AppSettings.StoreLocal.Save();
+            AppSettings.StorageLocal.Save();
         }
     }
 }

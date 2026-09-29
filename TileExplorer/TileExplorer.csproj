@@ -120,8 +120,8 @@
     <Compile Include="AppBackup\Backup.Equipment.cs" />
     <Compile Include="AppBackup\Backup.Markers.cs" />
     <Compile Include="AppBackup\Backup.Tracks.cs" />
-    <Compile Include="AppSettings\SettingsStoreLocal.cs" />
-    <Compile Include="AppSettings\SettingsStoreRoaming.cs" />
+    <Compile Include="AppSettings\SettingsStorageLocal.cs" />
+    <Compile Include="AppSettings\SettingsStorageRoaming.cs" />
     <Compile Include="Enums\DataLoad.cs" />
     <Compile Include="Forms\Main.Utils.cs">
       <SubType>Form</SubType>

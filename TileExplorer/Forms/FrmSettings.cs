@@ -1,7 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
-using P3tr0viCh.Utils.Settings;
+using P3tr0viCh.Utils.Storage;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -11,12 +11,12 @@ namespace TileExplorer
 {
     internal class FrmSettings : FrmSettingsBase
     {
-        private AppSettings AppSettings => Settings as AppSettings;
+        private AppSettings AppSettings => ObjectStorage as AppSettings;
 
-        public FrmSettings(ISettingsStore settings) : base(settings)
+        public FrmSettings(IObjectStorage objectStorage) : base(objectStorage)
         {
         }
-        
+
         public static bool ShowDlg(Form owner)
         {
             using (var frm = new FrmSettings(new AppSettings()))
@@ -27,12 +27,12 @@ namespace TileExplorer
 
         protected override void SaveFormState()
         {
-            AppSettings.StoreLocal.SaveFormState(this, AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.SaveFormState(this, AppSettings.Local.FormStates);
         }
 
         protected override void LoadFormState()
         {
-            AppSettings.StoreLocal.LoadFormState(this, AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.LoadFormState(this, AppSettings.Local.FormStates);
         }
 
         private string prevDirectoryRoaming;
@@ -48,9 +48,9 @@ namespace TileExplorer
 
             if (AppSettings.Local.DirectoryRoaming != prevDirectoryRoaming)
             {
-                if (File.Exists(AppSettings.StoreRoaming.FilePath))
+                if (File.Exists(AppSettings.StorageRoaming.FilePath))
                 {
-                    AppSettings.StoreRoaming.Load();
+                    AppSettings.StorageRoaming.Load();
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace TileExplorer
         {
             if (!AppSettings.DirectoryRoaming.IsEmpty())
             {
-                if (Files.PathEquals(AppSettings.DirectoryRoaming, AppSettings.StoreLocal.Directory))
+                if (Files.PathEquals(AppSettings.DirectoryRoaming, AppSettings.StorageLocal.Directory))
                 {
                     throw new ArgumentException(
                         string.Format(Resources.ErrorDirectoryRoamingWrongLocation,

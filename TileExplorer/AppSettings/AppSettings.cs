@@ -1,6 +1,6 @@
 ﻿using P3tr0viCh.Utils;
 using P3tr0viCh.Utils.Attributes;
-using P3tr0viCh.Utils.Settings;
+using P3tr0viCh.Utils.Storage;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
@@ -9,18 +9,18 @@ using System.Windows.Forms.Design;
 
 namespace TileExplorer
 {
-    internal class AppSettings : DefaultInstance<AppSettings>, ISettingsStore
+    internal class AppSettings : DefaultInstance<AppSettings>, IObjectStorage, IObjectPersistence
     {
         private const string Resource = "Properties.ResourcesSettings";
 
-        private static readonly SettingsStoreLocal storeLocal = new SettingsStoreLocal();
-        private static readonly SettingsStoreRoaming storeRoaming = new SettingsStoreRoaming();
+        private static readonly SettingsStorageLocal storageLocal = new SettingsStorageLocal();
+        private static readonly SettingsStorageRoaming storageRoaming = new SettingsStorageRoaming();
 
-        public static SettingsStoreLocal StoreLocal => storeLocal;
-        public static SettingsStoreRoaming StoreRoaming => storeRoaming;
+        public static SettingsStorageLocal StorageLocal => storageLocal;
+        public static SettingsStorageRoaming StorageRoaming => storageRoaming;
 
-        public static SettingsLocal Local => StoreLocal.Settings;
-        public static SettingsRoaming Roaming => StoreRoaming.Settings;
+        public static SettingsLocal Local => StorageLocal.Settings;
+        public static SettingsRoaming Roaming => StorageRoaming.Settings;
 
         // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.Directories", Resource)]
@@ -382,9 +382,17 @@ namespace TileExplorer
         public Color ColorChartText { get => Roaming.ColorChartText; set => Roaming.ColorChartText = value; }
 
         // ------------------------------------------------------------------------------------------------------------
-        public bool Save() => StoreLocal.Save() && StoreRoaming.Save();
+        [Browsable(false)]
+        public IObjectPersistence Object => Default;
 
-        public bool Load() => StoreLocal.Load() && StoreRoaming.Load();
+        public void Check()
+        {
+        }
+
+        // ------------------------------------------------------------------------------------------------------------
+        public bool Save() => StorageLocal.Save() && StorageRoaming.Save();
+
+        public bool Load() => StorageLocal.Load() && StorageRoaming.Load();
 
         private string GetDirectory(string directory, string defDirectory)
         {
@@ -395,7 +403,7 @@ namespace TileExplorer
 
         public void UpdateDirectoryRoaming()
         {
-            StoreRoaming.Directory = GetDirectory(Local.DirectoryRoaming,
+            StorageRoaming.Directory = GetDirectory(Local.DirectoryRoaming,
 #if DEBUG
                 Path.Combine(Files.ExecutableDirectory(), "roaming"));
 #else

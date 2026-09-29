@@ -61,16 +61,16 @@ namespace TileExplorer.Presenters
 
         protected override void LoadFormState()
         {
-            AppSettings.StoreLocal.LoadFormState(Form, FormType.ToString(), AppSettings.Local.FormStates);
-            AppSettings.StoreLocal.LoadDataGridColumns(FrmList.DataGridView, FormType.ToString(), AppSettings.Local.ColumnStates);
+            AppSettings.StorageLocal.LoadFormState(Form, FormType.ToString(), AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.LoadDataGridColumns(FrmList.DataGridView, FormType.ToString(), AppSettings.Local.ColumnStates);
         }
 
         protected override void SaveFormState()
         {
-            AppSettings.StoreLocal.SaveFormState(Form, FormType.ToString(), AppSettings.Local.FormStates);
-            AppSettings.StoreLocal.SaveDataGridColumns(FrmList.DataGridView, FormType.ToString(), AppSettings.Local.ColumnStates);
+            AppSettings.StorageLocal.SaveFormState(Form, FormType.ToString(), AppSettings.Local.FormStates);
+            AppSettings.StorageLocal.SaveDataGridColumns(FrmList.DataGridView, FormType.ToString(), AppSettings.Local.ColumnStates);
 
-            AppSettings.StoreLocal.Save();
+            AppSettings.StorageLocal.Save();
         }
 
         protected override void UpdateColumns()

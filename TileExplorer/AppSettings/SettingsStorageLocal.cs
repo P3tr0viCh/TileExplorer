@@ -3,7 +3,7 @@ using P3tr0viCh.Utils.Settings;
 
 namespace TileExplorer
 {
-    internal class SettingsStoreLocal : SettingsStore<SettingsLocal>
+    internal class SettingsStorageLocal : SettingsStorage<SettingsLocal>
     {
         public new bool Load()
         {
