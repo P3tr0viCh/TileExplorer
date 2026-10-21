@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TileExplorer.Interfaces;
 using TileExplorer.Properties;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static TileExplorer.Database.Models;
 
 namespace TileExplorer.Presenters
@@ -170,12 +169,12 @@ namespace TileExplorer.Presenters
                     if (result == 0)
                         result = EmptyStringComparer.Default.Compare(x.Text, y.Text, ComparerSortOrder.Ascending);
                     break;
-                case nameof(Track.Duration):
+                case nameof(Track.DurationAsString):
                     result = SortOrderComparer.Default.Compare(x.Duration, y.Duration, sortOrder);
                     if (result == 0)
                         result = SortOrderComparer.Default.Compare(x.DateTimeStart, y.DateTimeStart, ComparerSortOrder.Descending);
                     break;
-                case nameof(Track.DurationInMove):
+                case nameof(Track.DurationInMoveAsString):
                     result = SortOrderComparer.Default.Compare(x.DurationInMove, y.DurationInMove, sortOrder);
                     if (result == 0)
                         result = SortOrderComparer.Default.Compare(x.DateTimeStart, y.DateTimeStart, ComparerSortOrder.Descending);
