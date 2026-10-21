@@ -1,10 +1,10 @@
 ﻿using GMap.NET;
-using P3tr0viCh.Utils.Storage;
+using P3tr0viCh.Utils.Settings;
 using System.Drawing;
 
 namespace TileExplorer
 {
-    internal class SettingsRoaming : ObjectPersistenceBase
+    internal class SettingsRoaming : SettingsPersistenceBase
     {
         // ------------------------------------------------------------------------------------------------------------
         public MouseWheelZoomType MouseWheelZoomType { get; set; } = MouseWheelZoomType.MousePositionWithoutCenter;
