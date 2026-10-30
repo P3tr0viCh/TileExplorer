@@ -39,8 +39,6 @@
             this.tsbtnAdd = new System.Windows.Forms.ToolStripButton();
             this.tsbtnChange = new System.Windows.Forms.ToolStripButton();
             this.tsbtnDelete = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbtnChartTrackEle = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -131,14 +129,11 @@
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbtnAdd,
             this.tsbtnChange,
-            this.tsbtnDelete,
-            this.toolStripSeparator1,
-            this.tsbtnChartTrackEle});
-            this.toolStrip.Location = new System.Drawing.Point(0, 4);
+            this.tsbtnDelete});
+            this.toolStrip.Location = new System.Drawing.Point(0, 3);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(41, 107);
             this.toolStrip.TabIndex = 0;
-            this.toolStrip.MouseEnter += new System.EventHandler(this.ToolStripLeft_MouseEnter);
             // 
             // tsbtnAdd
             // 
@@ -175,23 +170,6 @@
             this.tsbtnDelete.Size = new System.Drawing.Size(40, 32);
             this.tsbtnDelete.ToolTipText = "Удалить";
             this.tsbtnDelete.Click += new System.EventHandler(this.TsbtnDelete_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(39, 6);
-            this.toolStripSeparator1.Visible = false;
-            // 
-            // tsbtnChartTrackEle
-            // 
-            this.tsbtnChartTrackEle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbtnChartTrackEle.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnChartTrackEle.Image")));
-            this.tsbtnChartTrackEle.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbtnChartTrackEle.Name = "tsbtnChartTrackEle";
-            this.tsbtnChartTrackEle.Size = new System.Drawing.Size(39, 28);
-            this.tsbtnChartTrackEle.ToolTipText = "График высоты";
-            this.tsbtnChartTrackEle.Visible = false;
-            this.tsbtnChartTrackEle.Click += new System.EventHandler(this.TsbtnTrackEleChart_Click);
             // 
             // FrmList
             // 
@@ -236,8 +214,6 @@
         private System.Windows.Forms.ToolStripButton tsbtnAdd;
         private System.Windows.Forms.ToolStripButton tsbtnChange;
         private System.Windows.Forms.ToolStripButton tsbtnDelete;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton tsbtnChartTrackEle;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel slCount;
         private System.Windows.Forms.ToolStripStatusLabel slSelectedCount;

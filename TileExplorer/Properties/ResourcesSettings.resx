@@ -497,6 +497,9 @@
   <data name="SaveOsmTileMinZoom.DisplayName" xml:space="preserve">
     <value>Минимальный масштаб</value>
   </data>
+  <data name="Category.Obsidian" xml:space="preserve">
+    <value>Обсидиан</value>
+  </data>
   <data name="TileStatusFileOsmandIcon.Description" xml:space="preserve">
     <value>Значок точки</value>
   </data>
@@ -550,5 +553,11 @@
   </data>
   <data name="WidthTrackSelected.DisplayName" xml:space="preserve">
     <value>Толщина выделенного</value>
+  </data>
+  <data name="DirectoryObsidianVault.DisplayName" xml:space="preserve">
+    <value>Хранилище</value>
+  </data>
+  <data name="DirectoryObsidianVault.Description" xml:space="preserve">
+    <value>Расположение хранилища Обсидиан</value>
   </data>
 </root>

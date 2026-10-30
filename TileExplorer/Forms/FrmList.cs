@@ -71,7 +71,7 @@ namespace TileExplorer
 
         private void PresenterFrmList_ListChanged(object sender, EventArgs e)
         {
-            tsbtnChange.Enabled = tsbtnDelete.Enabled = tsbtnChartTrackEle.Enabled = !DataGridView.IsEmpty();
+            tsbtnChange.Enabled = tsbtnDelete.Enabled = !DataGridView.IsEmpty();
 
             statusStripPresenter.Count = DataGridView.Count();
         }
@@ -88,17 +88,6 @@ namespace TileExplorer
             Utils.Forms.ToolStripActivateFormOnMouseEnter(this, toolStrip);
 
             LabelLoadingUpdatePosition();
-
-            toolStripSeparator1.Visible = false;
-
-            switch (FormType)
-            {
-                case ChildFormType.TrackList:
-                    toolStripSeparator1.Visible = true;
-                    tsbtnChartTrackEle.Visible = true;
-
-                    break;
-            }
         }
 
         ToolStripStatusLabel PresenterStatusStrip<StatusLabel>.IPresenterStatusStrip.GetLabel(StatusLabel label)
@@ -131,7 +120,7 @@ namespace TileExplorer
             get => dataGridView.GetSelectedList<BaseId>();
             set => dataGridView.SetSelectedList(value);
         }
-        
+
         public bool Loading
         {
             set => lblLoading.Visible = value;
@@ -154,36 +143,6 @@ namespace TileExplorer
         private async void TsbtnDelete_Click(object sender, EventArgs e)
         {
             await PresenterFrmList.SelectedDeleteAsync();
-        }
-
-        private void ShowTrackEleChart()
-        {
-            var selectedCount = SelectedList.Count();
-
-            if (selectedCount == 0) return;
-
-            if (selectedCount > 5)
-            {
-                if (!Msg.Question(Resources.QuestionOpenManyForms, selectedCount)) return;
-            }
-
-            foreach (var track in SelectedList.Cast<Track>())
-            {
-                FrmChartTrackEle.OpenFrm(MainForm as Form, track);
-            }
-        }
-
-        private void TsbtnTrackEleChart_Click(object sender, EventArgs e)
-        {
-            ShowTrackEleChart();
-        }
-
-        private void ToolStripLeft_MouseEnter(object sender, EventArgs e)
-        {
-            if (ActiveForm != null)
-            {
- //               Activate();
-            }
         }
 
         private void FrmList_Activated(object sender, EventArgs e)

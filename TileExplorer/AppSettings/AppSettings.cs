@@ -52,6 +52,14 @@ namespace TileExplorer
         public string DirectoryBackups { get => Local.DirectoryBackups; set => Local.DirectoryBackups = value; }
 
         // ------------------------------------------------------------------------------------------------------------
+        [LocalizedCategory("Category.Obsidian", Resource)]
+        [LocalizedDisplayName("DirectoryObsidianVault.DisplayName", Resource)]
+        [LocalizedDescription("DirectoryObsidianVault.Description", Resource)]
+        [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
+        [CheckDirectory]
+        public string DirectoryObsidianVault { get => Local.DirectoryObsidianVault; set => Local.DirectoryObsidianVault = value; }
+
+        // ------------------------------------------------------------------------------------------------------------
         [LocalizedCategory("Category.DesignMarkers", Resource)]
         [LocalizedDisplayName("ColorMarkerFill.DisplayName", Resource)]
         [LocalizedDescription("ColorMarkerFill.Description", Resource)]

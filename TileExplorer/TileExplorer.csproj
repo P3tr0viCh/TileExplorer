@@ -236,6 +236,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ResourcesColumnHeader.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\ResourcesImages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResourcesImages.resx</DependentUpon>
+    </Compile>
     <Compile Include="UpdateApp.cs" />
     <Compile Include="ProgramStatus.cs" />
     <Compile Include="Models\MapItemMarkerCross.cs" />
@@ -252,6 +257,7 @@
     </Compile>
     <Compile Include="AppBackup\Backup.cs" />
     <Compile Include="Utils.Forms.cs" />
+    <Compile Include="Utils.Obsidian.cs" />
     <Compile Include="Utils.Tiles.cs" />
     <Compile Include="Utils.Gpx.cs" />
     <Compile Include="Utils.Osm.cs" />
@@ -342,6 +348,10 @@
     <EmbeddedResource Include="Properties\ResourcesColumnHeader.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ResourcesColumnHeader.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\ResourcesImages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourcesImages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\ResourcesSettings.resx">
       <Generator>ResXFileCodeGenerator</Generator>

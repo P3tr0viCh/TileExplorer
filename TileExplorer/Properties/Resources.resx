@@ -495,4 +495,24 @@ ddd</value>
     <value>Во время создания каталога данных произошла ошибка:
 {0}</value>
   </data>
+  <data name="ErrorObsidianVaultWrongLocation" xml:space="preserve">
+    <value>Каталог «{0}» не является хранилищем Обсидиан.</value>
+  </data>
+  <data name="TextButtonChartTrackEleToolTip" xml:space="preserve">
+    <value>График высоты</value>
+  </data>
+  <data name="TextButtonOpenDailyNoteToolTip" xml:space="preserve">
+    <value>Заметка за день</value>
+  </data>
+  <data name="ErrorObsidianVaultDailyNotesDisabled" xml:space="preserve">
+    <value>Плагин ежедневных заметок в хранилище Обсидиан «{0}» отключён.</value>
+  </data>
+  <data name="ErrorObsidianVaultOpenDailyNote" xml:space="preserve">
+    <value>Не удалось открыть ежедневную заметку в хранилище Обсидиан «{0}».
+Ошибка:
+{1}.</value>
+  </data>
+  <data name="ErrorObsidianVaultDailyNoteNotExits" xml:space="preserve">
+    <value>Заметка за «{1}» в хранилище Обсидиан «{0}» отсутствует.</value>
+  </data>
 </root>

@@ -18,6 +18,9 @@ namespace TileExplorer
         public string DirectoryBackups { get; set; } = string.Empty;
 
         // --------------------------------------------------------------------------
+        public string DirectoryObsidianVault { get; set; } = string.Empty;
+
+        // --------------------------------------------------------------------------
         public double HomeLat { get; set; } = 51.196369;
         public double HomeLng { get; set; } = 58.298527;
         public int HomeZoom { get; set; } = 11;

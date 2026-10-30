@@ -17,7 +17,14 @@ namespace TileExplorer.Presenters
 {
     internal class PresenterFrmListTracks : PresenterFrmList<Track>
     {
+        private ToolStripSeparator tssepChartTrackEle;
+        private ToolStripButton tsbtnChartTrackEle;
+        private ToolStripSeparator tssepOpenDailyNote;
+        private ToolStripButton tsbtnOpenDailyNote;
+
         public override ChildFormType FormType => ChildFormType.TrackList;
+
+        protected override string FormTitle => Resources.TitleListTracks;
 
         public PresenterFrmListTracks(IChildFormList frmList) : base(frmList)
         {
@@ -30,9 +37,57 @@ namespace TileExplorer.Presenters
 
             ItemsChanged += PresenterFrmListTracks_ItemsChanged;
             ItemsDeleted += PresenterFrmListTracks_ItemsDeleted;
+
+            ListChanged += PresenterFrmListTracks_ListChanged;
+
+            CreateToolStripButtons();
         }
 
-        protected override string FormTitle => Resources.TitleListTracks;
+        private void PresenterFrmListTracks_ListChanged(object sender, EventArgs e)
+        {
+            tsbtnChartTrackEle.Enabled =
+            tsbtnOpenDailyNote.Enabled =
+                !FrmList.DataGridView.IsEmpty();
+        }
+
+        private void CreateToolStripButtons()
+        {
+            tssepChartTrackEle = new ToolStripSeparator();
+
+            tsbtnChartTrackEle = new ToolStripButton
+            {
+                DisplayStyle = ToolStripItemDisplayStyle.Image,
+                Image = ResourcesImages.ChartTrackEle,
+                ImageTransparentColor = System.Drawing.Color.Magenta,
+                Name = "tsbtnChartTrackEle",
+                Size = new System.Drawing.Size(39, 28),
+                ToolTipText = Resources.TextButtonChartTrackEleToolTip
+            };
+            tsbtnChartTrackEle.Click += new EventHandler(TsbtnChartTrackEle_Click);
+
+            tssepOpenDailyNote = new ToolStripSeparator();
+
+            tsbtnOpenDailyNote = new ToolStripButton
+            {
+                DisplayStyle = ToolStripItemDisplayStyle.Image,
+                Image = ResourcesImages.OpenDailyNote,
+                ImageTransparentColor = System.Drawing.Color.Magenta,
+                Name = "tsbtnOpenDailyNote",
+                Size = new System.Drawing.Size(39, 28),
+                ToolTipText = Resources.TextButtonOpenDailyNoteToolTip
+            };
+            tsbtnOpenDailyNote.Click += new EventHandler(TsbtnOpenDailyNote_Click);
+
+            FrmList.ToolStrip.SuspendLayout();
+
+            FrmList.ToolStrip.Items.AddRange(new ToolStripItem[] {
+                tssepChartTrackEle, tsbtnChartTrackEle,
+                tssepOpenDailyNote, tsbtnOpenDailyNote
+            });
+
+            FrmList.ToolStrip.ResumeLayout(false);
+            FrmList.ToolStrip.PerformLayout();
+        }
 
         protected override void LoadFormState()
         {
@@ -130,6 +185,10 @@ namespace TileExplorer.Presenters
 
         public override void UpdateSettings()
         {
+            tssepOpenDailyNote.Visible =
+            tsbtnOpenDailyNote.Visible =
+                !AppSettings.Default.DirectoryObsidianVault.IsEmpty();
+
             FrmList.DataGridView.Columns[nameof(Track.DateTimeStart)].DefaultCellStyle = DataGridViewCellStyles.DateTime;
             FrmList.DataGridView.Columns[nameof(Track.DateTimeFinish)].DefaultCellStyle = DataGridViewCellStyles.DateTime;
 
@@ -319,6 +378,51 @@ namespace TileExplorer.Presenters
 
                 return;
             }
+        }
+
+        private void ShowTrackEleChart()
+        {
+            var selectedCount = SelectedList.Count();
+
+            if (selectedCount == 0) return;
+
+            if (selectedCount > 5)
+            {
+                if (!Msg.Question(Resources.QuestionOpenManyForms, selectedCount)) return;
+            }
+
+            foreach (var track in SelectedList.Cast<Track>())
+            {
+                FrmChartTrackEle.OpenFrm(MainForm as Form, track);
+            }
+        }
+
+        private void TsbtnChartTrackEle_Click(object sender, EventArgs e)
+        {
+            ShowTrackEleChart();
+        }
+
+        private void OpenDailyNote()
+        {
+            var selectedCount = SelectedList.Count();
+
+            if (selectedCount == 0) return;
+
+            var track = Selected;
+
+            if (selectedCount > 1)
+            {
+                FrmList.DataGridView.ClearSelection();
+
+                FrmList.DataGridView.SetSelectedRows(track);
+            }
+
+            Utils.Obsidian.OpenDailyNote(track.DateTimeStart);
+        }
+
+        private void TsbtnOpenDailyNote_Click(object sender, EventArgs e)
+        {
+            OpenDailyNote();
         }
     }
 }

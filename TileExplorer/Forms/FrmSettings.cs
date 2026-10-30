@@ -1,4 +1,5 @@
 ﻿using P3tr0viCh.Utils;
+using P3tr0viCh.Utils.Exceptions;
 using P3tr0viCh.Utils.Extensions;
 using P3tr0viCh.Utils.Forms;
 using P3tr0viCh.Utils.Storage;
@@ -65,6 +66,11 @@ namespace TileExplorer
                         string.Format(Resources.ErrorDirectoryRoamingWrongLocation,
                         AppSettings.DirectoryRoaming));
                 }
+            }
+
+            if (!AppSettings.DirectoryObsidianVault.IsEmpty())
+            {
+                Utils.Obsidian.AssertVault();
             }
         }
 

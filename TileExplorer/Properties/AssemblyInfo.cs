@@ -19,10 +19,10 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("7c7050af-768e-4bb2-a127-8aab9bd06bb7")]
 
-[assembly: AssemblyVersion("1.87.*")]
-[assembly: AssemblyFileVersion("1.87.0.0")]
+[assembly: AssemblyVersion("1.88.*")]
+[assembly: AssemblyFileVersion("1.88.0.0")]
 #if DEBUG
-[assembly: AssemblyInformationalVersion("1.87 (debug build)")]
+[assembly: AssemblyInformationalVersion("1.88 (debug build)")]
 #else
-[assembly: AssemblyInformationalVersion("1.87")]
+[assembly: AssemblyInformationalVersion("1.88")]
 #endif

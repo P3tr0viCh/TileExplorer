@@ -19,7 +19,7 @@ namespace TileExplorer.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -317,6 +317,44 @@ namespace TileExplorer.Properties {
         internal static string ErrorNeedText {
             get {
                 return ResourceManager.GetString("ErrorNeedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заметка за «{1}» в хранилище Обсидиан «{0}» отсутствует..
+        /// </summary>
+        internal static string ErrorObsidianVaultDailyNoteNotExits {
+            get {
+                return ResourceManager.GetString("ErrorObsidianVaultDailyNoteNotExits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Плагин ежедневных заметок в хранилище Обсидиан «{0}» отключён..
+        /// </summary>
+        internal static string ErrorObsidianVaultDailyNotesDisabled {
+            get {
+                return ResourceManager.GetString("ErrorObsidianVaultDailyNotesDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не удалось открыть ежедневную заметку в хранилище Обсидиан «{0}».
+        ///Ошибка:
+        ///{1}..
+        /// </summary>
+        internal static string ErrorObsidianVaultOpenDailyNote {
+            get {
+                return ResourceManager.GetString("ErrorObsidianVaultOpenDailyNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Каталог «{0}» не является хранилищем Обсидиан..
+        /// </summary>
+        internal static string ErrorObsidianVaultWrongLocation {
+            get {
+                return ResourceManager.GetString("ErrorObsidianVaultWrongLocation", resourceCulture);
             }
         }
         
@@ -884,6 +922,24 @@ namespace TileExplorer.Properties {
         internal static string StatusZoom {
             get {
                 return ResourceManager.GetString("StatusZoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to График высоты.
+        /// </summary>
+        internal static string TextButtonChartTrackEleToolTip {
+            get {
+                return ResourceManager.GetString("TextButtonChartTrackEleToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заметка за день.
+        /// </summary>
+        internal static string TextButtonOpenDailyNoteToolTip {
+            get {
+                return ResourceManager.GetString("TextButtonOpenDailyNoteToolTip", resourceCulture);
             }
         }
         

@@ -119,6 +119,11 @@ namespace TileExplorer
             return value != default ? value.ToHoursMinutesString() : string.Empty;
         }
 
+        public static string DateToString(DateTime value)
+        {
+            return value != default ? value.ToString(AppSettings.Roaming.FormatDate) : string.Empty;
+        }
+
         public static string DateTimeToString(DateTime value)
         {
             return value != default ? value.ToString(AppSettings.Roaming.FormatDateTime) : string.Empty;
